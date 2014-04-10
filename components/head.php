@@ -4,6 +4,7 @@
 <head>
 <meta charset="<?=$head->charset?>"/>
 <title><?=$head->title?></title>
+<base href="<?=URL?>/"/>
 <meta name="description" content="<?=$head->description?>"/>
 <meta name="keywords" content="<?=$head->keywords?>"/>
 <meta name="robots" content="<?=$head->robots?>"/>
@@ -12,19 +13,19 @@
 <meta itemprop="description" content="<?=$head->description?>"/>
 <meta itemprop="keywords" content="<?=$head->keywords?>"/>
 <meta itemprop="author" content="<?=$head->author?>"/>
-<meta itemprop="image" content="<?=URL?>/favicon.svgz"/>
+<meta itemprop="image" content="favicon.svgz"/>
 <meta name="viewport" content="<?=$head->viewport?>"/>
 <meta name="mobile-web-app-capable" content="yes">
-<link rel="icon" type="image/svg" sizes="any" href="<?=URL?>/favicon.svgz?t=<?=time()?>"/>
-<link rel="alternate icon" type="image/png" sizes="16x16" href="<?=URL?>/favicon.png"/>
-<link rel="stylesheet" type="text/css" href="<?=URL?>/stylesheets/normalize.css" media="all"/>
-<link rel="stylesheet" type="text/css" href="<?=URL?>/stylesheets/style.css" media="all"/>
-<link rel="stylesheet" type="text/css" href="<?=URL?>/stylesheets/fonts.css" media="all"/>
-<link rel="stylesheet" type="text/css" href="<?=URL?>/stylesheets/animations.css" media="screen"/>
-<link rel="stylesheet" type="text/css" href="<?=URL?>/stylesheets/mobile.css" media="phone, screen and (max-width:499px)"/>
-<script type="text/javascript" src="<?=URL?>/scripts/functions.js" async></script>
-<script type="text/javascript" src="<?=URL?>/scripts/polyfill.js" async></script>
-<script type="text/javascript" src="<?=URL?>/scripts/custom.js" defer></script>
+<link rel="icon" type="image/svg" sizes="any" href="favicon.svgz?t=<?=time()?>"/>
+<link rel="alternate icon" type="image/png" sizes="16x16" href="favicon.png"/>
+<link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="all"/>
+<link rel="stylesheet" type="text/css" href="stylesheets/style.css" media="all"/>
+<link rel="stylesheet" type="text/css" href="stylesheets/fonts.css" media="all"/>
+<link rel="stylesheet" type="text/css" href="stylesheets/animations.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="stylesheets/mobile.css" media="phone, screen and (max-width:499px)"/>
+<script type="text/javascript" src="scripts/functions.js" async></script>
+<script type="text/javascript" src="scripts/polyfill.js" async></script>
+<script type="text/javascript" src="scripts/custom.js" defer></script>
 <!--[if lte IE 8]>
 <script type="text/javascript">
 	var html5=new Array('header','hgroup','nav','menu','main','section','article','footer','aside','mark');
