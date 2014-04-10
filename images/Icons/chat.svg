@@ -1,0 +1,8 @@
+<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="100%" width="100%" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="0 0 90 85">
+<g transform="matrix(5,0,0,4.9987193,-15,-5160.4671)">
+<g fill="#FFF" transform="translate(-789,604.3622)">
+<path style="color:black;enable-background:accumulate;" fill-rule="nonzero" d="M7.3125,4c-3.541,0.0684-4.3125,0.625-4.3125,5v3c0,5,1,5,6,5h6c5,0,6,0,6-5v-3c0-5-1-5-6-5h-6c-0.625,0-1.1816-0.0098-1.6875,0zm-1.3125,3h12v1h-12v-1zm0,2h12v1h-12v-1zm0,2h8v1h-8v-1z" transform="translate(789,424)"/>
+<path d="m796,440,0,5,5-5z"/>
+</g>
+</g>
+</svg>

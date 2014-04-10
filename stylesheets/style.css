@@ -1,0 +1,29 @@
+@charset 'UTF-8';
+:root{
+	var-rem:1.3vw;
+	font-size:1.3vw;
+	font-size:var(rem);
+}
+html{font-size:20px;}
+body.hidden *{-webkit-animation-play-state:paused;animation-play-state:paused;}
+.arrow{display:inline-block;background:transparent;width:0;height:0;}
+.arrow#up{
+	border-left:32px solid transparent;
+	border-right:32px solid transparent;
+	border-bottom:40px solid #331A01;
+}
+.arrow#down{
+	border-left:32px solid transparent;
+	border-right:32px solid transparent;
+	border-top:22px solid #331A01;
+}
+.arrow#right{
+	border-left:20px solid #331A01;
+	border-bottom:20px solid transparent;
+	border-top:20px solid transparent;
+}
+.arrow#left{
+	border-right:20px solid #331A01;
+	border-bottom:20px solid transparent;
+	border-top:20px solid transparent;
+}
