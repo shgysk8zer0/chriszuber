@@ -1,0 +1,53 @@
+<svg id="svg2844" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" height="100%" width="100%" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<title id="title2988">Super User</title>
+<defs id="defs11">
+<linearGradient id="linearGradient3785" x1="110.01459" spreadMethod="reflect" gradientUnits="userSpaceOnUse" y1="62.865494" x2="109.23652" y2="163.21393">
+<stop id="stop3779" stop-color="#1a1a1a" offset="0"/>
+<stop id="stop3781" stop-color="#505050" offset="1"/>
+</linearGradient>
+</defs>
+<metadata id="metadata7">
+<rdf:RDF>
+<cc:Work>
+<dc:format>image/svg+xml</dc:format>
+<dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+<cc:license rdf:resource="http://creativecommons.org/licenses/by-sa/3.0/"/>
+<dc:publisher>
+<cc:Agent rdf:about="http://openclipart.org/">
+<dc:title>Openclipart</dc:title>
+</cc:Agent>
+</dc:publisher>
+<dc:title>Super User</dc:title>
+<dc:date>2014-04-09T20:34:25</dc:date>
+<dc:description/>
+<dc:source/>
+<dc:creator>
+<cc:Agent>
+<dc:title>Chris Zuber</dc:title>
+</cc:Agent>
+</dc:creator>
+<dc:subject>
+<rdf:Bag>
+<rdf:li>Linux</rdf:li>
+<rdf:li>Super User</rdf:li>
+<rdf:li>sudo</rdf:li>
+</rdf:Bag>
+</dc:subject>
+<dc:identifier>favicon</dc:identifier>
+</cc:Work>
+<cc:License rdf:about="http://creativecommons.org/licenses/by-sa/3.0/">
+<cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+<cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+<cc:requires rdf:resource="http://creativecommons.org/ns#Notice"/>
+<cc:requires rdf:resource="http://creativecommons.org/ns#Attribution"/>
+<cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+<cc:requires rdf:resource="http://creativecommons.org/ns#ShareAlike"/>
+</cc:License>
+</rdf:RDF>
+</metadata>
+<g id="g2987" fill="#1a1a1a" transform="matrix(1,0,0,1.11922,0.74839877,20.114522)">
+<g id="text2991" style="letter-spacing:0px;word-spacing:0px;" line-height="125%" font-family="Sans" font-size="120.80951691px" font-weight="normal" font-style="normal" fill="#1a1a1a">
+<path id="path3774" fill="url(#linearGradient3785)" d="m120.27164,55.41201-17.16581,0-4.955075,19.702334,17.283785,0,4.8371-19.702334m-8.84836-33.564753-6.13485,24.480444,17.22479,0,6.19385-24.480444,9.43824,0-6.07587,24.480444,18.40458,0,0,9.084309-20.70515,0-4.8371,19.702334,18.75851,0,0,9.02532-21.05908,0-6.13486,24.421456-9.43824,0,6.07587-24.421456-17.283787,0-6.07587,24.421456-9.497232,0,6.134858-24.421456-18.581542,0,0-9.02532,20.764136,0,4.955078-19.702334-18.994465,0,0-9.084309,21.295037,0,6.016877-24.480444,9.55622,0m-78.494488-21.846606-32.928788,52.078862l10.129923,10.304609,0.05838-0.05839,89.035705,90.495778-0.08753,0.11677,10.100038,10.27565,0.0875-0.11677,0.0291,0.0291,10.12992-10.27565-0.0291-0.0584,88.62748-90.05766,10.36346-10.538146v-0.02915l0.0875-0.08753-5.78005-9.107962-0.29193-0.291922-17.89457-28.20012h0.17515l-9.1079-14.421344h-0.17516l-0.02914-0.058384375h-10.36346l-0.0875,0.058384375h-127.92253l-0.08753-0.058384375h-14.041208zm7.531584,14.479326h137.05848l22.65314,35.760196-90.84609,92.305227-91.225353-92.714385,22.361683-35.351973z"/>
+</g>
+</g>
+</svg>
