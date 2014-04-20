@@ -22,8 +22,7 @@
 <link rel="stylesheet" type="text/css" href="stylesheets/style.css" media="all"/>
 <link rel="stylesheet" type="text/css" href="stylesheets/fonts.css" media="all"/>
 <link rel="stylesheet" type="text/css" href="stylesheets/animations.css" media="screen"/>
-<link rel="stylesheet" type="text/css" href="stylesheets/mobile.css" media="phone, screen and (max-width:499px)"/>
-<script type="text/javascript" src="scripts/functions.js" async></script>
+<script type="text/javascript" src="scripts/functions.js;version=1.7" async></script>
 <script type="text/javascript" src="scripts/polyfill.js" async></script>
 <script type="text/javascript" src="scripts/custom.js" defer></script>
 <!--[if lte IE 8]>

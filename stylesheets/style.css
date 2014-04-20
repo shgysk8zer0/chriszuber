@@ -1,29 +1,67 @@
 @charset 'UTF-8';
-:root{
-	var-rem:1.3vw;
-	font-size:1.3vw;
-	font-size:var(rem);
+@supports (width:1.3vw) and (not (color:var(a))){
+	@media screen and (min-width:1000px){
+		:root{
+			font-size:1.3vw;
+		}
+	}
+	@media screen and (max-width:999px) and (min-width:500px){
+		:root{
+			font-size:2vw;
+		}
+	}
+	@media screen and (max-width:499px){
+		:root{
+			font-size:2vw;
+		}
+	}
 }
-html{font-size:20px;}
+@supports (var-rem:1vw and font-size:var(rem)){
+	@media screen and (min-width:1000px){
+		:root{
+			var-rem:1.3vw;
+		}
+	}
+	@media screen and (max-width:999px) and (min-width:500px){
+		:root{
+			var-rem:2vw;
+		}
+	}
+	@media screen and (max-width:499px){
+		:root{
+			var-rem:2vw;
+		}
+	}
+	:root{
+		font-size:var(rem);
+	}
+
+}
+:root {
+    var-glass:linear-gradient(to top left,rgba(80,80,80,0.7), rgba(140,140,140,0.9),rgba(40, 40, 40, 0.7));
+    var-shadow:0.15em 0.15em 0.15em rgba(20,20,20,0.9);
+    background-image:url(../images/backgrounds/red-curls.svgz);
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+    color: whitesmoke;
+    text-shadow:var(shadow);
+}
 body.hidden *{-webkit-animation-play-state:paused;animation-play-state:paused;}
-.arrow{display:inline-block;background:transparent;width:0;height:0;}
-.arrow#up{
-	border-left:32px solid transparent;
-	border-right:32px solid transparent;
-	border-bottom:40px solid #331A01;
+a[rel=license]>img[src$=svgz] {
+	width: calc(30rem / 5);
+	height: calc(13rem / 5);
 }
-.arrow#down{
-	border-left:32px solid transparent;
-	border-right:32px solid transparent;
-	border-top:22px solid #331A01;
-}
-.arrow#right{
-	border-left:20px solid #331A01;
-	border-bottom:20px solid transparent;
-	border-top:20px solid transparent;
-}
-.arrow#left{
-	border-right:20px solid #331A01;
-	border-bottom:20px solid transparent;
-	border-top:20px solid transparent;
+[data-icon]::after  {
+	all: unset;
+	display: inline;
+	font-family: 'Web Symbols';
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	font-size: 1em;
+	font-size-adjust: none;
+	font-stretch: none;
+	content:' 'attr(data-icon);
 }

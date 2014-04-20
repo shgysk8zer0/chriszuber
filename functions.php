@@ -1,4 +1,11 @@
 <?php
+	/**
+	 * @author Chris Zuber <shgysk8zer0@gmail.com>
+	 * @copyright 2014, Chris Zuber
+	 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
+	 * @package core_shared
+	 * @version 2014-04-19
+	 */
 	if (!defined('PHP_VERSION_ID')) {
 		$version = explode('.', PHP_VERSION);
 		define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
@@ -9,19 +16,28 @@
 		define('PHP_RELEASE_VERSION', $version[2]);
 	}
 
-	spl_autoload_register('load_class'); 				//Load class by naming it
+	spl_autoload_register('load_class');				 //Load class by naming it
 	$site = init();										// Get info by reading .ini
+
 	function regexp($str) {								//Make regular expression from string
+		/**
+		 * @param string $str
+		 * @return string in regular expression format /string\.\.\./
+		 */
 		return '/' . preg_quote($str, '/') . '/';
 	}
 
 	function init($site = null) {						// Get info from .ini file
+		/**
+		 * @param string $site
+		 * @return array $info
+		 */
 		ini_set('include_path', ini_get('include_path') . ':' . __DIR__ . ":" . __DIR__ . "/classes");
 		$info = parse_ini_file("connect.ini");
 		if(!array_key_exists('site', $info)) {
 			// If $site has not been passed to the function, strip it out of the URL
-			if(is_null($site)){
-					($_SERVER['DOCUMENT_ROOT'] === __DIR__ . '/' or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? $info['site'] = end(explode('/', preg_replace('/\/$/', '', $_SERVER['DOCUMENT_ROOT']))) : $info['site'] = explode('/', $_SERVER['PHP_SELF'])[1];
+			if(is_null($site)) {
+				($_SERVER['DOCUMENT_ROOT'] === __DIR__ . '/' or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? $info['site'] = end(explode('/', preg_replace('/\/$/', '', $_SERVER['DOCUMENT_ROOT']))) : $info['site'] = explode('/', $_SERVER['PHP_SELF'])[1];
 			}
 		}
 		if(!array_key_exists('user', $info)) $info['user'] = $info['site'];
@@ -35,6 +51,10 @@
 		/**
 		* Sets timezone, starts session named according to site
 		* Defines BASE and URL and sets Content-Security-Policy headers
+		*
+		* @parmam void
+		* @return void
+		* @global $site
 		*/
 		global $site;
 		date_default_timezone_set('America/Los_Angeles');
@@ -47,7 +67,11 @@
 	}
 
 	function CSP() {								//Sets Content-Security-Policy from csp.ini
-		$CSP = ''; 									// Begin with an empty string
+		/**
+		 * @param void
+		 * @return void
+		 */
+		$CSP = '';									 // Begin with an empty string
 		$CSP_Policy = parse_ini_file('csp.ini');	// Read ini
 		$enforce = array_remove('enforce', $CSP_Policy);
 		if(is_null($enforce)) $enforce = true;
@@ -69,15 +93,27 @@
 	}
 
 	function localhost() {							// Just checks of client is also server
+		/**
+		 * @param void
+		 * @return boolean
+		 */
 		return ($_SERVER['REMOTE_ADDR'] === $_SERVER['SERVER_ADDR']);
 	}
 
 	function is_ajax() {							// Try to determine if this is and ajax request
+		/**
+		 * @param void
+		 * @return boolean
+		 */
 		// [TODO] Fix returning true for all form submissions
 		return ((isset($_REQUEST) or (isset($_SERVER['REDIRECT_URL']) and $_SERVER['REDIRECT_STATUS'] === '200')) and (isset($_SERVER['CONTENT_TYPE']) and preg_match('/^application\/x-www-form-urlencoded/', $_SERVER['CONTENT_TYPE'])));
 	}
 
 	function array_remove($key, &$array) {			// Remove from array by key and return it's value
+		/**
+		 * @param string $key, array $array
+		 * @return array | null
+		 */
 		if(array_key_exists($key, $array)) {
 			$val = $array[$key];					// Need to store to variable before unsetting, then return the variable
 			unset($array[$key]);
@@ -87,27 +123,51 @@
 	}
 
 	function flatten() {							// Convert a multi-dimensional array into a simple array
+		/**
+		 * @param mixed args
+		 * @return array
+		 */
 		return iterator_to_array(new RecursiveIteratorIterator(
 			new RecursiveArrayIterator(func_get_args())),FALSE);
 	}
 
 	function is_a_number($n) {						// Because I was tired of writing this... the ultimate point of programming, after all
+		/**
+		 * @params mixed $n
+		 * @return boolean
+		 */
 		return preg_match('/^\d+$/', $n);
 	}
 
 	function is_not_a_number($n) {					// Opposite of previous.
+		/**
+		 * @params mixed $n
+		 * @return boolean
+		 */
 		return !is_a_number($n);
 	}
 
 	function https() {								// Just returns a boolean value for if schema is https
+		/**
+		 * @params void
+		 * @return boolean
+		 */
 		return (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS']);
 	}
 
 	function DNT() {								// Is DNT set and on?
+		/**
+		 * @params void
+		 * @return boolean
+		 */
 		return (isset($_SERVER['HTTP_DNT']) and $_SERVER['HTTP_DNT']);
 	}
 
 	function ls($path = __DIR__, $ext = null, $strip_ext = null) {			// List files in given path. Optional extension and strip extension from results
+		/**
+		 * @params [string $path[, string $ext[, boolean $strip_ext]]]
+		 * @return array
+		 */
 		$files = array_diff(scandir($path), array('.', '..'));				// Get array of files. Remove current and previous directory (. & ..)
 		$results = array();
 		if(isset($ext)) {													//$ext has been passed, so let's work with it
@@ -129,10 +189,14 @@
 	}
 
 	function load() {									// Load resource from components directory
+		/**
+		 * @params mixed args
+		 * @return void
+		 */
 		global $DB;										// Include $DB here, so it is in the currecnt scope. Saves multiple uses of global
 		$args = flatten(func_get_args());				// One or more arguments might be an array... flatten them.
 		foreach($args as $fname) {						// Unknown how many arguments passed. Loop through fucntion arguments array
-			if(is_array($fname)) {						// In the event 
+			if(is_array($fname)) {						// In the event
 				foreach($fname as $item) include_once BASE . "/components/{$item}.php";
 			}
 			else {
@@ -143,10 +207,18 @@
 
 	function load_class($class) {						// Load class from Classes directory
 														//PHP uses include_path, so use that. I've added the classes directory to include_path already
+		/**
+		 * @params string $class
+		 * @return void
+		 */
 		require_once "{$class}.php";
 	}
 
 	function same_origin() {							// Determine if request is from us
+		/**
+		 * @params void
+		 * @return boolean
+		 */
 		if(isset($_SERVER['HTTP_ORIGIN'])) {
 			$origin = $_SERVER['HTTP_ORIGIN'];
 		}
@@ -158,12 +230,20 @@
 	}
 
 	function sub_root() {								// Just get directory up on level from $_SERVER['DOCUMENT_ROOT']
+		/**
+		 * @params void
+		 * @return string
+		 */
 		$root = preg_replace('/\/$/', '', $_SERVER['DOCUMENT_ROOT']);	// Strip off the '/' at the end of DOCUMENT_ROOT
 		$sub = preg_replace('/' . preg_quote(end(explode('/', $root))) . '/', '', $root);
 		return $sub;
 	}
 
 	function unquote($str) {							// Remove Leading and trailing single quotes
+		/**
+		 * @params string $str
+		 * @return string
+		 */
 		return preg_replace("/^\'|\'$/", '', $str);
 	}
 
@@ -173,7 +253,10 @@
 		* Return false as soon as one is missing
 		* $args is all arguments given to function
 		* Since final argument is array, seperate that and remove from length
-		*/
+		*
+		 * @params string[, string, .... string] array
+		 * @return boolean
+		 */
 		$args = func_get_args();
 		$arr = end($args);
 		$length = func_num_args() - 1;
@@ -184,16 +267,28 @@
 	}
 
 	function caps($str) {								// Receives a string, returns same string with all words capitalized
+		/**
+		 * @params string $str
+		 * @return string
+		 */
 		return ucwords(strtolower($str));
 	}
 
 	function list_array($array) {						// Lists array as <ul>
+		/**
+		 * @params array
+		 * @return void
+		 */
 		echo "<ul>";
 		foreach($array as $key => $entry) echo "<li>{$key}: {$entry}</li>";
 		echo "</ul>";
 	}
 
 	function array_to_table($table) {					// Converts an associative array to a table
+		/**
+		 * @params array $tabel
+		 * @return void
+		 */
 		//[TODO] Use array keys instead of looping through and grabbing keys
 		$headers = table_headers($table);
 		echo "<table border=\"1\">";
@@ -211,6 +306,10 @@
 	}
 
 	function table_headers($table) {					//Unneeded, but keeping for now.
+		/**
+		 * @params array $table
+		 * @return array
+		 */
 		//[TODO] Stop using this and use array keys instead
 		$headers = array();
 		$row = $table[0];
@@ -221,6 +320,10 @@
 	}
 
 	function define_UA() {								// Define Browser and OS according to user-agent string
+		/**
+		 * @params void
+		 * @return void
+		 */
 		if(isset($_SERVER['HTTP_USER_AGENT'])) {
 			define('UA', $_SERVER['HTTP_USER_AGENT']);
 			if(preg_match("/Firefox/i", UA)) define('BROWSER', 'Firefox');
@@ -243,6 +346,10 @@
 	}
 
 	function nonce($length = 50) {						// generate a nonce of $length random characters
+		/**
+		 * @params integer $length
+		 * @return string
+		 */
 		$session = new session;
 		if($session->nonce) {	// Use existing nonce instead of a new one
 			return $session->nonce;
@@ -257,16 +364,29 @@
 	}
 
 	function encode($file) {							// Base 64 encode $file. Does not set data: URI
+		/**
+		 * @params string $file
+		 * @return string (base_64 encoded)
+		 */
 		if(file_exists($file)) return base64_encode(file_get_contents($file));
 	}
 
 	function clean($string, $rep=null) {				//Strips dangerous characters from string.
+		/**
+		 * @depreciated
+		 * @params string $string[, string $rep]
+		 * @return string
+		 */
 		if($rep === null) $rep = array("<",">","/",";","\\","&","'","\"","{","}","[","]","(",")");
 		else $rep = explode(" ",$rep);
 		return str_replace($rep,"",$string);
 	}
 
 	function curl($request, $method = 'get') {			// Returns http content from request.
+		/**
+		 * @params string $request[, string $method]
+		 * @return string
+		 */
 		//[TODO] Handle both GET and POST methods
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $request);
@@ -282,6 +402,11 @@
 	}
 
 	function curl_post($url, $request) {			//cURL for post instead of get
+		/**
+		 * @params string $url, string $request
+		 * @return string
+		 */
+
 		$requestBody = http_build_query($request);
 		$connection = curl_init();
 		curl_setopt($connection, CURLOPT_URL, $url);
@@ -299,10 +424,19 @@
 	}
 
 	function minify($src) {							//Trims extra spaces and removes tabs and new lines.
+		/**
+		 * @params string $src
+		 * @return string
+		 */
 		return preg_replace(array('/\t/', '/\n/', '/\r\n/'), array(), trim($src));
 	}
 
 	function strip_path() {							//For use with server redirects. Gets just redirect path as array
+		/**
+		 * @depreciated
+		 * @params void
+		 * @return array
+		 */
 		$path = explode('/',$_SERVER['REQUEST_URI']);
 		$_PASSED = array();
 		for($n = 1;$n < count($path); $n++) $_PASSED[$path[$n]] = $path[++$n];
@@ -310,10 +444,14 @@
 	}
 
 	function pattern($type = null) {					 //Returns regular expression based on $type
+
 		/**
-		* Useful for pattern attributes as well as server-side input validation
-		* Must add regexp breakpoints for server-side use ['/^$pattern$/']
-		*/
+		 * Useful for pattern attributes as well as server-side input validation
+		 * Must add regexp breakpoints for server-side use ['/^$pattern$/']
+		*
+		 * @params string $type
+		 * @return string (regexp)
+		 */
 		switch($type) {
 			case "text":
 				$pattern = "(\w+(\ )?)+";
@@ -358,12 +496,22 @@
 	}
 
 	function today($timestamp = null) {							//Returns data as 'Y-m-d'. Defaults to current timestamp
+		/**
+		 * @depreciated
+		 * @param [int $timestamp]
+		 * @return string
+		 */
 		if(!$timestamp) $timestamp = time();
 		$date = date('Y-m-d', $timestamp);
 		return $date;
 	}
 
 	function long_date($timestamp = null) {						//Returns long-date format for timestamp
+		/**
+		 * @depreciated
+		 * @param [int $timestamp]
+		 * @return string
+		 */
 		if(!$timestamp) $timestamp = time();
 		$date = date('l, F jS Y, g:i A', $timestamp);
 		return $date;
@@ -373,7 +521,11 @@
 		return htmlentities($string, ENT_QUOTES | ENT_HTML5,"UTF-8");
 	}
 	function http_status($code = 200) {							//HTTP status header, the easy way. Just need status code
-		//Description of Status Codes may be found here http://www.w3schools.com/tags/ref_httpmessages.asp
+		/**
+		 * @params integer $code
+		 * @return void
+		 * @link http://www.w3schools.com/tags/ref_httpmessages.asp
+		 */
 		switch($code) {
 			case 100:
 				$desc = 'Continue';
@@ -513,24 +665,44 @@
 	}
 
 	function header_type($type) {							// Set content-type header.
+		/**
+		 * @params string $type
+		 * @return void
+		 */
 		header("Content-Type: {$type}\n");
 	}
 
 	function inline_min($file = null) {						// Strips tabs and new lines.
+		/**
+		 * @params string $file
+		 * @return string
+		 */
 		if(!is_null($file)) return preg_replace("/\t|\n/","", file_get_contents(BASE . "/$file"));
 	}
 
 	function date_taken($filename) {						//Get date-taken from photo data
+		/**
+		 * @depreciated
+		 * @params string $filename
+		 * @return string
+		 */
 		$exif_data = exif_read_data ($filename);
 		if (!empty($exif_data['DateTimeOriginal'])) {
 			$timestamp = to_timestamp(substr($exif_data['DateTimeOriginal'], 0, 10), substr($exif_data['DateTimeOriginal'], 11));
-		} else if (!empty($exif_data['DateTime'])) {
+		}
+		else if (!empty($exif_data['DateTime'])) {
 			$timestamp = to_timestamp(substr($exif_data['DateTime'], 0, 10), substr($exif_data['DateTime'], 11));
-		} else $timestamp = filemtime($filename);
+		}
+		else $timestamp = filemtime($filename);
 		return $timestamp;
 	}
 
 	function to_timestamp($date, $time="00:00") {			//Gets date("Y-m-d") [and time("H:i")] and returns timestamp
+		/**
+		 * @depreciated
+		 * @params string $date[, string $time]
+		 * @return string
+		 */
 		$h = substr($time, 0, 2);
 		$m = substr($time, 3, 2);
 		$y = substr($date, 0, 4);
