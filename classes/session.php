@@ -46,10 +46,13 @@
 					$name = trim(strtolower($name));
 					session_name($name);
 					$this->name = $name;
+					session_set_cookie_params(0, preg_replace('/^' . preg_quote("{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}", '/') . '/', '', URL), null, (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS']), true);
 					session_start();
 				}
 				else {										#If session has already started, get the name of it
 					$this->name = session_name();
+					session_set_cookie_params(0, preg_replace('/^' . preg_quote("{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}", '/') . '/', '', URL), null, (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS']), true);
+					session_start();
 				}
 			}
 		}
