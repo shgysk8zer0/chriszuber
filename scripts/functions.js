@@ -11,16 +11,16 @@ if (!Element.prototype.matches) {
 	Element.prototype.matches = function (sel) {
 		if (html.mozMatchesSelector) {
 			return this.mozMatchesSelector(sel);
-		} 
+		}
 		else if (html.webkitMatchesSelector) {
 			return this.webkitMatchesSelector(sel);
-		} 
+		}
 		else if (html.oMatchesSelector) {
 			return this.oMatchesSelector(sel);
-		} 
+		}
 		else if (html.msMatchesSelector) {
 			return this.msMatchesSelector(sel);
-		} 
+		}
 		else {
 			return ($(sel) .has(this));
 		}
@@ -287,7 +287,7 @@ function $(e) {
 			e
 		];
 		return results;
-	} 
+	}
 	catch (error) {
 		console.error(error);
 		console.error('No results for ' + e);
@@ -334,7 +334,7 @@ function notify(options) {
 		sendNotification = function (title, options) {
 			return navigator.mozNotification.createNotification(title, options.body, options.icon) .show();
 		};
-	} 
+	}
 	else if ('notifications' in window) {
 		if (window.notifications.checkPermission != 1) {
 			window.notifications.requestPermission();
@@ -396,76 +396,79 @@ function supports(type) {
 	/*Shorten for CSS properties*/
 	style = document.documentElement.style;
 	switch (type.toLowerCase()) {
-	case 'queryselectorall':
-		supports = (!!document.querySelectorAll);
-		break;
-	case 'svg':
-		supports = (document.implementation.hasFeature('http://www.w3.org/TR/SVG11/feature#Shape', '1.1'));
-		break;
-	case 'dataset':
-		supports = (!!document.body.dataset);
-		break;
-	case 'geolocation':
-		supports = (!!navigator.geolocation);
-		break;
-	case 'connectivity':
-		supports = (!!navigator.onLine);
-		break;
-	case 'visibility':
-		supports = (!!((document.visibilityState) || (document.webkitVisibilityState)));
-		break;
-	case 'validity':
-		supports = (!!document.createElement('input') .validity);
-		break;
-	case 'fonts':
-		supports = !!window.CSSFontFaceRule;
-		break;
-	case 'csssupports':
-		supports = (!!window.CSSSupportsRule);
-		break;
-	case 'listeners':
-		supports = (!!window.addEventListener);
-		break;
-	case 'animations':
-		supports = (((!!CSS.supports) && CSS.supports('animation', 'name') ||
-		CSS.supports('-webkit-animation', 'name')) ||
-		style.animation !== undefined ||
-		style.webkitAnimation !== undefined ||
-		style.MozAnimation !== undefined ||
-		style.OAnimation !== undefined ||
-		style.MsAnimationn !== undefined
-		);
-		break;
-	case 'transitions':
-		supports = (((!!CSS.supports) && CSS.supports('transition', 'none') ||
-		CSS.supports('-webkit-transition', 'none')) ||
-		style.transition !== undefined ||
-		style.webkitTransition !== undefined ||
-		style.MozTransition !== undefined ||
-		style.OTransition !== undefined ||
-		style.MsTransition !== undefined
-		);
-		break;
-	case 'notifications':
-		supports = (!!window.notifications || !!window.Notification);
-		break;
-	case 'applicationcache':
-		supports = (!!window.applicationCache);
-		break;
-	case 'indexeddb':
-		supports = (!!window.indexedDB);
-		break;
-	case 'fullscreen':
-		supports = (!!document.cancelFullScreen);
-		break;
-	case 'workers':
-		supports = (!!window.Worker);
-		break;
-	case 'test':
-		supports = (!!window.DNE);
-		break;
-	default:
-		supports = (document.createElement(type.toLowerCase()) .toString() !== document.createElement('DNE') .toString());
+		case 'queryselectorall':
+			supports = (!!document.querySelectorAll);
+			break;
+		case 'svg':
+			supports = (document.implementation.hasFeature('http://www.w3.org/TR/SVG11/feature#Shape', '1.1'));
+			break;
+		case 'dataset':
+			supports = (!!document.body.dataset);
+			break;
+		case 'geolocation':
+			supports = (!!navigator.geolocation);
+			break;
+		case 'connectivity':
+			supports = (!!navigator.onLine);
+			break;
+		case 'visibility':
+			supports = (!!((document.visibilityState) || (document.webkitVisibilityState)));
+			break;
+		case 'validity':
+			supports = (!!document.createElement('input') .validity);
+			break;
+		case 'fonts':
+			supports = !!window.CSSFontFaceRule;
+			break;
+		case 'csssupports':
+			supports = (!!window.CSSSupportsRule);
+			break;
+		case 'listeners':
+			supports = (!!window.addEventListener);
+			break;
+		case 'animations':
+			supports = (((!!CSS.supports) && CSS.supports('animation', 'name') ||
+			CSS.supports('-webkit-animation', 'name')) ||
+			style.animation !== undefined ||
+			style.webkitAnimation !== undefined ||
+			style.MozAnimation !== undefined ||
+			style.OAnimation !== undefined ||
+			style.MsAnimationn !== undefined
+			);
+			break;
+		case 'transitions':
+			supports = (((!!CSS.supports) && CSS.supports('transition', 'none') ||
+			CSS.supports('-webkit-transition', 'none')) ||
+			style.transition !== undefined ||
+			style.webkitTransition !== undefined ||
+			style.MozTransition !== undefined ||
+			style.OTransition !== undefined ||
+			style.MsTransition !== undefined
+			);
+			break;
+		case 'notifications':
+			supports = (!!window.notifications || !!window.Notification);
+			break;
+		case 'applicationcache':
+			supports = (!!window.applicationCache);
+			break;
+		case 'indexeddb':
+			supports = (!!window.indexedDB);
+			break;
+		case 'fullscreen':
+			supports = (!!document.cancelFullScreen);
+			break;
+		case 'workers':
+			supports = (!!window.Worker);
+			break;
+		case 'promises':
+			supports = ('Promise' in window);
+			break;
+		case 'ajax':
+			supports = ('XMLHttpRequest' in window);
+			break;
+		default:
+			supports = (document.createElement(type.toLowerCase()) .toString() !== document.createElement('DNE') .toString());
 	}
 	return supports;
 }
