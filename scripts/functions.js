@@ -496,6 +496,22 @@ zQ.prototype.popstate = function (callback) {
 	/*History.back event*/
 	return this.listen('popstate', callback);
 };
+zQ.prototype.watch = function(watching, options) {
+	/*https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver*/
+	var watcher = new MutationObserver(function(mutations){
+		mutations.forEach(function(mutation){
+			watching[mutation.type].call(mutation);
+		});
+	}),
+	watches = new Object();
+	Object.keys(watching).concat(options).forEach(function(event){
+		watches[event] = true;
+	})
+	this.each(function(el){
+		watcher.observe(el, watches);
+	});
+	return this;
+}
 zQ.prototype.$ = function (e) {
 	return this.querySelectorAll(e);
 }
