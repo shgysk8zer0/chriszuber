@@ -467,6 +467,9 @@ function supports(type) {
 		case 'ajax':
 			supports = ('XMLHttpRequest' in window);
 			break;
+		case 'cssvars':
+			supports = (!!CSS.supports('var-x','x'));
+			break;
 		default:
 			supports = (document.createElement(type.toLowerCase()) .toString() !== document.createElement('DNE') .toString());
 	}
