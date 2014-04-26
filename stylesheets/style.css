@@ -40,6 +40,7 @@
 :root {
     var-glass:linear-gradient(to top left,rgba(80,80,80,0.7), rgba(140,140,140,0.9),rgba(40, 40, 40, 0.7));
     var-shadow:0.15em 0.15em 0.15em rgba(20,20,20,0.9);
+    var-grad: linear-gradient(to bottom right, rgb(100,100,100), rgb(40,40,40));
     background-image:url(../images/backgrounds/red-curls.svgz);
     background-size:cover;
     background-position:center;
@@ -48,10 +49,62 @@
     color: whitesmoke;
     text-shadow:var(shadow);
 }
+#contact-card {
+    height: 20rem;
+    width: 40vw;
+    margin: 0 auto;
+    perspective: 1000px;
+    perspective-origin: top;
+}
+#contact-card [itemprop=image] {
+    border-radius: 50%;
+    border: 0.2rem outset black;
+    box-shadow: 0.5rem 0.5rem 0.5rem  black;
+}
+#contact-card>.container {
+    height: 100%;
+    transition: all 2s;
+    position: relative;
+    transform-style: preserve-3d;
+    box-shadow: var(shadow);
+    border-radius: 1rem;
+}
+#contact-card:hover>.container {
+    transform:rotateY(180deg);
+}
+.face {
+    height: 100%;
+    width:100%;
+    padding: 2rem;
+    backface-visibility: hidden;
+	background-image: var(grad);
+    position: absolute;
+    border-radius: inherit;
+    box-shadow: 0 0 3rem 0 dimgray inset;
+    border: 0.3rem inset black;
+}
+.face.front {
+}
+.face.back {
+    transform: rotateY(180deg);
+}
 body.hidden *{-webkit-animation-play-state:paused;animation-play-state:paused;}
 a[rel=license]>img[src$=svgz] {
 	width: calc(30rem / 5);
 	height: calc(13rem / 5);
+}
+a.logo {
+    display:inline-block;
+    width:3rem;
+    overflow:visible;
+}
+a.logo svg {
+    overflow: visible;
+    transform-origin: center;
+    transition:all 1s;
+}
+a.logo svg:hover {
+    transform: scale(2)rotateZ(360deg)
 }
 [data-icon]::after  {
 	all: unset;
@@ -63,5 +116,5 @@ a[rel=license]>img[src$=svgz] {
 	font-size: 1em;
 	font-size-adjust: none;
 	font-stretch: none;
-	content:' 'attr(data-icon);
+	content: ' 'attr(data-icon)' ';
 }
