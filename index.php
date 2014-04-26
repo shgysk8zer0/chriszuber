@@ -2,7 +2,6 @@
 	require_once './functions.php';
 	config();
 	$DB = _pdo::load();
-	CSP();
 	if(is_ajax()) {
 		require_once './ajax.php';
 		die;
