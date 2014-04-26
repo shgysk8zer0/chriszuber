@@ -26,6 +26,27 @@
 		 */
 		return '/' . preg_quote($str, '/') . '/';
 	}
+	
+	function debug($data, $comment = false) {
+		/**
+		 * Prints out information about $data
+		 * Wrapped in html comments or <pre><code>
+		 *
+		 * @param mixed $data[, boolean $comment]
+		 * @return void
+		 */
+
+		if($comment) {
+			echo '<!--';
+			print_r($data);
+			echo '-->';
+		}
+		else {
+			echo '<pre><code>';
+			print_r($data);
+			echo '</code></pre>';
+		}
+	}
 
 	function init($site = null) {						// Get info from .ini file
 		/**
@@ -63,6 +84,7 @@
 		define('BASE', __DIR__);
 		($_SERVER['DOCUMENT_ROOT'] === __DIR__ . '/' or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/{$site['site']}");
 		new session("{$site['site']}");
+		CSP();
 		nonce(50);									// Set a nonce of n random characters
 	}
 
@@ -73,6 +95,7 @@
 		 */
 		$CSP = '';									 // Begin with an empty string
 		$CSP_Policy = parse_ini_file('csp.ini');	// Read ini
+		if(!$CSP_Policy) return;
 		$enforce = array_remove('enforce', $CSP_Policy);
 		if(is_null($enforce)) $enforce = true;
 		foreach($CSP_Policy as $type => $src) {		// Convert config array to string for CSP header
@@ -200,7 +223,7 @@
 				foreach($fname as $item) include_once BASE . "/components/{$item}.php";
 			}
 			else {
-				include_once BASE . "/components/{$fname}.php";
+				include BASE . "/components/{$fname}.php";
 			}
 		}
 	}
