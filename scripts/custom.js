@@ -8,7 +8,7 @@ window.addEventListener('load',function(){
 		(supports(sup)) ? html.classList.add(sup) : html.classList.add('no-' + sup);
 	});
 	$('a.confirm[href]').click(function(event){
-		if(!confirm('Go to ' + this.href)) {
+		if(!confirm('Go to ' + this.href + '?')) {
 			event.preventDefault();
 		}
 	});
