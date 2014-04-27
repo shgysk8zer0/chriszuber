@@ -1,6 +1,7 @@
 'use strict';
 var body = document.body,
-html = document.documentElement;
+html = document.documentElement,
+	prefixes = ['-moz-', '-webkit-', '-o-', '-ms-'];
 if (!window.Element) {
 	/*Fix IE not allowing Element.prototype*/
 	Element = function () {
@@ -25,6 +26,14 @@ if (!Element.prototype.matches) {
 			return ($(sel) .has(this));
 		}
 	}
+}
+Array.prototype.unique = function() {
+	return this.filter(
+		function(val, i, arr)
+		{
+			return (i <= arr.indexOf(val));
+		}
+	);
 }
 /*===========================De-Prefix several JavaScript methods==========================================================================*/
 
@@ -512,7 +521,20 @@ zQ.prototype.watch = function(watching, options) {
 	});
 	return this;
 }
-zQ.prototype.$ = function (e) {
-	return this.querySelectorAll(e);
+zQ.prototype.$ = function (q) {
+	/**
+	 * [TODO]
+	 * detect :matches/:any support (check prefixes) and use that
+	 * else use commented code as fallback
+	 */
+	return $(':-moz-any(' + this.query +') '+ ':-moz-any(' + q +')');
+	/*var results = [], any = [':matches', ':any', ':-moz-any', ':-webkit-any', ':-o-any', ':-ms-'];
+	this.query = ':matches(' + this.query +') :matches(' + q +')';
+	this.each(function(el){
+		results.push(el);
+	});
+	this.results = results.unique();
+	this.length = this.results.length;
+	return this;*/
 }
 /*====================================================================================================================*/
