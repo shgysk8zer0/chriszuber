@@ -28,7 +28,7 @@
 	<script type="application/javascript;version=1.8" src="scripts/custom.js" defer></script>
 <?php else:?>
 	<script type="application/javascript" src="scripts/functions.js" async></script>
-	<script type="applicatoin/javascript" src="scripts/custom.js" defer></script>
+	<script type="application/javascript" src="scripts/custom.js" defer></script>
 <?php endif?>
 <!--[if lte IE 8]>
 <script type="text/javascript">
