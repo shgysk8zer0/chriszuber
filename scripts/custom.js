@@ -1,4 +1,3 @@
-'use strict';
 window.addEventListener('load',function(){
 	var html = $(document.documentElement),
 		body = $(document.body),
