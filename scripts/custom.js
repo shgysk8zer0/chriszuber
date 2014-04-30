@@ -1,31 +1,35 @@
-window.addEventListener('load',function(){
+window.addEventListener('load', function () {
 	var html = $(document.documentElement),
 		body = $(document.body),
 		head = $(document.head);
-	html.removeClass('no-js');
-	for(let feature of ['querySelectorAll', 'svg', 'audio', 'video', 'canvas', 'dataset', 'connectivity', 'visibility', 'notifications', 'ApplicationCache', 'indexedDB', 'transitions', 'animations', 'cssSupports', 'cssVars', 'workers', 'promises', 'ajax']){
-		(supports(feature)) ? html.addClass(feature) : html.addClass('no-' + feature);
-	};
-	(!document.documentElement.classList.contains('connectivity') && !navigator.onLine) ? html.addClass('offline')  : html.addClass('online');
-	(!document.documentElement.classList.contains('visibility') && document.hidden) ? html.addClass('hidden')  : html.addClass('visible');
-	$('a.confirm[href]').click(function(event){
-		if(!confirm('Go to ' + this.href + '?')) {
-			event.preventDefault();
-		}
+	['svg', 'audio', 'video', 'canvas', 'dataset', 'connectivity', 'visibility', 'notifications', 'ApplicationCache', 'indexedDB', 'transitions', 'animations',  'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll', 'workers', 'promises', 'ajax', 'FormData'].forEach(function(support){
+		(supports(support)) ? html.addClass(support) : html.addClass('no-' + support);
 	});
+	document.body.bootstrap();
 	body.watch({
 		childList: function(){
-			console.log(this.addedNodes)
+			this.addedNodes.bootstrap();
 		},
-		attributes: function(){
-			console.log(this.attributeName, this.oldValue)
-		},
-		characterData: function(){
-			console.log(this.oldValue)
-		}
 	}, [
-		'subtree',
-		'attributeOldValue',
-		'characterDataOldValue'
+		'subtree'
 	]);
+	$(window).online(function(){
+		$('fieldset').each(function(fieldset){
+			fieldset.removeAttribute('disabled');
+		});
+		notify({
+			title: 'Network:',
+			body: 'online',
+			icon: 'images/Icons/network-server.png'
+		});
+	}).offline(function(){
+		$('fieldset').each(function(fieldset){
+			fieldset.disabled = true;
+		});
+		notify({
+			title: 'Network:',
+			body: 'offline',
+			icon: 'images/Icons/network-server.png'
+		});
+	});
 });
