@@ -1,19 +1,17 @@
 CACHE MANIFEST
-#VERSION 2.5
+#VERSION 2.6
 CACHE:
 
 #SCRIPTS
 scripts/functions.js
 scripts/polyfill.js
 scripts/custom.js
-scripts/workers/clock.js
 
 #STYLESHEETS
 stylesheets/normalize.css
 stylesheets/style.css
 stylesheets/fonts.css
 stylesheets/animations.css
-stylesheets/mobile.css
 
 #IMAGES
 favicon.svgz
@@ -35,7 +33,6 @@ images/Icons/play.png
 images/Icons/pause.png
 images/Icons/network-server.png
 images/Icons/map.png
-videos/posters/Sintel.jpg
 
 #CURSORS
 images/cursors/Arch.svgz
@@ -48,13 +45,12 @@ fonts/gnome-typewriter.woff
 fonts/URW-Chancery-Med-Italic.woff
 
 #AUDIO
-audio/heroines.ogg
 
 #VIDEO
 #videos/Sintel.webm
 
 NETWORK:
-*
+#*
 
 FALLBACK:
 
