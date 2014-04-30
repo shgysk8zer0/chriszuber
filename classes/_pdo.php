@@ -138,7 +138,7 @@
 			return array_keys($this->data);
 		}
 
-		protected function prepare($query) {
+		public function prepare($query) {
 			/**
 			 * Argument $query is a SQL query in prepared statement format
 			 * "SELECT FROM `$table` WHERE `column` = ':$values'"
@@ -155,7 +155,7 @@
 			return $this;
 		}
 
-		protected function bind($array) {
+		public function bind($array) {
 			/**
 			 * Binds values to prepared statements
 			 *
@@ -168,7 +168,7 @@
 			return $this;
 		}
 
-		protected function execute() {
+		public function execute() {
 			/**
 			 * Executes prepared statements. Does not return results
 			 *
@@ -176,11 +176,13 @@
 			 * @return self
 			 */
 
-			$this->prepared->execute() or die("<h1>Error executing: <code>{$this->prepared}</code</h1>");
-			return $this;
+			if($this->prepared->execute()) {
+				return $this;
+			}
+			return false;
 		}
 
-		protected function get_results($n = null) {
+		public function get_results($n = null) {
 			/**
 			 * Gets results of prepared statement. $n can be passed to retreive a specific row
 			 *
@@ -198,6 +200,7 @@
 				array_push($results, $row);
 			}
 			//If $n is set, return $results[$n] (row $n of results) Else return all
+			if(!count($results)) return false;
 			if(is_null($n)) return $results;
 			else return $results[$n];
 		}
@@ -264,6 +267,7 @@
 
 			$results = $this->query($query);
 			$data = $results->fetchAll(PDO::FETCH_CLASS);
+			if(!count($data)) return false;
 			return $data;
 		}
 
@@ -276,7 +280,6 @@
 			$data = array();
 			if($these !== '*') $these ="`{$these}`";
 			$data = $this->fetch_array("SELECT {$these} FROM {$table}");
-
 			return $data;
 		}
 
@@ -290,8 +293,8 @@
 
 			foreach($content as &$value) $value = $this->pdo->quote($value);
 			$query = "INSERT into `{$table}` (`". join('`,`', array_keys($content)) . "`) VALUES(" . join(',', $content) . ")";
-			$this->pdo->query($query);
-			return $this;
+			$resp = $this->pdo->query($query);
+			return $resp;
 		}
 
 		public function sql_table($table_name) {
