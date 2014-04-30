@@ -26,7 +26,12 @@
 		 */
 		return '/' . preg_quote($str, '/') . '/';
 	}
-	
+
+	function json_response($resp) {
+		header('Content-Type: application/json');
+		exit(json_encode($resp));
+	}
+
 	function debug($data, $comment = false) {
 		/**
 		 * Prints out information about $data
@@ -80,7 +85,7 @@
 		global $site;
 		date_default_timezone_set('America/Los_Angeles');
 		//Error Reporting Levels: http://us3.php.net/manual/en/errorfunc.constants.php
-		($site['debug']) ? error_reporting(E_PARSE) : error_reporting(E_ERROR);
+		($site['debug']) ? error_reporting(E_ERROR) : error_reporting(E_ERROR);
 		define('BASE', __DIR__);
 		($_SERVER['DOCUMENT_ROOT'] === __DIR__ . '/' or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/{$site['site']}");
 		new session("{$site['site']}");
@@ -211,21 +216,30 @@
 		else return $files;
 	}
 
+	function load_results(){
+		ob_start();
+		load(func_get_args());
+		return ob_get_clean();
+	}
+
 	function load() {									// Load resource from components directory
 		/**
 		 * @params mixed args
 		 * @return void
 		 */
+		$found = true;
 		global $DB;										// Include $DB here, so it is in the currecnt scope. Saves multiple uses of global
 		$args = flatten(func_get_args());				// One or more arguments might be an array... flatten them.
 		foreach($args as $fname) {						// Unknown how many arguments passed. Loop through fucntion arguments array
-			if(is_array($fname)) {						// In the event
-				foreach($fname as $item) include_once BASE . "/components/{$item}.php";
-			}
-			else {
-				include BASE . "/components/{$fname}.php";
-			}
+			(include(BASE . "/components/{$fname}.php")) or $found = false;
 		}
+		return $found;
+	}
+
+	function load_file() {
+		$resp = '';
+		$files = flatten(func_get_args());
+		foreach($files as $file) $resp .= file_get_content(BASE . "components/{$file}");
 	}
 
 	function load_class($class) {						// Load class from Classes directory
@@ -701,6 +715,39 @@
 		 * @return string
 		 */
 		if(!is_null($file)) return preg_replace("/\t|\n/","", file_get_contents(BASE . "/$file"));
+	}
+
+
+	function array_to_obj($arr) {
+		return (object) $arr;
+	}
+
+	function array_to_json($arr) {
+		return json_encode($arr);
+	}
+
+	function obj_to_json($arr) {
+		return json_encode($arr);
+	}
+
+	function json_to_obj($json){
+		return json_decode($json);
+	}
+
+	function json_to_array($json){
+		return json_decode($json, true);
+	}
+
+	function obj_to_array($obj) {
+		return (array) $obj;
+	}
+
+	function xml_to_obj($xml) {
+		return simplexml_load_string($xml);
+	}
+
+	function xml_to_json($xml){
+		return json_encode($xml);
 	}
 
 	function date_taken($filename) {						//Get date-taken from photo data
