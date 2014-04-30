@@ -370,6 +370,17 @@ Element.prototype.bootstrap = function() {
 			}, console.error);
 		});
 	});
+	if(supports('menuitem')){
+		this.parentElement.querySelectorAll('[data-menu]').forEach(function(el){
+			var menu = el.data('menu');
+			el.setAttribute('contextmenu', menu);
+			el.removeAttribute('data-menu');
+			ajax({
+				url: document.baseURI,
+				request: 'load=menus/' + menu
+			}).then(handleXHRjson, console.error);
+		});
+	}
 	return this;
 }
 NodeList.prototype.bootstrap = function() {
