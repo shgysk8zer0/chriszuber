@@ -1,5 +1,7 @@
 <?php
+	$storage = storage::load();
 	$head = $DB->name_value('head');
+	$storage->site_info = $head;
 	define_UA();						// Firefox handles JavaScript versions, whereas Chrome does not.
 	global $site;
 ?>
