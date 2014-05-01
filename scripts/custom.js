@@ -2,6 +2,7 @@ window.addEventListener('load', function () {
 	var html = $(document.documentElement),
 		body = $(document.body),
 		head = $(document.head);
+	html.removeClass('no-js');
 	['svg', 'audio', 'video', 'canvas', 'dataset', 'connectivity', 'visibility', 'notifications', 'ApplicationCache', 'indexedDB', 'transitions', 'animations',  'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll', 'workers', 'promises', 'ajax', 'FormData'].forEach(function(support){
 		(supports(support)) ? html.addClass(support) : html.addClass('no-' + support);
 	});
