@@ -385,7 +385,15 @@ Element.prototype.bootstrap = function() {
 }
 NodeList.prototype.bootstrap = function() {
 	this.forEach(function(node){
-		node.bootstrap();
+		if(!node.tagName) {
+			return this;
+		}
+		try {
+			node.bootstrap();
+		}
+		catch(e) {
+			console.error(e);
+		}
 	});
 	return this;
 }
