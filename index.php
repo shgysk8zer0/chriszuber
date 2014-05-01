@@ -17,7 +17,6 @@
 <body lang="en">
 	<?php load('header');?>
 	<main>
-		<?php load('contact_card')?>
 	</main>
 	<?php load('footer');?>
 </body>
