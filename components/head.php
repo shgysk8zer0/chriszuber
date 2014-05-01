@@ -20,6 +20,7 @@
 <meta itemprop="image" content="favicon.svgz"/>
 <meta name="viewport" content="<?=$head->viewport?>"/>
 <meta name="mobile-web-app-capable" content="yes">
+<link rel="cannonical" href="<?=URL?>"/>
 <link rel="icon" type="image/svg" sizes="any" href="favicon.svgz?t=<?=time()?>"/>
 <link rel="alternate icon" type="image/png" sizes="16x16" href="favicon.png"/>
 <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="all"/>
