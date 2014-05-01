@@ -29,10 +29,10 @@
 <?php if($site->debug):?>
 	<script type="application/javascript" src="scripts/polyfills.js"></script>
 	<script type="application/javascript" src="scripts/promises.js"></script>
-	<?php if(BROWSER === 'Firefox'):{?>
+	<?php if(BROWSER === 'Firefox'):?>
 		<script type="application/javascript;version=1.8" src="scripts/functions.js" async></script>
 		<script type="application/javascript;version=1.8" src="scripts/custom.js" defer></script>
-	<?php }else:?>
+	<?php else:?>
 		<script type="application/javascript" src="scripts/functions.js" async></script>
 		<script type="application/javascript" src="scripts/custom.js" defer></script>
 	<?php endif?>
