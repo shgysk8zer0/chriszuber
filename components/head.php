@@ -43,7 +43,6 @@
 		<script type="application/javascript" src="scripts/combined.js" async></script>
 	<?php endif?>
 <?php endif?>
-<!--<?php debug($site)?>-->
 <!--[if lte IE 8]>
 <script type="text/javascript">
 	var html5=new Array('header','hgroup','nav','menu','main','section','article','footer','aside','mark');
