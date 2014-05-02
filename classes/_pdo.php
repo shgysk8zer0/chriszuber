@@ -316,11 +316,13 @@
 			}
 			$thead .= "</tr></thead>";
 			$tbody = "<tbody>";
-			foreach($table_data as $tr) {
-				$tbody .= "<tr data-sql-id=\"{$tr->id}\">";
-				foreach($tr as $key => $td) {
-					if($key !== 'id') {
-						$tbody .= "<td><input name={$key} type=\"text\" value=\"{$td}\" class=\"sql\">";
+			if(is_array($table_data) && count($table_data)) {
+				foreach($table_data as $tr) {
+					$tbody .= "<tr data-sql-id=\"{$tr->id}\">";
+					foreach($tr as $key => $td) {
+						if($key !== 'id') {
+							$tbody .= "<td><input name={$key} type=\"text\" value=\"{$td}\" class=\"sql\">";
+						}
 					}
 				}
 			}
