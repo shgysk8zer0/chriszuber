@@ -373,12 +373,14 @@ Element.prototype.bootstrap = function() {
 	if(supports('menuitem')){
 		this.parentElement.querySelectorAll('[data-menu]').forEach(function(el){
 			var menu = el.data('menu');
-			el.setAttribute('contextmenu', menu);
+			el.setAttribute('contextmenu', menu + '_menu');
 			el.removeAttribute('data-menu');
-			ajax({
-				url: document.baseURI,
-				request: 'load=menus/' + menu
-			}).then(handleXHRjson, console.error);
+			if($('menu#'+menu + '_menu').length === 0){
+				ajax({
+					url: document.baseURI,
+					request: 'load=menus/' + menu
+				}).then(handleXHRjson, console.error);
+			}
 		});
 	}
 	return this;
@@ -397,29 +399,46 @@ NodeList.prototype.bootstrap = function() {
 	});
 	return this;
 }
+Object.prototype.keys = function() {
+	return Object.keys(this) || [];
+}
 function handleXHRjson(data){
 	var json = JSON.parse(data);
-	if (json.notify) {
-		notify(json.notify);
-	}
 	if (json.remove) {
-		$(json.remove).delete();
+		document.querySelectorAll(json.remove).forEach(function(el){
+			el.parentElement.removeChild(el);
+		});
 	}
 	Object.keys(json.html || []).forEach(function(key){
 		document.querySelector(key).innerHTML = json.html[key];
 	});
 	Object.keys(json.after || []).forEach(function(key){
-		document.querySelector(key) .after(json.after[key]);
+		document.querySelector(key).insertAdjacentHTML('afterend', json.after[key]);
 	});
 	Object.keys(json.before || []).forEach(function(key){
-		document.querySelector(key) .before(json.before[key]);
+		document.querySelector(key).insertAdjacentHTML('beforebegin', json.before[key]);
 	});
 	Object.keys(json.append || []).forEach(function(key){
-		document.querySelector(key).append(json.append[key]);
+		document.querySelector(key).insertAdjacentHTML('beforeend', json.append[key]);
 	});
 	Object.keys(json.prepend || []).forEach(function(key){
-		document.querySelector(key).prepend(json.prepend[key]);
+		document.querySelector(key).insertAdjacentHTML('afterbegin', json.prepend[key]);
 	});
+	Object.keys(json.attributes || []).forEach(function(selector) {
+		document.querySelectorAll(selector).forEach(function(el) {
+			Object.keys(json.attributes[selector] || []).forEach(function(attribute) {
+				if(typeof json.attributes[selector][attribute] === 'boolean'){
+					(json.attributes[selector][attribute]) ? el.setAttribute(attribute, '') : el.removeAttribute(attribute);
+				}
+				else {
+					el.setAttribute(attribute, json.attributes[selector][attribute].log());
+				}
+			});
+		});
+	});
+	if (json.notify) {
+		notify(json.notify);
+	}
 }
 Element.prototype.ajaxSubmit = function() {
 	var form = this;
@@ -514,10 +533,19 @@ zQ.prototype.hasClass = function(cname) {
 		return el.classList.contains(cname)
 	});
 }
+zQ.prototype.toggleClass = function() {
+	return this;
+}
 zQ.prototype.delete = function() {
 	this.each(function(el){
 		el.parentElement.removeChild(el);
 	});
+}
+zQ.prototype.pause = function() {
+	this.each(function(media){
+		media.pause();
+	});
+	return this;
 }
 /*======================================================Listener Functions=========================================================*/
 
@@ -537,20 +565,20 @@ zQ.prototype.networkChange = function (callback) {
 	return this.online(callback) .offline(callback);
 };
 zQ.prototype.playing = function (callback) {
-	this.forEach(function (e) {
+	this.each(function (e) {
 		/*Does not work with listeners. Use onEvent by default*/
 		e.onplay = callback;
 	});
 	return this;
 };
 zQ.prototype.paused = function (callback) {
-	this.forEach(function (e) {
+	this.each(function (e) {
 		e.onpause = callback;
 	});
 	return this;
 };
 zQ.prototype.visibilitychange = function (callback) {
-	this.forEach(function (e) {
+	this.each(function (e) {
 		[
 			'',
 			'moz',
