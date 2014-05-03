@@ -134,7 +134,8 @@
 		 * @return boolean
 		 */
 		// [TODO] Fix returning true for all form submissions
-		return ((isset($_REQUEST) or (isset($_SERVER['REDIRECT_URL']) and $_SERVER['REDIRECT_STATUS'] === '200')) and (isset($_SERVER['CONTENT_TYPE']) and preg_match('/^application\/x-www-form-urlencoded/', $_SERVER['CONTENT_TYPE'])));
+		return (isset($_SERVER['HTTP_REQUEST_TYPE']) and $_SERVER['HTTP_REQUEST_TYPE'] === 'AJAX');
+		//return ((isset($_REQUEST) or (isset($_SERVER['REDIRECT_URL']) and $_SERVER['REDIRECT_STATUS'] === '200')) and (isset($_SERVER['CONTENT_TYPE']) and preg_match('/^application\/x-www-form-urlencoded/', $_SERVER['CONTENT_TYPE'])));
 	}
 
 	function array_remove($key, &$array) {			// Remove from array by key and return it's value
