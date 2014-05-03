@@ -1,0 +1,22 @@
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg id="svg2" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 744.09 1052.4" height="100%" width="100%" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<defs id="defs4">
+<radialGradient id="radialGradient3761" gradientUnits="userSpaceOnUse" cy="525.22" cx="371.43" gradientTransform="matrix(1,0,0,1.3833841,0,-201.36074)" r="361.44">
+<stop id="stop3757" stop-color="#FFF" offset="0"/>
+<stop id="stop3759" stop-color="#d2d2d2" offset="1"/>
+</radialGradient>
+</defs>
+<metadata id="metadata7">
+<rdf:RDF>
+<cc:Work rdf:about="">
+<dc:format>image/svg+xml</dc:format>
+<dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+<dc:title/>
+</cc:Work>
+</rdf:RDF>
+</metadata>
+<g id="layer1">
+<rect id="rect2985" stroke-linejoin="round" stroke-dasharray="none" rx="80" ry="81" height="991.43" width="714.29" stroke="#000" stroke-miterlimit="4" y="29.505" x="14.286" stroke-width="8.6" fill="url(#radialGradient3761)"/>
+<text id="text3771" style="letter-spacing:0px;text-anchor:middle;word-spacing:0px;text-align:center;" font-weight="bold" xml:space="preserve" font-size="368.39602661px" font-stretch="normal" line-height="125%" font-variant="normal" y="382.31491" x="343.87057" font-family="Acme" fill="#000000"><tspan id="tspan3773" font-style="italic" y="382.31491" x="343.87057">403</tspan><tspan id="tspan3775" font-style="normal" y="861.18158" x="343.87057">?</tspan></text>
+</g>
+</svg>
