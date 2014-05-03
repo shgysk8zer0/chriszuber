@@ -176,6 +176,9 @@ function notify(options) {
 			body: options
 		};
 	}
+	if(!options.icon) {
+		options.icon = 'images/icons/info.png';
+	}
 	if ('Notification' in window) {
 		if (Notification.permission.toLowerCase() === 'default') {
 			Notification.requestPermission(function () {
@@ -378,7 +381,7 @@ Element.prototype.bootstrap = function() {
 			if($('menu#'+menu + '_menu').length === 0){
 				ajax({
 					url: document.baseURI,
-					request: 'load=menus/' + menu
+					request: 'load_menu=' + menu
 				}).then(handleXHRjson, console.error);
 			}
 		});
