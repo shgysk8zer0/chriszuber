@@ -4,7 +4,6 @@
 	$DB = _pdo::load();
 	if(is_ajax()) {
 		require_once './ajax.php';
-		die;
 	}
 ?>
 <!DOCTYPE HTML>
@@ -15,9 +14,6 @@
 <!--<?=date('Y-m-d H:i:s')?>-->
 <?php load('head');?>
 <body lang="en" data-menu="posts">
-	<?php load('header');?>
-	<main>
-	</main>
-	<?php load('footer');?>
+	<?php load('header', 'main', 'footer');?>
 </body>
 </html>
