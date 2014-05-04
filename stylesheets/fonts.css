@@ -3,17 +3,17 @@
 	font-family: 'Alice';
 	font-style: normal;
 	font-weight: 400;
-	src:local('Alice'),local('Alice-Regular'),url(/fonts/Alice.woff)format('woff'),url(//themes.googleusercontent.com/licensed/font?kit=e3I_8FVOoZuI9rXW09ytGZuy9QftGgiCbPT5J2Tle6QGEtCW0q5T6QHEAICoCh1h9R715REvNVFz5maQ3RAjMvuvYlUZxjWJuWoIFYd8ZVs9VGRJmXaKNSd0UG6XHo4E)format('woff'),url('/fonts/Alice.woff')format('woff'), url('/fonts/Alice.ttf')format('truetype');
+	src:local('Alice'),local('Alice-Regular'),url('../fonts/Alice.woff')format('woff'),url('//themes.googleusercontent.com/licensed/font?kit=e3I_8FVOoZuI9rXW09ytGZuy9QftGgiCbPT5J2Tle6QGEtCW0q5T6QHEAICoCh1h9R715REvNVFz5maQ3RAjMvuvYlUZxjWJuWoIFYd8ZVs9VGRJmXaKNSd0UG6XHo4E')format('woff'), url('/fonts/Alice.ttf')format('truetype');
 }
 @font-face{
-	font-family:"Acme";
+	font-family:'Acme';
 	font-style:normal;
 	font-weight:400;
-	src: local("Acme"),local("Acme-Regular"),url(/fonts/acme.woff)format('woff'),url("//themes.googleusercontent.com/static/fonts/acme/v2/-nVwQJDyFoBcrvpER8f-lA.woff")format("woff");
+	src: local('Acme'),local('Acme-Regular'),url('../fonts/acme.woff')format('woff'),url('//themes.googleusercontent.com/static/fonts/acme/v2/-nVwQJDyFoBcrvpER8f-lA.woff')format('woff');
 }
 @font-face{
 	font-family:'GNUTypewriter';
-	src:local('GNUTypewriter'),url(/fonts/gnome-typewriter.woff)format('woff'),url("http://openfontlibrary.org/assets/fonts/gnutypewriter/8a7cb57723df9125503083ed59e7a11c/e47a6e209a23b19c08d3d6e6a6db50d7/GNUTypewriterStandard.otf")format("opentype");
+	src:local('GNUTypewriter')url('../fonts/gnome-typewriter.woff')format('woff'),url('//themes.googleusercontent.com/static/fonts/acme/v2/-nVwQJDyFoBcrvpER8f-lA.woff')format('woff'),url('http://openfontlibrary.org/assets/fonts/gnutypewriter/8a7cb57723df9125503083ed59e7a11c/e47a6e209a23b19c08d3d6e6a6db50d7/GNUTypewriterStandard.otf')format('opentype');
 	font-weight:normal;
 	font-style:normal;
 }
@@ -21,107 +21,107 @@
 	font-family:'Cookies';
 	font-weight:normal;
 	font-style:normal;
-	src:local('Cookies'),url('/fonts/Cookies.woff')format('woff');
+	src:local('Cookies'),url('../fonts/Cookies.woff')format('woff');
 }
 @font-face{
 	font-family:'EptKazoo';
 	font-weight:normal;
 	font-style:normal;
-	src:local('EptKazoo'),url('/fonts/EptKazoo.woff')format('woff');
+	src:local('EptKazoo'),url('../fonts/EptKazoo.woff')format('woff');
 }
 @font-face{
 	font-family:'ConsolaMono';
 	font-weight:bold;
 	font-style:bold;
-	src:local('ConsolaMono'),url('/fonts/ConsolaMono-Bold.woff')format('woff');
+	src:local('ConsolaMono'),url('../fonts/ConsolaMono-Bold.woff')format('woff');
 }
 @font-face{
 	font-family:'Hobby-of-night';
 	font-weight:normal;
 	font-style:normal;
-	src:local('Hobby-of-night'),url('/fonts/Hobby-of-night.woff')format('woff');
+	src:local('Hobby-of-night'),url('../fonts/Hobby-of-night.woff')format('woff');
 }
 @font-face{
 	font-family:'Beon';
 	font-weight:normal;
 	font-style:normal;
-	src:local('Beon'),url('/fonts/Beon.woff')format('woff');
+	src:local('Beon'),url('../fonts/Beon.woff')format('woff');
 }
 @font-face{
 	font-family:'Griffy';
 	font-weight:normal;
 	font-style:normal;
-	src:local('Griffy'),url('/fonts/Griffy.woff')format('woff');
+	src:local('Griffy'),url('../fonts/Griffy.woff')format('woff');
 }
 @font-face{
 	font-family:'PressStart';
 	font-weight:normal;
 	font-style:normal;
-	src:local('Press Start 2P'),url(/fonts/PressStart2P.woff)format('woff'),url('/fonts/PressStart2P.ttf')format('truetype'), url(//themes.googleusercontent.com/static/fonts/pressstart2p/v1/8Lg6LX8-ntOHUQnvQ0E7o4FgepxKMIY7yvDgT9frFvg.woff)format('woff');
+	src:local('Press Start 2P'),url('../fonts/PressStart2P.woff')format('woff'),url('../fonts/PressStart2P.ttf')format('truetype'), url('//themes.googleusercontent.com/static/fonts/pressstart2p/v1/8Lg6LX8-ntOHUQnvQ0E7o4FgepxKMIY7yvDgT9frFvg.woff')format('woff');
 }
 @font-face{
 	font-family:'Rye';
 	font-weight:normal;
 	font-style:normal;
-	src:local('Rye'),url('/fonts/Rye.woff')format('woff');
+	src:local('Rye'),url('../fonts/Rye.woff')format('woff');
 }
 @font-face{
 	font-family:'Essays';
 	font-weight:normal;
 	font-style:normal;
-	src:local('Essays'),url('/fonts/Essays1743.woff')format('woff');
+	src:local('Essays'),url('../fonts/Essays1743.woff')format('woff');
 }
 @font-face{
 	font-family:'Libertine';
 	font-weight:normal;
 	font-style:normal;
-	src:local('Libertine'),url('/fonts/Libertine.woff')format('woff');
+	src:local('Libertine'),url('../fonts/Libertine.woff')format('woff');
 }
 @font-face{
 	font-family:'Love Ya Like A Sister';
 	font-style:normal;
 	font-weight:400;
-	src:local('Love Ya Like A Sister'),url('/fonts/sketch.woff')format('woff');
+	src:local('Love Ya Like A Sister'),url('../fonts/sketch.woff')format('woff');
 }
 @font-face{
 	font-family:'Web Symbols';
 	font-style:normal;
 	font-weight:400;
-	src:local('Web Symbols'),url(/fonts/WebSymbols-Regular.woff),format('woff'),url('http://openfontlibrary.org/assets/fonts/web-symbols/26570e66618b46bd347b580e043282f4/eb6adba02c2fa4e9d8ded2e870458081/WebSymbolsRegular.otf')format('opentype'),url('/fonts/WebSymbols-Regular.woff')format('woff');
+	src:url('../fonts/WebSymbols-Regular.woff')format('woff'),url('http://openfontlibrary.org/assets/fonts/web-symbols/26570e66618b46bd347b580e043282f4/eb6adba02c2fa4e9d8ded2e870458081/WebSymbolsRegular.otf')format('opentype'),url('../fonts/WebSymbols-Regular.woff')format('woff');
 }
 @font-face{
 	font-family:'Outline';
 	font-style:normal;
 	font-weight:400;
-	src:local('Outline'),url('/fonts/DouarOutline.woff')format('woff'), url('/fonts/DouarOutline.ttf')format('truetype');
+	src:local('Outline'),url('../fonts/DouarOutline.woff')format('woff'), url('../fonts/DouarOutline.ttf')format('truetype');
 }
 @font-face{
 	font-family:'Earthbound';
 	font-style:normal;
 	font-weight:400;
-	src:local('Earthbound'),url('/fonts/Earthbound-Regular.woff')format('woff'), url('/fonts/Earthbound-Regular.ttf')format('truetype');
+	src:local('Earthbound'),url('../fonts/Earthbound-Regular.woff')format('woff'), url('../fonts/Earthbound-Regular.ttf')format('truetype');
 }
 @font-face{
 	font-family:'Intuitive';
 	font-weight:normal;
 	font-style:normal;
-	src:local('Intuitive'),url('/fonts/Intuitive.woff')format('woff'),url('/fonts/Intuitive.ttf')format('truetype');
+	src:local('Intuitive'),url('../fonts/Intuitive.woff')format('woff'),url('../fonts/Intuitive.ttf')format('truetype');
 }
 @font-face{
 	font-family:'Droid Sans Mono';
 	font-style: normal;
 	font-weight: 400;
-	src: local('Droid Sans Mono'),local('DroidSansMono'),url(/fonts/DroidSansMono.woff)format('woff'),url(//themes.googleusercontent.com/static/fonts/droidsansmono/v4/ns-m2xQYezAtqh7ai59hJVpU0UqMFFEOF-oUYoa1_48.woff)format('woff');
+	src: local('Droid Sans Mono'),local('DroidSansMono'),url('../fonts/DroidSansMono.woff')format('woff'),url('//themes.googleusercontent.com/static/fonts/droidsansmono/v4/ns-m2xQYezAtqh7ai59hJVpU0UqMFFEOF-oUYoa1_48.woff')format('woff');
 }
 @font-face {
 	font-family:'HennyPenny';
 	font-weight:normal;
 	font-style:normal;
-	src:local('Henny Penny'),local('HennyPenny-Regular'),url('/fonts/HennyPenny-Regular.woff')format('woff'),url('/fonts/Intuitive.ttf') format('truetype')url(//themes.googleusercontent.com/static/fonts/hennypenny/v1/5KmZ_gfx8tPgQLMk4S-PvobN6UDyHWBl620a-IRfuBk.woff) format('woff');
+	src:local('Henny Penny'),local('HennyPenny-Regular'),url('../fonts/HennyPenny-Regular.woff')format('woff'),url('../fonts/Intuitive.ttf') format('truetype')url('//themes.googleusercontent.com/static/fonts/hennypenny/v1/5KmZ_gfx8tPgQLMk4S-PvobN6UDyHWBl620a-IRfuBk.woff') format('woff');
 }
 @font-face{
 	font-family:'Amarante';
 	font-style: normal;
 	font-weight: 400;
-	src: local('Amarante'),url(/fonts/DroidSansMono.woff)format('woff'),url(/fonts/Amarante.ttf)format('truetype'),url(//themes.googleusercontent.com/static/fonts/amarante/v1/5dF-vhm2PDTNvpxu3h5td_esZW2xOQ-xsNqO47m55DA.woff)format('woff');
+	src: local('Amarante'),url('../fonts/DroidSansMono.woff')format('woff'),url('../fonts/Amarante.ttf')format('truetype'),url('//themes.googleusercontent.com/static/fonts/amarante/v1/5dF-vhm2PDTNvpxu3h5td_esZW2xOQ-xsNqO47m55DA.woff')format('woff');
 }
