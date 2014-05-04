@@ -5,7 +5,7 @@
 			$post = $DB->prepare('SELECT * FROM `posts` WHERE `url` = :title ORDER BY created LIMIT 1')->bind(['title' => strtolower($path[1])])->execute()->get_results(0);
 		}
 	}
-	else $post = $DB->fetch_array("SELECT * FROM `posts` WHERE `url` = '/' LIMIT 1")[0];
+	else $post = $DB->fetch_array("SELECT * FROM `posts` WHERE `url` = 'home' LIMIT 1")[0];
 	$time = new simple_date($post->created);
 	$keywords = explode(',', $post->keywords);
 ?>
