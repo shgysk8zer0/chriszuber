@@ -1,10 +1,10 @@
 CACHE MANIFEST
-#VERSION 2.6
+#VERSION 2.7
 CACHE:
 
 #SCRIPTS
 scripts/functions.js
-scripts/polyfill.js
+#scripts/polyfill.js
 scripts/custom.js
 
 #STYLESHEETS
@@ -16,23 +16,8 @@ stylesheets/animations.css
 #IMAGES
 favicon.svgz
 favicon.png
-images/backgrounds/red-wallpaper.svgz
-images/logos/Inkscape.svgz
-images/logos/Gimp.svgz
-images/logos/Blender.svgz
-images/logos/open_clip_art.svgz
-images/logos/Firefox.svgz
-images/logos/LibreOffice-Logo.svgz
-images/logos/Ubuntu.svgz
-images/logos/Android.svgz
+images/backgrounds/red-curls.svgz
 images/logos/CreativeCommons.svgz
-images/Icons/home.svgz
-images/Icons/up.svgz
-images/Icons/down.svgz
-images/Icons/play.png
-images/Icons/pause.png
-images/Icons/network-server.png
-images/Icons/map.png
 
 #CURSORS
 images/cursors/Arch.svgz
@@ -47,7 +32,6 @@ fonts/URW-Chancery-Med-Italic.woff
 #AUDIO
 
 #VIDEO
-#videos/Sintel.webm
 
 NETWORK:
 *
