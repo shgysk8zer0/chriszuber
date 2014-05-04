@@ -257,7 +257,7 @@
 			$this->pdo->query($sql);
 			return $this;
 		}
-		public function fetch_array($query) {
+		public function fetch_array($query, $n = null) {
 			/**
 			 * Return the results of a query as an associative array
 			 *
@@ -268,7 +268,8 @@
 			$results = $this->query($query);
 			$data = $results->fetchAll(PDO::FETCH_CLASS);
 			if(!count($data)) return false;
-			return $data;
+			elseif(is_null($n)) return $data;
+			else return $data[$n];
 		}
 
 		public function DB_get_table($table, $these = '*') {
