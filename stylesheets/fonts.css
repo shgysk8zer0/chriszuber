@@ -87,8 +87,7 @@
 	font-family:'Web Symbols';
 	font-style:normal;
 	font-weight:400;
-	/*src:local('Web Symbols'),url(/fonts/WebSymbols-Regular.woff),format('woff'),url('http://openfontlibrary.org/assets/fonts/web-symbols/26570e66618b46bd347b580e043282f4/eb6adba02c2fa4e9d8ded2e870458081/WebSymbolsRegular.otf')format('opentype'),url('/fonts/WebSymbols-Regular.woff')format('woff');*/
-	src: url(/fonts/WebSymbols-Regular.woff),format('woff');
+	src:local('Web Symbols'),url(/fonts/WebSymbols-Regular.woff),format('woff'),url('http://openfontlibrary.org/assets/fonts/web-symbols/26570e66618b46bd347b580e043282f4/eb6adba02c2fa4e9d8ded2e870458081/WebSymbolsRegular.otf')format('opentype'),url('/fonts/WebSymbols-Regular.woff')format('woff');
 }
 @font-face{
 	font-family:'Outline';
