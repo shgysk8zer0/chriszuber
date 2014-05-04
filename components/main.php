@@ -5,19 +5,19 @@
 			$post = $DB->prepare('SELECT * FROM `posts` WHERE `url` = :title ORDER BY created LIMIT 1')->bind(['title' => strtolower($path[1])])->execute()->get_results(0);
 		}
 	}
-	else $post = $DB->fetch_array("SELECT * FROM `posts` ORDER BY `created` LIMIT 1")[0];
+	else $post = $DB->fetch_array("SELECT * FROM `posts` WHERE `url` = '/' LIMIT 1")[0];
 	$time = new simple_date($post->created);
 	$keywords = explode(',', $post->keywords);
 ?>
 	<main role="main" itemprop="mainContentofPage" itemscope itemtype="http://schema.org/Blog">
 		<article>
-			<aside>
-				<?php foreach(explode(',', $post->keywords) as $tag):?>
-				<a href="tags/<?=$tag?>"><?=caps($tag)?></a>
-				<?php endforeach?>
-			</aside>
 			<header>
 				<h1 itemprop="headline"><?=$post->title?></h1>
+				<nav>
+					<?php foreach(explode(',', $post->keywords) as $tag):?>
+					<a href="tags/<?=$tag?>"><?=caps($tag)?></a>
+					<?php endforeach?>
+				</nav>
 			</header>
 			<section itemprop="text"><?=$post->content?></section>
 			<footer>

@@ -38,55 +38,103 @@
 
 }
 :root {
-    var-glass:linear-gradient(to top left,rgba(80,80,80,0.7), rgba(140,140,140,0.9),rgba(40, 40, 40, 0.7));
-    var-shadow:0.15em 0.15em 0.15em rgba(20,20,20,0.9);
-    var-grad: linear-gradient(to bottom right, rgb(100,100,100), rgb(40,40,40));
-    background-image:url(../images/backgrounds/red-curls.svgz);
-    background-size:cover;
-    background-position:center;
-    background-repeat:no-repeat;
-    background-attachment:fixed;
+	var-glass:linear-gradient(to top left,rgba(80,80,80,0.7), rgba(140,140,140,0.9),rgba(40, 40, 40, 0.7));
+	var-shadow:0.15em 0.15em 0.15em rgba(20,20,20,0.9);
+	var-grad: linear-gradient(to bottom right, rgb(100,100,100), rgb(40,40,40));
+	background-image:url(../images/backgrounds/red-curls.svgz);
+	background-size:cover;
+	background-position:center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	color: whitesmoke;
+	text-shadow:var(shadow);
+}
+::-moz-selection{
+	background-color:rgb(0,250,250);
+	background-color:rgba(0,250,250,0.7);
+	text-shadow:none;
+}
+::selection{
+	background-color:rgb(0,250,250);
+	background-color:rgba(0,250,250,0.7);
+	background-color: cyan;
+	text-shadow:none;
+}
+header {
+
+}
+main {
+	width: 90vw;
+	transform: translateX(5vw);
+    padding: 2rem;
+	background-image:linear-gradient(315deg,rgba(80,80,80,0.7),rgba(140,140,140,0.8),rgba(40,40,40,0.7));
+	border-radius:2rem;
+	display:flex;
+	-webkit-transform-origin: top;
+	-webkit-transform-style: preserve-3d;
+	transform-origin: top;
+}
+main>article{
+	color:#333;
+    background-color: whitesmoke;
+    border-radius: inherit;
+    padding: inherit;
+	flex: 3 1 60%;
+	order:1;
+}
+main>aside{
+	background-image:linear-gradient(315deg,rgba(80,80,80,0.8),rgba(140,140,140,0.9),rgba(40,40,40,0.8));
+	border-radius:1rem;
+	border:0.3rem inset black;
+	box-shadow:-1rem 1rem 1rem black,0 0 1rem 0 black inset;
+	flex: 1 6 20%;
+	order:2;
+}
+article header {
+    font-family: Alice;
+    font-size: 1.3rem;
+    padding: 0.4rem;
+    background-image: linear-gradient(rgba(40,40,40, 0.9), rgba(60,60,60,0.9));
     color: whitesmoke;
-    text-shadow:var(shadow);
 }
 #contact-card {
-    height: 20rem;
-    width: 40vw;
-    margin: 0 auto;
-    perspective: 1000px;
-    perspective-origin: top;
+	height: 20rem;
+	width: 40vw;
+	margin: 0 auto;
+	perspective: 1000px;
+	perspective-origin: top;
 }
 #contact-card [itemprop=image] {
-    border-radius: 50%;
-    border: 0.2rem outset black;
-    box-shadow: 0.5rem 0.5rem 0.5rem  black;
+	border-radius: 50%;
+	border: 0.2rem outset black;
+	box-shadow: 0.5rem 0.5rem 0.5rem  black;
 }
 #contact-card>.container {
-    height: 100%;
-    transition: all 2s;
-    position: relative;
-    transform-style: preserve-3d;
-    box-shadow: var(shadow);
-    border-radius: 1rem;
+	height: 100%;
+	transition: all 2s;
+	position: relative;
+	transform-style: preserve-3d;
+	box-shadow: var(shadow);
+	border-radius: 1rem;
 }
 #contact-card:hover>.container {
-    transform:rotateY(180deg);
+	transform:rotateY(180deg);
 }
 .face {
-    height: 100%;
-    width:100%;
-    padding: 2rem;
-    backface-visibility: hidden;
+	height: 100%;
+	width:100%;
+	padding: 2rem;
+	backface-visibility: hidden;
 	background-image: var(grad);
-    position: absolute;
-    border-radius: inherit;
-    box-shadow: 0 0 3rem 0 dimgray inset;
-    border: 0.3rem inset black;
+	position: absolute;
+	border-radius: inherit;
+	box-shadow: 0 0 3rem 0 dimgray inset;
+	border: 0.3rem inset black;
 }
 .face.front {
 }
 .face.back {
-    transform: rotateY(180deg);
+	transform: rotateY(180deg);
 }
 body.hidden *{-webkit-animation-play-state:paused;animation-play-state:paused;}
 a[rel=license]>img[src$=svgz] {
@@ -94,17 +142,17 @@ a[rel=license]>img[src$=svgz] {
 	height: calc(13rem / 5);
 }
 a.logo {
-    display:inline-block;
-    width:3rem;
-    overflow:visible;
+	display:inline-block;
+	width:3rem;
+	overflow:visible;
 }
 a.logo svg {
-    overflow: visible;
-    transform-origin: center;
-    transition:all 1s;
+	overflow: visible;
+	transform-origin: center;
+	transition:all 1s;
 }
 a.logo svg:hover {
-    transform: scale(2)rotateZ(360deg)
+	transform: scale(2)rotateZ(360deg)
 }
 [data-icon]::after  {
 	all: unset;
