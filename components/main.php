@@ -15,7 +15,7 @@
 				<h1 itemprop="headline"><?=$post->title?></h1>
 				<nav>
 					<?php foreach(explode(',', $post->keywords) as $tag):?>
-					<a href="tags/<?=$tag?>"><?=caps($tag)?></a>
+					<a href="tags/<?=trim(strtolower($tag))?>"><?=trim(caps($tag))?></a>
 					<?php endforeach?>
 				</nav>
 			</header>
