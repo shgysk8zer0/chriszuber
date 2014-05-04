@@ -3,7 +3,7 @@
 	font-family: 'Alice';
 	font-style: normal;
 	font-weight: 400;
-	src:local('Alice'),local('Alice-Regular'),url(../fonts/Alice.woff)formatt('woff'),url(//themes.googleusercontent.com/licensed/font?kit=e3I_8FVOoZuI9rXW09ytGZuy9QftGgiCbPT5J2Tle6QGEtCW0q5T6QHEAICoCh1h9R715REvNVFz5maQ3RAjMvuvYlUZxjWJuWoIFYd8ZVs9VGRJmXaKNSd0UG6XHo4E)format('woff'),url('../fonts/Alice.woff')format('woff'), url('../fonts/Alice.ttf')format('truetype');
+	src:local('Alice'),local('Alice-Regular'),url(../fonts/Alice.woff)format('woff'),url(//themes.googleusercontent.com/licensed/font?kit=e3I_8FVOoZuI9rXW09ytGZuy9QftGgiCbPT5J2Tle6QGEtCW0q5T6QHEAICoCh1h9R715REvNVFz5maQ3RAjMvuvYlUZxjWJuWoIFYd8ZVs9VGRJmXaKNSd0UG6XHo4E)format('woff'),url('../fonts/Alice.woff')format('woff'), url('../fonts/Alice.ttf')format('truetype');
 }
 @font-face{
 	font-family:"Acme";
@@ -13,7 +13,7 @@
 }
 @font-face{
 	font-family:'GNUTypewriter';
-	src:local('GNUTypewriter'),url(../fonts/gnome-typewriter.woff)formatt('woff'),url("http://openfontlibrary.org/assets/fonts/gnutypewriter/8a7cb57723df9125503083ed59e7a11c/e47a6e209a23b19c08d3d6e6a6db50d7/GNUTypewriterStandard.otf")format("opentype");
+	src:local('GNUTypewriter'),url(../fonts/gnome-typewriter.woff)format('woff'),url("http://openfontlibrary.org/assets/fonts/gnutypewriter/8a7cb57723df9125503083ed59e7a11c/e47a6e209a23b19c08d3d6e6a6db50d7/GNUTypewriterStandard.otf")format("opentype");
 	font-weight:normal;
 	font-style:normal;
 }
@@ -57,7 +57,7 @@
 	font-family:'PressStart';
 	font-weight:normal;
 	font-style:normal;
-	src:local('Press Start 2P'),url(../fonts/PressStart2P.woff)formatt('woff'),url('../fonts/PressStart2P.ttf')format('truetype'), url(//themes.googleusercontent.com/static/fonts/pressstart2p/v1/8Lg6LX8-ntOHUQnvQ0E7o4FgepxKMIY7yvDgT9frFvg.woff)format('woff');
+	src:local('Press Start 2P'),url(../fonts/PressStart2P.woff)format('woff'),url('../fonts/PressStart2P.ttf')format('truetype'), url(//themes.googleusercontent.com/static/fonts/pressstart2p/v1/8Lg6LX8-ntOHUQnvQ0E7o4FgepxKMIY7yvDgT9frFvg.woff)format('woff');
 }
 @font-face{
 	font-family:'Rye';
@@ -87,7 +87,7 @@
 	font-family:'Web Symbols';
 	font-style:normal;
 	font-weight:400;
-	src:local('Web Symbols'),url(../fonts/WebSymbols-Regular.woff),formatt('woff'),url('http://openfontlibrary.org/assets/fonts/web-symbols/26570e66618b46bd347b580e043282f4/eb6adba02c2fa4e9d8ded2e870458081/WebSymbolsRegular.otf')format('opentype'),url('../fonts/WebSymbols-Regular.woff')format('woff');
+	src:local('Web Symbols'),url(../fonts/WebSymbols-Regular.woff),format('woff'),url('http://openfontlibrary.org/assets/fonts/web-symbols/26570e66618b46bd347b580e043282f4/eb6adba02c2fa4e9d8ded2e870458081/WebSymbolsRegular.otf')format('opentype'),url('../fonts/WebSymbols-Regular.woff')format('woff');
 }
 @font-face{
 	font-family:'Outline';
