@@ -11,13 +11,13 @@
 ?>
 	<main role="main" itemprop="mainContentofPage" itemscope itemtype="http://schema.org/Blog">
 		<article>
-			<aside>
-				<?php foreach(explode(',', $post->keywords) as $tag):?>
-				<a href="tags/<?=$tag?>"><?=caps($tag)?></a>
-				<?php endforeach?>
-			</aside>
 			<header>
 				<h1 itemprop="headline"><?=$post->title?></h1>
+				<nav>
+					<?php foreach(explode(',', $post->keywords) as $tag):?>
+					<a href="tags/<?=$tag?>"><?=caps($tag)?></a>
+					<?php endforeach?>
+				</nav>
 			</header>
 			<section itemprop="text"><?=$post->content?></section>
 			<footer>
