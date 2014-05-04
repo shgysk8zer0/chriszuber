@@ -4,7 +4,6 @@
 <div id="contact-card" itemscope itemtype="http://schema.org/Person">
 	<div class="container">
 		<div class="face front">
-			<img src="favicon.svgz" hidden alt="Logo"/>
 			<h1 data-icon="U" itemprop="name"><span itemprop="givenName">Chris</span> <span itemprop="familyName">Zuber</span></h1>
 			<img alt="" src="https://lh4.googleusercontent.com/-Dp_ELbizyUA/AAAAAAAAAAI/AAAAAAAAe0g/4aRJqooOnV0/s120-c/photo.jpg" itemprop="image"/>
 			<h3><span itemprop="jobTitle">Web Developer</span> for <span itemprop="worksFor">Kern River Corporation</span></h3>
