@@ -21,9 +21,6 @@
 			</header>
 			<section itemprop="text"><?=$post->content?></section>
 			<footer>
-				<!--&copy;
-				<a href="<?=$post->author_url?>?rel=author" rel="author" itemprop="author"><?=$post->author?></a>
-				<time datetime="<?=$time->out()?>" itemprop="datePublished"><?=$time->out('m/d/Y')?></time>-->
 				<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" src="images/logos/CreativeCommons.svgz" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><?=$post->title?></span> by <a xmlns:cc="http://creativecommons.org/ns#" href="<?=$post->author_url?>?rel=author" property="cc:attributionName" rel="cc:attributionURL author" itemprop="author"><?=$post->author?></a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.<time datetime="<?=$time->out()?>" itemprop="datePublished"><?=$time->out('m/d/Y')?></time>
 			</footer>
 		</article>
