@@ -347,6 +347,19 @@ function supports(type) {
 	sessionStorage['Supports_' + type] = supports;
 	return supports;
 }
+Element.prototype.query = function(query) {
+	if(typeof query === 'undefined') {
+		query = '*';
+	}
+	var els = [];
+	if(this.matches(query)) {
+		els.push(this);
+	}
+	this.querySelectorAll(query).forEach(function(el) {
+		els.push(el)
+	});
+	return els;
+}
 Element.prototype.bootstrap = function() {
 	this.parentElement.querySelectorAll('form').forEach(function(el){
 		el.addEventListener('submit', function(event){
@@ -355,7 +368,7 @@ Element.prototype.bootstrap = function() {
 
 		});
 	});
-	this.parentElement.querySelectorAll('[data-request]:not([data-target])').forEach(function(el) {
+	this.query('[data-request]:not([data-target])').forEach(function(el) {
 		el.addEventListener('click', function(){
 			ajax({
 				url: this.data('url')|| document.baseURI,
@@ -363,7 +376,7 @@ Element.prototype.bootstrap = function() {
 			}).then(handleXHRjson, console.error);
 		});
 	});
-	this.parentElement.querySelectorAll('[data-request][data-target]').forEach(function(el) {
+	this.query('[data-request][data-target]').forEach(function(el) {
 		el.addEventListener('click', function(){
 			ajax({
 				url: this.data('url'),
@@ -374,7 +387,7 @@ Element.prototype.bootstrap = function() {
 		});
 	});
 	if(supports('menuitem')){
-		this.parentElement.querySelectorAll('[data-menu]').forEach(function(el){
+		this.query('[data-menu]').forEach(function(el){
 			var menu = el.data('menu');
 			el.setAttribute('contextmenu', menu + '_menu');
 			el.removeAttribute('data-menu');
