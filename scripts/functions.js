@@ -123,6 +123,12 @@ Element.prototype.data = function(set, value) {
 	}
 	return val;
 }
+Element.prototype.addClass = function(cname) {
+	this.classList.add(cname);
+}
+Element.prototype.removeClass = function(cname) {
+	this.classList.remove(cname);
+}
 function ajax(data) {
 	if (typeof data.url !== 'string') {
 		data.url = document.baseURI;
@@ -284,22 +290,22 @@ function supports(type) {
 			break;
 		case 'animations':
 			supports = (((!!CSS.supports) && CSS.supports('animation', 'name') ||
-			CSS.supports('-webkit-animation', 'name')) ||
-			style.animation !== undefined ||
-			style.webkitAnimation !== undefined ||
-			style.MozAnimation !== undefined ||
-			style.OAnimation !== undefined ||
-			style.MsAnimationn !== undefined
+				CSS.supports('-webkit-animation', 'name')) ||
+				style.animation !== undefined ||
+				style.webkitAnimation !== undefined ||
+				style.MozAnimation !== undefined ||
+				style.OAnimation !== undefined ||
+				style.MsAnimationn !== undefined
 			);
 			break;
 		case 'transitions':
 			supports = (((!!CSS.supports) && CSS.supports('transition', 'none') ||
-			CSS.supports('-webkit-transition', 'none')) ||
-			style.transition !== undefined ||
-			style.webkitTransition !== undefined ||
-			style.MozTransition !== undefined ||
-			style.OTransition !== undefined ||
-			style.MsTransition !== undefined
+				CSS.supports('-webkit-transition', 'none')) ||
+				style.transition !== undefined ||
+				style.webkitTransition !== undefined ||
+				style.MozTransition !== undefined ||
+				style.OTransition !== undefined ||
+				style.MsTransition !== undefined
 			);
 			break;
 		case 'notifications':
@@ -348,9 +354,6 @@ function supports(type) {
 	return supports;
 }
 Element.prototype.query = function(query) {
-	if(typeof query === 'undefined') {
-		query = '*';
-	}
 	var els = [];
 	if(this.matches(query)) {
 		els.push(this);
@@ -361,7 +364,7 @@ Element.prototype.query = function(query) {
 	return els;
 }
 Element.prototype.bootstrap = function() {
-	this.parentElement.querySelectorAll('form').forEach(function(el){
+	this.query('form').forEach(function(el){
 		el.addEventListener('submit', function(event){
 			event.preventDefault();
 			this.ajaxSubmit().then(handleXHRjson, console.error);
@@ -440,6 +443,20 @@ function handleXHRjson(data){
 	Object.keys(json.prepend || []).forEach(function(key){
 		document.querySelector(key).insertAdjacentHTML('afterbegin', json.prepend[key]);
 	});
+	Object.keys(json.addClass || []).forEach(function(selector){
+		document.querySelectorAll(selector).forEach(function(el){
+			json.addClass[selector].split(',').forEach(function(cname) {
+				el.classList.add(cname);
+			});
+		});
+	});
+	Object.keys(json.removeClass || []).forEach(function(selector){
+		document.querySelectorAll(selector).forEach(function(el){
+			json.removeClass[selector].split(',').forEach(function(cname) {
+				el.classList.remove(cname);
+			});
+		});
+	});
 	Object.keys(json.attributes || []).forEach(function(selector) {
 		document.querySelectorAll(selector).forEach(function(el) {
 			Object.keys(json.attributes[selector] || []).forEach(function(attribute) {
@@ -447,7 +464,7 @@ function handleXHRjson(data){
 					(json.attributes[selector][attribute]) ? el.setAttribute(attribute, '') : el.removeAttribute(attribute);
 				}
 				else {
-					el.setAttribute(attribute, json.attributes[selector][attribute].log());
+					el.setAttribute(attribute, json.attributes[selector][attribute]);
 				}
 			});
 		});
