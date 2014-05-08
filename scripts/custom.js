@@ -35,6 +35,9 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 	}, [
 		'subtree',
 		'attributeOldValue'
+	],[
+		'data-menu',
+		'contextmenu'
 	]);
 	$(window).online(function(){
 		$('fieldset').each(function(fieldset){
