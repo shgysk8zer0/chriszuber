@@ -26,8 +26,47 @@
 		 */
 		return '/' . preg_quote($str, '/') . '/';
 	}
-
+	
 	function json_response($resp) {
+		/**
+		 * Exits, printing out the $resp array as a JSON encoded string.
+		 * 
+		 * Intended to be handled by 'handleXHRjson', there are a usually
+		 * only a handful of array key/values, in different depths of the array.
+		 * 
+		 * Although any array or object could be passed as $resp, these
+		 * are the only values handled in handleXHRjson
+		 * 
+		 * @usage
+		 * $resp = [
+		 * 	'html' => [
+		 * 		'CSS-Selector' => 'HTML content' | load_results($files?),
+		 * 		'CSS-Selector2' => '...',
+		 * 		...
+		 * 	],
+		 * 	'append | prepend | before | after' => [
+		 * 		'CSS-Selector' => 'HTML content' | load_results($files?),
+		 * 		...
+		 * 	],
+		 * 	'attributes' => [
+		 * 		'CSS-Selector' => [
+		 * 			'attribute' => 'value' | true | false,
+		 * 			'attribute2' => ...
+		 * 			...
+		 * 		],
+		 * 		...
+		 * 	]
+		 * 	'notify' => [
+		 * 		'tile' => 'Notification Title',
+		 * 		'body' => 'Notifcation Message',
+		 * 		'icon' => 'path/file.ext',
+		 * 		'on[event]' => function(){}		//Not sure if this will work, depending on Content-Security-Policy for script handling of eval
+		 * 	]
+		 * ]
+		 * @param array $response
+		 * @return null
+		 */
+		
 		header('Content-Type: application/json');
 		exit(json_encode($resp));
 	}
@@ -59,6 +98,7 @@
 		 * @return array $info
 		 */
 		ini_set('include_path', ini_get('include_path') . ':' . __DIR__ . ":" . __DIR__ . "/classes");
+		
 		$info = parse_ini_file("connect.ini");
 		if(!array_key_exists('site', $info)) {
 			// If $site has not been passed to the function, strip it out of the URL
@@ -70,6 +110,7 @@
 		if(!array_key_exists('database', $info)) $info['database'] = $info['user'];
 		if(!array_key_exists('server', $info)) $info['server'] = 'localhost';
 		if(!array_key_exists('debug', $info)) $info['debug'] = true;
+		if(!array_key_exists('type', $info)) $info['type'] = 'mysql';
 		return $info;
 	}
 
@@ -85,12 +126,13 @@
 		global $site;
 		date_default_timezone_set('America/Los_Angeles');
 		//Error Reporting Levels: http://us3.php.net/manual/en/errorfunc.constants.php
-		($site['debug']) ? error_reporting(E_ERROR) : error_reporting(E_ERROR);
+		($site['debug']) ? error_reporting(E_ALL & ~E_NOTICE) : error_reporting(E_CORE_ERROR);
 		define('BASE', __DIR__);
 		($_SERVER['DOCUMENT_ROOT'] === __DIR__ . '/' or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/{$site['site']}");
+		//session_set_cookie_params(0, preg_replace('/^' . preg_quote("{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}", '/') . '/', '', URL), "{$_SERVER['SERVER_NAME']}", (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS']), true);
 		new session("{$site['site']}");
-		CSP();
 		nonce(50);									// Set a nonce of n random characters
+		CSP();
 	}
 
 	function CSP() {								//Sets Content-Security-Policy from csp.ini
@@ -130,12 +172,12 @@
 
 	function is_ajax() {							// Try to determine if this is and ajax request
 		/**
+		 * @depreciated (Look for HTTP_REQUEST_TYPE instead)
 		 * @param void
 		 * @return boolean
 		 */
 		// [TODO] Fix returning true for all form submissions
-		return (isset($_SERVER['HTTP_REQUEST_TYPE']) and $_SERVER['HTTP_REQUEST_TYPE'] === 'AJAX');
-		//return ((isset($_REQUEST) or (isset($_SERVER['REDIRECT_URL']) and $_SERVER['REDIRECT_STATUS'] === '200')) and (isset($_SERVER['CONTENT_TYPE']) and preg_match('/^application\/x-www-form-urlencoded/', $_SERVER['CONTENT_TYPE'])));
+		return ((isset($_REQUEST) or (isset($_SERVER['REDIRECT_URL']) and $_SERVER['REDIRECT_STATUS'] === '200')) and (isset($_SERVER['CONTENT_TYPE']) and preg_match('/^application\/x-www-form-urlencoded/', $_SERVER['CONTENT_TYPE'])));
 	}
 
 	function array_remove($key, &$array) {			// Remove from array by key and return it's value
@@ -194,7 +236,7 @@
 
 	function ls($path = __DIR__, $ext = null, $strip_ext = null) {			// List files in given path. Optional extension and strip extension from results
 		/**
-		 * @params [string $path[, string $ext[, boolean $strip_ext]]]
+		 * @param [string $path[, string $ext[, boolean $strip_ext]]]
 		 * @return array
 		 */
 		$files = array_diff(scandir($path), array('.', '..'));				// Get array of files. Remove current and previous directory (. & ..)
@@ -217,7 +259,12 @@
 		else return $files;
 	}
 
-	function load_results(){
+	function load_results() {
+		/**
+		 * @usage(string | array[string | array[, ...]]*)
+		 * @param mixed (string, arrays, ... whatever. They'll be converted to an array)
+		 * @return string (results echoed from load())
+		 */
 		ob_start();
 		load(func_get_args());
 		return ob_get_clean();
@@ -225,6 +272,7 @@
 
 	function load() {									// Load resource from components directory
 		/**
+		 * @usage(string | array[string | array[, ...]]*)
 		 * @params mixed args
 		 * @return void
 		 */
@@ -236,7 +284,7 @@
 		}
 		return $found;
 	}
-
+	
 	function load_file() {
 		$resp = '';
 		$files = flatten(func_get_args());
@@ -717,7 +765,7 @@
 		 */
 		if(!is_null($file)) return preg_replace("/\t|\n/","", file_get_contents(BASE . "/$file"));
 	}
-
+	
 
 	function array_to_obj($arr) {
 		return (object) $arr;
