@@ -566,7 +566,10 @@ zQ.prototype.hasClass = function(cname) {
 		return el.classList.contains(cname)
 	});
 }
-zQ.prototype.toggleClass = function() {
+zQ.prototype.toggleClass = function(cname, condition) {
+	this.each(function(el){
+		el.classList.toggle(cname, condition || !el.classList.contains(cname));
+	});
 	return this;
 }
 zQ.prototype.delete = function() {
@@ -623,7 +626,7 @@ zQ.prototype.visibilitychange = function (callback) {
 	});
 	return this;
 };
-zQ.prototype.watch = function(watching, options) {
+zQ.prototype.watch = function(watching, options, attributeFilter) {
 	/*https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver*/
 	if(typeof options === 'undefined') {
 		options = [];
@@ -636,7 +639,10 @@ zQ.prototype.watch = function(watching, options) {
 	watches = new Object();
 	Object.keys(watching).concat(options).forEach(function(event){
 		watches[event] = true;
-	})
+	});
+	if(typeof attributeFilter !== 'undefined') {
+		watches.attributeFilter = attributeFilter;
+	}
 	this.each(function(el){
 		watcher.observe(el, watches);
 	});
