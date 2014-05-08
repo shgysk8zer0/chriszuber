@@ -9,8 +9,8 @@
 		 */
 
 		protected $pdo, $prepared, $data = array();
-		private $user, $password, $server, $database, $query;
-		protected static $loaded = null;
+		private $query;
+		protected static $instance = null;
 
 		public static function load() {
 			/**
@@ -22,10 +22,10 @@
 			 * @example $pdo = _pdo::load
 			 */
 
-			if(is_null(self::$loaded)) {
-				self::$loaded = new self();
+			if(is_null(self::$instance)) {
+				self::$instance = new self();
 			}
-			return self::$loaded;
+			return self::$instance;
 		}
 
 		public function __construct() {
@@ -34,18 +34,27 @@
 			 * Uses that data to create a new PHP Data Object
 			 *
 			 * @param void
-			 * @global $site
 			 * @return void
 			 * @example $pdo = new _pdo()
 			 */
 
-			global $site;
-			//[TODO] Use some metthod other than global for importing $site. storage class would be good.
-			$this->user = $site['user'];
-			$this->password = $site['password'];
-			$this->server = $site['server'];
-			$this->database = $site['database'];
-			$this->pdo = new PDO("mysql:host={$this->server};dbname={$this->database}", $this->user, $this->password) or die("<h1>Error connecting</h1>");
+			try{
+				$site = parse_ini_file(BASE . '/connect.ini');
+				if(!array_keys_exist('user', 'password', $site)) throw new Exception('Missing credentials to connect to database');
+				$connect_string =(array_key_exists('type', $site)) ? "{$site['type']}:" : 'mysql:';
+				$connect_string .=(array_key_exists('database', $site)) ?  "dbname={$site['database']}" : "dbname={$site['user']}";
+				if(array_key_exists('server', $site)) $connect_string .= ";host={$site['server']}";
+				if(array_key_exists('port', $site)) $connect_string .= ";port={$site['port']}";
+				$this->pdo = new PDO($connect_string, $site['user'], $site['password']);
+			}
+			catch(Exception $e) {
+				$this->log(__METHOD__, __LINE__, $connect_string);
+				exit('Failed to connect to database.');
+			}
+		}
+
+		public function log($method, $line, $message = '') {
+			file_put_contents(BASE . '/' . __CLASS__ . '.log', "Error in $method in line $line: $message\n", FILE_APPEND | LOCK_EX);
 		}
 
 		public function __set($key, $value) {
@@ -115,7 +124,7 @@
 						return $this->data[$key];
 					}
 					else{
-						die('Unknown variable.');
+						return false;
 					}
 					break;
 				case 'set':
@@ -123,7 +132,7 @@
 					return $this;
 					break;
 				default:
-					die('Unknown method.');
+					throw new Exeption("Unknown method: {$name} in " . __CLASS__ .'->' . __METHOD__);
 			}
 		}
 
@@ -151,7 +160,7 @@
 			 * @return self
 			*/
 
-			$this->prepared = $this->pdo->prepare($query) or die("<h1>Failed to prepare statement: <code>{$query}</code></h1>");
+			$this->prepared = $this->pdo->prepare($query);
 			return $this;
 		}
 
@@ -163,7 +172,7 @@
 			 * @return self
 			 */
 			foreach($array as $paramater => $value) {
-				$this->prepared->bindValue(':' . $paramater, $value) or die("<h1>Failed to bind: {$value} to {$paramater} </h1>");
+				$this->prepared->bindValue(':' . $paramater, $value);
 			}
 			return $this;
 		}
@@ -205,7 +214,7 @@
 			else return $results[$n];
 		}
 
-		public function DB_close() {
+		public function close() {
 			/**
 			 * Need PDO method to close database connection
 			 *
@@ -241,8 +250,7 @@
 			 * @return
 			 */
 
-			$results = $this->pdo->query($query) or die("<h1>No Results: <code>{$query}</code></h1>");
-			return $results;
+			return $this->pdo->query($query);
 		}
 
 		public function restore($fname) {
@@ -265,23 +273,22 @@
 			 * @return array
 			 */
 
-			$results = $this->query($query);
-			$data = $results->fetchAll(PDO::FETCH_CLASS);
-			if(!count($data)) return false;
-			elseif(is_null($n)) return $data;
-			else return $data[$n];
+			//$results = $this->query($query);
+			$data = $this->query($query)->fetchAll(PDO::FETCH_CLASS);
+			if(is_array($data)){
+				return (is_null($n)) ? $data : $data[$n];
+			}
+			return [];
 		}
 
-		public function DB_get_table($table, $these = '*') {
+		public function get_table($table, $these = '*') {
 			/**
 			 * @param string $table[, string $these]
 			 * @return array
 			 */
 
-			$data = array();
 			if($these !== '*') $these ="`{$these}`";
-			$data = $this->fetch_array("SELECT {$these} FROM {$table}");
-			return $data;
+			return $this->fetch_array("SELECT {$these} FROM {$table}");
 		}
 
 		public function array_insert($table, $content) {
@@ -306,8 +313,9 @@
 			 * @return string (html table)
 			 */
 
-			$table_data = $this->DB_get_table($table_name);
-			$cols = $this->table_headers($table_name);
+			$table_data = $this->get_table($table_name);
+			if(!is_array($table_data)) return false;
+			(count($table_data)) ? $cols = array_keys(get_object_vars($table_data[0])) : $cols = $this->table_headers($table_name);
 			$table = "<table border=\"1\" data-sql-table=\"{$table_name}\">";
 			$thead = '<thead><tr>';
 			foreach($cols as $col) {
@@ -317,7 +325,7 @@
 			}
 			$thead .= "</tr></thead>";
 			$tbody = "<tbody>";
-			if(is_array($table_data) && count($table_data)) {
+			if(count($table_data)) {
 				foreach($table_data as $tr) {
 					$tbody .= "<tr data-sql-id=\"{$tr->id}\">";
 					foreach($tr as $key => $td) {
@@ -332,7 +340,7 @@
 			return $table;
 		}
 
-		public function DB_update($table, $name, $value, $where) {
+		public function update($table, $name, $value, $where) {
 			/**
 			 * Updates a table according to these arguments
 			 *
@@ -421,6 +429,7 @@
 
 			$this->query("DELETE FROM `{$table}`");
 			$this->query("ALTER TABLE `{$table}` AUTO_INCREMENT = 1");
+			return $this;
 		}
 	}
 ?>
