@@ -40,35 +40,35 @@ Array.prototype.end = function() {
 }
 /*===========================De-Prefix several JavaScript methods==========================================================================*/
 
-if (!Notification) {
+if (!'Notification' in window) {
 	Notification = mozNotification || false;
 }
-if (!window.notifications) {
+if (!'notifications' in window) {
 	window.notifications = window.webkitNotifications || window.oNotifications || window.msNotifications || false;
 }
-if (!window.indexedDB) {
+if (!'indexedDB' in window) {
 	window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || false;
 }
-if ('boolean' !== typeof document.hidden) {
+if (!'hidden' in document) {
 	document.hidden = function () {
 		return document.webkitHidden || document.msHidden || document.mozHidden || false;
 	}
 }
-if (!document.visibilityState) {
+if (!'visibilityState' in document) {
 	document.visibilityState = document.webkitVisibilityState || document.msVisibilityState || document.mozVisibilityState || false;
 }
-if (!document.fullScreenElement) {
+if (!'fullScreenElement' in document) {
 	document.fullScreenElement = document.mozFullScreenElement || document.webkitFullscreenElement || false;
 }
 //document.fullscreen = document.fullscreen || document.mozFullScreen || document.webkitFullscreen || false;
 
-if (!window.requestAnimationFrame) {
+if (!'requestAnimationFrame' in window) {
 	window.requestAnimationFrame = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || false;
 }
-if (!document.cancelFullScreen) {
+if (!'cancelFullScreen' in document) {
 	document.cancelFullScreen = document.mozCancelFullScreen || document.webkitCancelFullScreen || document.msCancelFullScreen || false;
 }
-if (!document.requestFullScreen) {
+if (!'requestFullScreen' in document) {
 	Element.prototype.requestFullScreen = function () {
 		return this.mozRequestFullScreen() || this.webkitRequestFullScreen() || false;
 	}
@@ -123,12 +123,21 @@ Element.prototype.data = function(set, value) {
 	}
 	return val;
 }
-Element.prototype.addClass = function(cname) {
-	this.classList.add(cname);
+/*Element.prototype.addClass = function(cname) {
+	(supports('classList')) ? this.classList.add(cname) : this.classlist().add(cname);
+	return this;
 }
 Element.prototype.removeClass = function(cname) {
-	this.classList.remove(cname);
+	(supports('classList')) ? this.classList.remove(cname) : this.classlist().remove(cname);
+	return this;
 }
+Element.prototype.hasClass = function(cname) {
+	return (supports('classList')) ? this.classList.contains(cname) : this.classlist().constains(cname);
+}
+Element.prototype.toggleClass = function(cname, condition) {
+	(supports('classlist')) ? this.classList.toggle(cname, condition || !this.hasClass(cname)) : this.classlist().toggle(cname, condition || !this.hasClass(cname));
+	return this;
+}*/
 function ajax(data) {
 	if (typeof data.url !== 'string') {
 		data.url = document.baseURI;
@@ -192,9 +201,6 @@ function notify(options) {
 			});
 		}
 		notification = new Notification(options.title || document.title, options);
-	}
-	else if ('mozNotification' in navigator) {
-		notification = navigator.mozNotification.createNotification(options.title || document.title, options.body, options.icon) .show();
 	}
 	else if ('notifications' in window) {
 		if (window.notifications.checkPermission != 1) {
@@ -346,6 +352,9 @@ function supports(type) {
 			break;
 		case 'formdata':
 			supports = ('FormData' in window);
+			break;
+		case 'classlist' :
+			supports = ('DOMTokenList' in window);
 			break;
 		default:
 			supports = (document.createElement(type.toLowerCase()) .toString() !== document.createElement('DNE') .toString());
@@ -551,7 +560,7 @@ zQ.prototype.map = function(callback) {
 }
 zQ.prototype.addClass = function(cname) {
 	this.each(function(el) {
-		el.classList.add(cname);;
+		el.classList.add(cname);
 	});
 	return this;
 }
