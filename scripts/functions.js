@@ -10,19 +10,24 @@ if (!window.Element) {
 if (!Element.prototype.matches) {
 	/*Check if Element matches a given CSS selector*/
 	Element.prototype.matches = function (sel) {
-		if (html.mozMatchesSelector) {
-			return this.mozMatchesSelector(sel);
+		try {
+			if (html.mozMatchesSelector) {
+				return this.mozMatchesSelector(sel);
+			}
+			else if (html.webkitMatchesSelector) {
+				return this.webkitMatchesSelector(sel);
+			}
+			else if (html.oMatchesSelector) {
+				return this.oMatchesSelector(sel);
+			}
+			else if (html.msMatchesSelector) {
+				return this.msMatchesSelector(sel);
+			}
+			else {
+				return ($(sel) .indexOf(this) !== -1);
+			}
 		}
-		else if (html.webkitMatchesSelector) {
-			return this.webkitMatchesSelector(sel);
-		}
-		else if (html.oMatchesSelector) {
-			return this.oMatchesSelector(sel);
-		}
-		else if (html.msMatchesSelector) {
-			return this.msMatchesSelector(sel);
-		}
-		else {
+		catch(e) {
 			return ($(sel) .indexOf(this) !== -1);
 		}
 	}
@@ -182,9 +187,6 @@ Element.prototype.values = function () {
 }
 function notify(options) {
 	/*Creates a notification, with alert fallback*/
-	/**
-	*TODO Directly create notification instead of defining function by which method is supported
-	*/
 	var notification;
 	if (typeof options === 'string') {
 		options = {
@@ -265,7 +267,7 @@ function supports(type) {
 	supportsTest:
 	switch (type) {
 		case 'queryselectorall':
-			supports = (!!document.querySelectorAll);
+			supports = ('querySelectorAll' in document);
 			break;
 		case 'svg':
 			supports = (document.implementation.hasFeature('http://www.w3.org/TR/SVG11/feature#Shape', '1.1'));
@@ -274,28 +276,28 @@ function supports(type) {
 			supports = (!!document.body.dataset);
 			break;
 		case 'geolocation':
-			supports = (!!navigator.geolocation);
+			supports = ('geolocation' in navigator);
 			break;
 		case 'connectivity':
-			supports = (!!navigator.onLine);
+			supports = ('onLine' in navigator);
 			break;
 		case 'visibility':
-			supports = (!!((document.visibilityState) || (document.webkitVisibilityState)));
+			supports = ('visibilityState' in document) || ('webkitVisibilityState' in document);
 			break;
 		case 'validity':
 			supports = (!!document.createElement('input') .validity);
 			break;
 		case 'fonts':
-			supports = !!window.CSSFontFaceRule;
+			supports = ('CSSFontFaceRule' in window);
 			break;
 		case 'csssupports':
-			supports = (!!CSS.supports);
+			supports = ('supports' in CSS);
 			break;
 		case 'listeners':
-			supports = (!!window.addEventListener);
+			supports = ('addEventListener' in window);
 			break;
 		case 'animations':
-			supports = (((!!CSS.supports) && CSS.supports('animation', 'name') ||
+			supports = ((('supports' in CSS) && CSS.supports('animation', 'name') ||
 				CSS.supports('-webkit-animation', 'name')) ||
 				style.animation !== undefined ||
 				style.webkitAnimation !== undefined ||
@@ -305,7 +307,7 @@ function supports(type) {
 			);
 			break;
 		case 'transitions':
-			supports = (((!!CSS.supports) && CSS.supports('transition', 'none') ||
+			supports = ((('supports' in CSS) && CSS.supports('transition', 'none') ||
 				CSS.supports('-webkit-transition', 'none')) ||
 				style.transition !== undefined ||
 				style.webkitTransition !== undefined ||
@@ -314,14 +316,21 @@ function supports(type) {
 				style.MsTransition !== undefined
 			);
 			break;
+		case 'cssgradients':
+			supports = (('supports' in CSS) && CSS.supports('background-image', 'linear-gradient(red,red)')) || (function(){
+				var el = document.createElement('a');
+				el.style.backgroundImage = 'linear-gradient(red, red)';
+				return (!!el.style.backgroundImage);
+			})();
+			break;
 		case 'notifications':
-			supports = (!!window.notifications || !!window.Notification);
+			supports = ('notifications' in window || 'Notification' in window);
 			break;
 		case 'applicationcache':
-			supports = (!!window.applicationCache);
+			supports = ('applicationCache' in window);
 			break;
 		case 'indexeddb':
-			supports = (!!window.indexedDB);
+			supports = ('indexedDB' in window);
 			break;
 		case 'fullscreen':
 			supports = (!!document.cancelFullScreen);
@@ -372,30 +381,23 @@ Element.prototype.query = function(query) {
 	});
 	return els;
 }
-Element.prototype.bootstrap = function() {
+Node.prototype.bootstrap = function() {
+	if(this.nodeType !== 1) {
+		return this;
+	}
 	this.query('form').forEach(function(el){
 		el.addEventListener('submit', function(event){
 			event.preventDefault();
-			this.ajaxSubmit().then(handleXHRjson, console.error);
+			this.ajaxSubmit().then(handleJSON, console.error);
 
 		});
 	});
-	this.query('[data-request]:not([data-target])').forEach(function(el) {
+	this.query('[data-request]').forEach(function(el) {
 		el.addEventListener('click', function(){
 			ajax({
 				url: this.data('url')|| document.baseURI,
 				request: this.data('request')
-			}).then(handleXHRjson, console.error);
-		});
-	});
-	this.query('[data-request][data-target]').forEach(function(el) {
-		el.addEventListener('click', function(){
-			ajax({
-				url: this.data('url'),
-				request: this.data('request')
-			}).then(function(resp){
-				document.querySelector(el.data('target')).innerHTML = resp;
-			}, console.error);
+			}).then(handleJSON, console.error);
 		});
 	});
 	if(supports('menuitem')){
@@ -407,7 +409,7 @@ Element.prototype.bootstrap = function() {
 				ajax({
 					url: document.baseURI,
 					request: 'load_menu=' + menu
-				}).then(handleXHRjson, console.error);
+				}).then(handleJSON, console.error);
 			}
 		});
 	}
@@ -415,9 +417,6 @@ Element.prototype.bootstrap = function() {
 }
 NodeList.prototype.bootstrap = function() {
 	this.forEach(function(node){
-		if(!node.tagName) {
-			return this;
-		}
 		try {
 			node.bootstrap();
 		}
@@ -430,7 +429,7 @@ NodeList.prototype.bootstrap = function() {
 Object.prototype.keys = function() {
 	return Object.keys(this) || [];
 }
-function handleXHRjson(data){
+function handleJSON(data){
 	var json = JSON.parse(data);
 	if (json.remove) {
 		document.querySelectorAll(json.remove).forEach(function(el){
@@ -483,15 +482,14 @@ function handleXHRjson(data){
 	}
 }
 Element.prototype.ajaxSubmit = function() {
-	var form = this;
 	return new Promise(function (success, fail) {
-		if(form.tagName.toLowerCase() !== 'form'){
-			fail(Error(form.tagName + ' is not a form'));
+		if(this.tagName.toLowerCase() !== 'form'){
+			fail(Error(this.tagName + ' is not a form'));
 		}
-		var formData = new FormData(form),
+		var formData = new FormData(this),
 			req = new XMLHttpRequest();
-		formData.append('form', form.name);
-		req.open(form.method, form.action);
+		formData.append('form', this.name);
+		req.open(this.method, this.action);
 		req.setRequestHeader('Request-Type', 'AJAX');
 		req.send(formData);
 		req.onload = function () {
@@ -500,7 +498,7 @@ Element.prototype.ajaxSubmit = function() {
 		req.onerror = function () {
 			fail(Error('Network Error'));
 		};
-	});
+	}.bind(this));
 }
 Object.prototype.isArray = false;
 Object.prototype.isString = false;
@@ -525,15 +523,20 @@ zQ.prototype.constructor = zQ;
 function zQ(q) {
 	this.query = q;
 	try {
-		(typeof this.query === 'string') ? this.results = document.querySelectorAll(this.query)  : this.results = [
-			this.query
-		];
+		switch(typeof this.query) {
+			case 'string':
+				 this.results = document.querySelectorAll(this.query);
+				break;
+			default:
+				this.results = [this.query];
+		}
 	}
 	catch (error) {
-		console.error(error);
+		console.error(error, this);
 		console.error('No results for ' + this.query);
 	}
 	this.length = this.results.length;
+	this.found = (!!this.results.length);
 	return this;
 }
 zQ.prototype.get = function(n) {
@@ -649,7 +652,7 @@ zQ.prototype.watch = function(watching, options, attributeFilter) {
 	Object.keys(watching).concat(options).forEach(function(event){
 		watches[event] = true;
 	});
-	if(typeof attributeFilter !== 'undefined') {
+	if(typeof attributeFilter !== 'undefined' && attributeFilter.isArray) {
 		watches.attributeFilter = attributeFilter;
 	}
 	this.each(function(el){
