@@ -12,7 +12,7 @@
 		 */
 
 		public $user_data = array();
-		private static $instance = null;
+		protected static $instance = null;
 
 		public static function load() {
 			/**
@@ -62,7 +62,7 @@
 			 */
 
 			if(array_keys_exist('user', 'password', $source)) {	#Check if needed entries exist in array
-				if(array_key_exists('repeat', $source) and $source['password'] !== $source['repeat']) die("<code class=\"error\">Passwords do not match</code>");
+				if(array_key_exists('repeat', $source) and $source['password'] !== $source['repeat']) return false;
 				$salt = mcrypt_create_iv(50, MCRYPT_DEV_URANDOM);
 				$options = [
 						'cost' => 11,
@@ -87,12 +87,12 @@
 
 			#[TODO] Handle an invalid login
 			if(array_keys_exist('user', 'password', $source)) {	#Make sure necessary information has been passed
-				$query = "SELECT `user`, `password`, `role` FROM `users` WHERE `user` = '{$this->escape($source['user'])}' LIMIT 1";
-				$results = $this->fetch_array($query)[0];
+				$results = $this->prepare("SELECT `user`, `password`, `role` FROM `users` WHERE `user` = :user LIMIT 1")->bind(['user' => $source['user']])->execute()->get_results(0);
 				if(password_verify(trim($source['password']), $results->password) and $results->role !== 'new') {	#Verifies by matching hashes
 					$this->setUser($results->user)->setPassword($results->password)->setRole($results->role)->setLogged_In(true);
 				}
 			}
+			return $this;
 		}
 
 		public function __set($key, $value) {
