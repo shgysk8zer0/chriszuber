@@ -1,16 +1,20 @@
+'use strict';
 window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to work, so use this instead*/
-	'use strict';
 	var html = $(document.documentElement),
 		body = $(document.body),
 		head = $(document.head);
-	html.removeClass('no-js').addClass('js');
-	['svg', 'audio', 'video', 'canvas', 'menuitem', 'dataset', 'connectivity', 'visibility', 'notifications', 'ApplicationCache', 'indexedDB', 'transitions', 'animations',  'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll', 'workers', 'promises', 'ajax', 'FormData'].forEach(function(support){
+		html.removeClass('no-js').addClass('js');
+	['svg', 'audio', 'video', 'canvas', 'menuitem', 'dataset', 'classList', 'connectivity', 'visibility', 'notifications', 'ApplicationCache', 'indexedDB', 'CSSgradients', 'transitions', 'animations',  'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll', 'workers', 'promises', 'ajax', 'FormData'].forEach(function(support){
 		(supports(support)) ? html.addClass(support) : html.addClass('no-' + support);
 	});
+	(supports('connectivity') && !navigator.onLine) ? html.addClass('offline') : html.addClass('online');
+	
 	document.body.bootstrap();
 	body.watch({
 		childList: function(){
-			this.addedNodes.bootstrap();
+			this.addedNodes.forEach(function(node){
+				node.bootstrap();
+			});
 		},
 		attributes: function(){
 			switch(this.attributeName) {
@@ -18,11 +22,11 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 					var menu = this.target.data('menu');
 					if(menu && menu !== '') {
 						this.target.setAttribute('contextmenu', menu + '_menu');
-						if($('menu#'+ menu + '_menu').length === 0){
+						if(!$('menu#'+ menu + '_menu').found){
 							ajax({
 								url: document.baseURI,
 								request: 'load_menu=' + menu
-							}).then(handleXHRjson, console.error);
+							}).then(handleJSON, console.error);
 						}
 						this.target.removeAttribute('data-menu');
 					}
@@ -35,11 +39,13 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 	}, [
 		'subtree',
 		'attributeOldValue'
-	],[
+	], [
 		'data-menu',
 		'contextmenu'
 	]);
-	$(window).online(function(){
+	$(window).networkChange(function(){
+		$('html').toggleClass('online', navigator.onLine).toggleClass('offline', !navigator.onLine);
+	}).online(function(){
 		$('fieldset').each(function(fieldset){
 			fieldset.removeAttribute('disabled');
 		});
@@ -59,13 +65,4 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 		});
 	});
 });
-Element.prototype.worker_clock=function(){
-	var clock=document.createElement('time'),
-	clockWorker=new Worker(document.baseURI + 'scripts/workers/clock.js');
-	this.appendChild(clock);
-	clockWorker.addEventListener('message',function(e){
-		clock.innerHTML=e.data.norm;
-		clock.setAttribute('datetime',e.data.datetime);
-	});
-	clockWorker.postMessage('');
-}
+

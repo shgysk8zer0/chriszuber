@@ -34,8 +34,7 @@ if (!Element.prototype.matches) {
 }
 Array.prototype.unique = function() {
 	return this.filter(
-		function(val, i, arr)
-		{
+		function(val, i, arr) {
 			return (i <= arr.indexOf(val));
 		}
 	);
@@ -93,11 +92,6 @@ Object.prototype.camelCase = function () {
 		return group1.toUpperCase();
 	});
 }
-Object.prototype.camelCase = function () {
-	return this.toLowerCase() .replace(/\ /g, '-') .replace(/-(.)/g, function (match, group1) {
-		return group1.toUpperCase();
-	});
-}
 Element.prototype.after = function (content) {
 	this.insertAdjacentHTML('afterend', content);
 	return this;
@@ -121,12 +115,27 @@ Element.prototype.append = function(content) {
 Element.prototype.data = function(set, value) {
 	var val = null;
 	if(!!document.body.dataset){
-		(typeof value !== 'undefined') ? this.dataset[set] = value : val = this.dataset[set];
+		(typeof value !== 'undefined') ? this.dataset[set.camelCase()] = value : val = this.dataset[set.camelCase()];
 	}
 	else {
 		(typeof value !== 'undefined') ? this.setAttribute('data-' + set, value): val = this.getAttribute('data-' + set);
 	}
 	return val;
+}
+Element.prototype.attr = function(attr, val) {
+	switch(typeof val) {
+		case 'string':
+			this.setAttribute(attr, val);
+			break;
+		case 'boolean':
+			(val) ? this.setAttribute(attr, '') : this.removeAttribute(attr);
+			break;
+		case 'undefined':
+			return this.getAttribute(attr);
+	}
+}
+Element.prototype.ancestor = function (tag) {
+	return (this.parentElement.tagName.toLowerCase() === tag) ? this.parentElement : this.parentElement.ancestor(tag);
 }
 /*Element.prototype.addClass = function(cname) {
 	(supports('classList')) ? this.classList.add(cname) : this.classlist().add(cname);
@@ -400,6 +409,13 @@ Node.prototype.bootstrap = function() {
 			}).then(handleJSON, console.error);
 		});
 	});
+	this.query('table[data-sql-table] tr[data-sql-id] input[name]').forEach(function(input){
+		input.addEventListener('change', function(){
+			ajax({
+				request:'table=' + this.ancestor('table').data('sql-table') + '&id=' + this.ancestor('tr').data('sql-id') + '&name=' + this.name + '&value=' + this.value
+			});
+		});
+	});
 	if(supports('menuitem')){
 		this.query('[data-menu]').forEach(function(el){
 			var menu = el.data('menu');
@@ -597,7 +613,7 @@ zQ.prototype.pause = function() {
 }
 /*======================================================Listener Functions=========================================================*/
 
-zQ.prototype.listen = function (event, callback) {
+zQ.prototype.on = function (event, callback) {
 	this.each(function (e) {
 		(html.addEventListener) ? e.addEventListener(event, callback, true)  : e['on' + event] = callback;
 	});
@@ -606,7 +622,7 @@ zQ.prototype.listen = function (event, callback) {
 /*Listeners per event type*/
 ['click','dblclick','contextmenu','keypress','keyup','keydown','mouseenter','mouseleave','mouseover','mouseout','mousemove','mousedown','mouseup','input','change','submit','reset','select','focus','blur','resize','updateready','DOMContentLoaded','load','unload','beforeunload','abort','error','scroll','drag','offline', 'online','visibilitychange','popstate', 'pagehide'].forEach(function(ev){
 	zQ.prototype[ev] = function(callback){
-		return this.listen(ev, callback);
+		return this.on(ev, callback);
 	}
 });
 zQ.prototype.networkChange = function (callback) {
