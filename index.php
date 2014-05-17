@@ -3,6 +3,7 @@
 	config();
 	$DB = _pdo::load();
 	$login = login::load();
+	if(array_keys_exist('user', 'password', $_SESSION)) $login->login_with($_SESSION);
 	if(is_ajax()) {
 		require_once('./ajax.php');
 	}
