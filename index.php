@@ -3,10 +3,18 @@
 	config();
 	$DB = _pdo::load();
 	$login = login::load();
-	if(array_keys_exist('user', 'password', $_SESSION)) $login->login_with($_SESSION);
+	$session = session::load();
+
+	if(isset($session->user) and isset($session->password)) {
+		$login->login_with([
+			'user' => $session->user,
+			'password' => $session->password
+		]);
+	}
 	if(is_ajax()) {
 		require_once('./ajax.php');
 	}
+	CSP();
 ?>
 <!DOCTYPE HTML>
 <!--[if lt IE 7]>      <html class="lt-ie9 lt-ie8 lt-ie7 no-js"> <![endif]-->
