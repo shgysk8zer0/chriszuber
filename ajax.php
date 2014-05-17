@@ -42,39 +42,46 @@
 	elseif(array_key_exists('form', $_POST)) {
 		switch($_POST['form']) {
 			case 'login':
-				if(array_keys_exist('user', 'password', 'nonce', $_POST) and $_POST['nonce'] = $session->nonce) {
+				if(array_keys_exist('user', 'password', 'nonce', $_POST) and $_POST['nonce'] === $session->nonce) {
 					$login->login_with($_POST);
 					if($login->logged_in) {
-						$session->setUser($login->user)->setPassword($login->password);
+						$session->setUser($login->user)->setPassword($login->password)->setRole($login->role)->setLogged_In(true);
 						json_response([
-							'remove' => 'main > *',
 							'attributes' => [
-								'menu[label=Account] menuitem[label=Login]' => [
+								'menu[label=Account] menuitem:not([label=Logout])' => [
 									'disabled' => true
 								],
-								'menu[label=Account] menuitem[label=Logout]' => [
+								'menuitem[label=Logout]' => [
 									'disabled' => false
 								],
 								'body > main' => [
+									'contextmenu' => false,
 									'data-menu' => 'admin'
-								]
-							],
-							'notify' => [
-								'title' => 'Logged in as: ',
-								'body' => $login->user,
-								'icon' => 'images/icons/people.png'
+								],
+								'remove' => 'main > *'
 							]
 						]);
 					}
 					else {
 						json_response([
 							'notify' => [
-								'title' => 'Login: ',
-								'body' => 'Rejected'
+								'title' => 'Login not accepted',
+								'body' => 'Check your email & password',
+								'icon' => 'images/icons/people.png'
 							]
 						]);
 					}
 				}
+				else {
+					json_response([
+						'notify' => [
+							'title' => 'Login not accepted',
+							'body' => 'Check your email & password',
+							'icon' => 'images/icons/people.png'
+						]
+					]);
+				}
+				break;
 		}
 	}
 
