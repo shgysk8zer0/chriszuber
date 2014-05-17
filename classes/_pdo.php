@@ -288,7 +288,7 @@
 			 */
 
 			if($these !== '*') $these ="`{$these}`";
-			return $this->fetch_array("SELECT {$these} FROM {$table}");
+			return $this->fetch_array("SELECT {$these} FROM {$this->escape($table)}");
 		}
 
 		public function array_insert($table, $content) {
@@ -300,7 +300,7 @@
 			 */
 
 			foreach($content as &$value) $value = $this->pdo->quote($value);
-			$query = "INSERT into `{$table}` (`". join('`,`', array_keys($content)) . "`) VALUES(" . join(',', $content) . ")";
+			$query = "INSERT into `{$this->escape($table)}` (`". join('`,`', array_keys($content)) . "`) VALUES(" . join(',', $content) . ")";
 			$resp = $this->pdo->query($query);
 			return $resp;
 		}
@@ -316,7 +316,7 @@
 			$table_data = $this->get_table($table_name);
 			if(!is_array($table_data)) return false;
 			(count($table_data)) ? $cols = array_keys(get_object_vars($table_data[0])) : $cols = $this->table_headers($table_name);
-			$table = "<table border=\"1\" data-sql-table=\"{$table_name}\">";
+			$table = "<table border=\"1\" data-nonce=\"{$_SESSION['nonce']}\" data-sql-table=\"{$table_name}\">";
 			$thead = '<thead><tr>';
 			foreach($cols as $col) {
 				if($col !== 'id') {
@@ -373,12 +373,27 @@
 			 * @return array
 			 */
 
-			$query = "DESCRIBE {$table}";
+			$query = "DESCRIBE {$this->escape($table)}";
 			$results = $this->pdo->query($query);
 			$headers = $results->fetchAll(PDO::FETCH_COLUMN, 0);
 			return $headers;
 		}
 
+		public function describe($table) {
+			/**
+			 * Describe $table, including:
+			 * Field {name}
+			 * Type {varchar|int... & (length)}
+			 * Null (boolean)
+			 * Default {value}
+			 * Extra {auto_increment, etc}
+			 * 
+			 * @param string $table
+			 * @return array
+			 */
+			return $this->pdo->query("DESCRIBE {$this->escape($table)}")->fetchAll(PDO::FETCH_CLASS);
+		}
+		
 		public function value_properties($query) {
 			/**
 			 * Returns the results of a SQL query as a stdClass object
@@ -409,7 +424,7 @@
 			 * @return obj
 			 */
 
-			$data = $this->fetch_array("SELECT `name`, `value` FROM `{$table}`");
+			$data = $this->fetch_array("SELECT `name`, `value` FROM `{$this->escape($table)}`");
 			$values = new stdClass();
 			foreach($data as $row) {
 				$name = trim($row->name);
@@ -427,6 +442,7 @@
 			 * @return void
 			 */
 
+			$table = $this->escape($table);
 			$this->query("DELETE FROM `{$table}`");
 			$this->query("ALTER TABLE `{$table}` AUTO_INCREMENT = 1");
 			return $this;

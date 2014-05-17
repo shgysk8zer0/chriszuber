@@ -412,7 +412,7 @@ Node.prototype.bootstrap = function() {
 	this.query('table[data-sql-table] tr[data-sql-id] input[name]').forEach(function(input){
 		input.addEventListener('change', function(){
 			ajax({
-				request:'table=' + this.ancestor('table').data('sql-table') + '&id=' + this.ancestor('tr').data('sql-id') + '&name=' + this.name + '&value=' + this.value
+				request:'table=' + encodeURIComponent(this.ancestor('table').data('sql-table')) + '&id=' + encodeURIComponent(this.ancestor('tr').data('sql-id')) + '&name=' + encodeURIComponent(this.name) + '&value=' + encodeURIComponent(this.value)
 			});
 		});
 	});

@@ -64,5 +64,15 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 			icon: 'images/Icons/network-server.png'
 		});
 	});
+	$('.clock').get(0).worker_clock();
 });
-
+Element.prototype.worker_clock=function(){
+	var clock=document.createElement('time'),
+	clockWorker=new Worker(document.baseURI + 'scripts/workers/clock.js');
+	this.appendChild(clock);
+	clockWorker.addEventListener('message',function(e){
+		clock.textContent = e.data.norm;
+		clock.setAttribute('datetime',e.data.datetime);
+	});
+	clockWorker.postMessage('');
+}
