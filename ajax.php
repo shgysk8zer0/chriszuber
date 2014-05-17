@@ -33,17 +33,18 @@
 					if($login->logged_in) {
 						$session->setUser($login->user)->setPassword($login->password)->setRole($login->role);
 						json_response([
+							'remove' => 'main > *',
+							'attributes' => [
+								'menu[label=Account] menuitem[label=Login]' => [
+									'disabled' => true
+								],
+								'menu[label=Account] menuitem[label=Logout]' => [
+									'disabled' => false
+								]
+							],
 							'notify' => [
 								'title' => 'Login: ',
 								'body' => 'Approved'
-							],
-							'attributes' => [
-								'menu[label=Account] menuitem[label=Login' => [
-									'disabled' => true
-								],
-								'menu[label=Account] menuitem[label=Logout' => [
-									'disabled' => false
-								]
 							]
 						]);
 					}
@@ -67,6 +68,25 @@
 						'body' => load_results("menus/{$_POST['load_menu']}")
 					]
 				]);
+		}
+	}
+
+	elseif(array_key_exists('action', $_POST)) {
+		switch($_POST['action']) {
+			case 'logout':
+				$login->logout();
+				json_response([
+					'attributes' => [
+						'menu[label=Account] menuitem[label=Login]' => [
+							'disabled' => false
+						],
+						'menu[label=Account] menuitem[label=Logout]' => [
+							'disabled' => true
+						]
+					],
+					'remove' => 'main > *'
+				]);
+				break;
 		}
 	}
 
