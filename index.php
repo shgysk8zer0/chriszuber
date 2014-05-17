@@ -1,17 +1,20 @@
 <?php
+	/**
+	 * @author Chris Zuber <shgysk8zer0@gmail.com>
+	 * @copyright 2014, Chris Zuber
+	 * @license /LICENSE
+	 * @package chriszuber
+	 */
 	require_once('./functions.php');
 	config();
 	$DB = _pdo::load();
 	$login = login::load();
 	$session = session::load();
 
-	if(isset($session->user) and isset($session->password)) {
-		$login->login_with([
-			'user' => $session->user,
-			'password' => $session->password
-		]);
+	if(isset($session->logged_in) and $session->logged_in) { //Check login if session
+		$login->setUser($session->user)->setPassword($session->password)->setRole($session->role)->setLogged_In($session->logged_in);
 	}
-	if(is_ajax()) {
+	if(is_ajax()) { // If this is an ajax request, let ajax.php handle it.
 		require_once('./ajax.php');
 	}
 	CSP();
