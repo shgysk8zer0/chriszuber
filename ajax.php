@@ -1,4 +1,7 @@
 <?php
+	$session = session::load();
+	$login = login::load();
+
 	if(array_key_exists('load', $_POST)){
 		switch($_POST['load']) {
 			default:
@@ -19,6 +22,40 @@
 					]
 				]);
 				break;
+		}
+	}
+
+	elseif(array_key_exists('form', $_POST)) {
+		switch($_POST['form']) {
+			case 'login':
+				if(array_keys_exist('user', 'password', 'nonce', $_POST) and $_POST['nonce'] = $session->nonce) {
+					$login->login_with($_POST);
+					if($login->logged_in) {
+						$session->setUser($login->user)->setPassword($login->password)->setRole($login->role);
+						json_response([
+							'notify' => [
+								'title' => 'Login: ',
+								'body' => 'Approved'
+							],
+							'attributes' => [
+								'menu[label=Account] menuitem[label=Login' => [
+									'disabled' => true
+								],
+								'menu[label=Account] menuitem[label=Logout' => [
+									'disabled' => false
+								]
+							]
+						]);
+					}
+					else {
+						json_response([
+							'notify' => [
+								'title' => 'Login: ',
+								'body' => 'Rejected'
+							]
+						]);
+					}
+				}
 		}
 	}
 
