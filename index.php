@@ -1,9 +1,10 @@
 <?php
-	require_once './functions.php';
+	require_once('./functions.php');
 	config();
 	$DB = _pdo::load();
+	$login = login::load();
 	if(is_ajax()) {
-		require_once './ajax.php';
+		require_once('./ajax.php');
 	}
 ?>
 <!DOCTYPE HTML>
