@@ -22,6 +22,20 @@
 					]
 				]);
 				break;
+			case 'new_post':
+				($login->logged_in) ? json_response([
+					'html' => [
+						'main' => load_results('forms/new_post')
+					]
+				]) : json_response([
+					'notify' => [
+						'title' => 'We have a problem',
+						'body' => 'You must be logged in to do that'
+					],
+					'html' => [
+						'main' => load_results('forms/login')
+					]
+				]);
 		}
 	}
 
@@ -31,7 +45,7 @@
 				if(array_keys_exist('user', 'password', 'nonce', $_POST) and $_POST['nonce'] = $session->nonce) {
 					$login->login_with($_POST);
 					if($login->logged_in) {
-						$session->setUser($login->user)->setPassword($login->password)->setRole($login->role);
+						$session->setUser($login->user)->setPassword($login->password);
 						json_response([
 							'remove' => 'main > *',
 							'attributes' => [
@@ -40,11 +54,15 @@
 								],
 								'menu[label=Account] menuitem[label=Logout]' => [
 									'disabled' => false
+								],
+								'body > main' => [
+									'data-menu' => 'admin'
 								]
 							],
 							'notify' => [
-								'title' => 'Login: ',
-								'body' => 'Approved'
+								'title' => 'Logged in as: ',
+								'body' => $login->user,
+								'icon' => 'images/icons/people.png'
 							]
 						]);
 					}
@@ -82,6 +100,9 @@
 						],
 						'menu[label=Account] menuitem[label=Logout]' => [
 							'disabled' => true
+						],
+						'body > main' => [
+							'contextmenu' => false
 						]
 					],
 					'remove' => 'main > *'
