@@ -82,6 +82,51 @@
 					]);
 				}
 				break;
+
+			case 'new_post':
+				if(array_keys_exist('title', 'description', 'keywords', 'author', 'content', 'nonce', $_POST) and $_POST['nonce'] === $session->nonce) {
+					($DB->prepare("
+						INSERT INTO `posts`(
+							`title`,
+							`description`,
+							`keywords`,
+							`author`,
+							`content`
+						) VALUE(
+							:title,
+							:description,
+							:keywords,
+							:author,
+							:content
+						)
+					")->bind([
+						'title' => $_POST['title'],
+						'description' => $_POST['description'],
+						'keywords' => $_POST['keywords'],
+						'author' => $_POST['author'],
+						'content' => $_POST['content']
+					])->execute()) ? json_response([
+						'notify' => [
+							'title' => 'Post submitted',
+							'body' => 'Check for new posts'
+						],
+						'remove' => 'main > *'
+					]) : json_response([
+						'notify' => [
+							'title' => 'Post failed',
+							'body' => 'Look into what went wrong'
+						]
+					]);
+				}
+				else {
+					json_response([
+						'notify' => [
+							'title' => 'Something went wrong...',
+							'body' => 'There seems to be some missing info.'
+						]
+					]);
+				}
+				break;
 		}
 	}
 
