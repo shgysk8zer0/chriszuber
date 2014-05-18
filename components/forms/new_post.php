@@ -14,7 +14,7 @@
 		<input type="text" name="author" id="author" required/><br/>
 		<label for="content">Post: </label>
 		<textarea name="content" id="content" required></textarea><br/>
-		<input type="hidden" nome="nonce" value="<?=$session->nonce?>" required readonly/>
+		<input type="hidden" name="nonce" value="<?=$session->nonce?>" required readonly/>
 		<input type="submit" value="Submit"/>
 		<input type="reset" value="Reset"/>
 	</fieldset>
