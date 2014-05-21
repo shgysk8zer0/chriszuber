@@ -57,22 +57,30 @@
 			 * Creates new user using an array passed as source. Usually $_POST or $_SESSION
 			 *
 			 * @param array $source
-			 * @return void
+			 * @return boolean
 			 * @example $login->create_from($_POST|$_GET|$_REQUEST|array())
 			 */
 
-			if(array_keys_exist('user', 'password', $source)) {	#Check if needed entries exist in array
+			if(array_keys_exist('user', 'password', $source)) {
 				if(array_key_exists('repeat', $source) and $source['password'] !== $source['repeat']) return false;
-				$salt = mcrypt_create_iv(50, MCRYPT_DEV_URANDOM);
-				$options = [
+				return $this->prepare("
+					INSERT INTO `users` (
+						`user`,
+						`password`
+					) VALUES (
+						:user,
+						:password
+					)
+				")->bind([
+					'user' => trim($source['user']),
+					'password' => password_hash(trim($source['password']), PASSWORD_BCRYPT, [
 						'cost' => 11,
-						'salt' => $salt
-				];
-
-				$this->array_insert('users', [
-					'user' => $source['user'],
-					'password' => password_hash(trim($source['password']), PASSWORD_BCRYPT, $options)
-				]);
+						'salt' => mcrypt_create_iv(50, MCRYPT_DEV_URANDOM)
+					])
+				])->execute();
+			}
+			else {
+				return false;
 			}
 		}
 
@@ -85,14 +93,25 @@
 			 * @example $login->login_with($_POST|$_GET|$_REQUEST|$_SESSION|array())
 			 */
 
-			#[TODO] Handle an invalid login
-			if(array_keys_exist('user', 'password', $source)) {	#Make sure necessary information has been passed
-				$results = $this->prepare("SELECT `user`, `password`, `role` FROM `users` WHERE `user` = :user LIMIT 1")->bind(['user' => $source['user']])->execute()->get_results(0);
-				if(password_verify(trim($source['password']), $results->password) and $results->role !== 'new') {	#Verifies by matching hashes
+			if(array_keys_exist('user', 'password', $source)) {
+				$results = $this->prepare("
+					SELECT `user`,
+					`password`,
+					`role`
+					FROM `users`
+					WHERE `user` = :user
+					LIMIT 1
+				")->bind([
+					'user' => $source['user']
+				])->execute()->get_results(0);
+				if(password_verify(
+					trim($source['password']),
+					$results->password
+				) and $results->role !== 'new') {
 					$this->setUser($results->user)->setPassword($results->password)->setRole($results->role)->setLogged_In(true);
 				}
 			}
-			return $this;
+			return ($this->user_data['logged-in']);
 		}
 
 		public function __set($key, $value) {
