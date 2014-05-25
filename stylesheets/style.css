@@ -41,7 +41,7 @@
 	var-glass:linear-gradient(to top left,rgba(80,80,80,0.7), rgba(140,140,140,0.9),rgba(40, 40, 40, 0.7));
 	var-shadow:0.15em 0.15em 0.15em rgba(20,20,20,0.9);
 	var-grad: linear-gradient(to bottom right, rgb(100,100,100), rgb(40,40,40));
-	background-image:url(../images/backgrounds/red-curls.svgz);
+	background-image:url(../images/backgrounds/space.svgz);
 	background-size:cover;
 	background-position:center;
 	background-repeat:no-repeat;
