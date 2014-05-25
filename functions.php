@@ -27,6 +27,19 @@
 		return '/' . preg_quote($str, '/') . '/';
 	}
 
+	function strip_enclosing_tag($html) {
+		/**
+		 * strips leading trailing and closing tags, including leading
+		 * new lines, tabs, and any attributes in the tag itself.
+		 * 
+		 * @param $html (html content to be stripping tags from)
+		 * @return string (html content with leading and trailing tags removed)
+		 * @usage strip_enclosing_tags('<div id="some_div" ...><p>Some Content</p></div>')
+		 */
+		
+		return preg_replace('/^\n*\t*\<.+\>|\<\/.+\>$/', '', $html);
+	}
+
 	function json_response($resp) {
 		/**
 		 * Exits, printing out the $resp array as a JSON encoded string.
@@ -92,6 +105,51 @@
 		}
 	}
 
+function require_login($exit = 'notify') {
+	$login = login::load();
+	if(!$login->logged_in) {
+		switch($exit) {
+			case 'notify': {
+				$resp = new json_response();
+				$resp->notify(
+					'We have a problem :(',
+					'You must be logged in for that'
+				)->html(
+					'#forms',
+					load_results('forms/login', 'buttons/registration')
+				)->remove(
+					'main > *'
+				)->send();
+			}
+
+			case 403: {
+				http_status(403);
+				exit();
+			}
+
+			default: {
+				http_status(403);
+				exit();
+			}
+		}
+	}
+	return true;
+}
+
+function check_nonce() {
+	if(!(array_key_exists('nonce', $_POST) and array_key_exists('nonce', $_SESSION)) or $_POST['nonce'] !== $_SESSION['nonce']) {
+		$resp = new json_response();
+		$resp->error(
+			"nonce not set or does not match"
+		)->notify(
+			'Something went wrong :(',
+			'Your session has exired. Try refreshing the page',
+			'images/icons/network-server.png'
+		)->send();
+		exit();
+	};
+}
+
 	function init($site = null) {						// Get info from .ini file
 		/**
 		 * @param string $site
@@ -127,8 +185,8 @@
 		date_default_timezone_set('America/Los_Angeles');
 		//Error Reporting Levels: http://us3.php.net/manual/en/errorfunc.constants.php
 		($site['debug']) ? error_reporting(E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR) : error_reporting(E_CORE_ERROR);
-		define('BASE', __DIR__);
-		($_SERVER['DOCUMENT_ROOT'] === __DIR__ . '/' or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/{$site['site']}");
+		if(!defined('BASE')) define('BASE', __DIR__);
+		if(!defined('URL')) ($_SERVER['DOCUMENT_ROOT'] === __DIR__ . '/' or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/{$site['site']}");
 		new session("{$site['site']}");
 		nonce(50);									// Set a nonce of n random characters
 	}
@@ -275,11 +333,11 @@
 		 * @return void
 		 */
 		$found = true;
-		global $DB;										// Include $DB here, so it is in the currecnt scope. Saves multiple uses of global
-		$args = flatten(func_get_args());				// One or more arguments might be an array... flatten them.
-		foreach($args as $fname) {						// Unknown how many arguments passed. Loop through fucntion arguments array
+		$DB = _pdo::load();								// Include $DB here, so it is in the currecnt scope. Saves multiple uses of global
+		foreach(flatten(func_get_args()) as $fname) {	// Unknown how many arguments passed. Loop through fucntion arguments array
 			(include(BASE . "/components/{$fname}.php")) or $found = false;
 		}
+		unset($DB);
 		return $found;
 	}
 
@@ -408,25 +466,27 @@
 		 * @params void
 		 * @return void
 		 */
-		if(isset($_SERVER['HTTP_USER_AGENT'])) {
-			define('UA', $_SERVER['HTTP_USER_AGENT']);
-			if(preg_match("/Firefox/i", UA)) define('BROWSER', 'Firefox');
-			elseif(preg_match("/Chrome/i", UA)) define('BROWSER', 'Chrome');
-			elseif(preg_match("/MSIE/i", UA)) define('BROWSER', 'IE');
-			elseif(preg_match("/(Safari)||(AppleWebKit)/i", UA)) define('BROWSER', 'Webkit');
-			elseif(preg_match("/Opera/i", UA)) define('BROWSER', 'Opera');
-			else define('BROWSER', 'Unknown');
-			if(preg_match("/Windows/i", UA)) define('OS', 'Windows');
-			elseif(preg_match("/Ubuntu/i", UA)) define('OS', 'Ubuntu');
-			elseif(preg_match("/Android/i", UA)) define('OS', 'Android');
-			elseif(preg_match("/(IPhone)|(Macintosh)/i", UA)) define('OS', 'Apple');
-			elseif(preg_match("/Linux/i", UA)) define('OS', 'Linux');
-			else define('OS', 'Unknown');
+		if(!defined('UA')){
+			if(isset($_SERVER['HTTP_USER_AGENT'])) {
+				define('UA', $_SERVER['HTTP_USER_AGENT']);
+				if(preg_match("/Firefox/i", UA)) define('BROWSER', 'Firefox');
+				elseif(preg_match("/Chrome/i", UA)) define('BROWSER', 'Chrome');
+				elseif(preg_match("/MSIE/i", UA)) define('BROWSER', 'IE');
+				elseif(preg_match("/(Safari)||(AppleWebKit)/i", UA)) define('BROWSER', 'Webkit');
+				elseif(preg_match("/Opera/i", UA)) define('BROWSER', 'Opera');
+				else define('BROWSER', 'Unknown');
+				if(preg_match("/Windows/i", UA)) define('OS', 'Windows');
+				elseif(preg_match("/Ubuntu/i", UA)) define('OS', 'Ubuntu');
+				elseif(preg_match("/Android/i", UA)) define('OS', 'Android');
+				elseif(preg_match("/(IPhone)|(Macintosh)/i", UA)) define('OS', 'Apple');
+				elseif(preg_match("/Linux/i", UA)) define('OS', 'Linux');
+				else define('OS', 'Unknown');
+			}
+			else{
+				 define('BOWSER', 'Unknown');
+				 define('OS', 'Unknown');
+			};
 		}
-		else{
-			 define('BOWSER', 'Unknown');
-			 define('OS', 'Unknown');
-		};
 	}
 
 	function nonce($length = 50) {						// generate a nonce of $length random characters
