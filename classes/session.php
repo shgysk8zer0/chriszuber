@@ -1,9 +1,15 @@
 <?php
-/**
-* Since this class is using $_SESSION for all data, there are few variables
-* There are several methods to make better use of $_SESSION, and it adds the ability to chain
-* As $_SESSION is used for all storage, there is no pro or con to using __construct vs ::load()
-*/
+	/**
+	* Since this class is using $_SESSION for all data, there are few variables
+	* There are several methods to make better use of $_SESSION, and it adds the ability to chain
+	* As $_SESSION is used for all storage, there is no pro or con to using __construct vs ::load()
+	*
+	* @author Chris Zuber <shgysk8zer0@gmail.com>
+	* @copyright 2014, Chris Zuber
+	* @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
+	* @package core_shared
+	* @version 2014-04-19
+	*/
 	class session {
 		/**
 		 * @author Chris Zuber <shgysk8zer0@gmail.com>

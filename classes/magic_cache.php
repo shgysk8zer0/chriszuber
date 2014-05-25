@@ -1,4 +1,12 @@
 <?php
+	/**
+	 * @author Chris Zuber <shgysk8zer0@gmail.com>
+	 * @copyright 2014, Chris Zuber
+	 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
+	 * @package core_shared
+	 * @version 2014-04-19
+	 */
+
 	class magic_cache {
 		protected $file, $ext, $type, $size, $etag, $mod_time, $gz, $status;
 

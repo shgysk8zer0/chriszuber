@@ -1,4 +1,12 @@
 <?php
+	/**
+	 * @author Chris Zuber <shgysk8zer0@gmail.com>
+	 * @copyright 2014, Chris Zuber
+	 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
+	 * @package core_shared
+	 * @version 2014-04-19
+	 */
+
 	class simple_date {
 		public $obj, $data = [], $src, $months = [
 			'January',
