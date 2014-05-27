@@ -6,6 +6,7 @@
 	 * @package core_shared
 	 * @version 2014-04-19
 	 */
+
 	if (!defined('PHP_VERSION_ID')) {
 		$version = explode('.', PHP_VERSION);
 		define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
@@ -31,12 +32,12 @@
 		/**
 		 * strips leading trailing and closing tags, including leading
 		 * new lines, tabs, and any attributes in the tag itself.
-		 * 
+		 *
 		 * @param $html (html content to be stripping tags from)
 		 * @return string (html content with leading and trailing tags removed)
 		 * @usage strip_enclosing_tags('<div id="some_div" ...><p>Some Content</p></div>')
 		 */
-		
+
 		return preg_replace('/^\n*\t*\<.+\>|\<\/.+\>$/', '', $html);
 	}
 
@@ -50,6 +51,7 @@
 		 * Although any array or object could be passed as $resp, these
 		 * are the only values handled in handleJSON
 		 *
+		 * @depreciated
 		 * @usage
 		 * $resp = [
 		 * 	'html' => [
