@@ -152,7 +152,10 @@
 			*/
 
 			session_destroy();
-			if(array_key_exists(session_name(), $_COOKIE)) setcookie("{$this->name}", '', time() - 3600);
+			if(array_key_exists($this->name, $_COOKIE)){
+				unset($_COOKIE[$this->name]);
+				setcookie($this->name, null, -1, '/');
+			}
 		}
 
 		public function debug() {

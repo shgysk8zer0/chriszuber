@@ -36,7 +36,6 @@
 			 * Uses that data to create a new PHP Data Object
 			 *
 			 * @param void
-			 * @global $site
 			 * @return void
 			 * @example $login = new login()
 			 */
@@ -204,8 +203,6 @@
 			 * @return void
 			 */
 
-			if(isset($_COOKIE['cert'])) setcookie('cert', '', time()-3600);
-			if(isset($_SESSION)) session_destroy();
 			$this->setUser(null)->setPassword(null)->setRole(null)->setLogged_In(false);
 		}
 

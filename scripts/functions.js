@@ -1,7 +1,7 @@
 'use strict';
 var body = document.body,
-html = document.documentElement,
-	prefixes = ['-moz-', '-webkit-', '-o-', '-ms-'];
+	html = document.documentElement,
+	prefixes = ['', '-moz-', '-webkit-', '-o-', '-ms-'];
 if (!window.Element) {
 	/*Fix IE not allowing Element.prototype*/
 	Element = function () {
@@ -78,14 +78,12 @@ if (!'requestFullScreen' in document) {
 	}
 }
 /*===============================================================================================================================================*/
-Object.prototype.log = function () {
-	/*Use instead of console.log(this)*/
-	console.log(this);
-	return this;
-}
 Object.prototype.isaN = function () {
 	/*Boolean... is this a number?*/
 	return parseFloat(this) == this;
+}
+Element.prototype.delete = function() {
+	this.parentElement.removeChild(this);
 }
 Object.prototype.camelCase = function () {
 	return this.toLowerCase() .replace(/\ /g, '-') .replace(/-(.)/g, function (match, group1) {
@@ -103,13 +101,16 @@ Element.prototype.before = function (content) {
 Element.prototype.prev = function (){ /*Returns the node just prior to Element*/
 	return this.previousSibling;
 }
-
 Element.prototype.prepend = function(content) {
 	this.insertAdjacentHTML('afterbegin', content);
 	return this;
 }
 Element.prototype.append = function(content) {
 	this.insertAdjacentHTML('beforeend', content);
+	return this;
+}
+Element.prototype.html = function(html) {
+	this.innerHTML = html;
 	return this;
 }
 Element.prototype.data = function(set, value) {
@@ -137,6 +138,15 @@ Element.prototype.attr = function(attr, val) {
 Element.prototype.ancestor = function (tag) {
 	return (this.parentElement.tagName.toLowerCase() === tag) ? this.parentElement : this.parentElement.ancestor(tag);
 }
+Element.prototype.ajax = function(args) {
+	ajax(args).then(
+		this.html.bind(this),
+		console.error
+	);
+	return this;
+}
+String.prototype.toBase64 = btoa;
+String.prototype.fromBase64 = atob;
 /*Element.prototype.addClass = function(cname) {
 	(supports('classList')) ? this.classList.add(cname) : this.classlist().add(cname);
 	return this;
@@ -152,34 +162,6 @@ Element.prototype.toggleClass = function(cname, condition) {
 	(supports('classlist')) ? this.classList.toggle(cname, condition || !this.hasClass(cname)) : this.classlist().toggle(cname, condition || !this.hasClass(cname));
 	return this;
 }*/
-function ajax(data) {
-	if (typeof data.url !== 'string') {
-		data.url = document.baseURI;
-	}
-	if (typeof data.type !== 'string') {
-		data.type = 'POST';
-	}
-	if (typeof data.async !== 'boolean') {
-		data.async = true;
-	}
-	if ((data.type === 'get') && (typeof data.request === 'string')) {
-		data.url += '?' + data.request;
-	}
-	return new Promise(function (success, fail) {
-		/*https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise*/
-		var req = new XMLHttpRequest();
-		req.open(data.type, data.url, data.async);
-		req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-		req.setRequestHeader('Request-Type', 'AJAX');
-		req.onload = function () {
-			(req.status == 200) ? success(req.response)  : fail(Error(req.statusText));
-		};
-		req.onerror = function () {
-			fail(Error('Network Error'));
-		};
-		(typeof data.request === 'string') ? req.send(data.request)  : req.send();
-	});
-}
 Element.prototype.values = function () {
 	var inputs = this.querySelectorAll('input:not([type=submit]):not([type=reset]),select,textarea'),
 	results = [
@@ -374,6 +356,12 @@ function supports(type) {
 		case 'classlist' :
 			supports = ('DOMTokenList' in window);
 			break;
+		case 'localstorage':
+			supports = ('localStorage' in window);
+			break;
+		case 'sessionstorage':
+			supports = ('sessionStorage' in window);
+			break;
 		default:
 			supports = (document.createElement(type.toLowerCase()) .toString() !== document.createElement('DNE') .toString());
 	}
@@ -390,68 +378,69 @@ Element.prototype.query = function(query) {
 	});
 	return els;
 }
-Node.prototype.bootstrap = function() {
-	if(this.nodeType !== 1) {
-		return this;
-	}
-	this.query('form').forEach(function(el){
-		el.addEventListener('submit', function(event){
-			event.preventDefault();
-			this.ajaxSubmit().then(handleJSON, console.error);
-
-		});
-	});
-	this.query('[data-request]').forEach(function(el) {
-		el.addEventListener('click', function(){
-			ajax({
-				url: this.data('url')|| document.baseURI,
-				request: this.data('request')
-			}).then(handleJSON, console.error);
-		});
-	});
-	this.query('table[data-sql-table] tr[data-sql-id] input[name]').forEach(function(input){
-		input.addEventListener('change', function(){
-			ajax({
-				request:'table=' + encodeURIComponent(this.ancestor('table').data('sql-table')) + '&id=' + encodeURIComponent(this.ancestor('tr').data('sql-id')) + '&name=' + encodeURIComponent(this.name) + '&value=' + encodeURIComponent(this.value)
-			});
-		});
-	});
-	if(supports('menuitem')){
-		this.query('[data-menu]').forEach(function(el){
-			var menu = el.data('menu');
-			el.setAttribute('contextmenu', menu + '_menu');
-			el.removeAttribute('data-menu');
-			if($('menu#'+menu + '_menu').length === 0){
-				ajax({
-					url: document.baseURI,
-					request: 'load_menu=' + menu
-				}).then(handleJSON, console.error);
-			}
-		});
-	}
-	return this;
-}
-NodeList.prototype.bootstrap = function() {
-	this.forEach(function(node){
-		try {
-			node.bootstrap();
-		}
-		catch(e) {
-			console.error(e);
-		}
-	});
-	return this;
-}
 Object.prototype.keys = function() {
 	return Object.keys(this) || [];
 }
-function handleJSON(data){
-	var json = JSON.parse(data);
+function ajax(data) {
+	if ((typeof data.type !== 'undefined' && data.type.toLowerCase() === 'get') && (typeof data.request === 'string')) {
+		data.url += '?' + data.request;
+	}
+	return new Promise(function (success, fail) {
+		/*https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise*/
+		if(data.cache && cache.has(data.cache)) {
+			success(cache.get(data.cache));
+		}
+		else if(typeof navigator.onLine !== 'boolean' || navigator.onLine) {
+			var req = new XMLHttpRequest();
+			req.open(
+				data.type || 'POST',
+				data.url || document.baseURI,
+				data.async || true
+			);
+			req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+			req.setRequestHeader('Request-Type', 'AJAX');
+			req.onload = function () {
+				if(req.status == 200) {
+					if(data.cache) {
+						cache.set(data.cache, req.response.trim());
+					}
+					success(req.response.trim());
+				}
+				else {
+					fail(Error(req.statusText));
+				}
+			};
+			req.onerror = function () {
+				fail(Error('Network Error'));
+			};
+			(typeof data.request === 'string') ? req.send(data.request)  : req.send();
+		}
+		else {
+			notify({
+				title: 'Network:',
+				body: 'offline',
+				icon: 'images/icons/network-server.png'
+			});
+			fail('No Internet Connection');
+		}
+	});
+}
+function handleJSON(json){
+	if(typeof json === 'undefined') {
+		return false;
+	}
+	/*var json = JSON.parse(data.trim());*/
+	if(typeof json === 'string') {
+		json = JSON.parse(json.trim());
+	}
 	if (json.remove) {
 		document.querySelectorAll(json.remove).forEach(function(el){
 			el.parentElement.removeChild(el);
 		});
 	}
+	Object.keys(json.text || []).forEach(function(key){
+		document.querySelector(key).textContent = json.text[key];
+	});
 	Object.keys(json.html || []).forEach(function(key){
 		document.querySelector(key).innerHTML = json.html[key];
 	});
@@ -493,8 +482,23 @@ function handleJSON(data){
 			});
 		});
 	});
+	Object.keys(json.sessionStorage || []).forEach(function(key) {
+		(json.sessionStorage[key] === '') ? delete sessionStorage[key] : sessionStorage[key] = json.sessionStorage[key];
+	});
+	Object.keys(json.localStorage || []).forEach(function(key) {
+		(json.localStorage[key] === '') ? delete sessionStorage[key] : localStorage[key] = json.localStorage[key];
+	});
 	if (json.notify) {
 		notify(json.notify);
+	}
+	if(json.script) {
+		eval(json.script);
+	}
+	if(json.log){
+		console.log(json.log);
+	}
+	if(json.error){
+		console.error(json.error);
 	}
 }
 Element.prototype.ajaxSubmit = function() {
@@ -515,6 +519,38 @@ Element.prototype.ajaxSubmit = function() {
 			fail(Error('Network Error'));
 		};
 	}.bind(this));
+}
+function cache() {
+	return this;
+}
+cache.prototype.constructor = cache;
+cache.prototype.has = function(key) {
+	return localStorage.keys().indexOf(('cache ' + key).camelCase()) !== -1;
+}
+cache.prototype.get = function(key) {
+	return (this.has(key)) ? localStorage[('cache ' + key).camelCase()] : false;
+}
+cache.prototype.set = function(key, value) {
+	localStorage[('cache ' + key).camelCase()] = value;
+	return this;
+}
+cache.prototype.unset = function(key) {
+	delete localStorage[('cache ' + key).camelCase()];
+	return this;
+}
+cache.prototype.keys = function() {
+	return localStorage.keys().filter(function(key){
+		return /^cache/.test(key);
+	});
+}
+cache.prototype.each = function(callback) {
+	return this.keys().forEach(callback.bind(this));
+}
+cache.prototype.clear = function() {
+	this.each(function(key){
+		delete localStorage[key];
+	});
+	return this;
 }
 Object.prototype.isArray = false;
 Object.prototype.isString = false;
@@ -559,7 +595,9 @@ zQ.prototype.get = function(n) {
 	return this.results[n];
 }
 zQ.prototype.each = function(callback) {
-	this.results.forEach(callback);
+	if(this.found) {
+		this.results.forEach(callback);
+	}
 	return this;
 }
 zQ.prototype.indexOf = function(i) {

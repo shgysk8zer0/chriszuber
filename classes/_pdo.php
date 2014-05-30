@@ -30,7 +30,7 @@
 
 		public function __construct() {
 			/**
-			 * Gets database connection info from /connect.ini (stored in $site)
+			 * Gets database connection info from /connect.ini (using ini::load)
 			 * Uses that data to create a new PHP Data Object
 			 *
 			 * @param void
@@ -38,14 +38,15 @@
 			 * @example $pdo = new _pdo()
 			 */
 
+			$connect = ini::load('connect');
+			
 			try{
-				$site = parse_ini_file(BASE . '/connect.ini');
-				if(!array_keys_exist('user', 'password', $site)) throw new Exception('Missing credentials to connect to database');
-				$connect_string =(array_key_exists('type', $site)) ? "{$site['type']}:" : 'mysql:';
-				$connect_string .=(array_key_exists('database', $site)) ?  "dbname={$site['database']}" : "dbname={$site['user']}";
-				if(array_key_exists('server', $site)) $connect_string .= ";host={$site['server']}";
-				if(array_key_exists('port', $site)) $connect_string .= ";port={$site['port']}";
-				$this->pdo = new PDO($connect_string, $site['user'], $site['password']);
+				if(!(isset($connect->user) and isset($connect->password))) throw new Exception('Missing credentials to connect to database');
+				$connect_string = (isset($connect->type)) ? "{$connect->type}:" : 'mysql:';
+				$connect_string .= (isset($connect->database)) ?  "dbname={$connect->database}" : "dbname={$connect->user}";
+				if(isset($connect->server)) $connect_string .= ";host={$connect->server}";
+				if(isset($connect->port)) $connect_string .= ";port={connect->port}";
+				$this->pdo = new PDO($connect_string, $connect->user, $connect->password);
 			}
 			catch(Exception $e) {
 				$this->log(__METHOD__, __LINE__, $connect_string);

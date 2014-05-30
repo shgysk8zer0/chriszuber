@@ -3,7 +3,7 @@
 	$head = $DB->name_value('head');
 	$storage->site_info = $head;
 	define_UA();						// Firefox handles JavaScript versions, whereas Chrome does not.
-	global $site;
+	$connect = ini::load('connect');
 ?>
 <head>
 <meta charset="<?=$head->charset?>"/>
@@ -27,7 +27,7 @@
 <link rel="stylesheet" type="text/css" href="stylesheets/style.css" media="all"/>
 <link rel="stylesheet" type="text/css" href="stylesheets/fonts.css" media="all"/>
 <link rel="stylesheet" type="text/css" href="stylesheets/animations.css" media="screen"/>
-<?php if($site['debug']):?>
+<?php if($connect->debug):?>
 	<?php if(BROWSER === 'Firefox'):?>
 		<script type="application/javascript;version=1.8" src="scripts/functions.js" async></script>
 		<script type="application/javascript;version=1.8" src="scripts/custom.js" defer></script>

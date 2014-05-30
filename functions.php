@@ -18,7 +18,7 @@
 	}
 
 	spl_autoload_register('load_class');				 //Load class by naming it
-	$site = init();										// Get info by reading .ini
+	init();
 
 	function regexp($str) {								//Make regular expression from string
 		/**
@@ -116,11 +116,6 @@ function require_login($exit = 'notify') {
 				$resp->notify(
 					'We have a problem :(',
 					'You must be logged in for that'
-				)->html(
-					'#forms',
-					load_results('forms/login', 'buttons/registration')
-				)->remove(
-					'main > *'
 				)->send();
 			}
 
@@ -141,12 +136,15 @@ function require_login($exit = 'notify') {
 function check_nonce() {
 	if(!(array_key_exists('nonce', $_POST) and array_key_exists('nonce', $_SESSION)) or $_POST['nonce'] !== $_SESSION['nonce']) {
 		$resp = new json_response();
-		$resp->error(
-			"nonce not set or does not match"
-		)->notify(
+		$resp->notify(
 			'Something went wrong :(',
 			'Your session has exired. Try refreshing the page',
 			'images/icons/network-server.png'
+		)->error(
+			"nonce not set or does not match"
+		)->sessionStorage(
+			'nonce',
+			nonce()
 		)->send();
 		exit();
 	};
@@ -160,18 +158,17 @@ function check_nonce() {
 		ini_set('include_path', ini_get('include_path') . ':' . __DIR__ . ":" . __DIR__ . "/classes");
 
 		$info = parse_ini_file("connect.ini");
-		if(!array_key_exists('site', $info)) {
-			// If $site has not been passed to the function, strip it out of the URL
+		$connect = ini::load('connect');
+		if(!isset($connect->site)) {
 			if(is_null($site)) {
-				($_SERVER['DOCUMENT_ROOT'] === __DIR__ . '/' or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? $info['site'] = end(explode('/', preg_replace('/\/$/', '', $_SERVER['DOCUMENT_ROOT']))) : $info['site'] = explode('/', $_SERVER['PHP_SELF'])[1];
+				($_SERVER['DOCUMENT_ROOT'] === __DIR__ . '/' or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? $connect->site = end(explode('/', preg_replace('/\/$/', '', $_SERVER['DOCUMENT_ROOT']))) : $connect->site = explode('/', $_SERVER['PHP_SELF'])[1];
 			}
 		}
-		if(!array_key_exists('user', $info)) $info['user'] = $info['site'];
-		if(!array_key_exists('database', $info)) $info['database'] = $info['user'];
-		if(!array_key_exists('server', $info)) $info['server'] = 'localhost';
-		if(!array_key_exists('debug', $info)) $info['debug'] = true;
-		if(!array_key_exists('type', $info)) $info['type'] = 'mysql';
-		return $info;
+		if(!isset($connect->user)) $conenct->user = $connect->site;
+		if(!isset($connect->database)) $connect->database = $connect->user;
+		if(!isset($connect->server)) $connect->server = 'localhost';
+		if(!isset($connect->debug)) $connect->debug = true;
+		if(!isset($connect->type)) $connect->type = 'mysql';
 	}
 
 	function config() {								// Initial Setup
@@ -181,15 +178,15 @@ function check_nonce() {
 		*
 		* @parmam void
 		* @return void
-		* @global $site
 		*/
-		global $site;
+		
+		$connect = ini::load('connect');
 		date_default_timezone_set('America/Los_Angeles');
 		//Error Reporting Levels: http://us3.php.net/manual/en/errorfunc.constants.php
-		($site['debug']) ? error_reporting(E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR) : error_reporting(E_CORE_ERROR);
+		($connect->debug) ? error_reporting(E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR) : error_reporting(E_CORE_ERROR);
 		if(!defined('BASE')) define('BASE', __DIR__);
-		if(!defined('URL')) ($_SERVER['DOCUMENT_ROOT'] === __DIR__ . '/' or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/{$site['site']}");
-		new session("{$site['site']}");
+		if(!defined('URL')) ($_SERVER['DOCUMENT_ROOT'] === __DIR__ . '/' or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/{$connect->site}");
+		new session($connect->site);
 		nonce(50);									// Set a nonce of n random characters
 	}
 
@@ -198,6 +195,7 @@ function check_nonce() {
 		 * @param void
 		 * @return void
 		 */
+		
 		$CSP = '';									 // Begin with an empty string
 		$CSP_Policy = parse_ini_file('csp.ini');	// Read ini
 		if(!$CSP_Policy) return;
@@ -383,6 +381,10 @@ function check_nonce() {
 		return $sub;
 	}
 
+	function extension($file) {
+		return end(explode('.', $file));
+	}
+
 	function unquote($str) {							// Remove Leading and trailing single quotes
 		/**
 		 * @params string $str
@@ -515,6 +517,34 @@ function check_nonce() {
 		 * @return string (base_64 encoded)
 		 */
 		if(file_exists($file)) return base64_encode(file_get_contents($file));
+	}
+
+	function mime_type($file) {
+		if(substr($file, 0, 1) !== '/') $file = BASE . "/$file";
+		$unsupported_types = [
+			'css' => 'text/css',
+			'js' => 'application/javascript',
+			'svg' => 'image/svg+xml',
+			'woff' => 'application/font-woff',
+			'appcache' => 'text/cache-manifest',
+			'm4a' => 'audio/mp4',
+			'ogg' => 'audio/ogg',
+			'oga' => 'audio/ogg',
+			'ogv' => 'vidoe/ogg'
+		];
+		if(array_key_exists(extension($file), $unsupported_types)) {
+			$mime = $unsupported_types[extension($file)];
+		}
+		else {
+			$finfo = finfo_open(FILEINFO_MIME_TYPE);
+			$mime = finfo_file($finfo, $file);
+			finfo_close($finfo);
+		}
+		return $mime;
+	}
+
+	function data_uri($file) {
+		return 'data:' . mime_type($file) . ';base64,' . encode($file);
 	}
 
 	function clean($string, $rep=null) {				//Strips dangerous characters from string.

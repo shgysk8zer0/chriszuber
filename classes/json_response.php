@@ -15,6 +15,14 @@
 
 	class json_response {
 		protected $response = [];
+		private static $instance = null;
+		
+		public static function load($arr = null) {
+			if(is_null(self::$instance)) {
+				self::$instance = new self($arr);
+			}
+			return self::$instance;
+		}
 		
 		public function __construct($arr = null) {
 			if(is_array($arr)) {
@@ -96,35 +104,37 @@
 					break;
 			}
 		}
-		
+
 		public function text($selector, $content) {
 			/**
 			 * Sets textContent of elements matching $selector to $content
-			 * 
+			 *
 			 * @param string $selector
 			 * @param string $content
-			 * 
+			 *
 			 */
-			
+
 			$this->response['text'][$selector] = $content;
 			return $this;
 		}
-		
+
 		public function notify($title = null, $body = null, $icon = null) {
 			/**
+			 * Creates a notification (or alert)
+			 *
 			 * @param string $title
 			 * @param string $body
 			 * @param string $icon
 			 * @usage $resp->notify('Title', 'Body', 'path/to/icon.png');
 			 */
-			
+
 			$this->response['notify'] = [];
 			if(isset($title)) $this->response['notify']['title'] = $title;
 			if(isset($body)) $this->response['notify']['body'] = $body;
 			if(isset($icon)) $this->response['notify']['icon'] = $icon;
 			return $this;
 		}
-		
+
 		public function html($selector, $content) {
 			/**
 			 * @param string $selector
@@ -135,86 +145,86 @@
 			$this->response['html'][$selector] = $content;
 			return $this;
 		}
-		
+
 		public function append($selector, $content) {
 			/**
 			 * @param string $selector
 			 * @param string $content
 			 * @usage $resp->append('.cssSelector', '<p>Some HTML content</p>');
 			 */
-			
+
 			if(!array_key_exists('append', $this->response)) $this->response['append'] = [];
 			$this->response['append'][$selector] = $content;
 			return $this;
 		}
-		
+
 		public function prepend($selector, $content) {
 			/**
 			 * @param string $selector
 			 * @param string $content
 			 * @usage $resp->prepend('.cssSelector', '<p>Some HTML content</p>');
 			 */
-			
+
 			if(!array_key_exists('prepend', $this->response)) $this->response['prepend'] = [];
 			$this->response['prepend'][$selector] = $content;
 			return $this;
 		}
-		
+
 		public function before($selector, $content) {
 			/**
 			 * @param string $selector
 			 * @param string $content
 			 * @usage $resp->before('.cssSelector', '<p>Some HTML content</p>');
 			 */
-			
+
 			if(!array_key_exists('before', $this->response)) $this->response['before'] = [];
 			$this->response['before'][$selector] = $content;
 			return $this;
 		}
-		
+
 		public function after($selector, $content) {
 			/**
 			 * @param string $selector
 			 * @param string $content
 			 * @usage $resp->after('.cssSelector', '<p>Some HTML content</p>');
 			 */
-			
+
 			$this->response['after'][$selector] = $content;
 			return $this;
 		}
-		
+
 		public function addClass($selector, $classes) {
 			/**
 			 * @param string $selector
 			 * @param string $classes
 			 * @usage $resp->addClass('.cssSelector', 'newClass, otherClass');
 			 */
-			
+
 			$this->response['addClass'][$selector] = $classes;
 			return $this;
 		}
-		
+
 		public function removeClass($selector, $classes) {
 			/**
 			 * @param string $selector
 			 * @param string $classes
 			 * @usage $resp->removeClass('.cssSelector', 'someClass, someOtherClass');
 			 */
-			
+
 			$this->response['removeClass'][$selector] = $classes;
 			return $this;
 		}
-		
+
 		public function remove($selector) {
 			/**
 			 * @param string $selector
 			 * @usage $resp->remove('html .class > #id');
 			 */
-			
+
 			(array_key_exists('remove', $this->response)) ? $this->response['remove'] .= ',' . $selector : $this->response['remove'] = $selector;
 			return $this;
 		}
-		
+
 		public function attributes($selector, $attribute, $value) {
 			/**
 			 * @param string $selector
@@ -226,11 +236,11 @@
 			 * 	'html', 'data-menu', 'admin'
 			 * );
 			 */
-			
+
 			$this->response['attributes'][$selector][$attribute] = $value;
 			return $this;
 		}
-		
+
 		public function script($js) {
 			/**
 			 * handleJSON in functions.js will eval() $js
@@ -238,29 +248,47 @@
 			 * which is generally a BAD idea.
 			 * Including because it is useful.
 			 * *USE WITH CAUTION* and watch your quotes
-			 * 
+			 *
 			 * @param string $js (script to execute)
 			 * @usage $resp->script("alert('Hello world')");
 			 */
-			
+
 			(array_key_exists('script', $this->response)) ? $this->response['script'] .= ';' . $js : $this->response['script'] = $js;
 			return $this;
 		}
-		
+
 		public function sessionStorage($key, $value) {
+			/**
+			 * handleJSON in functions.js will do sessionStorage[$key] = $value
+			 * Useful for storing data temporarily (session) on the client side
+			 *
+			 * @param string $key
+			 * @param mixed $value
+			 * @usage $resp->sessionStorage('nonce', $session->nonce)
+			 */
+
 			$this->response['sessionStorage'][$key] = $value;
 			return $this;
 		}
-		
+
 		public function localStorage($key, $value) {
+			/**
+			 * handleJSON in functions.js will do localStorage[$key] = $value
+			 * Useful for storing data more permenantly on the client side
+			 *
+			 * @param string $key
+			 * @param mixed $value
+			 * @usage $resp->localStorage('greeting', 'Hello World!')
+			 */
+
 			$this->response['localStorage'][$key] = $value;
 			return $this;
 		}
-		
+
 		public function log() {
 			/**
 			 * handleJSON in functions.js will console.log functions arguments
-			 * 
+			 *
 			 * @param mixed (arguments passed to function)
 			 * @usage $resp->log($session->nonce, $_SERVER['SERVER_NAME']);
 			 */
@@ -268,11 +296,11 @@
 			$this->response['log'] = func_get_args();
 			return $this;
 		}
-		
+
 		public function error() {
 			/**
 			 * handleJSON in functions.js will console.error functions arguments
-			 * 
+			 *
 			 * @param mixed (arguments passed to function)
 			 * @usage $resp->error($error);
 			 */
@@ -280,13 +308,13 @@
 			$this->response['error'] = func_get_args();
 			return $this;
 		}
-		
+
 		public function debug($format = false) {
 			/**
 			 * @param boolean $format
 			 * @usage $resp->debug((true|false)?);
 			 */
-			
+
 			if($format) {
 				echo json_encode($this->response);
 			}
@@ -294,15 +322,26 @@
 				debug($this);
 			}
 		}
-		
+
 		public function send($key = null) {
 			/**
+			 * Sends everything with content-type of application/json,
+			 * Exits with json_encode($this->response)
+			 * An optional $key argument can be used to only
+			 * send a subset of $this->response
+			 *
 			 * @param $key
-			 * @usage $resp->sned() or $resp->send('notify')
+			 * @usage $resp->send() or $resp->send('notify')
 			 */
-			
-			header('Content-Type: application/json');
-			(isset($key)) ? exit(json_encode([$key => $this->response[$key]])) : exit(json_encode($this->response));
+
+			if(count($this->response)) {
+				header('Content-Type: application/json');
+				(isset($key)) ? exit(json_encode([$key => $this->response[$key]])) : exit(json_encode($this->response));
+			}
+			else {
+				http_status(403);
+				exit();
+			}
 		}
 	}
 ?>
