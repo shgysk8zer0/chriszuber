@@ -107,34 +107,34 @@
 		}
 	}
 
-function require_login($exit = 'notify') {
-	$login = login::load();
-	if(!$login->logged_in) {
-		switch($exit) {
-			case 'notify': {
-				$resp = new json_response();
-				$resp->notify(
-					'We have a problem :(',
-					'You must be logged in for that'
-				)->send();
-			}
+	function require_login($role = null, $exit = 'notify') {
+		$login = login::load();
+		if(!$login->logged_in and (is_null($role) or $login->role = $role)) {
+			switch($exit) {
+				case 'notify': {
+					$resp = new json_response();
+					$resp->notify(
+						'We have a problem :(',
+						'You must be logged in for that'
+					)->send();
+				}
 
-			case 403: {
-				http_status(403);
-				exit();
-			}
+				case 403: {
+					http_status(403);
+					exit();
+				}
 
-			default: {
-				http_status(403);
-				exit();
+				default: {
+					http_status(403);
+					exit();
+				}
 			}
 		}
+		return true;
 	}
-	return true;
-}
 
-function check_nonce() {
-	if(!(array_key_exists('nonce', $_POST) and array_key_exists('nonce', $_SESSION)) or $_POST['nonce'] !== $_SESSION['nonce']) {
+	function check_nonce() {
+		if(!(array_key_exists('nonce', $_POST) and array_key_exists('nonce', $_SESSION)) or $_POST['nonce'] !== $_SESSION['nonce']) {
 		$resp = new json_response();
 		$resp->notify(
 			'Something went wrong :(',
@@ -148,7 +148,7 @@ function check_nonce() {
 		)->send();
 		exit();
 	};
-}
+	}
 
 	function init($site = null) {						// Get info from .ini file
 		/**
@@ -183,7 +183,7 @@ function check_nonce() {
 		$connect = ini::load('connect');
 		date_default_timezone_set('America/Los_Angeles');
 		//Error Reporting Levels: http://us3.php.net/manual/en/errorfunc.constants.php
-		($connect->debug) ? error_reporting(E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR) : error_reporting(E_CORE_ERROR);
+		//($connect->debug) ? error_reporting(E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR) : error_reporting(E_CORE_ERROR);
 		if(!defined('BASE')) define('BASE', __DIR__);
 		if(!defined('URL')) ($_SERVER['DOCUMENT_ROOT'] === __DIR__ . '/' or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/{$connect->site}");
 		new session($connect->site);
@@ -498,16 +498,16 @@ function check_nonce() {
 		 * @params integer $length
 		 * @return string
 		 */
-		$session = new session;
-		if($session->nonce) {	// Use existing nonce instead of a new one
-			return $session->nonce;
+		
+		if(array_key_exists('nonce', $_SESSION)) {	// Use existing nonce instead of a new one
+			return $_SESSION['nonce'];
 		}
 		//We are going to shuffle an alpha-numeric string to get random characters
 		$str = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
 		if(strlen($str) < $length) {					// $str length is limited to length of available characters. Be recursive for extra length
 			$str .= nonce($length - strlen($str));
 		}
-		$session->nonce = $str;							// Save this to session for re-use
+		$_SESSION['nonce'] = $str;							// Save this to session for re-use
 		return $str;
 	}
 
