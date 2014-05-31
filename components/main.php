@@ -18,19 +18,19 @@
 	$time = new simple_date($post->created);
 	$keywords = explode(',', $post->keywords);
 ?>
-	<main role="main" itemprop="mainContentofPage" itemscope itemtype="http://schema.org/Blog">
-		<article>
-			<header>
-				<h1 itemprop="headline"><?=$post->title?></h1>
-				<nav>
-					<?php foreach(explode(',', $post->keywords) as $tag):?>
-					<a href="tags/<?=trim(strtolower($tag))?>"><?=trim(caps($tag))?></a>
-					<?php endforeach?>
-				</nav>
-			</header>
-			<section itemprop="text"><?=$post->content?></section>
-			<footer>
-				<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" src="images/logos/CreativeCommons.svgz" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><?=$post->title?></span> by <a xmlns:cc="http://creativecommons.org/ns#" href="<?=$post->author_url?>?rel=author" property="cc:attributionName" rel="cc:attributionURL author" itemprop="author"><?=$post->author?></a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.<time datetime="<?=$time->out()?>" itemprop="datePublished"><?=$time->out('m/d/Y')?></time>
-			</footer>
-		</article>
-	</main>
+<main role="main" itemprop="mainContentofPage" itemscope itemtype="http://schema.org/Blog">
+	<?php
+		$tags = [];
+		foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="tags/' . trim(strtolower($tag)) . '">' . trim(caps($tag)) . "</a>";
+		$template = new template('blog');
+		$template->set([
+			'title' => $post->title,
+			'tags' => join(PHP_EOL, $tags),
+			'content' => $post->content,
+			'author' => $post->author,
+			'author_url' => $post->author_url,
+			'date' => $time->out('m/d/Y'),
+			'datetime' => $time->out()
+		])->out();
+	?>
+</main>
