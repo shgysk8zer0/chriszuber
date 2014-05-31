@@ -1,5 +1,6 @@
 <?php
 	$connect = ini::load('connect');
+	$login = login::load();
 	if(isset($_SERVER['REDIRECT_URL']) and isset($_SERVER['REDIRECT_STATUS']) and $_SERVER['REDIRECT_STATUS'] === '200') {
 		$path = explode('/', substr(preg_replace('/^' . preg_quote( '/' . $connect->site, '/') . '/', null, $_SERVER['REDIRECT_URL']), 1));
 		if($path[0] === 'posts' and isset($path[1])){
@@ -18,7 +19,7 @@
 	$time = new simple_date($post->created);
 	$keywords = explode(',', $post->keywords);
 ?>
-<main role="main" itemprop="mainContentofPage" itemscope itemtype="http://schema.org/Blog">
+<main role="main" itemprop="mainContentofPage" itemscope itemtype="http://schema.org/Blog" <?php if($login->logged_in) echo 'data-menu="admin"'?>>
 	<?php
 		$tags = [];
 		foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="tags/' . trim(strtolower($tag)) . '">' . trim(caps($tag)) . "</a>";
