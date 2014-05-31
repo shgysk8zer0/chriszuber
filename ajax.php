@@ -85,20 +85,23 @@
 							`description`,
 							`keywords`,
 							`author`,
-							`content`
+							`content`,
+							`url`
 						) VALUE(
 							:title,
 							:description,
 							:keywords,
 							:author,
-							:content
+							:content,
+							:url
 						)
 					")->bind([
-						'title' => $_POST['title'],
-						'description' => $_POST['description'],
-						'keywords' => $_POST['keywords'],
-						'author' => $_POST['author'],
-						'content' => $_POST['content']
+						'title' => trim($_POST['title']),
+						'description' => trim($_POST['description']),
+						'keywords' => trim($_POST['keywords']),
+						'author' => trim($_POST['author']),
+						'content' => trim($_POST['content']),
+						'url' => trim(strtolower(urlencode($_POST['title'])))
 					]);
 					($DB->execute()) ? $resp->notify(
 						'Post submitted',
