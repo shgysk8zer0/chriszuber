@@ -22,7 +22,7 @@
 	<?php
 		$tags = [];
 		foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="tags/' . trim(strtolower($tag)) . '">' . trim(caps($tag)) . "</a>";
-		$template = new template('blog');
+		$template = template::load('blog');
 		$template->set([
 			'title' => $post->title,
 			'tags' => join(PHP_EOL, $tags),
