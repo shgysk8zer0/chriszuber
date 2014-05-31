@@ -79,6 +79,33 @@
 			case 'new_post':
 				if(array_keys_exist('title', 'description', 'keywords', 'author', 'content', $_POST)) {
 					check_nonce();
+
+					$title = urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['title'])));
+					$description = trim($_POST['description']);
+					$keywords = urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['keywords'])));
+					$author = trim($_POST['author']);
+					$content = urldecode(trim($_POST['content']));
+					$url = urlencode(strtolower(preg_replace('/\W/', null, $title)));
+
+					$template = template::load('blog');
+					$time = new simple_date();
+					$template->set([
+						'title' => $title,
+						'tags' => $keywords,
+						'content' => $content,
+						'author' => $author,
+						'author_url' => $url,
+						'date' => $time->out('m/d/Y'),
+						'datetime' => $time->out()
+					]);
+					ob_start();
+					$template->out();
+					$post = ob_get_clean();
+					$resp->html(
+						'main',
+						$post
+					);
+
 					$DB->prepare("
 						INSERT INTO `posts`(
 							`title`,
@@ -96,12 +123,12 @@
 							:url
 						)
 					")->bind([
-						'title' => trim($_POST['title']),
-						'description' => trim($_POST['description']),
-						'keywords' => trim($_POST['keywords']),
-						'author' => trim($_POST['author']),
-						'content' => trim($_POST['content']),
-						'url' => trim(strtolower(urlencode($_POST['title'])))
+						'title' => $title,
+						'description' => $description,
+						'keywords' => $keywords,
+						'author' => $author,
+						'content' => $content,
+						'url' => $url
 					]);
 					($DB->execute()) ? $resp->notify(
 						'Post submitted',
