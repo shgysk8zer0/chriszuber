@@ -19,7 +19,7 @@
 		 * @version 2014-04-19
 		 */
 
-		private $name;
+		private $name, $expires, $path, $domain, $secure, $httponly;
 		private static $instance = null;
 
 		public static function load($site = null) {
@@ -48,18 +48,21 @@
 			 */
 
 			if(!isset($_SESSION)) {							#Do not create new session of one has already been created
+				$this->expires = 0;
+				$this->path = preg_replace('/^' . preg_quote("{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}", '/') . '/', '', URL);
+				$this->domain =$_SERVER['HTTP_HOST'];
+				$this->secure = https();
+				$this->httponly = true;
 				if(isset($name)) {
 					$name = trim(strtolower($name));
 					session_name($name);
 					$this->name = $name;
-					session_set_cookie_params(0, preg_replace('/^' . preg_quote("{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}", '/') . '/', '', URL), null, (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS']), true);
-					session_start();
 				}
 				else {										#If session has already started, get the name of it
 					$this->name = session_name();
-					session_set_cookie_params(0, preg_replace('/^' . preg_quote("{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}", '/') . '/', '', URL), null, (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS']), true);
-					session_start();
 				}
+				session_set_cookie_params($this->expires, $this->path, $this->domain, $this->secure, $this->httponly);
+				session_start();
 			}
 		}
 
@@ -150,11 +153,12 @@
 			* @param void
 			* @return void
 			*/
-
+			session_regenerate_id(true);
 			session_destroy();
+			unset($_SESSION);
 			if(array_key_exists($this->name, $_COOKIE)){
 				unset($_COOKIE[$this->name]);
-				setcookie($this->name, null, -1, '/');
+				setcookie($this->name, null, -1, $this->path, $this->domain, $this->secure, $this->httponly);
 			}
 		}
 
