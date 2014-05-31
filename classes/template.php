@@ -30,9 +30,9 @@
 			$this->replace('%' . trim(strtoupper($replace)) . '%')->with($with);
 		}
 
-		public function set($arr, $encloser = '%') {
+		public function set($arr) {
 			foreach($arr as $replace => $with) {
-				$this->replace($encloser . trim(strtoupper($replace)) . $encloser)->with($with);
+				$this->replace('%' . trim(strtoupper($replace)) . '%')->with($with);
 			}
 			return $this;
 		}
