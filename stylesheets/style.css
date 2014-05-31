@@ -60,13 +60,23 @@
 	background-color: cyan;
 	text-shadow:none;
 }
-header {
+body> header {
 
+}
+body > header h1::after {
+	content: '';
+	display: inline-block;
+	width: 1.2em;
+	height: 1.2em;
+	background-image: url('/favicon.svgz');
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: bottom;
 }
 main {
 	width: 90vw;
 	transform: translateX(5vw);
-    padding: 2rem;
+	padding: 2rem;
 	background-image:linear-gradient(315deg,rgba(80,80,80,0.7),rgba(140,140,140,0.8),rgba(40,40,40,0.7));
 	border-radius:2rem;
 	display:flex;
@@ -76,9 +86,9 @@ main {
 }
 main>article{
 	color:#333;
-    background-color: whitesmoke;
-    border-radius: inherit;
-    padding: inherit;
+	background-color: whitesmoke;
+	border-radius: inherit;
+	padding: inherit;
 	flex: 3 1 60%;
 	order:1;
 }
@@ -91,11 +101,11 @@ main>aside{
 	order:2;
 }
 article header {
-    font-family: Alice;
-    font-size: 1.3rem;
-    padding: 0.4rem;
-    background-image: linear-gradient(rgba(40,40,40, 0.9), rgba(60,60,60,0.9));
-    color: whitesmoke;
+	font-family: Alice;
+	font-size: 1.3rem;
+	padding: 0.4rem;
+	background-image: linear-gradient(rgba(40,40,40, 0.9), rgba(60,60,60,0.9));
+	color: whitesmoke;
 }
 #contact-card {
 	height: 20rem;
