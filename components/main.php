@@ -1,8 +1,17 @@
 <?php
+	$connect = ini::load('connect');
 	if(isset($_SERVER['REDIRECT_URL']) and isset($_SERVER['REDIRECT_STATUS']) and $_SERVER['REDIRECT_STATUS'] === '200') {
-		$path = explode('/', substr($_SERVER['REDIRECT_URL'], 1));
+		$path = explode('/', substr(preg_replace('/^' . preg_quote( '/' . $connect->site, '/') . '/', null, $_SERVER['REDIRECT_URL']), 1));
 		if($path[0] === 'posts' and isset($path[1])){
-			$post = $DB->prepare('SELECT * FROM `posts` WHERE `url` = :title ORDER BY created LIMIT 1')->bind(['title' => strtolower($path[1])])->execute()->get_results(0);
+			$post = $DB->prepare('
+				SELECT *
+				FROM `posts`
+				WHERE `url` = :title
+				ORDER BY `created`
+				LIMIT 1
+			')->bind([
+				'title' => strtolower($path[1])
+			])->execute()->get_results(0);
 		}
 	}
 	else $post = $DB->fetch_array("SELECT * FROM `posts` ORDER BY `created` LIMIT 1", 0);
