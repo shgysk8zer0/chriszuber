@@ -509,6 +509,9 @@ Element.prototype.ajaxSubmit = function() {
 		var formData = new FormData(this),
 			req = new XMLHttpRequest();
 		formData.append('form', this.name);
+		this.querySelectorAll('[contenteditable][data-input-name]').forEach(function(input) {
+			formData.append(input.data('input-name'), input.innerHTML);
+		});
 		req.open(this.method, this.action);
 		req.setRequestHeader('Request-Type', 'AJAX');
 		req.send(formData);
