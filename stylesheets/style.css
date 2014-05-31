@@ -87,7 +87,7 @@ main {
 	-webkit-transform-style: preserve-3d;
 	transform-origin: top;
 }
-main>article{
+main article{
 	color:#333;
 	background-color: whitesmoke;
 	border-radius: inherit;
