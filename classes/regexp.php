@@ -201,7 +201,7 @@
 			return $this;
 		}
 
-		public function execute() {
+		public function execute($update = true) {
 			/**
 			 * Runs the RegExp replacement, modifies and returns the string
 			 *
@@ -209,8 +209,13 @@
 			 * @return string
 			 */
 
-			$this->in = preg_replace($this->pattern, $this->replacement, $this->in, $this->limit);
-			return $this->in;
+			/*$this->in = preg_replace($this->pattern, $this->replacement, $this->in, $this->limit);
+			return $this->in;*/
+			if($update) {
+				$this->in = preg_replace($this->pattern, $this->replacement, $this->in, $this->limit);
+				return $this->in;
+			}
+			else return preg_replace($this->pattern, $this->replacement, $this->in, $this->limit);
 		}
 
 		public function value() {
@@ -234,6 +239,10 @@
 			$pattern = pattern($type);
 			$this->find = "/^$pattern$/";
 			return $this->test();
+		}
+
+		public function debug() {
+			debug($this);
 		}
 	}
 ?>
