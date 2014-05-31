@@ -1,6 +1,7 @@
 <?php
 	$session = session::load();
 	$login = login::load();
+	$connect = ini::load('connect');
 	$resp = new json_response();
 
 	if(array_key_exists('load', $_POST)){
@@ -52,6 +53,10 @@
 							]
 						])->remove(
 							'main > *'
+						)->notify(
+							'Login successful',
+							"Welcome back {$login->user}",
+							'images/icons/people.png'
 						);
 					}
 					else {
@@ -129,6 +134,9 @@
 		switch($_POST['action']) {
 			case 'logout':
 				$login->logout();
+				$session->destroy();
+				$session = new session($connect->site);
+				nonce();
 				$resp->setAttributes([
 					'menu[label=Account] menuitem[label=Login]' => [
 						'disabled' => false
@@ -141,6 +149,13 @@
 					]
 				])->remove(
 					'main > *'
+				)->sessionStorage(
+					'nonce',
+					$session->nonce
+				)->notify(
+					'User has been logged out',
+					'Login again to make changes.',
+					'images/icons/people.png'
 				);
 				break;
 		}
