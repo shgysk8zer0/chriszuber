@@ -133,7 +133,7 @@
 					return $this;
 					break;
 				default:
-					throw new Exeption("Unknown method: {$name} in " . __CLASS__ .'->' . __METHOD__);
+					throw new Exception("Unknown method: {$name} in " . __CLASS__ .'->' . __METHOD__);
 			}
 		}
 
@@ -223,24 +223,145 @@
 			 * @return void
 			 * @todo Make it actually close the connection
 			 */
-
+			
+			unset($this->pdo);
 			unset($this);
 		}
+		
+		public function prepare_keys($arr) {
+			/**
+			 * Converts array_keys to something safe for
+			 * queries
+			 *
+			 * @param array $arr
+			 * @return array
+			 */
+			
+			$keys = array_keys($arr);
+			$key_walker = function(&$key) {
+				$this->escape($key);
+				$key = "`{$key}`";
+			};
+			array_walk($keys, $key_walker);
+			$arr = array_combine($keys, array_values($arr));
+			return $arr;
+		}
+		
+		public function prepare_key_value(&$arr) {
+			/**
+			 * While this works with multi-dimensional
+			 * array, it is intended to be used for things
+			 * like array_insert that use a simple array where
+			 * the keys are columns and the values are the values
+			 * 
+			 * @param array $arr
+			 * @return array
+			 * @usage $arr = [
+			 * 	'Key' => 'Value',
+			 * 'int' => 42,
+			 * 'Index Only',
+			 * 'Second_Level' => [...]
+			 * ];
+			 */
+			
+			$keys = array_keys($arr);
+			$values = array_values($arr);
+			$key_walker = function(&$key) {
+				if(is_string($key)) {
+					$this->escape($key);
+					$key = "`{$key}`";
+				}
+			};
+			$value_walker = function(&$value) {
+				if(is_array($value)) $this->prepare_key_value($value);
+				elseif (is_string($value)) $this->quote($value);
+			};
+			array_walk($keys, $key_walker);
+			array_walk($values, $value_walker);
+			$arr = array_combine($keys, $values);
+			return $arr;
+		}
+		
+		public function quote(&$val) {
+			/**
+			 * Makes a string safer to use in a query
+			 * When possible, use prepared statements instead
+			 * It returns the value, but it is also uses
+			 * a pointer, so $str = $DB->quoute($str)
+			 * has the same effect as $DB->quote($str)
+			 * 
+			 * @param mixed $val
+			 * @return mixed
+			 * @usage
+			 * $str = 'Some string'
+			 * $arr = ['String1', $str];
+			 * $DB->quote($str)
+			 * $DB->quote($arr)
+			 */
+			
+			if(is_array($val)) {
+				foreach($val as &$v) $this->quote($v);
+			}
+			else $val = $this->pdo->quote(trim((string) $val));
+			return $val;
+		}
 
-		public function escape($query) {
+		public function escape(&$val) {
 			/**
 			 * For lack of a pdo escape, use quote, trimming off the quotations
 			 *
-			 * @param string $query
-			 * @return string
+			 * @param mixed $str
+			 * @return mixed
 			 */
-
-			$escaped = unquote(
-				$this->pdo->quote(
-					trim($query)
-				)
-			);
-			return $escaped;
+			
+			if(is_array($val)) {
+				foreach($val as &$v) $this->escape($v);
+			}
+			else {
+				$this->quote($val);
+				$val = preg_replace('/^\'|\'$/', '',(string) $val);
+			}
+			return $val;
+		}
+		
+		public function binders($arr, $prefix = null, $suffix = null) {
+			/**
+			 * Make setting up prepared statements much easier by
+			 * setting up all of the components using $key => $value of $arr
+			 * 
+			 * $binds->cols[] is an array of column names
+			 * taken from the keys of $arr in the format of
+			 * `{$pdo->escape($key)}`
+			 * 
+			 * $binds->bindings is created from the keys to $arr
+			 * and used in prepared statements as what will be bound to
+			 * in the format of :{$prefix}{$key}{$suffix} with whitespaces
+			 * converted to underscores
+			 * 
+			 * $binds->values is array_values($arr) {original values
+			 * without the keys}
+			 * 
+			 * @param array $arr
+			 * @param string $prefix
+			 * @param string $suffix
+			 * @return object {cols:[], bindings: [], values: []}
+			 * @usage:
+			 * 	$binders = $pdo->binders([...])
+			 * 	$pdo->prepare("
+			 * 		INSERT INTO {$pdo->escape($table)}
+			 * 		(" . join(',', $binders->cols) . ")
+			 * 		VALUES(" . join(',', $binders->bindings) . ")
+			 * ")->bind(array_combine($binders->bindings, $binders->values))->execute();
+			 */
+			
+			$binds = new stdClass();
+			$binds->cols = array_keys($this->prepare_keys($arr));
+			$binds->bindings = [];
+			$binds->values = array_values($arr);
+			foreach(array_keys($arr) as $key) {
+				array_push($binds->bindings, preg_replace('/\s/', '_', ":{$prefix}{$key}{$suffix}"));
+			}
+			return $binds;
 		}
 
 		public function query($query) {
@@ -274,7 +395,6 @@
 			 * @return array
 			 */
 
-			//$results = $this->query($query);
 			$data = $this->query($query)->fetchAll(PDO::FETCH_CLASS);
 			if(is_array($data)){
 				return (is_null($n)) ? $data : $data[$n];
@@ -299,11 +419,12 @@
 			 * @return self
 			 * @example "$pdo->array_insert($table, array('var1' => 'value1', 'var2' => 'value2'))"
 			 */
-
-			foreach($content as &$value) $value = $this->pdo->quote($value);
-			$query = "INSERT into `{$this->escape($table)}` (`". join('`,`', array_keys($content)) . "`) VALUES(" . join(',', $content) . ")";
-			$resp = $this->pdo->query($query);
-			return $resp;
+			
+			return $this->prepare("
+				INSERT INTO `{$this->escape($table)}` 
+				(" . join(', ', array_keys($this->prepare_keys($content))) . ")
+				VALUES(:" . join(', :', array_keys($content)) . ")
+			")->bind($content)->execute();
 		}
 
 		public function sql_table($table_name) {
@@ -349,7 +470,7 @@
 			 * @return
 			 */
 
-			return $this->query("UPDATE `{$table}` SET `{$name}` = '{$value}' WHERE {$where}");
+			return $this->query("UPDATE `{$table}` SET `{$name}` = {$this->quote($value)} WHERE {$where}");
 		}
 
 		public function show_tables() {
@@ -392,7 +513,7 @@
 			 * @param string $table
 			 * @return array
 			 */
-			return $this->pdo->query("DESCRIBE {$this->escape($table)}")->fetchAll(PDO::FETCH_CLASS);
+			return $this->pdo->query("DESCRIBE `{$this->escape($table)}`")->fetchAll(PDO::FETCH_CLASS);
 		}
 		
 		public function value_properties($query) {
