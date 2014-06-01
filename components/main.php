@@ -22,7 +22,7 @@
 <main role="main" itemprop="mainContentofPage" itemscope itemtype="http://schema.org/Blog" <?=($login->logged_in) ? ' data-menu="admin"' : ''?>>
 	<?php
 		$tags = [];
-		foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
+		foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="' . URL . '/tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
 		$template = template::load('blog');
 		$template->set([
 			'title' => $post->title,
