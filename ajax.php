@@ -5,19 +5,74 @@
 	$resp = new json_response();
 
 	if(array_key_exists('href', $_POST)) {
-		switch($_POST['href']) {
+		$path = explode('/', urldecode(preg_replace('/^' . preg_quote(URL, '/')  .'(' .preg_quote($connect->site, '/') . ')?(\/)?/', null, $_POST['href'])));
+		ob_start();
+		debug($path);
+		switch($path[0]) {
 			default: {
 				$resp->notify(
 					'URL',
-					$_POST['href'],
+					join('/', $path),
 					'images/icons/db.png'
+				)->html(
+					'main',
+					ob_get_clean()
+				);
+			}
+		}
+	}
+
+	elseif(array_keys_exist('REDIRECT_STATUS', 'REDIRECT_URL', $_SERVER) and $_SERVER['REDIRECT_STATUS'] == 200) {
+		$path = explode('/', urldecode(preg_replace('/^(' . preg_quote(URL, '/')  .')?(' .preg_quote($connect->site, '/') . ')?(\/)?/', null, strtolower($_SERVER['REDIRECT_URL']))));
+		switch(strtolower(trim($path[0]))) {
+			case 'posts': {
+				$post = $DB->prepare('
+					SELECT *
+					FROM `posts`
+					WHERE `url` = :title
+					ORDER BY `created`
+					LIMIT 1
+				')->bind([
+					'title' => strtolower($path[1])
+				])->execute()->get_results(0);
+
+				$time = new simple_date($post->created);
+				$keywords = explode(',', $post->keywords);
+				$tags = [];
+				foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="' . URL . '/tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
+
+				$template = template::load('posts');
+				$output = $template->set([
+					'title' => $post->title,
+					'tags' => join(PHP_EOL, $tags),
+					'content' => $post->content,
+					'author' => $post->author,
+					'author_url' => $post->author_url,
+					'date' => $time->out('m/d/Y'),
+					'datetime' => $time->out()
+				]);
+				$resp->notify(
+					'Request post is:',
+					$path[1]
+				)->html('main', $template->out());
+			} break;
+			default: {
+				ob_start();
+				debug($path);
+				$resp->notify(
+					'URL',
+					join('/', $path),
+					'images/icons/db.png'
+				)->html(
+					'main',
+					ob_get_clean()
 				);
 			}
 		}
 	}
 
 	elseif(array_key_exists('post', $_POST)) {
-		$url = $_POST['post'];
+		$url = ($_POST['post']);
 
 		$post = $DB->prepare('
 			SELECT *
@@ -33,7 +88,7 @@
 		$keywords = explode(',', $post->keywords);
 		$tags = [];
 		foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="' . URL . '/tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
-		$template = template::load('blog');
+		$template = template::load('posts');
 		$template->set([
 			'title' => $post->title,
 			'tags' => join(PHP_EOL, $tags),
@@ -261,6 +316,13 @@
 			}
 		}
 	}
+
+	/*else {
+		ob_start();
+		debug($_SERVER);
+
+		$resp->html('main', ob_get_clean());
+	}*/
 
 	$resp->send();
 	exit();
