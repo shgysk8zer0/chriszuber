@@ -19,7 +19,7 @@
 			$tags = [];
 			foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="' . URL . '/tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
 
-			$template = template::load('blog');
+			$template = template::load('posts');
 			$output = $template->set([
 				'title' => $post->title,
 				'tags' => join(PHP_EOL, $tags),
@@ -31,9 +31,9 @@
 			])->out();
 		}
 		elseif($path[0] === 'tags' and isset($path[1])){
-			$output = '';
+			$output = '<div class="tags">';
 			$posts = $DB->prepare("
-				SELECT `title`, `description`, `author`, `author_url`, `url`
+				SELECT `title`, `description`, `author`, `author_url`, `url`, `created`
 				FROM `posts`
 				WHERE `keywords` LIKE :tag
 				LIMIT 20
@@ -44,14 +44,17 @@
 			$template = template::load('tags');
 
 			foreach($posts as $post) {
+				$datetime = new simple_date($post->created);
 				$output .= $template->set([
 					'title' => $post->title,
 					'description' => $post->description,
 					'author' => $post->author,
 					'author_url' => $post->author_url,
-					'url' => URL . '/posts/' . $post->url
+					'url' => $post->url,
+					'date' => $datetime->out('D M jS, Y \a\t h:iA')
 				])->out();
 			}
+			$output .= '</div>';
 
 			/*ob_start();
 			debug($posts);
@@ -73,7 +76,7 @@
 			$tags = [];
 			foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="' . URL . '/tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
 
-			$template = template::load('blog');
+			$template = template::load('posts');
 			$output = $template->set([
 				'title' => $post->title,
 				'tags' => join(PHP_EOL, $tags),
