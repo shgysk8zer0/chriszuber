@@ -37,9 +37,15 @@
 			return $this;
 		}
 
-		public function out() {
-			echo $this->execute(false);
+		public function out($print = false) {
+			$html = $this->execute(false);
 			$this->pattern = $this->replacement = [];
+			if($print){
+				echo $html;
+			}
+			else {
+				return $html;
+			}
 		}
 	}
 ?>
