@@ -115,17 +115,19 @@ NodeList.prototype.bootstrap = function() {
 		if(node.nodeType !== 1) {
 			return this;
 		}
-		/*node.query('a[href^="' + document.location.origin + '"]').forEach(function(a) {
+		node.query('a[href^="' + document.location.origin + '"]').forEach(function(a) {
 			a.addEventListener('click', function(event) {
 				event.preventDefault();
 				ajax({
-					request: 'href=' + this.href
+					url: this.href,
+					//request: 'href=' + encodeURIComponent(this.href),
+					type: 'GET'
 				}).then(
 					handleJSON,
 					console.error
 				);
 			});
-		});*/
+		});
 		node.query('[data-link]').forEach(function(link) {
 			link.addEventListener('click', function(){
 				window.location.href = this.data('link');
@@ -139,11 +141,13 @@ NodeList.prototype.bootstrap = function() {
 			});
 		});
 		node.query('[data-request]').forEach(function(el) {
-			el.addEventListener('click', function() {
+			el.addEventListener('click', function(event) {
+				event.preventDefault();
 				if(!this.data('confirm') || confirm(this.data('confirm'))){
 					ajax({
 						url: this.data('url')|| document.baseURI,
 						request: (this.data('prompt')) ? this.data('request') + '&prompt_value=' + encodeURIComponent(prompt(this.data('prompt'))) : this.data('request'),
+						history: this.data('history') || null,
 						cache: el.data('cache')
 					}).then(
 						handleJSON,
