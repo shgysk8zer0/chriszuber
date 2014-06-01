@@ -14,7 +14,7 @@
 		<nav>
 			<menu type="list">
 				<?php foreach($posts as $post):?>
-				<li><a href="posts/<?=$post->url?>"><?=$post->title?></a></li>
+				<li><a href="<?=URL?>/posts/<?=$post->url?>"><?=$post->title?></a></li>
 				<?php endforeach?>
 			</menu>
 		</nav>
