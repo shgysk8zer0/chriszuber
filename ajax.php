@@ -50,7 +50,7 @@
 				$time = new simple_date($post->created);
 				$keywords = explode(',', $post->keywords);
 				$tags = [];
-				foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="' . URL . '/tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
+				foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="' . URL . '/tags/' . strtolower(urlencode(trim($tag))) . '">' . trim(caps($tag)) . "</a>";
 
 				$template = template::load('posts');
 				$output = $template->set([
@@ -65,7 +65,7 @@
 				$resp->html('main', $template->out());
 			} break;
 			case 'tags': {
-				$tag = preg_replace('/\-/', ' ', $path[1]);
+				//$tag = preg_replace('/\-/', ' ', $path[1]);
 				$output = '<div class="tags">';
 				$posts = $DB->prepare("
 					SELECT `title`, `description`, `author`, `author_url`, `url`, `created`
@@ -73,7 +73,7 @@
 					WHERE `keywords` LIKE :tag
 					LIMIT 20
 				")->bind([
-					'tag' => "%{$tag}%"
+					'tag' => "%{$path[1]}%"
 				])->execute()->get_results();
 
 				$template = template::load('tags');
