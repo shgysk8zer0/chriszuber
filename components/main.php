@@ -2,7 +2,7 @@
 	$connect = ini::load('connect');
 	$login = login::load();
 	if(isset($_SERVER['REDIRECT_URL']) and isset($_SERVER['REDIRECT_STATUS']) and $_SERVER['REDIRECT_STATUS'] === '200') {
-		$path = explode('/', substr(preg_replace('/^' . preg_quote( '/' . $connect->site, '/') . '/', null, urldecode($_SERVER['REDIRECT_URL'])), 1));
+		$path = explode('/', urldecode(preg_replace('/^(' . preg_quote(URL, '/')  .')?(' .preg_quote($connect->site, '/') . ')?(\/)?/', null, strtolower($_SERVER['REDIRECT_URL']))));
 		if($path[0] === 'posts' and isset($path[1])){
 			$post = $DB->prepare('
 				SELECT *
@@ -17,7 +17,7 @@
 			$time = new simple_date($post->created);
 			$keywords = explode(',', $post->keywords);
 			$tags = [];
-			foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="' . URL . '/tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
+			foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="' . URL . '/tags/' . strtolower(urlencode(trim($tag))) . '">' . trim(caps($tag)) . "</a>";
 
 			$template = template::load('posts');
 			$output = $template->set([
@@ -55,10 +55,6 @@
 				])->out();
 			}
 			$output .= '</div>';
-
-			/*ob_start();
-			debug($posts);
-			$output = ob_get_clean();*/
 		}
 	}
 	else {
