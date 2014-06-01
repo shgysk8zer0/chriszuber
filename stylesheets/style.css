@@ -116,6 +116,10 @@ menu[type=list] li {
 form[name="new_post"] {
 	width: 95%;
 }
+form[name="new_post"] textarea {
+	width: 35rem;
+	height: 8rem;
+}
 #contact-card {
 	height: 20rem;
 	width: 40vw;
