@@ -43,10 +43,10 @@
 			'date' => $time->out('m/d/Y'),
 			'datetime' => $time->out()
 		]);
-		ob_start();
-		$template->out();
-
-		$resp->html('main', (ob_get_clean()));
+		$resp->html(
+			'main',
+			$template->out()
+		);
 	}
 
 	elseif(array_key_exists('load', $_POST)){
