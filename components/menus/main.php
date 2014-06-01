@@ -1,10 +1,20 @@
 <?php
 	$session = session::load();
 	$login = login::load();
+	$posts = $DB->fetch_array("
+		SELECT `title`, `url`
+		FROM `posts`
+		WHERE `url` != ''
+		ORDER BY `created`
+		LIMIT 10
+	");
 ?>
 <menu type="context" id="main_menu">
 	<menu label="Posts">
-		<menuitem label="about" data-request="load=contact_card"></menuitem>
+		<menuitem label="Home" data-link="<?=URL?>"></menuitem>
+		<?php foreach($posts as $post):?>
+		<menuitem label="<?=$post->title?>" data-link="<?=URL . '/posts/' . $post->url?>"></menuitem>
+		<?php endforeach?>
 	</menu>
 	<menu label="Account">
 	<?php if($login->logged_in):?>
