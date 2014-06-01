@@ -1,7 +1,8 @@
 <?php
 	class pages {
 		private static $instance = null;
-		public $data, $content, $path, $type, $url, $status;
+		private $data, $path, $type, $url, $status;
+		public $content;
 
 		public static function load() {
 			if(is_null(self::$instance)) {
