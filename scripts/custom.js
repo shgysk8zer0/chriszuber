@@ -115,6 +115,17 @@ NodeList.prototype.bootstrap = function() {
 		if(node.nodeType !== 1) {
 			return this;
 		}
+		/*node.query('a[href^="' + document.location.origin + '"]').forEach(function(a) {
+			a.addEventListener('click', function(event) {
+				event.preventDefault();
+				ajax({
+					request: 'href=' + this.href
+				}).then(
+					handleJSON,
+					console.error
+				);
+			});
+		});*/
 		node.query('[data-link]').forEach(function(link) {
 			link.addEventListener('click', function(){
 				window.location.href = this.data('link');
