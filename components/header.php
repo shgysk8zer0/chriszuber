@@ -10,7 +10,7 @@
 	");
 ?>
 	<header>
-		<h1><a href="<?=URL?>"><?=$storage->site_info->title?></a></h1>
+		<h1><a href="<?=URL?>" data-cache="home"><?=$storage->site_info->title?></a></h1>
 		<nav>
 			<menu type="list">
 				<?php foreach($posts as $post):?>

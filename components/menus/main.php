@@ -11,7 +11,7 @@
 ?>
 <menu type="context" id="main_menu">
 	<menu label="Posts">
-		<menuitem label="Home" icon="images/icons/home.svgz" data-link="<?=URL?>"></menuitem>
+		<menuitem label="Home" icon="images/icons/home.svgz" data-link="<?=URL?>" data-cache="home"></menuitem>
 		<?php foreach($posts as $post):?>
 		<menuitem label="<?=$post->title?>" icon="images/icons/coffee.svgz" data-link="<?=URL?>/posts/<?=$post->url?>"></menuitem>
 		<?php endforeach?>
