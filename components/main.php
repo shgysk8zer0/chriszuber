@@ -13,25 +13,78 @@
 			')->bind([
 				'title' => strtolower($path[1])
 			])->execute()->get_results(0);
+
+			$time = new simple_date($post->created);
+			$keywords = explode(',', $post->keywords);
+			$tags = [];
+			foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="' . URL . '/tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
+
+			$template = template::load('blog');
+			$output = $template->set([
+				'title' => $post->title,
+				'tags' => join(PHP_EOL, $tags),
+				'content' => $post->content,
+				'author' => $post->author,
+				'author_url' => $post->author_url,
+				'date' => $time->out('m/d/Y'),
+				'datetime' => $time->out()
+			])->out();
+		}
+		elseif($path[0] === 'tags' and isset($path[1])){
+			$output = '';
+			$posts = $DB->prepare("
+				SELECT `title`, `description`, `author`, `author_url`, `url`
+				FROM `posts`
+				WHERE `keywords` LIKE :tag
+				LIMIT 20
+			")->bind([
+				'tag' => "%{$path[1]}%"
+			])->execute()->get_results();
+
+			$template = template::load('tags');
+
+			foreach($posts as $post) {
+				$output .= $template->set([
+					'title' => $post->title,
+					'description' => $post->description,
+					'author' => $post->author,
+					'author_url' => $post->author_url,
+					'url' => URL . '/posts/' . $post->url
+				])->out();
+			}
+
+			/*ob_start();
+			debug($posts);
+			$output = ob_get_clean();*/
 		}
 	}
-	else $post = $DB->fetch_array("SELECT * FROM `posts` ORDER BY `created` LIMIT 1", 0);
-	$time = new simple_date($post->created);
-	$keywords = explode(',', $post->keywords);
+	else {
+		$post = $DB->fetch_array("
+			SELECT * FROM
+			`posts`
+			WHERE `url` = ''
+			ORDER BY `created`
+			LIMIT 1
+			", 0
+		);
+
+			$time = new simple_date($post->created);
+			$keywords = explode(',', $post->keywords);
+			$tags = [];
+			foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="' . URL . '/tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
+
+			$template = template::load('blog');
+			$output = $template->set([
+				'title' => $post->title,
+				'tags' => join(PHP_EOL, $tags),
+				'content' => $post->content,
+				'author' => $post->author,
+				'author_url' => $post->author_url,
+				'date' => $time->out('m/d/Y'),
+				'datetime' => $time->out()
+			])->out();
+	}
 ?>
 <main role="main" itemprop="mainContentofPage" itemscope itemtype="http://schema.org/Blog" <?=($login->logged_in) ? ' data-menu="admin"' : ''?>>
-	<?php
-		$tags = [];
-		foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="' . URL . '/tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
-		$template = template::load('blog');
-		$template->set([
-			'title' => $post->title,
-			'tags' => join(PHP_EOL, $tags),
-			'content' => $post->content,
-			'author' => $post->author,
-			'author_url' => $post->author_url,
-			'date' => $time->out('m/d/Y'),
-			'datetime' => $time->out()
-		])->out();
-	?>
+	<?= $output?>
 </main>
