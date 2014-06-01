@@ -206,7 +206,16 @@
 		}
 	}
 
-	else http_status(404);
+	elseif(array_key_exists('request', $_POST)) {
+		switch($_POST['request']) {
+			case 'nonce': {
+				$resp->sessionStorage(
+					'nonce',
+					$session->nonce
+				);
+			}
+		}
+	}
 
 	$resp->send();
 	exit();
