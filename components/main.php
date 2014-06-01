@@ -1,7 +1,9 @@
 <?php
 	$connect = ini::load('connect');
 	$login = login::load();
-	if(isset($_SERVER['REDIRECT_URL']) and isset($_SERVER['REDIRECT_STATUS']) and $_SERVER['REDIRECT_STATUS'] === '200') {
+	$pages = pages::load();
+
+	/*if(isset($_SERVER['REDIRECT_URL']) and isset($_SERVER['REDIRECT_STATUS']) and $_SERVER['REDIRECT_STATUS'] === '200') {
 		$path = explode('/', urldecode(preg_replace('/^(' . preg_quote(URL, '/')  .')?(' .preg_quote($connect->site, '/') . ')?(\/)?/', null, strtolower($_SERVER['REDIRECT_URL']))));
 		if($path[0] === 'posts' and isset($path[1])){
 			$post = $DB->prepare('
@@ -82,8 +84,8 @@
 				'date' => $time->out('m/d/Y'),
 				'datetime' => $time->out()
 			])->out();
-	}
+	}*/
 ?>
 <main role="main" itemprop="mainContentofPage" itemscope itemtype="http://schema.org/Blog" <?=($login->logged_in) ? ' data-menu="admin"' : ''?>>
-	<?= $output?>
+	<?=$pages->content?>
 </main>
