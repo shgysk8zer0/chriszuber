@@ -405,6 +405,9 @@ function ajax(data) {
 						cache.set(data.cache, req.response.trim());
 					}
 					success(req.response.trim());
+					if(typeof data.history === 'string') {
+						history.pushState(null, '', data.history);
+					}
 				}
 				else {
 					fail(Error(req.statusText));
@@ -736,6 +739,17 @@ zQ.prototype.$ = function (q) {
 	this.length = this.results.length;
 	return this;
 }
+$(window) .popstate(function () {
+		//$('.posts') .ajax(location.pathname);
+		var req = location.pathname.substring(1, location.pathname.length).split('/');
+		console.log(req);
+		ajax({
+			request: req[0] + '='+ req[1]
+		}).then(
+			handleJSON,
+			console.error
+		);
+	});
 Object.prototype.$ = function(q) {
 	if(this === document || this === window){
 		return $(q);
