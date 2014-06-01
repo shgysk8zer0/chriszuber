@@ -115,6 +115,11 @@ NodeList.prototype.bootstrap = function() {
 		if(node.nodeType !== 1) {
 			return this;
 		}
+		node.query('[data-link]').forEach(function(link) {
+			link.addEventListener('click', function(){
+				window.location.href = this.data('link');
+			});
+		});
 		node.query('form').forEach(function(el){
 			el.addEventListener('submit', function(event){
 				event.preventDefault();
@@ -202,7 +207,7 @@ NodeList.prototype.bootstrap = function() {
 						el[el.data('prop') || 'src'] = el.data('fallback');
 					}
 				}
-				
+
 			);
 		});
 		node.query('[label="Clear Cache"]').forEach(function(el) {
