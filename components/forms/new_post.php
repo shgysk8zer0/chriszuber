@@ -14,7 +14,7 @@
 			<section contenteditable="true" data-input-name="content" itemprop="text">Article Content Here</section>
 		</article>
 		<label for="description">Description: </label>
-		<textarea name="description" id="description"></textarea><br/>
+		<textarea name="description" id="description" placeholder="Description will appear in searches. 160 character limit" maxlength="160" required></textarea><br/>
 		<!--<input type="text" name="description" id="description" required/><br/>-->
 		<input type="hidden" name="nonce" value="<?=$session->nonce?>" required readonly/>
 		<input type="submit" value="Submit"/>
