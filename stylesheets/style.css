@@ -113,6 +113,9 @@ article header {
 menu[type=list] li {
 	display: inline;
 }
+form[name="new_post"] {
+	width: 95%;
+}
 #contact-card {
 	height: 20rem;
 	width: 40vw;
