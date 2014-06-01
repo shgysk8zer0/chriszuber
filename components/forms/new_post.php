@@ -1,14 +1,5 @@
 <?php
 	$session = session::load();
-	$login = login::load();
-	$user = $DB->prepare('
-		SELECT `g_plus`, `name`
-		FROM `users`
-		WHERE `user` = :user
-		LIMIT 1
-	')->bind([
-		'user' => $login->user
-	])->execute()->get_results(0);
 ?>
 <form name="new_post" action="." method="post">
 	<fieldset form="new_post">
