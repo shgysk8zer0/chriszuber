@@ -4,19 +4,30 @@
 	$storage->site_info = $head;
 	define_UA();						// Firefox handles JavaScript versions, whereas Chrome does not.
 	$connect = ini::load('connect');
+
+	$DB->prepare("
+		SELECT `title`, `keywords`, `description`, `author`
+		FROM `posts`
+		WHERE `url` = :url
+		LIMIT 1
+	")->bind([
+		'url' => end(explode('/', urldecode($_SERVER['REQUEST_URI'])))
+	])->execute();
+	$results = $DB->get_results(0);
+	$page = ($results) ? $results : $head;
 ?>
 <head>
 <meta charset="<?=$head->charset?>"/>
 <title><?=$head->title?></title>
 <base href="<?=URL?>/"/>
-<meta name="description" content="<?=$head->description?>"/>
-<meta name="keywords" content="<?=$head->keywords?>"/>
+<meta name="description" content="<?=$page->description?>"/>
+<meta name="keywords" content="<?=$page->keywords?>"/>
 <meta name="robots" content="<?=$head->robots?>"/>
-<meta name="author" content="<?=$head->author?>"/>
+<meta name="author" content="<?=$page->author?>"/>
 <meta itemprop="name" content="<?=$head->title?>"/>
-<meta itemprop="description" content="<?=$head->description?>"/>
-<meta itemprop="keywords" content="<?=$head->keywords?>"/>
-<meta itemprop="author" content="<?=$head->author?>"/>
+<meta itemprop="description" content="<?=$page->description?>"/>
+<meta itemprop="keywords" content="<?=$page->keywords?>"/>
+<meta itemprop="author" content="<?=$page->author?>"/>
 <meta itemprop="image" content="favicon.svgz"/>
 <meta name="viewport" content="<?=$head->viewport?>"/>
 <meta name="mobile-web-app-capable" content="yes">
