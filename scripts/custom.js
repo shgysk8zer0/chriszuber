@@ -120,8 +120,8 @@ NodeList.prototype.bootstrap = function() {
 				event.preventDefault();
 				ajax({
 					url: this.href,
-					//request: 'href=' + encodeURIComponent(this.href),
-					type: 'GET'
+					type: 'GET',
+					history: this.href
 				}).then(
 					handleJSON,
 					console.error
@@ -130,7 +130,14 @@ NodeList.prototype.bootstrap = function() {
 		});
 		node.query('[data-link]').forEach(function(link) {
 			link.addEventListener('click', function(){
-				window.location.href = this.data('link');
+				ajax({
+					url: this.data('link'),
+					type: 'GET',
+					history: this.data('link')
+				}).then(
+					handleJSON,
+					console.error
+				);
 			});
 		});
 		node.query('form').forEach(function(el){
