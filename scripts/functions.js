@@ -740,11 +740,9 @@ zQ.prototype.$ = function (q) {
 	return this;
 }
 $(window) .popstate(function () {
-		//$('.posts') .ajax(location.pathname);
-		var req = location.pathname.substring(1, location.pathname.length).split('/');
-		console.log(req);
 		ajax({
-			request: req[0] + '='+ req[1]
+			url: location.pathname,
+			type: 'GET'
 		}).then(
 			handleJSON,
 			console.error
