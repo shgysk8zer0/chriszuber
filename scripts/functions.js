@@ -388,6 +388,9 @@ function ajax(data) {
 	return new Promise(function (success, fail) {
 		/*https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise*/
 		if(data.cache && cache.has(data.cache)) {
+			if(typeof data.history === 'string') {
+				history.pushState(null, '', data.history);
+			}
 			success(cache.get(data.cache));
 		}
 		else if(typeof navigator.onLine !== 'boolean' || navigator.onLine) {
