@@ -77,33 +77,45 @@
 				break;
 
 			case 'new_post':
-				if(array_keys_exist('title', 'description', 'keywords', 'author', 'content', $_POST)) {
-					check_nonce();
+				check_nonce();
+				require_login('admin');
+				if(array_keys_exist('title', 'description', 'keywords', 'content', $_POST)) {
+
+					$user = $DB->prepare('
+						SELECT `g_plus`, `name`
+						FROM `users`
+						WHERE `user` = :user
+						LIMIT 1
+					')->bind([
+						'user' => $login->user
+					])->execute()->get_results(0);
 
 					$title = urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['title'])));
 					$description = trim($_POST['description']);
 					$keywords = urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['keywords'])));
-					$author = trim($_POST['author']);
+					$author = $user->name;
 					$content = urldecode(trim($_POST['content']));
 					$url = urlencode(strtolower(preg_replace('/\W/', null, $title)));
+
+					$tags = [];
+					foreach(explode(',', $keywords) as $tag) $tags[] = '<a href="tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
 
 					$template = template::load('blog');
 					$time = new simple_date();
 					$template->set([
 						'title' => $title,
-						'tags' => $keywords,
+						'tags' => join(PHP_EOL, $tags),
 						'content' => $content,
-						'author' => $author,
-						'author_url' => $url,
+						'author' => $user->name,
+						'author_url' => $user->g_plus,
 						'date' => $time->out('m/d/Y'),
 						'datetime' => $time->out()
 					]);
 					ob_start();
 					$template->out();
-					$post = ob_get_clean();
 					$resp->html(
 						'main',
-						$post
+						ob_get_clean()
 					);
 
 					$DB->prepare("
@@ -112,6 +124,7 @@
 							`description`,
 							`keywords`,
 							`author`,
+							`author_url`,
 							`content`,
 							`url`
 						) VALUE(
@@ -119,6 +132,7 @@
 							:description,
 							:keywords,
 							:author,
+							:author_url,
 							:content,
 							:url
 						)
@@ -126,7 +140,8 @@
 						'title' => $title,
 						'description' => $description,
 						'keywords' => $keywords,
-						'author' => $author,
+						'author' => $user->name,
+						'author_url' => $user->g_plus,
 						'content' => $content,
 						'url' => $url
 					]);
