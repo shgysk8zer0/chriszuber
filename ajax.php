@@ -4,109 +4,27 @@
 	$connect = ini::load('connect');
 	$resp = new json_response();
 
-	if(!count($_REQUEST) and !array_key_exists('REDIRECT_STATUS', $_SERVER)) {
-		$post = $DB->fetch_array('
-				SELECT *
-				FROM `posts`
-				WHERE `url` = ""
-				LIMIT 1
-			', 0);
+	if(!count($_POST)) {
+		$page = pages::load();
+		$resp->html(
+			'main',
+			$page->content
+		);
 
-			$time = new simple_date($post->created);
-			$keywords = explode(',', $post->keywords);
-			$tags = [];
-			foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="' . URL . '/tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
-
-			$template = template::load('posts');
-			$output = $template->set([
-				'title' => $post->title,
-				'tags' => join(PHP_EOL, $tags),
-				'content' => $post->content,
-				'author' => $post->author,
-				'author_url' => $post->author_url,
-				'date' => $time->out('m/d/Y'),
-				'datetime' => $time->out()
-			]);
-			$resp->html('main', $template->out());
-		/*ob_start();
-		debug($_SERVER);
-		$resp->html('main', ob_get_clean());*/
-	}
-
-	elseif(array_keys_exist('REDIRECT_STATUS', 'REDIRECT_URL', $_SERVER) and $_SERVER['REDIRECT_STATUS'] == 200) {
-		$path = explode('/', urldecode(preg_replace('/^(' . preg_quote(URL, '/')  .')?(' .preg_quote($connect->site, '/') . ')?(\/)?/', null, strtolower($_SERVER['REDIRECT_URL']))));
-		switch($path[0]) {
-			case 'posts': {
-				$post = $DB->prepare('
-					SELECT *
-					FROM `posts`
-					WHERE `url` = :title
-					ORDER BY `created`
-					LIMIT 1
-				')->bind([
-					'title' => strtolower($path[1])
-				])->execute()->get_results(0);
-
-				$time = new simple_date($post->created);
-				$keywords = explode(',', $post->keywords);
-				$tags = [];
-				foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="' . URL . '/tags/' . strtolower(urlencode(trim($tag))) . '">' . trim(caps($tag)) . "</a>";
-
-				$template = template::load('posts');
-				$output = $template->set([
-					'title' => $post->title,
-					'tags' => join(PHP_EOL, $tags),
-					'content' => $post->content,
-					'author' => $post->author,
-					'author_url' => $post->author_url,
-					'date' => $time->out('m/d/Y'),
-					'datetime' => $time->out()
-				]);
-				$resp->html('main', $template->out());
-			} break;
-			case 'tags': {
-				//$tag = preg_replace('/\-/', ' ', $path[1]);
-				$output = '<div class="tags">';
-				$posts = $DB->prepare("
-					SELECT `title`, `description`, `author`, `author_url`, `url`, `created`
-					FROM `posts`
-					WHERE `keywords` LIKE :tag
-					LIMIT 20
-				")->bind([
-					'tag' => "%{$path[1]}%"
-				])->execute()->get_results();
-
-				$template = template::load('tags');
-
-				foreach($posts as $post) {
-					$datetime = new simple_date($post->created);
-					$output .= $template->set([
-						'title' => $post->title,
-						'description' => $post->description,
-						'author' => $post->author,
-						'author_url' => $post->author_url,
-						'url' => $post->url,
-						'date' => $datetime->out('D M jS, Y \a\t h:iA')
-					])->out();
-				}
-				$output .= '</div>';
-				$resp->html(
-					'main',
-					$output
-				);
-			} break;
-			default: {
-				ob_start();
-				debug($path);
-				$resp->notify(
-					'URL',
-					join('/', $path),
-					'images/icons/db.png'
-				)->html(
-					'main',
-					ob_get_clean()
-				);
-			}
+		if($page->type === 'posts') {
+			$resp->attributes(
+				'meta[name=description], meta[itemprop=description]',
+				'content',
+				$page->description
+			)->attributes(
+				'meta[name=keywords], meta[itemprop=keywords]',
+				'content',
+				$page->keywords
+			)->attributes(
+				'meta[name=author], meta[itemprop=author]',
+				'content',
+				$page->author
+			);
 		}
 	}
 
