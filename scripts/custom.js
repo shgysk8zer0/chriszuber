@@ -121,7 +121,8 @@ NodeList.prototype.bootstrap = function() {
 				ajax({
 					url: this.href,
 					type: 'GET',
-					history: this.href
+					history: this.href,
+					cache: this.data('cache')
 				}).then(
 					handleJSON,
 					console.error
@@ -133,7 +134,8 @@ NodeList.prototype.bootstrap = function() {
 				ajax({
 					url: this.data('link'),
 					type: 'GET',
-					history: this.data('link')
+					history: this.data('link'),
+					cache: this.data('cache')
 				}).then(
 					handleJSON,
 					console.error
