@@ -110,6 +110,9 @@ article header {
 	background-image: linear-gradient(rgba(40,40,40, 0.9), rgba(60,60,60,0.9));
 	color: whitesmoke;
 }
+menu[type=list] li {
+	display: inline;
+}
 #contact-card {
 	height: 20rem;
 	width: 40vw;
