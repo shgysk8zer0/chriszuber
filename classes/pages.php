@@ -1,8 +1,8 @@
 <?php
 	class pages {
 		private static $instance = null;
-		private $data, $path, $type, $url, $status;
-		public $content;
+		private $data, $path, $url, $status;
+		public $content, $type;
 
 		public static function load() {
 			if(is_null(self::$instance)) {
@@ -62,6 +62,7 @@
 		}
 
 		public function get_content() {
+			$login = login::load();
 			switch($this->type) {
 				case 'posts': {
 					$template = template::load('posts');
@@ -69,7 +70,7 @@
 					$keywords = explode(',', $this->data->keywords);
 					$tags = [];
 					//foreach($keywords as $tag) $tags[] = '<a href="' . URL . '/tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
-				foreach($keywords as $tag) $tags[] = '<a href="' . URL . '/tags/' . strtolower(urlencode(trim($tag))) . '">' . trim(caps($tag)) . "</a>";
+				foreach($keywords as $tag) $tags[] = '<a href="' . URL . '/tags/' . strtolower(urlencode(trim($tag))) . '">' . trim($tag) . "</a>";
 					$this->content = $template->set([
 						'title' => $this->data->title,
 						'tags' => join(PHP_EOL, $tags),
