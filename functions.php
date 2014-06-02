@@ -169,6 +169,7 @@
 		if(!isset($connect->server)) $connect->server = 'localhost';
 		if(!isset($connect->debug)) $connect->debug = true;
 		if(!isset($connect->type)) $connect->type = 'mysql';
+		if($connect->server !== 'localhost' and is_null($connect->port)) $connect->port = '3306';
 	}
 
 	function config() {								// Initial Setup
@@ -179,7 +180,7 @@
 		* @parmam void
 		* @return void
 		*/
-		
+
 		$connect = ini::load('connect');
 		date_default_timezone_set('America/Los_Angeles');
 		//Error Reporting Levels: http://us3.php.net/manual/en/errorfunc.constants.php
@@ -195,7 +196,7 @@
 		 * @param void
 		 * @return void
 		 */
-		
+
 		$CSP = '';									 // Begin with an empty string
 		$CSP_Policy = parse_ini_file('csp.ini');	// Read ini
 		if(!$CSP_Policy) return;
@@ -498,7 +499,7 @@
 		 * @params integer $length
 		 * @return string
 		 */
-		
+
 		if(array_key_exists('nonce', $_SESSION)) {	// Use existing nonce instead of a new one
 			return $_SESSION['nonce'];
 		}
