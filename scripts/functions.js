@@ -42,6 +42,22 @@ Array.prototype.unique = function() {
 Array.prototype.end = function() {
 	return this[this.length - 1];
 }
+
+function selection() {
+	var selected = getSelection();
+	//this.target = selected.focusNode;
+	this.start = selected.anchorOffset;
+	this.end = selected.focusOffset;
+	this.length = this.end - this.start;
+	this.parent = selected.anchorNode;
+	this.before = this.parent.textContent.substring(0, this.start);
+	this.after = this.parent.textContent.substring(this.end);
+	this.text = selected.focusNode.textContent.substring(this.start, this.end);
+}
+selection.prototype.constructor = selection;
+selection.prototype.replace = function(rep) {
+	this.parent.innerHTML = this.before + rep + this.after;
+}
 /*===========================De-Prefix several JavaScript methods==========================================================================*/
 
 if (!'Notification' in window) {
@@ -127,16 +143,28 @@ Element.prototype.attr = function(attr, val) {
 	switch(typeof val) {
 		case 'string':
 			this.setAttribute(attr, val);
+			return this;
 			break;
 		case 'boolean':
 			(val) ? this.setAttribute(attr, '') : this.removeAttribute(attr);
+			return this;
 			break;
-		case 'undefined':
+		default:
 			return this.getAttribute(attr);
 	}
 }
 Element.prototype.ancestor = function (tag) {
-	return (this.parentElement.tagName.toLowerCase() === tag) ? this.parentElement : this.parentElement.ancestor(tag);
+	/*return (this.parentElement.tagName.toLowerCase() === tag) ? this.parentElement : this.parentElement.ancestor(tag);*/
+	if(this.parentElement.tagName.toLocaleLowerCase() === tag.toLowerCase()) {
+		return this.parentElement;
+	}
+	else if(this === document.body) {
+		return false;
+	}
+	else {
+		return this.parentElement.ancestor(tag);
+	}
+
 }
 Element.prototype.ajax = function(args) {
 	ajax(args).then(
