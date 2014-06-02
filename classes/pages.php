@@ -103,7 +103,7 @@
 							'description' => $post->description,
 							'author' => $post->author,
 							'author_url' => $post->author_url,
-							'url' => $post->url,
+							'url' => ($post->url === '')? URL : URL .'/posts/' . $post->url,
 							'date' => $datetime->out('D M jS, Y \a\t h:iA')
 						])->out();
 					}
