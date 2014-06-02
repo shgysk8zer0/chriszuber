@@ -1,4 +1,5 @@
 'use strict';
+var target = document.body;
 window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to work, so use this instead*/
 	var html = $('html'),
 		body = $('body'),
@@ -115,6 +116,20 @@ NodeList.prototype.bootstrap = function() {
 		if(node.nodeType !== 1) {
 			return this;
 		}
+		/*node.$('*').contextmenu(function(event){
+			console.log(event);
+		});*/
+		node.querySelectorAll('*').forEach(function(child) {
+			child.addEventListener('contextmenu', function(event){
+				target = event.target;
+			});
+		});
+		node.query('[label="Text Style"] > [data-style]').forEach(function(item) {
+			item.addEventListener('click', function() {
+				var sel = new selection();
+				sel.replace(sel.text[this.data('style')]());
+			})
+		});
 		node.query('a[href^="' + document.location.origin + '"]').forEach(function(a) {
 			a.addEventListener('click', function(event) {
 				event.preventDefault();
@@ -233,6 +248,54 @@ NodeList.prototype.bootstrap = function() {
 				}
 
 			);
+		});
+		node.query('menuitem[label="Edit Post"]').forEach(function(el) {
+			el.addEventListener('click', function() {
+				var form = document.createElement('form');
+				form.name = 'edit_post';
+				form.method = 'POST';
+				form.action = document.baseURI;
+				form.data('menu', 'wysiwyg');
+				var title = document.querySelector('article header h1');
+				var keywords = document.querySelector('article header nav');
+				var content = document.querySelector('article section');
+				var submit = document.createElement('button');
+				var nonce = document.createElement('input');
+				var fieldset = document.createElement('fieldset');
+				var legend = document.createElement('legend');
+				var oldTitle = document.createElement('input');
+				var tags = [];
+				keywords.querySelectorAll('a').forEach(function(tag) {
+					tags.push(tag.textContent);
+				});
+				legend.textContent = 'Update Post';
+				nonce.type = 'hidden';
+				nonce.name = 'nonce';
+				nonce.required = true;
+				nonce.readonly = true;
+				nonce.value = sessionStorage.nonce;
+				submit.type = "Submit";
+				submit.textContent = 'Update Post';
+				title.attr('contenteditable', 'true');
+				title.data('input-name','title');
+				keywords.attr('contenteditable', 'true');
+				keywords.data('input-name', 'keywords');
+				keywords.innerHTML = tags.join(', ');
+				content.attr('contenteditable', 'true');
+				content.data('input-name', 'content');
+				oldTitle.name = 'old_title';
+				oldTitle.type = 'hidden';
+				oldTitle.readonly = true;
+				oldTitle.required = true;
+				oldTitle.value = title.textContent;
+				fieldset.appendChild(legend);
+				fieldset.appendChild(document.querySelector('article'));
+				fieldset.appendChild(oldTitle);
+				fieldset.appendChild(nonce);
+				fieldset.appendChild(submit);
+				form.appendChild(fieldset);
+				document.querySelector('main').appendChild(form);
+			});
 		});
 		node.query('[label="Clear Cache"]').forEach(function(el) {
 			el.addEventListener('click', function() {
