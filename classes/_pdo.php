@@ -39,13 +39,13 @@
 			 */
 
 			$connect = ini::load('connect');
-			
+
 			try{
 				if(!(isset($connect->user) and isset($connect->password))) throw new Exception('Missing credentials to connect to database');
 				$connect_string = (isset($connect->type)) ? "{$connect->type}:" : 'mysql:';
 				$connect_string .= (isset($connect->database)) ?  "dbname={$connect->database}" : "dbname={$connect->user}";
 				if(isset($connect->server)) $connect_string .= ";host={$connect->server}";
-				if(isset($connect->port)) $connect_string .= ";port={connect->port}";
+				if(isset($connect->port)) $connect_string .= ";port={$connect->port}";
 				$this->pdo = new PDO($connect_string, $connect->user, $connect->password);
 			}
 			catch(Exception $e) {
@@ -223,11 +223,11 @@
 			 * @return void
 			 * @todo Make it actually close the connection
 			 */
-			
+
 			unset($this->pdo);
 			unset($this);
 		}
-		
+
 		public function prepare_keys($arr) {
 			/**
 			 * Converts array_keys to something safe for
@@ -236,7 +236,7 @@
 			 * @param array $arr
 			 * @return array
 			 */
-			
+
 			$keys = array_keys($arr);
 			$key_walker = function(&$key) {
 				$this->escape($key);
@@ -246,14 +246,14 @@
 			$arr = array_combine($keys, array_values($arr));
 			return $arr;
 		}
-		
+
 		public function prepare_key_value(&$arr) {
 			/**
 			 * While this works with multi-dimensional
 			 * array, it is intended to be used for things
 			 * like array_insert that use a simple array where
 			 * the keys are columns and the values are the values
-			 * 
+			 *
 			 * @param array $arr
 			 * @return array
 			 * @usage $arr = [
@@ -263,7 +263,7 @@
 			 * 'Second_Level' => [...]
 			 * ];
 			 */
-			
+
 			$keys = array_keys($arr);
 			$values = array_values($arr);
 			$key_walker = function(&$key) {
@@ -281,7 +281,7 @@
 			$arr = array_combine($keys, $values);
 			return $arr;
 		}
-		
+
 		public function quote(&$val) {
 			/**
 			 * Makes a string safer to use in a query
@@ -289,7 +289,7 @@
 			 * It returns the value, but it is also uses
 			 * a pointer, so $str = $DB->quoute($str)
 			 * has the same effect as $DB->quote($str)
-			 * 
+			 *
 			 * @param mixed $val
 			 * @return mixed
 			 * @usage
@@ -298,7 +298,7 @@
 			 * $DB->quote($str)
 			 * $DB->quote($arr)
 			 */
-			
+
 			if(is_array($val)) {
 				foreach($val as &$v) $this->quote($v);
 			}
@@ -313,7 +313,7 @@
 			 * @param mixed $str
 			 * @return mixed
 			 */
-			
+
 			if(is_array($val)) {
 				foreach($val as &$v) $this->escape($v);
 			}
@@ -323,24 +323,24 @@
 			}
 			return $val;
 		}
-		
+
 		public function binders($arr, $prefix = null, $suffix = null) {
 			/**
 			 * Make setting up prepared statements much easier by
 			 * setting up all of the components using $key => $value of $arr
-			 * 
+			 *
 			 * $binds->cols[] is an array of column names
 			 * taken from the keys of $arr in the format of
 			 * `{$pdo->escape($key)}`
-			 * 
+			 *
 			 * $binds->bindings is created from the keys to $arr
 			 * and used in prepared statements as what will be bound to
 			 * in the format of :{$prefix}{$key}{$suffix} with whitespaces
 			 * converted to underscores
-			 * 
+			 *
 			 * $binds->values is array_values($arr) {original values
 			 * without the keys}
-			 * 
+			 *
 			 * @param array $arr
 			 * @param string $prefix
 			 * @param string $suffix
@@ -353,7 +353,7 @@
 			 * 		VALUES(" . join(',', $binders->bindings) . ")
 			 * ")->bind(array_combine($binders->bindings, $binders->values))->execute();
 			 */
-			
+
 			$binds = new stdClass();
 			$binds->cols = array_keys($this->prepare_keys($arr));
 			$binds->bindings = [];
@@ -419,9 +419,9 @@
 			 * @return self
 			 * @example "$pdo->array_insert($table, array('var1' => 'value1', 'var2' => 'value2'))"
 			 */
-			
+
 			return $this->prepare("
-				INSERT INTO `{$this->escape($table)}` 
+				INSERT INTO `{$this->escape($table)}`
 				(" . join(', ', array_keys($this->prepare_keys($content))) . ")
 				VALUES(:" . join(', :', array_keys($content)) . ")
 			")->bind($content)->execute();
@@ -509,13 +509,13 @@
 			 * Null (boolean)
 			 * Default {value}
 			 * Extra {auto_increment, etc}
-			 * 
+			 *
 			 * @param string $table
 			 * @return array
 			 */
 			return $this->pdo->query("DESCRIBE `{$this->escape($table)}`")->fetchAll(PDO::FETCH_CLASS);
 		}
-		
+
 		public function value_properties($query) {
 			/**
 			 * Returns the results of a SQL query as a stdClass object
