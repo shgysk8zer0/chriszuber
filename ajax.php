@@ -91,7 +91,7 @@
 
 	elseif(array_key_exists('form', $_POST)) {
 		switch($_POST['form']) {
-			case 'login':
+			case 'login': {
 				if(array_keys_exist('user', 'password', $_POST)) {
 					check_nonce();
 					$login->login_with($_POST);
@@ -131,9 +131,9 @@
 						'images/icons/people.png'
 					);
 				}
-				break;
+			}break;
 
-			case 'new_post':
+			case 'new_post': {
 				check_nonce();
 				require_login('admin');
 				if(array_keys_exist('title', 'description', 'keywords', 'content', $_POST)) {
@@ -218,7 +218,44 @@
 						'There seems to be some missing info.'
 					);
 				}
-				break;
+			}break;
+
+			case 'edit_post': {
+				check_nonce();
+				require_login('admin');
+
+				if(array_keys_exist('title', 'keywords', 'content', 'old_title', $_POST)) {
+					$DB->prepare("
+						UPDATE `posts`
+						SET `title` = :title,
+						`keywords` = :keywords,
+						`content` = :content
+						WHERE `title` = :old_title
+						LIMIT 1
+					")->bind([
+						'title' => urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['title']))),
+						'keywords' => urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['keywords']))),
+						'content' => urldecode(trim($_POST['content'])),
+						'old_title' => urldecode(trim($_POST['old_title']))
+					]);
+					($DB->execute()) ? $resp->notify(
+						"Post has been updated.",
+						"{$_POST['old_title']} has been updated.",
+						'images/icons/db.png'
+					) : $resp->notify(
+						'Something went wrong :(',
+						"There was a problem updating {$_POST['old_title']}",
+						'images/icons/db.png'
+					);
+				}
+				else {
+					$resp->notify(
+						'Error Updating Post',
+						'It seems some info was missing',
+						'images/icons/db.png'
+					);
+				}
+			}
 		}
 	}
 
@@ -234,7 +271,7 @@
 
 	elseif(array_key_exists('action', $_POST)) {
 		switch($_POST['action']) {
-			case 'logout':
+			case 'logout': {
 				$login->logout();
 				$session->destroy();
 				$session = new session($connect->site);
@@ -259,7 +296,29 @@
 					'Login again to make changes.',
 					'images/icons/people.png'
 				);
-				break;
+			}break;
+				case 'restore database': {
+					require_login('admin');
+					$sql = file_get_contents(BASE . "/{$connect->site}.sql");
+					if($sql) {
+						($DB->query($sql)) ? $resp->notify(
+							'Success',
+							'Database restored',
+							'images/icons/db.png'
+						) : $resp->notify(
+							'Failure :(',
+							'There was an error restoring the database',
+							'images/icons/db.png'
+						) ;
+					}
+					else {
+						$resp->notify(
+							'Failure :(',
+							'Could not read the file to restore the database from',
+							'images/icons/db.png'
+						);
+					}
+				} break;
 		}
 	}
 
