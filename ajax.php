@@ -28,39 +28,6 @@
 		}
 	}
 
-	elseif(array_key_exists('post', $_POST)) {
-		$url = ($_POST['post']);
-
-		$post = $DB->prepare('
-			SELECT *
-			FROM `posts`
-			WHERE `url` = :url
-			ORDER BY `created`
-			LIMIT 1
-		')->bind([
-			'url' => ($_POST['post'] === 'home') ? '' : $_POST['post']
-		])->execute()->get_results(0);
-
-		$time = new simple_date($post->created);
-		$keywords = explode(',', $post->keywords);
-		$tags = [];
-		foreach(explode(',', $post->keywords) as $tag) $tags[] = '<a href="' . URL . '/tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
-		$template = template::load('posts');
-		$template->set([
-			'title' => $post->title,
-			'tags' => join(PHP_EOL, $tags),
-			'content' => $post->content,
-			'author' => $post->author,
-			'author_url' => $post->author_url,
-			'date' => $time->out('m/d/Y'),
-			'datetime' => $time->out()
-		]);
-		$resp->html(
-			'main',
-			$template->out()
-		);
-	}
-
 	elseif(array_key_exists('load', $_POST)){
 		switch($_POST['load']) {
 			default:
