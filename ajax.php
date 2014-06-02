@@ -100,6 +100,41 @@
 				}
 			}break;
 
+			case 'tag_search': {
+				$posts = $DB->prepare("
+					SELECT `title`, `description`, `author`, `author_url`, `url`, `created`
+					FROM `posts`
+					WHERE `keywords` LIKE :tag
+					LIMIT 20
+				")->bind([
+					'tag' => "%{$_POST['tag']}%"
+				])->execute()->get_results();
+
+				if($posts) {
+					$content = '<div class="tags">';
+
+					$template = template::load('tags');
+
+					foreach($posts as $post) {
+						$datetime = new simple_date($post->created);
+						$content .= $template->set([
+							'title' => $post->title,
+							'description' => $post->description,
+							'author' => $post->author,
+							'author_url' => $post->author_url,
+							'url' => ($post->url === '')? URL : URL .'/posts/' . $post->url,
+							'date' => $datetime->out('D M jS, Y \a\t h:iA')
+						])->out();
+					}
+					$content .= '</div>';
+
+					$resp->html(
+						'main',
+						$content
+					);
+				}
+			} break;
+
 			case 'new_post': {
 				check_nonce();
 				require_login('admin');

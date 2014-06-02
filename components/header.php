@@ -17,5 +17,6 @@
 				<li><a href="<?=URL?>/posts/<?=$post->url?>"><?=$post->title?></a></li>
 				<?php endforeach?>
 			</menu>
+			<?php load('forms/tag_search')?>
 		</nav>
 	</header>
