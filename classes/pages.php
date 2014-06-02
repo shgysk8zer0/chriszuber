@@ -83,16 +83,7 @@
 				} break;
 
 				case 'tags': {
-					//$tag = preg_replace('/\-/', ' ', $path[1]);
 					$this->content = '<div class="tags">';
-					/*$posts = $DB->prepare("
-						SELECT `title`, `description`, `author`, `author_url`, `url`, `created`
-						FROM `posts`
-						WHERE `keywords` LIKE :tag
-						LIMIT 20
-					")->bind([
-						'tag' => "%{$path[1]}%"
-					])->execute()->get_results();*/
 
 					$template = template::load('tags');
 
