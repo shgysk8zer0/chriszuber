@@ -299,28 +299,62 @@
 					'images/icons/people.png'
 				);
 			}break;
-				case 'restore database': {
-					require_login('admin');
-					$sql = file_get_contents(BASE . "/{$connect->site}.sql");
-					if($sql) {
-						($DB->query($sql)) ? $resp->notify(
-							'Success',
-							'Database restored',
-							'images/icons/db.png'
-						) : $resp->notify(
-							'Failure :(',
-							'There was an error restoring the database',
-							'images/icons/db.png'
-						) ;
-					}
-					else {
-						$resp->notify(
-							'Failure :(',
-							'Could not read the file to restore the database from',
-							'images/icons/db.png'
-						);
-					}
-				} break;
+
+			case 'restore database': {
+				require_login('admin');
+				$sql = file_get_contents(BASE . "/{$connect->site}.sql");
+				if($sql) {
+					($DB->query($sql)) ? $resp->notify(
+						'Success',
+						'Database restored',
+						'images/icons/db.png'
+					) : $resp->notify(
+						'Failure :(',
+						'There was an error restoring the database',
+						'images/icons/db.png'
+					) ;
+				}
+				else {
+					$resp->notify(
+						'Failure :(',
+						'Could not read the file to restore the database from',
+						'images/icons/db.png'
+					);
+				}
+			} break;
+			case 'restore database': {
+				check_nonce();
+				require_login('admin');
+
+				($DB->restore($connect->database)) ? $resp->notify(
+					'Success',
+					"The database has been restored from {$connect->database}.sql",
+					'images/icons/db.png'
+				) : $resp->notify(
+					'Failed',
+					"There was a problem restoring from {$connect->database}.sql",
+					'images/icons/db.png'
+				);
+			} break;
+
+			case 'backup database': {
+				check_nonce();
+				require_login('admin');
+
+				$DB->dump();
+				$resp->notify(
+					'Success',
+					"The database has been backed up to {$connect->database}.sql",
+					'images/icons/db.png'
+				);
+			} break;
+
+			case 'test': {
+				$resp->notify(
+					'Edit Me',
+					'I am on line ' . __LINE__ . ' in ' . __FILE__
+				);
+			}break;
 		}
 	}
 
@@ -333,6 +367,35 @@
 				);
 			}
 		}
+	}
+
+	elseif(array_key_exists('debug', $_POST)) { // Debugging only available to admins
+		check_nonce();
+		require_login('admin');
+
+		ob_start();
+		switch(trim($_POST['debug'])) {
+
+			case 'headers': {
+				debug(headers_list());
+			}break;
+
+			case 'extensions': {
+				debug(get_loaded_extensions());
+			}break;
+
+			case 'modules': {
+				debug(apache_get_modules());
+			}break;
+
+			default: {
+				debug($$_POST['debug']);
+			}
+		}
+		$resp->html(
+			'body > main',
+			ob_get_clean()
+		);
 	}
 
 	/*else {
