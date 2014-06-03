@@ -382,7 +382,7 @@
 			 * @param string $fname
 			 * @return self
 			 */
-			
+
 			if(is_null($fname)) {
 				$connect = ini::load('connect');
 				$fname = $connect->database;
@@ -396,25 +396,25 @@
 				return false;
 			}
 		}
-		
+
 		public function dump($filename = null) {
 			$connect = ini::load('connect');
-			
+
 			if(is_null($filename)) {
 				$filename = $connect->database;
 			}
-			
-			$command = "mysqldump -u {$connect->user} -p{$connect->password}";
-			
+
+			$command = "mysqldump -u {$connect->user} -p" . escapeshellcmd($connect->password);
+
 			if(isset($connect->server) and $connect->server !== 'localhost') {
 				$command .= " -h {$connect->server}";
 			}
-			
+
 			$command .= " {$connect->database} > {$filename}.sql";
-			
+
 			exec($command);
 		}
-		
+
 		public function fetch_array($query, $n = null) {
 			/**
 			 * Return the results of a query as an associative array
