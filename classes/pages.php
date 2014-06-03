@@ -45,11 +45,11 @@
 						$this->data = $pdo->prepare('
 							SELECT *
 							FROM `posts`
-							WHERE `url` = :title
+							WHERE `url` = :url
 							ORDER BY `created`
 							LIMIT 1
 						')->bind([
-							'title' => $this->path[1]
+							'url' => urlencode($this->path[1])
 						])->execute()->get_results(0);
 					}
 				}
