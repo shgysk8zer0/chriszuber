@@ -153,16 +153,16 @@ Element.prototype.attr = function(attr, val) {
 			return this.getAttribute(attr);
 	}
 }
-Element.prototype.ancestor = function (tag) {
+Element.prototype.ancestor = function (sel) {
 	/*return (this.parentElement.tagName.toLowerCase() === tag) ? this.parentElement : this.parentElement.ancestor(tag);*/
-	if(this.parentElement.tagName.toLocaleLowerCase() === tag.toLowerCase()) {
+	if(this.parentElement.matches(sel)) {
 		return this.parentElement;
 	}
 	else if(this === document.body) {
 		return false;
 	}
 	else {
-		return this.parentElement.ancestor(tag);
+		return this.parentElement.ancestor(sel);
 	}
 
 }
