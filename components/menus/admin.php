@@ -23,6 +23,7 @@
 	$session = session::load();
 	$pdo = _pdo::load();
 	$login = login::load();
+	$connect = ini::load('connect');
 
 	$tables = $pdo->show_tables();
 ?>
@@ -41,8 +42,8 @@
 			<menuitem type="command" label="Apache Modules" icon="images/icons/coffee.svgz" data-request="debug=modules&nonce=<?=$session->nonce?>" data-cache="debug_modules"></menuitem>
 		</menu>
 	<menu label="Manage Database">
-		<menuitem type="command" label="Restore Database" icon="images/icons/db.svgz" data-request="action=restore database&nonce=<?=$session->nonce?>" data-confirm="Are you sure you want to restore the database from mother_brain.sql? All changes made since the last mysqldump will be reverted."></menuitem>
-		<menuitem type="command" label="Backup Database" icon="images/icons/db.svgz" data-request="action=backup database&nonce=<?=$session->nonce?>" data-confirm="Are you sure you want to backup the database to mother_brain.sql?"></menuitem>
+		<menuitem type="command" label="Restore Database" icon="images/icons/db.svgz" data-request="action=restore database&nonce=<?=$session->nonce?>" data-confirm="Are you sure you want to restore the database from <?=$connect->database?>.sql? All changes made since the last mysqldump will be reverted."></menuitem>
+		<menuitem type="command" label="Backup Database" icon="images/icons/db.svgz" data-request="action=backup database&nonce=<?=$session->nonce?>" data-confirm="Are you sure you want to backup the database to <?=$connect->database?>.sql?"></menuitem>
 		<menuitem type="command" label="Clear CSP" icon="images/icons/db.svgz" data-request="reset_table=CSP_errors&nonce=<?=$session->nonce?>"></menuitem>
 		<menuitem type="command" label="MySQL Query" icon="images/icons/db.svgz" data-request="action=mysql_query&nonce=<?=$session->nonce?>" data-prompt="Type your query:"></menuitem>
 		</menu>
