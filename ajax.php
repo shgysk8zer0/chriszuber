@@ -5,7 +5,7 @@
 	$connect = ini::load('connect');
 	$resp = new json_response();
 
-	if(!count($_POST)) {
+	if(!count($_REQUEST)) {
 		$page = pages::load();
 		$resp->remove(
 			'main > :not(aside)'
@@ -59,8 +59,8 @@
 		}
 	}
 
-	elseif(array_key_exists('form', $_REQUEST)) {
-		switch($_POST['form']) {
+	elseif(array_key_exists('form', $_POST)) {
+		switch(trim($_POST['form'])) {
 			case 'login': {
 				if(array_keys_exist('user', 'password', $_POST)) {
 					check_nonce();
@@ -103,6 +103,51 @@
 					);
 				}
 			}break;
+
+			case 'tag_search': {
+				if(array_key_exists('tags', $_POST)) {
+					$posts = $DB->prepare("
+						SELECT `title`, `description`, `author`, `author_url`, `url`, `created`
+						FROM `posts`
+						WHERE `keywords` LIKE :tag
+						LIMIT 20
+					")->bind([
+						'tag' => "%{$_POST['tags']}%"
+					])->execute()->get_results();
+
+					if($posts) {
+						$content = '<div class="tags">';
+
+						$template = template::load('tags');
+
+						foreach($posts as $post) {
+							$datetime = new simple_date($post->created);
+							$content .= $template->set([
+								'title' => $post->title,
+								'description' => $post->description,
+								'author' => $post->author,
+								'author_url' => $post->author_url,
+								'url' => ($post->url === '')? URL : URL .'/posts/' . $post->url,
+								'date' => $datetime->out('D M jS, Y \a\t h:iA')
+							])->out();
+						}
+						$content .= '</div>';
+
+						$resp->remove(
+							'main > :not(aside)'
+						)->prepend(
+							'main',
+							$content
+						)->notify('LIKE', preg_replace('/\s+/', '%', "%{$_POST['tags']}%"));
+					}
+				}
+				else {
+					$resp->notify(
+						'Error',
+						'tags not set'
+					);
+				}
+			} break;
 
 			case 'new_post': {
 				check_nonce();
