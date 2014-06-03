@@ -375,18 +375,46 @@
 			return $this->pdo->query($query);
 		}
 
-		public function restore($fname) {
+		public function restore($fname = null) {
 			/**
 			 * Restores a MySQL database from file $fname
 			 *
 			 * @param string $fname
 			 * @return self
 			 */
+			
+			if(is_null($fname)) {
+				$connect = ini::load('connect');
+				$fname = $connect->database;
+			}
 
 			$sql = file_get_contents(BASE ."/{$fname}.sql");
-			$this->pdo->query($sql);
-			return $this;
+			if($sql) {
+				return $this->pdo->query($sql);
+			}
+			else {
+				return false;
+			}
 		}
+		
+		public function dump($filename = null) {
+			$connect = ini::load('connect');
+			
+			if(is_null($filename)) {
+				$filename = $connect->database;
+			}
+			
+			$command = "mysqldump -u {$connect->user} -p{$connect->password}";
+			
+			if(isset($connect->server) and $connect->server !== 'localhost') {
+				$command .= " -h {$connect->server}";
+			}
+			
+			$command .= " {$connect->database} > {$filename}.sql";
+			
+			exec($command);
+		}
+		
 		public function fetch_array($query, $n = null) {
 			/**
 			 * Return the results of a query as an associative array
