@@ -138,7 +138,7 @@
 						)->prepend(
 							'main',
 							$content
-						)->notify('LIKE', preg_replace('/\s+/', '%', "%{$_POST['tags']}%"));
+						);
 					}
 				}
 				else {
