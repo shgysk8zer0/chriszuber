@@ -293,6 +293,16 @@
 		);
 	}
 
+	elseif(array_key_exists('template', $_REQUEST)) {
+		switch($_REQUEST['template']) {
+			default: {
+				$template = get_template($_REQUEST['template']);
+			}
+		}
+
+		if($template) $resp->template = preg_replace('/\%.+\%/', null, $template);
+	}
+
 	elseif(array_key_exists('action', $_POST)) {
 		switch($_POST['action']) {
 			case 'logout': {
