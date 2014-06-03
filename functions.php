@@ -109,7 +109,8 @@
 
 	function require_login($role = null, $exit = 'notify') {
 		$login = login::load();
-		if(!$login->logged_in and (is_null($role) or $login->role = $role)) {
+
+		if(!$login->logged_in) {
 			switch($exit) {
 				case 'notify': {
 					$resp = new json_response();
@@ -117,11 +118,17 @@
 						'We have a problem :(',
 						'You must be logged in for that'
 					)->send();
+					return false;
+					exit();
 				}
 
-				case 403: {
+				case 403: case '403': case 'exit': {
 					http_status(403);
 					exit();
+				}
+
+				case 'return' : {
+					return false;
 				}
 
 				default: {
@@ -130,7 +137,43 @@
 				}
 			}
 		}
-		return true;
+
+		elseif(isset($role) and strlen($role)) {
+			$role = strtolower($role);
+			$resp = new json_response();
+			$roles = ['new', 'user', 'admin'];
+
+			$user_level = array_search($login->role, $roles);
+			$required_level = array_search($role, $roles);
+
+			if(!$user_level or !$required_level) {
+				$resp->notify(
+					'We have a problem',
+					'Either your user\'s role or the required role are invalid',
+					'images/icons/info.png'
+				)->send();
+				return false;
+				exit();
+			}
+
+			elseif($required_level > $user_level) {
+				$resp->notify(
+					'We have a problem :(',
+					//'You do not have permission to do that',
+					"You are logged in as {$login->role} but this action requires {$role}",
+					'images/icons/info.png'
+				)->send();
+				return false;
+				exit();
+			}
+
+			else {
+				return true;
+			}
+		}
+		else {
+			return true;
+		}
 	}
 
 	function check_nonce() {
@@ -145,6 +188,10 @@
 		)->sessionStorage(
 			'nonce',
 			nonce()
+		)->attributes(
+			'[name=nonce]',
+			'value',
+			$_SESSION['nonce']
 		)->send();
 		exit();
 	};
@@ -184,7 +231,7 @@
 		$connect = ini::load('connect');
 		date_default_timezone_set('America/Los_Angeles');
 		//Error Reporting Levels: http://us3.php.net/manual/en/errorfunc.constants.php
-		//($connect->debug) ? error_reporting(E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR) : error_reporting(E_CORE_ERROR);
+		($connect->debug) ? error_reporting(E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR) : error_reporting(E_CORE_ERROR);
 		if(!defined('BASE')) define('BASE', __DIR__);
 		if(!defined('URL')) ($_SERVER['DOCUMENT_ROOT'] === __DIR__ . '/' or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/{$connect->site}");
 		new session($connect->site);
