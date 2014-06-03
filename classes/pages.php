@@ -18,12 +18,6 @@
 			if(isset($url)) {
 				$this->url = $url;
 			}
-			elseif(count($_GET)) {
-				$this->url = URL;
-				foreach($_GET as $key => $value) {
-					$this->url .= '/' . urlencode($key) . '/' . urlencode($value);
-				}
-			}
 			else {
 				$this->url = (array_keys_exist('REDIRECT_URL', 'REDIRECT_STATUS', $_SERVER)) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'];
 			}
