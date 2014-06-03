@@ -1,4 +1,9 @@
 <?php
+
+	function get_template($template) {
+		return file_get_contents(BASE . "/components/templates/{$template}.tpl");
+	}
+
 	function get_all_tags(){
 		$pdo = _pdo::load();
 		$keywords = flatten($pdo->fetch_array("
