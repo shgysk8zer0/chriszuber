@@ -207,6 +207,19 @@ NodeList.prototype.bootstrap = function() {
 				}
 			});
 		}
+		if(supports('datalist')) {
+			node.query('[list]').forEach(function(list) {
+				if(!$('#' + list.getAttribute('list')).found) {
+					ajax({
+						request: 'datalist=' + list.getAttribute('list'),
+						type: 'POST'
+					}).then(
+						handleJSON,
+						console.error
+					);
+				}
+			});
+		}
 		node.query('script').forEach(function(script) {
 			(script.textContent!== '') && eval(script.textContent);
 		});
