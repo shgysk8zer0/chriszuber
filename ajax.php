@@ -138,6 +138,7 @@
 			case 'new_post': {
 				check_nonce();
 				require_login('admin');
+
 				if(array_keys_exist('title', 'description', 'keywords', 'content', $_POST)) {
 
 					$user = $DB->prepare('
@@ -154,12 +155,12 @@
 					$keywords = urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['keywords'])));
 					$author = $user->name;
 					$content = urldecode(trim($_POST['content']));
-					$url = urlencode(strtolower(preg_replace('/\W/', null, $title)));
+					$url = urlencode(strtolower(preg_replace('/\W+/', ' ', $title)));
 
 					$tags = [];
 					foreach(explode(',', $keywords) as $tag) $tags[] = '<a href="tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
 
-					$template = template::load('blog');
+					$template = template::load('posts');
 					$time = new simple_date();
 					$template->set([
 						'title' => $title,
@@ -300,28 +301,6 @@
 				);
 			}break;
 
-			case 'restore database': {
-				require_login('admin');
-				$sql = file_get_contents(BASE . "/{$connect->site}.sql");
-				if($sql) {
-					($DB->query($sql)) ? $resp->notify(
-						'Success',
-						'Database restored',
-						'images/icons/db.png'
-					) : $resp->notify(
-						'Failure :(',
-						'There was an error restoring the database',
-						'images/icons/db.png'
-					) ;
-				}
-				else {
-					$resp->notify(
-						'Failure :(',
-						'Could not read the file to restore the database from',
-						'images/icons/db.png'
-					);
-				}
-			} break;
 			case 'restore database': {
 				check_nonce();
 				require_login('admin');
