@@ -47,5 +47,6 @@
 		<menuitem type="command" label="MySQL Query" icon="images/icons/db.svgz" data-request="action=mysql_query&nonce=<?=$session->nonce?>" data-prompt="Type your query:"></menuitem>
 		</menu>
 	<menuitem type="command" label="test" icon="images/icons/coffee.svgz" data-request="action=test"></menuitem>
+	<?php endif?>
 	<menuitem type="command" label="Clear Cache" icon="images/icons/settings.svgz" data-confirm="Are you sure you want to clear your cache for this site?"></menuitem>
 </menu>
