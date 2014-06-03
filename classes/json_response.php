@@ -2,13 +2,13 @@
 	/**
 	 * Creates and sends a JSON encoded response for XMLHTTPRequests
 	 * Optimized to be handled by handleJSON in functions.js
-	 * 
+	 *
 	 * @author Chris Zuber <shgysk8zer0@gmail.com>
 	 * @copyright 2014, Chris Zuber
 	 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
 	 * @package core_shared
 	 * @version 2014-04-19
-	 * 
+	 *
 	 * @example $resp = new json_response();
 	 * $resp->notify(...)->html(...)->append(...)->prepend(...)->before(...)->after(...)->attributes(...)->remove(...)->send();
 	 */
@@ -16,20 +16,20 @@
 	class json_response {
 		protected $response = [];
 		private static $instance = null;
-		
+
 		public static function load($arr = null) {
 			if(is_null(self::$instance)) {
 				self::$instance = new self($arr);
 			}
 			return self::$instance;
 		}
-		
+
 		public function __construct($arr = null) {
 			if(is_array($arr)) {
 				$this->response = $arr;
 			}
 		}
-		
+
 		public function __set($key, $value) {
 			/**
 			 * Setter method for the class.
@@ -309,6 +309,10 @@
 			return $this;
 		}
 
+		/*public function template($template) {
+			$this->response['template'] = $template;
+		}*/
+
 		public function debug($format = false) {
 			/**
 			 * @param boolean $format
@@ -334,7 +338,7 @@
 			 * @usage $resp->send() or $resp->send('notify')
 			 */
 
-			if(count($this->response)) {
+			if(count($this->response) and !headers_sent()) {
 				header('Content-Type: application/json');
 				(isset($key)) ? exit(json_encode([$key => $this->response[$key]])) : exit(json_encode($this->response));
 			}
