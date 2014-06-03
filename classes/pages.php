@@ -4,18 +4,29 @@
 		private $data, $path, $url, $status;
 		public $content, $type;
 
-		public static function load() {
+		public static function load($url = null) {
 			if(is_null(self::$instance)) {
 				self::$instance = new self();
 			}
 			return self::$instance;
 		}
 
-		public function __construct() {
+		public function __construct($url = null) {
 			$connect = ini::load('connect');
 			$this->status = (array_key_exists('REDIRECT_STATUS', $_SERVER)) ? $_SERVER['REDIRECT_STATUS'] : http_response_code();
 			$pdo = _pdo::load();
-			$this->url = (array_keys_exist('REDIRECT_URL', 'REDIRECT_STATUS', $_SERVER)) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'];
+			if(isset($url)) {
+				$this->url = $url;
+			}
+			elseif(count($_GET)) {
+				$this->url = URL;
+				foreach($_GET as $key => $value) {
+					$this->url .= '/' . urlencode($key) . '/' . urlencode($value);
+				}
+			}
+			else {
+				$this->url = (array_keys_exist('REDIRECT_URL', 'REDIRECT_STATUS', $_SERVER)) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'];
+			}
 			$this->path = explode('/', urldecode(preg_replace('/^(' . preg_quote(URL, '/')  .')?(' .preg_quote($connect->site, '/') . ')?(\/)?/', null, strtolower($this->url))));
 
 			switch($this->path[0]) {
@@ -27,7 +38,8 @@
 						WHERE `keywords` LIKE :tag
 						LIMIT 20
 					")->bind([
-						'tag' => "%{$this->path[1]}%"
+						//'tag' => "%{$this->path[1]}%"
+						'tag' => preg_replace('/\w*/', '%', " {$this->path[1]} ")
 					])->execute()->get_results();
 				} break;
 
