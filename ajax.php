@@ -241,17 +241,19 @@
 				check_nonce();
 				require_login('admin');
 
-				if(array_keys_exist('title', 'keywords', 'content', 'old_title', $_POST)) {
+				if(array_keys_exist('title', 'keywords', 'content', 'old_title', 'description', $_POST)) {
 					$DB->prepare("
 						UPDATE `posts`
 						SET `title` = :title,
 						`keywords` = :keywords,
+						`description` = :description,
 						`content` = :content
 						WHERE `title` = :old_title
 						LIMIT 1
 					")->bind([
 						'title' => urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['title']))),
 						'keywords' => urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['keywords']))),
+						'description' => trim($_POST['description']),
 						'content' => urldecode(trim($_POST['content'])),
 						'old_title' => urldecode(trim($_POST['old_title']))
 					]);
