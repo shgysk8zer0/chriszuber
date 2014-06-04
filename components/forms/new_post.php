@@ -1,7 +1,7 @@
 <?php
 	$session = session::load();
 ?>
-<form name="new_post" action="." method="post">
+<form name="new_post" action="<?=URL?>" method="post">
 	<fieldset form="new_post">
 		<legend>New Post</legend>
 		<article>
@@ -11,7 +11,7 @@
 					KEYWORDS
 				</nav>
 			</header>
-			<section contenteditable="true" data-input-name="content" itemprop="text">Article Content Here</section>
+			<section contenteditable="true" data-input-name="content" itemprop="text" data-menu="wysiwyg">Article Content Here</section>
 		</article>
 		<label for="description">Description: </label>
 		<textarea name="description" id="description" placeholder="Description will appear in searches. 160 character limit" maxlength="160" required></textarea><br/>
