@@ -109,6 +109,9 @@ article header {
 	padding: 0.4rem;
 	background-image: linear-gradient(rgba(40,40,40, 0.9), rgba(60,60,60,0.9));
 	color: whitesmoke;
+	position: sticky;
+	top: 0;
+	left: 0;
 }
 menu[type=list] li {
 	display: inline;
