@@ -124,10 +124,16 @@ NodeList.prototype.bootstrap = function() {
 				target = event.target;
 			});
 		});
-		node.query('[label="Text Style"] > [data-style]').forEach(function(item) {
+		node.query('#wysiwyg_menu menuitem[data-editor-command]').forEach(function(item) {
 			item.addEventListener('click', function() {
-				var sel = new selection();
-				sel.replace(sel.text[this.data('style')]());
+				var arg = null;
+				if(this.data('editor-value')) {
+					arg = this.data('editor-value');
+				}
+				else if(this.data('prompt')) {
+					arg = prompt(this.data('prompt'));
+				}
+				document.execCommand(this.data('editor-command'), null, arg);
 			})
 		});
 		node.query('a[href^="' + document.location.origin + '"]').forEach(function(a) {
@@ -278,9 +284,14 @@ NodeList.prototype.bootstrap = function() {
 				var legend = document.createElement('legend');
 				var oldTitle = document.createElement('input');
 				var tags = [];
+				var description = document.createElement('textarea');
 				keywords.querySelectorAll('a').forEach(function(tag) {
 					tags.push(tag.textContent);
 				});
+				description.value = document.querySelector('meta[name="description"]').content;
+				description.required = true;
+				description.maxLength = 160;
+				description.placeholder = 'Description will appear in searches. 160 character limit';
 				legend.textContent = 'Update Post';
 				nonce.type = 'hidden';
 				nonce.name = 'nonce';
@@ -305,6 +316,7 @@ NodeList.prototype.bootstrap = function() {
 				fieldset.appendChild(document.querySelector('article'));
 				fieldset.appendChild(oldTitle);
 				fieldset.appendChild(nonce);
+				fieldset.appendChild(description);
 				fieldset.appendChild(submit);
 				form.appendChild(fieldset);
 				document.querySelector('main').appendChild(form);
