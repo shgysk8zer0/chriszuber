@@ -226,8 +226,8 @@ NodeList.prototype.bootstrap = function() {
 				}
 			});
 		}
-		node.query('script').forEach(function(script) {
-			(script.textContent!== '') && eval(script.textContent);
+		node.query('script:not([src])').forEach(function(script) {
+			eval(script.textContent);
 		});
 		node.query('[data-svg-icon]').forEach(function(el) {
 			el.ajax({
