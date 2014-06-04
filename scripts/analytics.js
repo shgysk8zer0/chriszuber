@@ -3,5 +3,5 @@
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-ga('create', 'UA-49193524-1', 'chriszuber.com');
+ga('create', '%GOOGLE_ANALYTICS_CODE%', document.baseURI);
 ga('send', 'pageview');
