@@ -288,6 +288,7 @@ NodeList.prototype.bootstrap = function() {
 				keywords.querySelectorAll('a').forEach(function(tag) {
 					tags.push(tag.textContent);
 				});
+				description.name = 'description';
 				description.value = document.querySelector('meta[name="description"]').content;
 				description.required = true;
 				description.maxLength = 160;
