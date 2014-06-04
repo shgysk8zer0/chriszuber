@@ -27,11 +27,11 @@
 	<menu label="Create">
 		<menu label="Headings">
 			<menuitem label="H1" data-editor-command="heading" data-editor-value="H1"></menuitem>
-			<menuitem label="H1" data-editor-command="heading" data-editor-value="H1"></menuitem>
-			<menuitem label="H1" data-editor-command="heading" data-editor-value="H1"></menuitem>
-			<menuitem label="H1" data-editor-command="heading" data-editor-value="H1"></menuitem>
-			<menuitem label="H1" data-editor-command="heading" data-editor-value="H1"></menuitem>
-			<menuitem label="H1" data-editor-command="heading" data-editor-value="H1"></menuitem>
+			<menuitem label="H2" data-editor-command="heading" data-editor-value="H2"></menuitem>
+			<menuitem label="H3" data-editor-command="heading" data-editor-value="H3"></menuitem>
+			<menuitem label="H4" data-editor-command="heading" data-editor-value="H4"></menuitem>
+			<menuitem label="H5" data-editor-command="heading" data-editor-value="H5"></menuitem>
+			<menuitem label="H6" data-editor-command="heading" data-editor-value="H6"></menuitem>
 		</menu>
 		<menu label="List">
 			<menuitem label="Ordered" data-editor-command="insertorderedlist"></menuitem>
