@@ -54,8 +54,8 @@
 		<script type="application/javascript" src="scripts/combined.js" async></script>
 	<?php endif?>
 <?php endif?>
-<?php if(!localhost()):?>
-	<script type="application/javascript" src="scripts/analytics.js" async></script>
+<?php if(isset($head->google_analytics_code)):?>
+	<script type="application/javascript" nonce="<?=$_SESSION['nonce']?>"><?=preg_replace('/' . preg_quote('%GOOGLE_ANALYTICS_CODE%', '/') .'/', $head->google_analytics_code, file_get_contents(BASE . '/scripts/analytics.js'))?></script>
 <?php endif?>
 <!--[if lte IE 8]>
 <script type="text/javascript">
