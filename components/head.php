@@ -54,6 +54,9 @@
 		<script type="application/javascript" src="scripts/combined.js" async></script>
 	<?php endif?>
 <?php endif?>
+<?php if(!localhost()):?>
+	<script type="application/javascript" src="scripts/analytics.js" async></script>
+<?php endif?>
 <!--[if lte IE 8]>
 <script type="text/javascript">
 	var html5=new Array('header','hgroup','nav','menu','main','section','article','footer','aside','mark');
