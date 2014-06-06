@@ -157,7 +157,7 @@ NodeList.prototype.bootstrap = function() {
 				document.execCommand(this.data('editor-command'), null, arg);
 			})
 		});
-		node.query('a[href^="' + document.location.origin + '"]').forEach(function(a) {
+		node.query('a[href^="' + document.location.origin + '"]:not([target])').forEach(function(a) {
 			a.addEventListener('click', function(event) {
 				event.preventDefault();
 				ajax({
@@ -314,7 +314,7 @@ NodeList.prototype.bootstrap = function() {
 				form.name = 'edit_post';
 				form.method = 'POST';
 				form.action = document.baseURI;
-				form.attr('contextment', 'wysiwyg_menu');
+				form.attr('contextmenu', 'wysiwyg_menu');
 				var title = document.querySelector('article header h1');
 				var keywords = document.querySelector('article header nav');
 				var content = document.querySelector('article section');
