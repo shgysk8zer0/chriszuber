@@ -1,5 +1,5 @@
-<!--https://developer.mozilla.org/en-US/docs/Midas-->
 <menu type="context" id="wysiwyg_menu">
+	<!--https://developer.mozilla.org/en-US/docs/Midas-->
 	<menu label="Text Style">
 		<menuitem label="Bold" data-editor-command="bold"></menuitem>
 		<menuitem label="Italics" data-editor-command="italic"></menuitem>
