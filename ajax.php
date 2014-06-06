@@ -1,5 +1,5 @@
 <?php
-	require_once('./custom.php');
+	//require_once('./custom.php');
 	$session = session::load();
 	$login = login::load();
 	$connect = ini::load('connect');
@@ -34,10 +34,14 @@
 	elseif(array_key_exists('load', $_POST)){
 		switch($_POST['load']) {
 			default:
-				$resp->html(
+				/*$resp->html(
 					'main',
 					load_results($_POST['load'])
-				);
+				);*/
+			$resp->notify(
+				'The basic load method is depreciated',
+				'Please update to a more specific request'
+			);
 		}
 	}
 
@@ -76,8 +80,7 @@
 								'disabled' => false
 							],
 							'body > main' => [
-								'contextmenu' => false,
-								'data-menu' => 'admin'
+								'contextmenu' => 'admin_menu'
 							]
 						])->remove(
 							'main > *'
@@ -333,6 +336,19 @@
 					'images/icons/people.png'
 				);
 			}break;
+
+			case 'Clear PHP_errors': {
+				$pdo = _pdo::load();
+				$pdo->reset_table('PHP_errors');
+				file_put_contents(BASE . '/errors.log', null, LOCK_EX);
+				$resp->notify(
+					'Success!',
+					"Table (PHP_errors) has been reset",
+					'images/icons/db.png'
+				)->remove(
+					'main > *'
+				);
+			} break;
 
 			case 'restore database': {
 				check_nonce();

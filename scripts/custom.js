@@ -21,11 +21,31 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 		},
 		attributes: function(){
 			switch(this.attributeName) {
-				case 'data-menu':
+				case 'contextmenu': {
+					var menu = this.target.attr('contextmenu');
+					(this.oldValue !== '') && $('menu#' + this.oldValue).delete();
+					if(menu && menu !== '') {
+						if(!$('menu#'+ menu).found){
+							ajax({
+								url: document.baseURI,
+								request: 'load_menu=' + menu.replace(/\_menu$/ ,''),
+								cache: this.target.data('cache')
+							}).then(
+								handleJSON,
+								console.error
+							);
+						}
+					}
+				} break;
+				case 'data-menu': {
 					var menu = this.target.data('menu');
+					notify({
+						title: 'Loading menu from data-menu',
+						body: menu + ' on ' + this.target.tagName
+					});
 					if(menu && menu !== '') {
 						this.target.setAttribute('contextmenu', menu + '_menu');
-						if(!$('menu#'+ menu + '_menu').found){
+						/*if(!$('menu#'+ menu + '_menu').found){
 							ajax({
 								url: document.baseURI,
 								request: 'load_menu=' + menu,
@@ -35,9 +55,9 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 								console.error
 							);
 						}
-						this.target.removeAttribute('data-menu');
+						this.target.removeAttribute('data-menu');*/
 					}
-					break;
+				} break;
 				case 'data-request':
 					(this.oldValue !== '') && this.target.addEventListener('click', function() {
 						if(!this.data('confirm') || confirm(this.data('confirm'))){
@@ -79,7 +99,8 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 		'data-request',
 		'data-ajax',
 		'data-ajax-request',
-		'contextmenu'
+		'contextmenu',
+		'contenteditable'
 	]);
 	$(window).networkChange(function(){
 		$('html').toggleClass('online', navigator.onLine).toggleClass('offline', !navigator.onLine);
@@ -200,7 +221,11 @@ NodeList.prototype.bootstrap = function() {
 			node.query('[data-menu]').forEach(function(el){
 				var menu = el.data('menu');
 				el.setAttribute('contextmenu', menu + '_menu');
-				el.removeAttribute('data-menu');
+				notify({
+					title: 'Found node with data-menu attribute',
+					body: menu + ' on ' + el.tagName
+				});
+			/*	el.removeAttribute('data-menu');
 				if($('menu#'+menu + '_menu').length === 0){
 					ajax({
 						url: document.baseURI,
@@ -210,9 +235,24 @@ NodeList.prototype.bootstrap = function() {
 						handleJSON,
 						console.error
 					);
-				}
+				}*/
 			});
 		}
+		node.query('[contextmenu]').forEach(function(el) {
+			var menu = el.attr('contextmenu');
+			if(menu && menu !== '') {
+				if(!$('menu#'+ menu).found){
+					ajax({
+						url: document.baseURI,
+						request: 'load_menu=' + menu.replace(/\_menu$/ ,''),
+						cache: el.data('cache')
+					}).then(
+						handleJSON,
+						console.error
+					);
+				}
+			}
+		});
 		if(supports('datalist')) {
 			node.query('[list]').forEach(function(list) {
 				if(!$('#' + list.getAttribute('list')).found) {
@@ -274,7 +314,7 @@ NodeList.prototype.bootstrap = function() {
 				form.name = 'edit_post';
 				form.method = 'POST';
 				form.action = document.baseURI;
-				form.data('menu', 'wysiwyg');
+				form.attr('contextment', 'wysiwyg_menu');
 				var title = document.querySelector('article header h1');
 				var keywords = document.querySelector('article header nav');
 				var content = document.querySelector('article section');

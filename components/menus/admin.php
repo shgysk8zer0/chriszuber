@@ -44,6 +44,7 @@
 	<menu label="Manage Database">
 		<menuitem type="command" label="Restore Database" icon="images/icons/db.svgz" data-request="action=restore database&nonce=<?=$session->nonce?>" data-confirm="Are you sure you want to restore the database from <?=$connect->database?>.sql? All changes made since the last mysqldump will be reverted."></menuitem>
 		<menuitem type="command" label="Backup Database" icon="images/icons/db.svgz" data-request="action=backup database&nonce=<?=$session->nonce?>" data-confirm="Are you sure you want to backup the database to <?=$connect->database?>.sql?"></menuitem>
+		<menuitem type="command" label="Clear PHP Errors" icon="images/icons/db.svgz" data-request="action=Clear PHP_errors&nonce=<?=$session->nonce?>"></menuitem>
 		<menuitem type="command" label="Clear CSP" icon="images/icons/db.svgz" data-request="reset_table=CSP_errors&nonce=<?=$session->nonce?>"></menuitem>
 		<menuitem type="command" label="MySQL Query" icon="images/icons/db.svgz" data-request="action=mysql_query&nonce=<?=$session->nonce?>" data-prompt="Type your query:"></menuitem>
 		</menu>

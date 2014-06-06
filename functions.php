@@ -11,6 +11,7 @@
 		$version = explode('.', PHP_VERSION);
 		define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
 	}
+
 	if (PHP_VERSION_ID < 50207) {
 		define('PHP_MAJOR_VERSION',   $version[0]);
 		define('PHP_MINOR_VERSION',   $version[1]);
@@ -18,6 +19,12 @@
 	}
 
 	spl_autoload_register('load_class');				 //Load class by naming it
+
+	function error_reporter_class($error_level, $error_message, $file, $line, $scope) {
+		$reporter = error_reporter::load((defined('ERROR_METHOD')) ? ERROR_METHOD : 'log');
+		return $reporter->report($error_level, $error_message, $file, $line, $scope);
+	}
+
 	init();
 
 	function regexp($str) {								//Make regular expression from string
@@ -202,21 +209,33 @@
 		 * @param string $site
 		 * @return array $info
 		 */
+		
 		ini_set('include_path', ini_get('include_path') . ':' . __DIR__ . ":" . __DIR__ . "/classes");
 
-		$info = parse_ini_file("connect.ini");
 		$connect = ini::load('connect');
 		if(!isset($connect->site)) {
 			if(is_null($site)) {
 				($_SERVER['DOCUMENT_ROOT'] === __DIR__ . '/' or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? $connect->site = end(explode('/', preg_replace('/\/$/', '', $_SERVER['DOCUMENT_ROOT']))) : $connect->site = explode('/', $_SERVER['PHP_SELF'])[1];
 			}
 		}
+
 		if(!isset($connect->user)) $conenct->user = $connect->site;
 		if(!isset($connect->database)) $connect->database = $connect->user;
 		if(!isset($connect->server)) $connect->server = 'localhost';
 		if(!isset($connect->debug)) $connect->debug = true;
 		if(!isset($connect->type)) $connect->type = 'mysql';
 		if($connect->server !== 'localhost' and is_null($connect->port)) $connect->port = '3306';
+		
+		if(file_exists('./define.ini')) {
+			foreach(parse_ini_file('./define.ini') as $key => $value) {
+				define(strtoupper(preg_replace('/\s|-/', '_', $key)), $value);
+			}
+		}
+
+		if(!defined('BASE')) define('BASE', __DIR__);
+		if(!defined('URL')) ($_SERVER['DOCUMENT_ROOT'] === __DIR__ . '/' or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/{$connect->site}");
+		new session($connect->site);
+		nonce(50);									// Set a nonce of n random characters
 	}
 
 	function config() {								// Initial Setup
@@ -228,14 +247,63 @@
 		* @return void
 		*/
 
-		$connect = ini::load('connect');
+		$settings = ini::load('settings');
+		if(isset($settings->path)) {
+			ini_set('include_path', ini_get('include_path') . ':' . join(':' . __DIR__ . '/', explode(',', $settings->path)));
+		}
+		ini_set('include_path', ini_get('include_path') . ':' . __DIR__ . ":" . __DIR__ . "/classes");
 		date_default_timezone_set('America/Los_Angeles');
+		
+		$error_handler = (isset($settings->error_handler)) ? $settings->error_handler : 'error_reporter_class';
+		
+		if(isset($settings->requires)) {
+			foreach(explode(',', $settings->requires) as $file) {
+				require_once(__DIR__ . '/' . trim($file));
+			}
+		}
+
 		//Error Reporting Levels: http://us3.php.net/manual/en/errorfunc.constants.php
-		($connect->debug) ? error_reporting(E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR) : error_reporting(E_CORE_ERROR);
-		if(!defined('BASE')) define('BASE', __DIR__);
-		if(!defined('URL')) ($_SERVER['DOCUMENT_ROOT'] === __DIR__ . '/' or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/{$connect->site}");
-		new session($connect->site);
-		nonce(50);									// Set a nonce of n random characters
+		if(isset($settings->debug)) {
+			if(is_string($settings->debug)) $settings->debug = strtolower($settings->debug);
+			error_reporting(0);
+			switch($settings->debug) {
+				case 'true': case 'all': case 'on': {
+					set_error_handler($error_handler, E_ALL);
+				} break;
+
+				case 'false': case 'off': {
+					set_error_handler($error_handler, 0);
+				} break;
+
+				case 'core': {
+					set_error_handler($error_handler, E_CORE_ERROR|E_CORE_WARNING);
+				} break;
+
+				case 'strict': {
+					set_error_handler($error_handler, E_ALL & ~E_USER_ERROR & ~E_USER_WARNING & ~E_USER_NOTICE);
+				} break;
+				
+				case 'notice': {
+					set_error_handler($error_handler, E_ALL & ~E_STRICT & ~E_USER_ERROR & ~E_USER_WARNING & ~E_USER_NOTICE);
+				} break;
+
+				case 'developement': {
+					set_error_handler($error_handler, E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+				} break;
+
+				case 'production': {
+					set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
+				} break;
+
+				default: {
+					set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
+				}
+			}
+		}
+
+		else {
+			error_reporting(E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
+		}
 	}
 
 	function CSP() {								//Sets Content-Security-Policy from csp.ini
@@ -338,11 +406,13 @@
 		return (isset($_SERVER['HTTP_DNT']) and $_SERVER['HTTP_DNT']);
 	}
 
-	function ls($path = __DIR__, $ext = null, $strip_ext = null) {			// List files in given path. Optional extension and strip extension from results
+	function ls($path = null, $ext = null, $strip_ext = null) {			// List files in given path. Optional extension and strip extension from results
 		/**
 		 * @param [string $path[, string $ext[, boolean $strip_ext]]]
 		 * @return array
 		 */
+		
+		if(is_null($path)) $path = BASE;
 		$files = array_diff(scandir($path), array('.', '..'));				// Get array of files. Remove current and previous directory (. & ..)
 		$results = array();
 		if(isset($ext)) {													//$ext has been passed, so let's work with it
@@ -744,6 +814,7 @@
 	function utf($string) {										//Concerts characters to UTF-8. Replaces special chars.
 		return htmlentities($string, ENT_QUOTES | ENT_HTML5,"UTF-8");
 	}
+
 	function http_status($code = 200) {							//HTTP status header, the easy way. Just need status code
 		/**
 		 * @params integer $code
@@ -903,7 +974,6 @@
 		 */
 		if(!is_null($file)) return preg_replace("/\t|\n/","", file_get_contents(BASE . "/$file"));
 	}
-
 
 	function array_to_obj($arr) {
 		return (object) $arr;

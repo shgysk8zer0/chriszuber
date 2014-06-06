@@ -120,20 +120,21 @@
 			$act = substr($name, 0, 3);
 			$key = preg_replace('/_/', '-', substr($name, 3));
 			switch($act) {
-				case 'get':
+				case 'get': {
 					if(array_key_exists($key, $this->data)) {
 						return $this->data[$key];
 					}
 					else{
 						return false;
 					}
-					break;
-				case 'set':
+				} break;
+				case 'set': {
 					$this->data[$key] = $arguments[0];
 					return $this;
-					break;
-				default:
+				} break;
+				default: {
 					throw new Exception("Unknown method: {$name} in " . __CLASS__ .'->' . __METHOD__);
+				}
 			}
 		}
 
@@ -253,6 +254,10 @@
 			 * array, it is intended to be used for things
 			 * like array_insert that use a simple array where
 			 * the keys are columns and the values are the values
+			 * 
+			 * It takes a pointer to the array as its argument,
+			 * so $arr = $pdo->prepare_key_value($arr) is the same as
+			 * $$pdo->prepare_key_value($arr)
 			 *
 			 * @param array $arr
 			 * @return array
@@ -262,6 +267,7 @@
 			 * 'Index Only',
 			 * 'Second_Level' => [...]
 			 * ];
+			 * $pdo->prepare_key_value($arr)
 			 */
 
 			$keys = array_keys($arr);
@@ -287,16 +293,16 @@
 			 * Makes a string safer to use in a query
 			 * When possible, use prepared statements instead
 			 * It returns the value, but it is also uses
-			 * a pointer, so $str = $DB->quoute($str)
-			 * has the same effect as $DB->quote($str)
+			 * a pointer, so $str = $pdo->quoute($str)
+			 * has the same effect as $pdo->quote($str)
 			 *
 			 * @param mixed $val
 			 * @return mixed
 			 * @usage
 			 * $str = 'Some string'
 			 * $arr = ['String1', $str];
-			 * $DB->quote($str)
-			 * $DB->quote($arr)
+			 * $pdo->quote($str)
+			 * $pdo->quote($arr)
 			 */
 
 			if(is_array($val)) {

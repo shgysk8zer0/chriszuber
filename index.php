@@ -26,7 +26,7 @@
 <!--[if gt IE 8]><!--> <html itemscope itemtype="http://schema.org/WebPage" class="no-js" <?php if(!localhost()):?> manifest="manifest.appcache"<?php endif?>> <!--<![endif]-->
 <!--<?=date('Y-m-d H:i:s')?>-->
 <?php load('head');?>
-<body lang="en" data-menu="main">
+<body lang="en" contextmenu="main_menu">
 	<?php load('header', 'main', 'footer');?>
 </body>
 </html>
