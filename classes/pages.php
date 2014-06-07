@@ -33,11 +33,16 @@
 						LIMIT 20
 					")->bind([
 						//'tag' => "%{$this->path[1]}%"
-						'tag' => preg_replace('/\w*/', '%', " {$this->path[1]} ")
+						'tag' => preg_replace('/\s*/', '%', " {$this->path[1]} ")
 					])->execute()->get_results();
 				} break;
 
-				default: {
+				case 'forms': {
+					$this->type = 'forms';
+					$this->get_content();
+				} break;
+
+				case 'posts': default: {
 					$this->type = 'posts';
 					if(count($this->path) === 1){
 						$this->data = $pdo->fetch_array('
@@ -105,7 +110,21 @@
 						])->out();
 					}
 					$this->content .= '</div>';
-				}
+				} break;
+
+				case 'forms': {
+					switch($this->path[1]) {
+						case 'login': {
+							$this->content = load_results('forms/login');
+						} break;
+
+						default: {
+							require_login();
+
+							$this->content = load_results("forms/{$this->path[1]}");
+						}
+					} break;
+				} break;
 			}
 		}
 
