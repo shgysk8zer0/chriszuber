@@ -48,14 +48,18 @@
 	elseif(array_key_exists('load_form', $_POST)) {
 		switch($_POST['load_form']) {
 			case 'login':
-				$resp->html(
+				$resp->remove(
+					'main > :not(aside)'
+				)->prepend(
 					'main',
 					load_results('forms/login')
 				);
 				break;
 			case 'new_post':
 				require_login();
-				$resp->html(
+				$resp->remove(
+					'main > :not(aside)'
+				)->prepend(
 					'main',
 					load_results('forms/new_post')
 				);
@@ -83,7 +87,7 @@
 								'contextmenu' => 'admin_menu'
 							]
 						])->remove(
-							'main > *'
+							'main > :not(aside)'
 						)->notify(
 							'Login successful',
 							"Welcome back {$login->user}",
@@ -420,7 +424,9 @@
 				debug($$_POST['debug']);
 			}
 		}
-		$resp->html(
+		$resp->remove(
+			'main > :not(aside)'
+		)->prepend(
 			'body > main',
 			ob_get_clean()
 		);
