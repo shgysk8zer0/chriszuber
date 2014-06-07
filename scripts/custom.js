@@ -12,7 +12,7 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 	(supports('connectivity') && !navigator.onLine) ? html.addClass('offline') : html.addClass('online');
 	setTimeout(
 		function(){
-			html.results.bootstrap();
+			body.results.bootstrap();
 		}, 100
 	);
 	body.watch({
@@ -35,27 +35,6 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 								console.error
 							);
 						}
-					}
-				} break;
-				case 'data-menu': {
-					var menu = this.target.data('menu');
-					notify({
-						title: 'Loading menu from data-menu',
-						body: menu + ' on ' + this.target.tagName
-					});
-					if(menu && menu !== '') {
-						this.target.setAttribute('contextmenu', menu + '_menu');
-						/*if(!$('menu#'+ menu + '_menu').found){
-							ajax({
-								url: document.baseURI,
-								request: 'load_menu=' + menu,
-								cache: this.target.data('cache')
-							}).then(
-								handleJSON,
-								console.error
-							);
-						}
-						this.target.removeAttribute('data-menu');*/
 					}
 				} break;
 				case 'data-request':
@@ -137,9 +116,6 @@ NodeList.prototype.bootstrap = function() {
 		if(node.nodeType !== 1) {
 			return this;
 		}
-		/*node.$('*').contextmenu(function(event){
-			console.log(event);
-		});*/
 		node.querySelectorAll('*').forEach(function(child) {
 			child.addEventListener('contextmenu', function(event){
 				target = event.target;
@@ -207,52 +183,23 @@ NodeList.prototype.bootstrap = function() {
 				}
 			});
 		});
-		node.query('table[data-sql-table] tr[data-sql-id] input[name]').forEach(function(input){
-			input.addEventListener('change', function(){
-				ajax({
-					request:'table=' + encodeURIComponent(this.ancestor('table').data('sql-table')) + '&id=' + encodeURIComponent(this.ancestor('tr').data('sql-id')) + '&name=' + encodeURIComponent(this.name) + '&value=' + encodeURIComponent(this.value) + '&nonce=' + sessionStorage.nonce
-				}).then(
-					handleJSON,
-					console.error
-				);
-			});
-		});
-		if(supports('menuitem')){
-			node.query('[data-menu]').forEach(function(el){
-				var menu = el.data('menu');
-				el.setAttribute('contextmenu', menu + '_menu');
-				notify({
-					title: 'Found node with data-menu attribute',
-					body: menu + ' on ' + el.tagName
-				});
-			/*	el.removeAttribute('data-menu');
-				if($('menu#'+menu + '_menu').length === 0){
-					ajax({
-						url: document.baseURI,
-						request: 'load_menu=' + menu,
-						cache: el.data('cache')
-					}).then(
-						handleJSON,
-						console.error
-					);
-				}*/
+		if(supports('menuitem')) {
+			node.query('[contextmenu]').forEach(function(el) {
+				var menu = el.attr('contextmenu');
+				if(menu && menu !== '') {
+					if(!$('menu#'+ menu).found){
+						ajax({
+							url: document.baseURI,
+							request: 'load_menu=' + menu.replace(/\_menu$/ ,''),
+							cache: el.data('cache')
+						}).then(
+							handleJSON,
+							console.error
+						);
+					}
+				}
 			});
 		}
-		node.query('[contextmenu]').forEach(function(el) {
-			var menu = el.attr('contextmenu');
-			if(menu && menu !== '') {
-				if(!$('menu#'+ menu).found){
-					ajax({
-						url: document.baseURI,
-						request: 'load_menu=' + menu.replace(/\_menu$/ ,''),
-						cache: el.data('cache')
-					}).then(
-						handleJSON,
-						console.error
-					);
-				}
-			}
-		});
 		if(supports('datalist')) {
 			node.query('[list]').forEach(function(list) {
 				if(!$('#' + list.getAttribute('list')).found) {
