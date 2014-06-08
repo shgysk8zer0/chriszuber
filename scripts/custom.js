@@ -133,7 +133,7 @@ NodeList.prototype.bootstrap = function() {
 				document.execCommand(this.data('editor-command'), null, arg);
 			})
 		});
-		node.query('a[href^="' + document.location.origin + '"]:not([target])').forEach(function(a) {
+		node.query('a[href^="' + document.location.origin + '"]:not([target="_blank"]):not([download])').forEach(function(a) {
 			a.addEventListener('click', function(event) {
 				event.preventDefault();
 				ajax({
