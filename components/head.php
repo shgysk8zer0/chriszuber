@@ -25,6 +25,7 @@
 <meta name="robots" content="<?=$head->robots?>"/>
 <meta name="author" content="<?=$page->author?>"/>
 <meta itemprop="name" content="<?=$head->title?>"/>
+<meta itemprop="url" content="<?=URL . $_SERVER['REQUEST_URI']?>"/>
 <meta itemprop="description" content="<?=$page->description?>"/>
 <meta itemprop="keywords" content="<?=$page->keywords?>"/>
 <meta itemprop="author" content="<?=$page->author?>"/>
