@@ -28,7 +28,7 @@
 <meta itemprop="description" content="<?=$page->description?>"/>
 <meta itemprop="keywords" content="<?=$page->keywords?>"/>
 <meta itemprop="author" content="<?=$page->author?>"/>
-<meta itemprop="image" content="favicon.svgz"/>
+<meta itemprop="image" content="favicon.png"/>
 <meta name="viewport" content="<?=$head->viewport?>"/>
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="canonical" itemprop="url" href="<?=URL . $_SERVER['REQUEST_URI']?>"/>
