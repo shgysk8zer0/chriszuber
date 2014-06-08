@@ -16,6 +16,10 @@
 		<menu label="Font Family">
 			<menuitem label="Alice" data-editor-command="fontname" data-editor-value="Alice"></menuitem>
 			<menuitem label="Web Symbols" data-editor-command="fontname" data-editor-value="Web Symbols"></menuitem>
+			<menuitem label="Acme" data-editor-command="fontname" data-editor-value="Acme"></menuitem>
+			<menuitem label="GNUTypewriter" data-editor-command="fontname" data-editor-value="GNUTypewriter"></menuitem>
+			<menuitem label="PressStart" data-editor-command="fontname" data-editor-value="PressStart"></menuitem>
+			<menuitem label="GNUTypewriter" data-editor-command="fontname" data-editor-value="GNUTypewriter"></menuitem>
 			<menuitem label="Other?" data-editor-command="fontname" data-prompt="What font would you like to use?"></menuitem>
 		</menu>
 	</menu>
