@@ -103,7 +103,7 @@ input[type=search] {
 	max-width: 80%;
 	background: transparent;
 	border-width: 0 0 0.1rem 0;
-	color: whitesmoke;
+	color: inherit;
 	text-shadow: 0.1rem 0.05rem 0.1rem black;
 	-webkit-transition: all 500ms;
 	transition: all 500ms;
