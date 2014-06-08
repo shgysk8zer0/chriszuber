@@ -132,6 +132,7 @@ form[name="new_post"] textarea {
 }
 input[type=search] {
 	width: 7rem;
+	-webkit-transition: width 500ms;
 	transition: width 500ms;
 }
 input[type=search]:focus {
