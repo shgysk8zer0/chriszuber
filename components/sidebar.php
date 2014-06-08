@@ -1,14 +1,13 @@
 <?php
 	require_once(BASE . '/custom.php');
 	$posts = get_recent_posts();
-	//$tags = get_all_tags();
 ?>
 <aside class="sidebar">
 	<div class="recent posts">
 		<h3>Recent Posts</h3>
 		<?php foreach($posts as $post):?>
 		<a href="<?=URL?>/posts/<?=$post->url?>">
-			<?=$post->title?>
+			<h4><?=$post->title?></h4>
 			<p><?=$post->description?></p>
 		</a>
 		<?php endforeach?>
