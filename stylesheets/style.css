@@ -163,7 +163,7 @@ aside .recent {
 	margin: 0.2rem;
 	box-shadow: 0.3rem 0.3rem 0.3rem black;
 }
-@media screen and (max-width:499px) {
+@media screen and (max-width:999px) {
 	header nav {
 		display: none;
 	}
