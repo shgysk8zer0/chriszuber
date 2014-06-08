@@ -48,6 +48,7 @@
 	background-attachment:fixed;
 	color: whitesmoke;
 	text-shadow:var(shadow);
+	cursor: url(../images/cursors/Arch.svgz), url(../images/cursors/Arch.png), url(../images/cursors/Arch.cur), auto;
 }
 :root.offline {
 	pointer-events: none;
@@ -68,16 +69,25 @@ body> header {
 	border-bottom: 0.2rem solid dimgray;
 	box-shadow: 0 0 3rem black inset;
 }
-a {
+a, [download] {
 	font-family: inherit;
 	color: inherit;
 }
-main a::after {
+a::after {
 	font-family: 'Web Symbols';
+}
+main a::after {
 	content: '  K';
 }
 nav a::after, .tags a::after {
 	content: '  ,';
+}
+a[target]::after {
+	content:'  D';
+
+}
+[download]::after {
+	content:'  A';
 }
 body > header h1::after {
 	content: '';
@@ -106,18 +116,35 @@ main > article, main > .tags{
 	border-radius: inherit;
 	padding: inherit;
 	border: 0.3rem outset black;
+	word-wrap: break-word;
 	flex: 1 1 60%;
 	order:1;
 }
 main aside{
-	background-image:linear-gradient(315deg,rgba(80,80,80,0.8),rgba(140,140,140,0.9),rgba(40,40,40,0.8));
+	padding: 1.3rem;
+	background-image: linear-gradient(whitesmoke ,#ddd);
+	color: #333;
+	background-size: cover;
 	border-radius:1rem;
 	border:0.3rem inset black;
 	box-shadow:-1rem 1rem 1rem black,0 0 1rem 0 black inset;
 	flex: 1 1 20%;
 	order:2;
 }
+aside h3 {
+	background-color: cyan;
+	padding: 0.3rem;
+	border-bottom: 0.2rem solid black;
+}
+aside .recent {
+	border: 0.2rem outset black;
+	margin: 0.2rem;
+	box-shadow: 0.3rem 0.3rem 0.3rem black;
+}
 @media screen and (max-width:499px) {
+	header nav {
+		display: none;
+	}
 	main {
 		width: 95vw;
 		transform: translateX(2.5vw);
@@ -233,7 +260,7 @@ a.logo svg:hover {
 	font-style: normal;
 	font-weight: normal;
 	font-variant: normal;
-	font-size: 1em;
+	font-size: inherit;
 	font-size-adjust: none;
 	font-stretch: none;
 	content: ' 'attr(data-icon)' ';
