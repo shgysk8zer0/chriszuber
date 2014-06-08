@@ -123,6 +123,13 @@ form[name="new_post"] textarea {
 	width: 35rem;
 	height: 8rem;
 }
+input[type=search] {
+	width: 7rem;
+	transition: width 500ms;
+}
+input[type=search]:focus {
+	width: 20rem;
+}
 #contact-card {
 	height: 20rem;
 	width: 40vw;
