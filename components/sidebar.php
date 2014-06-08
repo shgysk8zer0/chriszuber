@@ -9,14 +9,14 @@
 		<a href="<?=URL?>/posts/<?=$post->url?>">
 			<h4><?=$post->title?></h4>
 			<p><?=$post->description?></p>
-		</a>
+		</a><br/>
 		<?php endforeach?>
 		<?php load('forms/tag_search')?>
 	</div>
 	<div class="recent tags">
 		<h3>Tags</h3>
 		<?php foreach(get_all_tags() as $tag):?>
-		<a href="<?=URL?>/tags/<?=urlencode($tag)?>"><?=$tag?></a>
+		<a href="<?=URL?>/tags/<?=urlencode($tag)?>"><?=$tag?></a><br/>
 		<?php endforeach?>
 	</div>
 </aside>
