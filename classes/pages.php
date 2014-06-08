@@ -80,7 +80,7 @@
 					$keywords = explode(',', $this->data->keywords);
 					$tags = [];
 					//foreach($keywords as $tag) $tags[] = '<a href="' . URL . '/tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
-				foreach($keywords as $tag) $tags[] = '<a href="' . URL . '/tags/' . strtolower(urlencode(trim($tag))) . '" rel="tag">' . trim($tag) . "</a>";
+				foreach($keywords as $tag) $tags[] = '<a href="' . URL . '/tags/' . urlencode(trim($tag)) . '" rel="tag">' . trim($tag) . "</a>";
 					$this->content = $template->set([
 						'title' => $this->data->title,
 						'tags' => join(PHP_EOL, $tags),
