@@ -29,7 +29,7 @@
 	}
 	@media screen and (max-width:499px){
 		:root{
-			var-rem:2vw;
+			var-rem:4vw;
 		}
 	}
 	:root{
@@ -64,7 +64,20 @@
 	text-shadow:none;
 }
 body> header {
-
+	background-image: linear-gradient(rgba(40,40,40,0.8), rgba(80,80,80,0.7));
+	border-bottom: 0.2rem solid dimgray;
+	box-shadow: 0 0 3rem black inset;
+}
+a {
+	font-family: inherit;
+	color: inherit;
+}
+main a::after {
+	font-family: 'Web Symbols';
+	content: '  K';
+}
+nav a::after, .tags a::after {
+	content: '  ,';
 }
 body > header h1::after {
 	content: '';
@@ -87,21 +100,36 @@ main {
 	-webkit-transform-style: preserve-3d;
 	transform-origin: top;
 }
-main article{
+main > article, main > .tags{
 	color:#333;
 	background-color: whitesmoke;
 	border-radius: inherit;
 	padding: inherit;
-	flex: 3 1 60%;
+	border: 0.3rem outset black;
+	flex: 1 1 60%;
 	order:1;
 }
-main>aside{
+main aside{
 	background-image:linear-gradient(315deg,rgba(80,80,80,0.8),rgba(140,140,140,0.9),rgba(40,40,40,0.8));
 	border-radius:1rem;
 	border:0.3rem inset black;
 	box-shadow:-1rem 1rem 1rem black,0 0 1rem 0 black inset;
-	flex: 1 6 20%;
+	flex: 1 1 20%;
 	order:2;
+}
+@media screen and (max-width:499px) {
+	main {
+		width: 95vw;
+		transform: translateX(2.5vw);
+		padding: 1rem;
+		flex-direction: column;
+	}
+	main article {
+		flex: 1 1 100%;
+	}
+	main aside {
+		flex: 1 1 100%;
+	}
 }
 article header {
 	font-family: Alice;
@@ -177,7 +205,10 @@ input[type=search]:focus {
 .face.back {
 	transform: rotateY(180deg);
 }
-body.hidden *{-webkit-animation-play-state:paused;animation-play-state:paused;}
+body.hidden *{
+	-webkit-animation-play-state:paused;
+	animation-play-state:paused;
+}
 a[rel=license]>img[src$=svgz] {
 	width: calc(30rem / 5);
 	height: calc(13rem / 5);
