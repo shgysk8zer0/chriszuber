@@ -82,7 +82,7 @@ main a::after {
 a[rel=tag]::after {
 	content: '  ,';
 }
-a[target]::after {
+a[target="_blank"]::after {
 	content:'  D';
 }
 [download]::after {
@@ -100,11 +100,13 @@ menu[type=list] li {
 }
 input[type=search] {
 	width: 7rem;
+	max-width: 80%;
 	background: transparent;
 	border-width: 0 0 0.1rem 0;
 	color: whitesmoke;
-	-webkit-transition: width 500ms;
-	transition: width 500ms;
+	text-shadow: 0.1rem 0.05rem 0.1rem black;
+	-webkit-transition: all 500ms;
+	transition: all 500ms;
 }
 input[type=search]:focus {
 	width: 20rem;
