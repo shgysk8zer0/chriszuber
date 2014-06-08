@@ -32,7 +32,6 @@
 						WHERE `keywords` LIKE :tag
 						LIMIT 20
 					")->bind([
-						//'tag' => "%{$this->path[1]}%"
 						'tag' => preg_replace('/\s*/', '%', " {$this->path[1]} ")
 					])->execute()->get_results();
 				} break;
