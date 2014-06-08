@@ -10,10 +10,10 @@
 	");
 ?>
 	<header>
-		<h1><a href="<?=URL?>" data-cache="home"><?=$storage->site_info->title?></a></h1>
-		<nav>
+		<h1><a href="<?=URL?>" rel="bookmark" data-cache="home"><?=$storage->site_info->title?></a></h1>
+		<nav itemprop="keywords">
 			<?php foreach($posts as $post):?>
-			<a href="<?=URL?>/posts/<?=$post->url?>" itemprop="keywords"><?=$post->title?></a>
+			<a href="<?=URL?>/posts/<?=$post->url?>" rel="tag"><?=$post->title?></a>
 			<?php endforeach?>
 			<?php load('forms/tag_search')?>
 		</nav>
