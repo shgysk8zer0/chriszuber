@@ -10,6 +10,14 @@
 		<menuitem label="Superscript" data-editor-command="superscript"></menuitem>
 		<menuitem label="Subscript" data-editor-command="subscript"></menuitem>
 	</menu>
+	<menu label="Font">
+		<menuitem label="Big" data-editor-command="increasefontsize"></menuitem>
+		<menuitem label="Small" data-editor-command="decreasefontsize"></menuitem>
+		<menu label="Font Family">
+			<menuitem label="Alice" data-editor-command="fontname" data-editor-value="Alice"></menuitem>
+			<menuitem label="Other?" data-editor-command="fontname" data-prompt="What font would you like to use?"></menuitem>
+		</menu>
+	</menu>
 	<menu label="Selection">
 		<menuitem label="Select All" data-editor-command="selectall"></menuitem>
 		<menuitem label="Clear Formatting" data-editor-command="removeformat"></menuitem>
