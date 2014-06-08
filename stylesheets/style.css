@@ -79,15 +79,35 @@ a::after {
 main a::after {
 	content: '  K';
 }
-nav a::after, .tags a::after {
+a[rel=tag]::after {
 	content: '  ,';
 }
 a[target]::after {
 	content:'  D';
-
 }
 [download]::after {
 	content:'  A';
+}
+button[type=button], [type=submit], [type=reset] {
+	border: 0.2rem outset cyan;
+	min-width: 2rem;
+	padding: 0.2rem;
+	background-image: linear-gradient(cyan, rgb(59, 117, 218));
+	font-family: inherit;
+}
+menu[type=list] li {
+	display: inline;
+}
+input[type=search] {
+	width: 7rem;
+	background: transparent;
+	border-width: 0 0 0.1rem 0;
+	color: whitesmoke;
+	-webkit-transition: width 500ms;
+	transition: width 500ms;
+}
+input[type=search]:focus {
+	width: 20rem;
 }
 body > header h1::after {
 	content: '';
@@ -168,16 +188,6 @@ article header {
 	top: 0;
 	left: 0;
 }
-button[type=button], [type=submit], [type=reset] {
-	border: 0.2rem outset cyan;
-	min-width: 2rem;
-	padding: 0.2rem;
-	background-image: linear-gradient(cyan, rgb(59, 117, 218));
-	font-family: inherit;
-}
-menu[type=list] li {
-	display: inline;
-}
 form[name="new_post"] {
 	width: 95%;
 }
@@ -189,9 +199,6 @@ input[type=search] {
 	width: 7rem;
 	-webkit-transition: width 500ms;
 	transition: width 500ms;
-}
-input[type=search]:focus {
-	width: 20rem;
 }
 #contact-card {
 	height: 20rem;
