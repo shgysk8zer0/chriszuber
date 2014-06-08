@@ -113,6 +113,13 @@ article header {
 	top: 0;
 	left: 0;
 }
+button[type=button], [type=submit], [type=reset] {
+	border: 0.2rem outset cyan;
+	min-width: 2rem;
+	padding: 0.2rem;
+	background-image: linear-gradient(cyan, rgb(59, 117, 218));
+	font-family: inherit;
+}
 menu[type=list] li {
 	display: inline;
 }
