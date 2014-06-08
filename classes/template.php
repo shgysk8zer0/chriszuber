@@ -102,10 +102,10 @@
 			$html = $this->execute(false);
 			$this->pattern = $this->replacement = [];
 			if($print){
-				echo $html;
+				echo preg_replace('/\%[A-Z]+%/', null, $html);
 			}
 			else {
-				return $html;
+				return preg_replace('/\%[A-Z]+%/', null, $html);
 			}
 		}
 	}
