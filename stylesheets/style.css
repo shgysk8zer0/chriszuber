@@ -132,7 +132,7 @@ main {
 	-webkit-transform-style: preserve-3d;
 	transform-origin: top;
 }
-main > article, main > .tags{
+main article, main > .tags{
 	color:#333;
 	background-color: whitesmoke;
 	border-radius: inherit;
