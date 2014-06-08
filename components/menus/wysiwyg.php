@@ -15,6 +15,7 @@
 		<menuitem label="Small" data-editor-command="decreasefontsize"></menuitem>
 		<menu label="Font Family">
 			<menuitem label="Alice" data-editor-command="fontname" data-editor-value="Alice"></menuitem>
+			<menuitem label="Web Symbols" data-editor-command="fontname" data-editor-value="Web Symbols"></menuitem>
 			<menuitem label="Other?" data-editor-command="fontname" data-prompt="What font would you like to use?"></menuitem>
 		</menu>
 	</menu>
