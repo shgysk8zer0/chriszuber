@@ -89,6 +89,7 @@
 						'author_url' => $this->data->author_url,
 						'date' => $time->out('m/d/Y'),
 						'datetime' => $time->out()
+						//'comments' => load_results('forms/comment')
 					])->out();
 				} break;
 
