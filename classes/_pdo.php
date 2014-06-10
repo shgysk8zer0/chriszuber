@@ -10,35 +10,40 @@
 
 		protected $pdo, $prepared, $data = array();
 		private $query;
-		protected static $instance = null;
+		protected static $instances = [];
 
-		public static function load() {
+		public static function load($ini = 'connect') {
 			/**
 			 * Static load function avoids creating multiple instances/connections
-			 * It checks if an instance has been created and returns that or a new instance
+			 * It stores an array of instances in the static instances array.
+			 * It uses $ini as the key to the array, and the _pdo instance as
+			 * the value.
 			 *
-			 * @params void
+			 * @params string $ini (.ini file to use for database credentials)
 			 * @return pdo_object/class
-			 * @example $pdo = _pdo::load
+			 * @example $pdo = _pdo::load or $pdo = _pdo::load('connect')
 			 */
 
-			if(is_null(self::$instance)) {
-				self::$instance = new self();
+			if(!array_key_exists($ini, self::$instances)) {
+				self::$instances[$ini] = new self($ini);
 			}
-			return self::$instance;
+			return self::$instances[$ini];
 		}
 
-		public function __construct() {
+		public function __construct($ini = 'connect') {
 			/**
 			 * Gets database connection info from /connect.ini (using ini::load)
+			 * The default ini file to use is connect, but can be passed another
+			 * in the $ini argument.
+			 * 
 			 * Uses that data to create a new PHP Data Object
 			 *
-			 * @param void
+			 * @param string $ini (.ini file to use for database credentials)
 			 * @return void
 			 * @example $pdo = new _pdo()
 			 */
 
-			$connect = ini::load('connect');
+			$connect = ini::load($ini);
 
 			try{
 				if(!(isset($connect->user) and isset($connect->password))) throw new Exception('Missing credentials to connect to database');
