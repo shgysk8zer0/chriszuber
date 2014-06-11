@@ -46,8 +46,8 @@
 		<menuitem type="command" label="Backup Database" icon="images/icons/db.svgz" data-request="action=backup database&nonce=<?=$session->nonce?>" data-confirm="Are you sure you want to backup the database to <?=$connect->database?>.sql?"></menuitem>
 		<menuitem type="command" label="Clear PHP Errors" icon="images/icons/db.svgz" data-request="action=Clear PHP_errors&nonce=<?=$session->nonce?>"></menuitem>
 		<menuitem type="command" label="Clear CSP" icon="images/icons/db.svgz" data-request="reset_table=CSP_errors&nonce=<?=$session->nonce?>"></menuitem>
-		<menuitem type="command" label="MySQL Query" icon="images/icons/db.svgz" data-request="action=mysql_query&nonce=<?=$session->nonce?>" data-prompt="Type your query:"></menuitem>
 		</menu>
+	<menuitem type="command" label="Search PHP errors" icon="images/icons/db.svgz" data-request="load_form=php_errors"></menuitem>
 	<menuitem type="command" label="test" icon="images/icons/coffee.svgz" data-request="action=test"></menuitem>
 	<?php endif?>
 	<menuitem type="command" label="Clear Cache" icon="images/icons/settings.svgz" data-confirm="Are you sure you want to clear your cache for this site?"></menuitem>

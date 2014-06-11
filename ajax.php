@@ -47,15 +47,16 @@
 
 	elseif(array_key_exists('load_form', $_POST)) {
 		switch($_POST['load_form']) {
-			case 'login':
+			case 'login': {
 				$resp->remove(
 					'main > :not(aside)'
 				)->prepend(
 					'main',
 					load_results('forms/login')
 				);
-				break;
-			case 'new_post':
+				} break;
+
+			case 'new_post': {
 				require_login();
 				$resp->remove(
 					'main > :not(aside)'
@@ -63,7 +64,16 @@
 					'main',
 					load_results('forms/new_post')
 				);
-			break;
+			} break;
+
+			case 'php_errors': {
+				require_login('admin');
+
+				$resp->html(
+					'main',
+					load_results("forms/php_errors")
+				);
+			} break;
 		}
 	}
 
@@ -282,6 +292,194 @@
 					);
 				}
 			}
+
+			case 'php_errors': {
+				check_nonce();
+				require_login('admin');
+
+				/**
+				 * First, check that the input for "file" is set and matches the pattern.
+				 *
+				 * We have already checked that the user is logged in as admin and
+				 * has a valid session.
+				 */
+
+				if(array_key_exists('file', $_POST) and preg_match('/^[A-z\/]+\.php$/', $_POST['file'])) {
+					/**
+					 * Next, do a query for all errors in PHP_errors where
+					 * the file is $_POST['file'] (Add on BASE . '/' to fill in
+					 * the full value, since I trim these for the input but they
+					 * are stored with their full paths)
+					 *
+					 * Sort them according to line to make easier to navigate.
+					 */
+
+					/**
+					 * Create an array to map the HTML table's columns to the
+					 * Database's table columns.
+					 *
+					 * Keys will be used for the <table> and values will be used for
+					 * the database's columns.
+					 *
+					 * This way, it should be easy to modify without having to switch
+					 * things around in varous places.
+					 *
+					 * We will also use the values of the array (columns
+					 * in the database's table) to build the query. You can
+					 * change $mapping and it changes everything else.
+					 */
+
+					$mapping = [
+						'Error Type' => 'error_type',
+						'Line #' => 'line',
+						'Message' => 'error_message',
+						'Date Time' => 'datetime'
+					];
+
+					$select = '`' . join('`, `', array_values($mapping)) . '`';
+
+					if(array_key_exists('level', $_POST) and $_POST['level'] !== '*') {
+						$DB->prepare("
+							SELECT {$select}
+							FROM `PHP_errors`
+							WHERE `file` = :file
+							AND `error_type` = :level
+							ORDER BY `line`
+						")->bind([
+							'file' => BASE . '/' . $_POST['file'],
+							'level' => $_POST['level']
+						]);
+					}
+					else {
+						$DB->prepare("
+							SELECT {$select}
+							FROM `PHP_errors`
+							WHERE `file` = :file
+							ORDER BY `line`
+						")->bind([
+							'file' => BASE . '/' . $_POST['file']
+						]);;
+					}
+					$errors = $DB->execute()->get_results();
+
+					/**
+					 * Check if an errors were found (if no
+					 * errors were found, it will be an empty
+					 * array and count() will be 0 and evaluate
+					 * as false.)
+					 */
+
+					if(is_array($errors) and count($errors)) {
+						/**
+						 * We will be building an HTML <table>,
+						 * using headers and footers for column names,
+						 * and the cells will be each value from the
+						 * $errors array.
+						 *
+						 * Just setup the opening tag (head and foot also
+						 * get the row starting tag)
+						 */
+
+						$table = '<table border="1">';
+						$thead = '<thead><tr>';
+						$tfoot = '<tfoot><tr>';
+						$tbody = '<tbody>';
+
+						$table .= '<caption>PHP Errors</caption>';
+
+						/**
+						 * Loop through the array's keys, setting up
+						 * both <thead> and >tfoot> at the same time.
+						 */
+
+						foreach(array_keys($mapping) as $th) {
+							$thead .= "<th>{$th}</th>";
+						}
+
+						$thead .= '</tr></thead>';
+						$tfoot .= '</tr></tfoot>';
+
+						/**
+						 * Add both thead and tfoot to the table (
+						 * table footers actually go before the
+						 * table body)
+						 */
+
+						$table .= $thead;
+						$table .= $tfoot;
+
+						foreach($errors as $error) {
+							/**
+							 * Loop through errors, just setting up
+							 * the table row for now. Actual values
+							 * will be done in a bit.
+							 */
+
+							$tr = '<tr>';
+
+							foreach(array_values($mapping) as $cell) {
+								/**
+								 * Now it's time to fill in the table.
+								 * We already have all of the errors and
+								 * are going through each error to add the
+								 * cells.
+								 *
+								 * Since we have $mappping, which alrady has
+								 * all of the database's column names, and
+								 * each error's value is mapped to $error as
+								 * $error->$column_name, we can re-use this array
+								 * to always add the correct cells and in the
+								 * correct order.
+								 */
+
+								$tr .= "<td>{$error->$cell}</td>";
+							}
+
+							/**
+							 * Add the row's closing tag and add the entire
+							 * <tr> to <tbody>
+							 */
+
+							$tr .= '</tr>';
+							$tbody .= $tr;
+						}
+
+						/**
+						 * Add the entire <tbody> to <table> and add the closing
+						 * tag to <table>
+						 */
+
+						$table .= $tbody;
+
+						$table .= '</table>';
+
+						/**
+						 * Set <main.'s innerHTML to be <table>
+						 */
+
+						$resp->html(
+							'main',
+							$table
+						);
+					}
+
+					else {
+						$resp->notify(
+							'Nothing to report',
+							"No errors in {$_POST['file']} of that type",
+							'images/icons/db.png'
+						);
+					}
+				}
+
+				else {
+					$resp->notify(
+						'Something went wrong :(',
+						'Either file is not set or does not match the set pattern',
+						'images/icons/db.png'
+					);
+				}
+			} break;
 		}
 	}
 
