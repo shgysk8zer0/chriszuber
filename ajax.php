@@ -528,7 +528,7 @@
 						'contextmenu' => false
 					]
 				])->remove(
-					'main > *'
+					'main > :not(aside)'
 				)->sessionStorage(
 					'nonce',
 					$session->nonce
