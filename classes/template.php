@@ -9,7 +9,7 @@
 		 */
 
 		private static $instance = [];
-		private $template, $path;
+		private $path;
 
 		public static function load($tpl) {
 			/**
@@ -80,9 +80,35 @@
 			 */
 
 			foreach($arr as $replace => $with) {
-				$this->replace('%' . trim(strtoupper($replace)) . '%')->with($with);
+				$this->replace('%' . trim(strtoupper(preg_replace('/-/', '_', $replace))) . '%')->with($with);
 			}
 			return $this;
+		}
+		
+		public function __call($name, $arguments) {
+			/**
+			 * The magic method __call for the class.
+			 * Used in cases where no such method exists in
+			 * this class or its parent.
+			 * 
+			 * Unlike most __call methods, this is a 'set' only
+			 * method. More specifically, it will set a new replace/
+			 * with in its parent. No set/get prefixes required.
+			 * 
+			 * Use with caution, as it can be difficult to determine when
+			 * a it is causing errors because there is another method
+			 * that already exists, and you might not realize that the
+			 * existing method is being called instead of this method.
+			 * 
+			 * Can be easily chained to do multiple replacements at once.
+			 * 
+			 * @param string $name (placeholder in template, case-insensitive)
+			 * @param array $arguments (arguments passed to method. Only uses first)
+			 * @return self
+			 * @example $template->testing('Works')->another_test('Still Works')
+			 */
+			
+			return $this->replace('%' . strtoupper($name) . '%')->with($arguments[0]);
 		}
 
 		public function out($print = false) {
@@ -100,9 +126,11 @@
 			 */
 
 			$html = $this->execute(false);
-			$this->pattern = $this->replacement = [];
+			$this->pattern = [];
+			$this->replacement = [];
 			if($print){
 				echo preg_replace('/\%[A-Z_]+%/', null, $html);
+				return $this;
 			}
 			else {
 				return preg_replace('/\%[A-Z_]+%/', null, $html);

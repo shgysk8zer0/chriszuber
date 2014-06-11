@@ -20,12 +20,156 @@
 
 	spl_autoload_register('load_class');				 //Load class by naming it
 
+	init();
+
+	function init($site = null) {						// Get info from .ini file
+		/**
+			 * @param string $site
+			 * @return array $info
+			 */
+
+		set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . PATH_SEPARATOR . __DIR__  . DIRECTORY_SEPARATOR . 'classes');
+
+		$connect = ini::load('connect');
+		if(!isset($connect->site)) {
+			if(is_null($site)) {
+				($_SERVER['DOCUMENT_ROOT'] === __DIR__ . DIRECTORY_SEPARATOR or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? $connect->site = end(explode('/', preg_replace('/' . preg_quote(DIRECTORY_SEPARATOR, '/') .'$/', null, $_SERVER['DOCUMENT_ROOT']))) : $connect->site = explode(DIRECTORY_SEPARATOR, $_SERVER['PHP_SELF'])[1];
+			}
+		}
+
+		if(!isset($connect->user)) $conenct->user = $connect->site;
+		if(!isset($connect->database)) $connect->database = $connect->user;
+		if(!isset($connect->server)) $connect->server = 'localhost';
+		if(!isset($connect->debug)) $connect->debug = true;
+		if(!isset($connect->type)) $connect->type = 'mysql';
+		if($connect->server !== 'localhost' and is_null($connect->port)) $connect->port = '3306';
+
+		if(file_exists('./define.ini')) {
+			foreach(parse_ini_file('./define.ini') as $key => $value) {
+				define(strtoupper(preg_replace('/\s|-/', '_', $key)), $value);
+			}
+		}
+
+		if(!defined('BASE')) define('BASE', __DIR__);
+		if(!defined('URL')) ($_SERVER['DOCUMENT_ROOT'] === __DIR__ . DIRECTORY_SEPARATOR or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/{$connect->site}");
+		new session($connect->site);
+		nonce(50);									// Set a nonce of n random characters
+	}
+
+	function config($settings_file = 'settings') {								// Initial Setup
+		/**
+		* Sets default timezone, include_path, and error_handler
+		* Loads all files in requires directive
+		*
+		* @parmam void
+		* @return void
+		*/
+		
+		date_default_timezone_set('America/Los_Angeles');
+
+		$settings = ini::load($settings_file);
+		if(isset($settings->path)) {
+			//ini_set('include_path', ini_get('include_path') . ':' . join(':' . __DIR__ . '/', explode(',', preg_replace('/\w/', null, $settings->path))));
+			set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
+		}
+
+		$error_handler = (isset($settings->error_handler)) ? $settings->error_handler : 'error_reporter_class';
+
+		if(isset($settings->requires)) {
+			foreach(explode(',', $settings->requires) as $file) {
+				require_once(__DIR__ . '/' . trim($file));
+			}
+		}
+
+		//Error Reporting Levels: http://us3.php.net/manual/en/errorfunc.constants.php
+		if(isset($settings->debug)) {
+			if(is_string($settings->debug)) $settings->debug = strtolower($settings->debug);
+			error_reporting(0);
+			switch($settings->debug) {
+				case 'true': case 'all': case 'on': {
+					set_error_handler($error_handler, E_ALL);
+				} break;
+
+				case 'false': case 'off': {
+					set_error_handler($error_handler, 0);
+				} break;
+
+				case 'core': {
+					set_error_handler($error_handler, E_CORE_ERROR|E_CORE_WARNING);
+				} break;
+
+				case 'strict': {
+					set_error_handler($error_handler, E_ALL & ~E_USER_ERROR & ~E_USER_WARNING & ~E_USER_NOTICE);
+				} break;
+
+				case 'notice': {
+					set_error_handler($error_handler, E_ALL & ~E_STRICT & ~E_USER_ERROR & ~E_USER_WARNING & ~E_USER_NOTICE);
+				} break;
+
+				case 'developement': {
+					set_error_handler($error_handler, E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+				} break;
+
+				case 'production': {
+					set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
+				} break;
+
+				default: {
+					set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
+				}
+			}
+		}
+
+		else {
+			error_reporting(E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
+		}
+	}
+
 	function error_reporter_class($error_level, $error_message, $file, $line, $scope) {
 		$reporter = error_reporter::load((defined('ERROR_METHOD')) ? ERROR_METHOD : 'log');
 		return $reporter->report($error_level, $error_message, $file, $line, $scope);
 	}
 
-	init();
+	function load_results() {
+		/**
+			 * @usage(string | array[string | array[, ...]]*)
+			 * @param mixed (string, arrays, ... whatever. They'll be converted to an array)
+			 * @return string (results echoed from load())
+			 */
+		ob_start();
+		load(func_get_args());
+		return ob_get_clean();
+	}
+
+	function load() {									// Load resource from components directory
+		/**
+			 * @usage(string | array[string | array[, ...]]*)
+			 * @params mixed args
+			 * @return void
+			 */
+		$found = true;
+		$DB = _pdo::load();								// Include $DB here, so it is in the currecnt scope. Saves multiple uses of global
+		foreach(flatten(func_get_args()) as $fname) {	// Unknown how many arguments passed. Loop through fucntion arguments array
+			(include(BASE . "/components/{$fname}.php")) or $found = false;
+		}
+		unset($DB);
+		return $found;
+	}
+
+	function load_file() {
+		$resp = '';
+		$files = flatten(func_get_args());
+		foreach($files as $file) $resp .= file_get_content(BASE . "components/{$file}");
+	}
+
+	function load_class($class) {						// Load class from Classes directory
+		//PHP uses include_path, so use that. I've added the classes directory to include_path already
+		/**
+			 * @params string $class
+			 * @return void
+			 */
+		require_once "{$class}.php";
+	}
 
 	function regexp($str) {								//Make regular expression from string
 		/**
@@ -204,108 +348,6 @@
 	};
 	}
 
-	function init($site = null) {						// Get info from .ini file
-		/**
-		 * @param string $site
-		 * @return array $info
-		 */
-		
-		ini_set('include_path', ini_get('include_path') . ':' . __DIR__ . ":" . __DIR__ . "/classes");
-
-		$connect = ini::load('connect');
-		if(!isset($connect->site)) {
-			if(is_null($site)) {
-				($_SERVER['DOCUMENT_ROOT'] === __DIR__ . '/' or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? $connect->site = end(explode('/', preg_replace('/\/$/', '', $_SERVER['DOCUMENT_ROOT']))) : $connect->site = explode('/', $_SERVER['PHP_SELF'])[1];
-			}
-		}
-
-		if(!isset($connect->user)) $conenct->user = $connect->site;
-		if(!isset($connect->database)) $connect->database = $connect->user;
-		if(!isset($connect->server)) $connect->server = 'localhost';
-		if(!isset($connect->debug)) $connect->debug = true;
-		if(!isset($connect->type)) $connect->type = 'mysql';
-		if($connect->server !== 'localhost' and is_null($connect->port)) $connect->port = '3306';
-		
-		if(file_exists('./define.ini')) {
-			foreach(parse_ini_file('./define.ini') as $key => $value) {
-				define(strtoupper(preg_replace('/\s|-/', '_', $key)), $value);
-			}
-		}
-
-		if(!defined('BASE')) define('BASE', __DIR__);
-		if(!defined('URL')) ($_SERVER['DOCUMENT_ROOT'] === __DIR__ . '/' or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/{$connect->site}");
-		new session($connect->site);
-		nonce(50);									// Set a nonce of n random characters
-	}
-
-	function config() {								// Initial Setup
-		/**
-		* Sets timezone, starts session named according to site
-		* Defines BASE and URL and sets Content-Security-Policy headers
-		*
-		* @parmam void
-		* @return void
-		*/
-
-		$settings = ini::load('settings');
-		if(isset($settings->path)) {
-			ini_set('include_path', ini_get('include_path') . ':' . join(':' . __DIR__ . '/', explode(',', $settings->path)));
-		}
-		ini_set('include_path', ini_get('include_path') . ':' . __DIR__ . ":" . __DIR__ . "/classes");
-		date_default_timezone_set('America/Los_Angeles');
-		
-		$error_handler = (isset($settings->error_handler)) ? $settings->error_handler : 'error_reporter_class';
-		
-		if(isset($settings->requires)) {
-			foreach(explode(',', $settings->requires) as $file) {
-				require_once(__DIR__ . '/' . trim($file));
-			}
-		}
-
-		//Error Reporting Levels: http://us3.php.net/manual/en/errorfunc.constants.php
-		if(isset($settings->debug)) {
-			if(is_string($settings->debug)) $settings->debug = strtolower($settings->debug);
-			error_reporting(0);
-			switch($settings->debug) {
-				case 'true': case 'all': case 'on': {
-					set_error_handler($error_handler, E_ALL);
-				} break;
-
-				case 'false': case 'off': {
-					set_error_handler($error_handler, 0);
-				} break;
-
-				case 'core': {
-					set_error_handler($error_handler, E_CORE_ERROR|E_CORE_WARNING);
-				} break;
-
-				case 'strict': {
-					set_error_handler($error_handler, E_ALL & ~E_USER_ERROR & ~E_USER_WARNING & ~E_USER_NOTICE);
-				} break;
-				
-				case 'notice': {
-					set_error_handler($error_handler, E_ALL & ~E_STRICT & ~E_USER_ERROR & ~E_USER_WARNING & ~E_USER_NOTICE);
-				} break;
-
-				case 'developement': {
-					set_error_handler($error_handler, E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
-				} break;
-
-				case 'production': {
-					set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
-				} break;
-
-				default: {
-					set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
-				}
-			}
-		}
-
-		else {
-			error_reporting(E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
-		}
-	}
-
 	function CSP() {								//Sets Content-Security-Policy from csp.ini
 		/**
 		 * @param void
@@ -342,6 +384,22 @@
 		return ($_SERVER['REMOTE_ADDR'] === $_SERVER['SERVER_ADDR']);
 	}
 
+	function https() {								// Just returns a boolean value for if schema is https
+		/**
+			 * @params void
+			 * @return boolean
+			 */
+		return (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS']);
+	}
+
+	function DNT() {								// Is DNT set and on?
+		/**
+			 * @params void
+			 * @return boolean
+			 */
+		return (isset($_SERVER['HTTP_DNT']) and $_SERVER['HTTP_DNT']);
+	}
+
 	function is_ajax() {							// Try to determine if this is and ajax request
 		/**
 		 * Checks for the custom Request-Type header sent in my ajax requests
@@ -350,6 +408,229 @@
 		 * @return boolean
 		 */
 		return (isset($_SERVER['HTTP_REQUEST_TYPE']) and $_SERVER['HTTP_REQUEST_TYPE'] === 'AJAX');
+	}
+
+	function http_status($code = 200) {							//HTTP status header, the easy way. Just need status code
+	/**
+		 * @params integer $code
+		 * @return void
+		 * @link http://www.w3schools.com/tags/ref_httpmessages.asp
+		 */
+	switch($code) {
+		case 100:
+		$desc = 'Continue';
+		break;
+		case 101:
+		$desc = 'Switching Protocols';
+		break;
+		case 103:
+		$desc = 'Checkpoint';
+		break;
+		case 200:
+		$desc = 'OK';
+		break;
+		case 201:
+		$desc = 'Created';
+		break;
+		case 202:
+		$desc = 'Accepted';
+		break;
+		case 203:
+		$desc = 'Non-Authoritative Information';
+		break;
+		case 204:
+		$desc = 'No Content';
+		break;
+		case 205:
+		$desc = 'Reset Content';
+		break;
+		case 206:
+		$desc = 'Partial Content';
+		break;
+		case 300:
+		$desc = 'Multiple Choices';
+		break;
+		case 301:
+		$desc = 'Moved Permanently';
+		break;
+		case 302:
+		$desc = 'Found';
+		break;
+		case 303:
+		$desc = 'See Other';
+		break;
+		case 304:
+		$desc = 'Not Modified';
+		break;
+		case 306:
+		$desc = 'Switch Proxy';
+		break;
+		case 307:
+		$desc = 'Temporary Redirect';
+		break;
+		case 308:
+		$desc = 'Resume Incomplete';
+		break;
+		case 400:
+		$desc = 'Bad Request';
+		break;
+		case 401:
+		$desc = 'Unauthorized';
+		break;
+		case 402:
+		$desc = 'Payment Required';
+		break;
+		case 403:
+		$desc = 'Forbidden';
+		break;
+		case 404:
+		$desc = 'Not Found';
+		break;
+		case 405:
+		$desc = 'Method Not Allowed';
+		break;
+		case 406:
+		$desc = 'Not Acceptable';
+		break;
+		case 407:
+		$desc = 'Proxy Authentication Required';
+		break;
+		case 408:
+		$desc = 'Request Timeout';
+		break;
+		case 409:
+		$desc = 'Conflict';
+		break;
+		case 410:
+		$desc = 'Gone';
+		break;
+		case 411:
+		$desc = 'Length Required';
+		break;
+		case 412:
+		$desc = 'Precondition Failed';
+		break;
+		case 413:
+		$desc = 'Request Entity Too Large';
+		break;
+		case 414:
+		$desc = 'Request-URI Too Long';
+		break;
+		case 415:
+		$desc = 'Unsupported Media Type';
+		break;
+		case 416:
+		$desc = 'Requested Range Not Satisfiable';
+		break;
+		case 417:
+		$desc = 'Expectation Failed';
+		break;
+		case 500:
+		$desc = 'Internal Server Error';
+		break;
+		case 501:
+		$desc = 'Not Implemented';
+		break;
+		case 502:
+		$desc = 'Bad Gateway';
+		break;
+		case 503:
+		$desc = 'Service Unavailable';
+		break;
+		case 504:
+		$desc = 'Gateway Timeout';
+		break;
+		case 505:
+		$desc = 'HTTP Version Not Supported';
+		break;
+		case 511:
+		$desc = 'Network Authentication Required';
+		break;
+		default:
+		http_status(500);
+		return;
+	}
+	header("HTTP/1.1 {$code} {$desc}");
+	return;
+}
+
+	function header_type($type) {							// Set content-type header.
+	/**
+		 * @params string $type
+		 * @return void
+		 */
+		header("Content-Type: {$type}\n");
+	}
+
+	function define_UA() {								// Define Browser and OS according to user-agent string
+		/**
+			 * @params void
+			 * @return void
+			 */
+		if(!defined('UA')){
+			if(isset($_SERVER['HTTP_USER_AGENT'])) {
+				define('UA', $_SERVER['HTTP_USER_AGENT']);
+				if(preg_match("/Firefox/i", UA)) define('BROWSER', 'Firefox');
+				elseif(preg_match("/Chrome/i", UA)) define('BROWSER', 'Chrome');
+				elseif(preg_match("/MSIE/i", UA)) define('BROWSER', 'IE');
+				elseif(preg_match("/(Safari)||(AppleWebKit)/i", UA)) define('BROWSER', 'Webkit');
+				elseif(preg_match("/Opera/i", UA)) define('BROWSER', 'Opera');
+				else define('BROWSER', 'Unknown');
+				if(preg_match("/Windows/i", UA)) define('OS', 'Windows');
+				elseif(preg_match("/Ubuntu/i", UA)) define('OS', 'Ubuntu');
+				elseif(preg_match("/Android/i", UA)) define('OS', 'Android');
+				elseif(preg_match("/(IPhone)|(Macintosh)/i", UA)) define('OS', 'Apple');
+				elseif(preg_match("/Linux/i", UA)) define('OS', 'Linux');
+				else define('OS', 'Unknown');
+			}
+			else{
+				define('BOWSER', 'Unknown');
+				define('OS', 'Unknown');
+			};
+		}
+	}
+
+	function nonce($length = 50) {						// generate a nonce of $length random characters
+	/**
+		 * @params integer $length
+		 * @return string
+		 */
+
+	if(array_key_exists('nonce', $_SESSION)) {	// Use existing nonce instead of a new one
+		return $_SESSION['nonce'];
+	}
+	//We are going to shuffle an alpha-numeric string to get random characters
+	$str = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
+	if(strlen($str) < $length) {					// $str length is limited to length of available characters. Be recursive for extra length
+		$str .= nonce($length - strlen($str));
+	}
+	$_SESSION['nonce'] = $str;							// Save this to session for re-use
+	return $str;
+	}
+
+	function same_origin() {							// Determine if request is from us
+		/**
+			 * @params void
+			 * @return boolean
+			 */
+		if(isset($_SERVER['HTTP_ORIGIN'])) {
+			$origin = $_SERVER['HTTP_ORIGIN'];
+		}
+		elseif(isset($_SERVER['HTTP_REFERER'])) {
+			$origin = $_SERVER['HTTP_REFERER'];
+		}
+		$name = '/^http(s)?' .preg_quote('://' . $_SERVER['SERVER_NAME'], '/') . '/';
+		return (isset($origin) and preg_match($name, $origin));
+	}
+
+	function sub_root() {								// Just get directory up on level from $_SERVER['DOCUMENT_ROOT']
+		/**
+			 * @params void
+			 * @return string
+			 */
+		$root = preg_replace('/\/$/', '', $_SERVER['DOCUMENT_ROOT']);	// Strip off the '/' at the end of DOCUMENT_ROOT
+		$sub = preg_replace('/' . preg_quote(end(explode('/', $root))) . '/', '', $root);
+		return $sub;
 	}
 
 	function array_remove($key, &$array) {			// Remove from array by key and return it's value
@@ -364,6 +645,25 @@
 		}
 		else return null;
 	}
+
+	function array_keys_exist() {						// Check if all keys exist in array
+	/**
+		* Use array_key_exists on each key.
+		* Return false as soon as one is missing
+		* $args is all arguments given to function
+		* Since final argument is array, seperate that and remove from length
+		*
+		 * @params string[, string, .... string] array
+		 * @return boolean
+		 */
+	$args = func_get_args();
+	$arr = end($args);
+	$length = func_num_args() - 1;
+	for($i = 0; $i < $length; $i++) {
+		if(!array_key_exists($args[$i], $arr)) return false;
+	}
+	return true;
+}
 
 	function flatten() {							// Convert a multi-dimensional array into a simple array
 		/**
@@ -388,22 +688,6 @@
 		 * @return boolean
 		 */
 		return !is_a_number($n);
-	}
-
-	function https() {								// Just returns a boolean value for if schema is https
-		/**
-		 * @params void
-		 * @return boolean
-		 */
-		return (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS']);
-	}
-
-	function DNT() {								// Is DNT set and on?
-		/**
-		 * @params void
-		 * @return boolean
-		 */
-		return (isset($_SERVER['HTTP_DNT']) and $_SERVER['HTTP_DNT']);
 	}
 
 	function ls($path = null, $ext = null, $strip_ext = null) {			// List files in given path. Optional extension and strip extension from results
@@ -433,70 +717,40 @@
 		else return $files;
 	}
 
-	function load_results() {
+	function encode($file) {							// Base 64 encode $file. Does not set data: URI
 		/**
-		 * @usage(string | array[string | array[, ...]]*)
-		 * @param mixed (string, arrays, ... whatever. They'll be converted to an array)
-		 * @return string (results echoed from load())
-		 */
-		ob_start();
-		load(func_get_args());
-		return ob_get_clean();
+			 * @params string $file
+			 * @return string (base_64 encoded)
+			 */
+		if(file_exists($file)) return base64_encode(file_get_contents($file));
 	}
 
-	function load() {									// Load resource from components directory
-		/**
-		 * @usage(string | array[string | array[, ...]]*)
-		 * @params mixed args
-		 * @return void
-		 */
-		$found = true;
-		$DB = _pdo::load();								// Include $DB here, so it is in the currecnt scope. Saves multiple uses of global
-		foreach(flatten(func_get_args()) as $fname) {	// Unknown how many arguments passed. Loop through fucntion arguments array
-			(include(BASE . "/components/{$fname}.php")) or $found = false;
+	function mime_type($file) {
+		if(substr($file, 0, 1) !== '/') $file = BASE . "/$file";
+		$unsupported_types = [
+			'css' => 'text/css',
+			'js' => 'application/javascript',
+			'svg' => 'image/svg+xml',
+			'woff' => 'application/font-woff',
+			'appcache' => 'text/cache-manifest',
+			'm4a' => 'audio/mp4',
+			'ogg' => 'audio/ogg',
+			'oga' => 'audio/ogg',
+			'ogv' => 'vidoe/ogg'
+		];
+		if(array_key_exists(extension($file), $unsupported_types)) {
+			$mime = $unsupported_types[extension($file)];
 		}
-		unset($DB);
-		return $found;
-	}
-
-	function load_file() {
-		$resp = '';
-		$files = flatten(func_get_args());
-		foreach($files as $file) $resp .= file_get_content(BASE . "components/{$file}");
-	}
-
-	function load_class($class) {						// Load class from Classes directory
-														//PHP uses include_path, so use that. I've added the classes directory to include_path already
-		/**
-		 * @params string $class
-		 * @return void
-		 */
-		require_once "{$class}.php";
-	}
-
-	function same_origin() {							// Determine if request is from us
-		/**
-		 * @params void
-		 * @return boolean
-		 */
-		if(isset($_SERVER['HTTP_ORIGIN'])) {
-			$origin = $_SERVER['HTTP_ORIGIN'];
+		else {
+			$finfo = finfo_open(FILEINFO_MIME_TYPE);
+			$mime = finfo_file($finfo, $file);
+			finfo_close($finfo);
 		}
-		elseif(isset($_SERVER['HTTP_REFERER'])) {
-			$origin = $_SERVER['HTTP_REFERER'];
-		}
-		$name = '/^http(s)?' .preg_quote('://' . $_SERVER['SERVER_NAME'], '/') . '/';
-		return (isset($origin) and preg_match($name, $origin));
+		return $mime;
 	}
 
-	function sub_root() {								// Just get directory up on level from $_SERVER['DOCUMENT_ROOT']
-		/**
-		 * @params void
-		 * @return string
-		 */
-		$root = preg_replace('/\/$/', '', $_SERVER['DOCUMENT_ROOT']);	// Strip off the '/' at the end of DOCUMENT_ROOT
-		$sub = preg_replace('/' . preg_quote(end(explode('/', $root))) . '/', '', $root);
-		return $sub;
+	function data_uri($file) {
+		return 'data:' . mime_type($file) . ';base64,' . encode($file);
 	}
 
 	function extension($file) {
@@ -509,25 +763,6 @@
 		 * @return string
 		 */
 		return preg_replace("/^\'|\'$/", '', $str);
-	}
-
-	function array_keys_exist() {						// Check if all keys exist in array
-		/**
-		* Use array_key_exists on each key.
-		* Return false as soon as one is missing
-		* $args is all arguments given to function
-		* Since final argument is array, seperate that and remove from length
-		*
-		 * @params string[, string, .... string] array
-		 * @return boolean
-		 */
-		$args = func_get_args();
-		$arr = end($args);
-		$length = func_num_args() - 1;
-		for($i = 0; $i < $length; $i++) {
-			if(!array_key_exists($args[$i], $arr)) return false;
-		}
-		return true;
 	}
 
 	function caps($str) {								// Receives a string, returns same string with all words capitalized
@@ -581,88 +816,6 @@
 			array_push($headers, $key);
 		}
 		return $headers;
-	}
-
-	function define_UA() {								// Define Browser and OS according to user-agent string
-		/**
-		 * @params void
-		 * @return void
-		 */
-		if(!defined('UA')){
-			if(isset($_SERVER['HTTP_USER_AGENT'])) {
-				define('UA', $_SERVER['HTTP_USER_AGENT']);
-				if(preg_match("/Firefox/i", UA)) define('BROWSER', 'Firefox');
-				elseif(preg_match("/Chrome/i", UA)) define('BROWSER', 'Chrome');
-				elseif(preg_match("/MSIE/i", UA)) define('BROWSER', 'IE');
-				elseif(preg_match("/(Safari)||(AppleWebKit)/i", UA)) define('BROWSER', 'Webkit');
-				elseif(preg_match("/Opera/i", UA)) define('BROWSER', 'Opera');
-				else define('BROWSER', 'Unknown');
-				if(preg_match("/Windows/i", UA)) define('OS', 'Windows');
-				elseif(preg_match("/Ubuntu/i", UA)) define('OS', 'Ubuntu');
-				elseif(preg_match("/Android/i", UA)) define('OS', 'Android');
-				elseif(preg_match("/(IPhone)|(Macintosh)/i", UA)) define('OS', 'Apple');
-				elseif(preg_match("/Linux/i", UA)) define('OS', 'Linux');
-				else define('OS', 'Unknown');
-			}
-			else{
-				 define('BOWSER', 'Unknown');
-				 define('OS', 'Unknown');
-			};
-		}
-	}
-
-	function nonce($length = 50) {						// generate a nonce of $length random characters
-		/**
-		 * @params integer $length
-		 * @return string
-		 */
-
-		if(array_key_exists('nonce', $_SESSION)) {	// Use existing nonce instead of a new one
-			return $_SESSION['nonce'];
-		}
-		//We are going to shuffle an alpha-numeric string to get random characters
-		$str = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
-		if(strlen($str) < $length) {					// $str length is limited to length of available characters. Be recursive for extra length
-			$str .= nonce($length - strlen($str));
-		}
-		$_SESSION['nonce'] = $str;							// Save this to session for re-use
-		return $str;
-	}
-
-	function encode($file) {							// Base 64 encode $file. Does not set data: URI
-		/**
-		 * @params string $file
-		 * @return string (base_64 encoded)
-		 */
-		if(file_exists($file)) return base64_encode(file_get_contents($file));
-	}
-
-	function mime_type($file) {
-		if(substr($file, 0, 1) !== '/') $file = BASE . "/$file";
-		$unsupported_types = [
-			'css' => 'text/css',
-			'js' => 'application/javascript',
-			'svg' => 'image/svg+xml',
-			'woff' => 'application/font-woff',
-			'appcache' => 'text/cache-manifest',
-			'm4a' => 'audio/mp4',
-			'ogg' => 'audio/ogg',
-			'oga' => 'audio/ogg',
-			'ogv' => 'vidoe/ogg'
-		];
-		if(array_key_exists(extension($file), $unsupported_types)) {
-			$mime = $unsupported_types[extension($file)];
-		}
-		else {
-			$finfo = finfo_open(FILEINFO_MIME_TYPE);
-			$mime = finfo_file($finfo, $file);
-			finfo_close($finfo);
-		}
-		return $mime;
-	}
-
-	function data_uri($file) {
-		return 'data:' . mime_type($file) . ';base64,' . encode($file);
 	}
 
 	function clean($string, $rep=null) {				//Strips dangerous characters from string.
@@ -813,158 +966,6 @@
 
 	function utf($string) {										//Concerts characters to UTF-8. Replaces special chars.
 		return htmlentities($string, ENT_QUOTES | ENT_HTML5,"UTF-8");
-	}
-
-	function http_status($code = 200) {							//HTTP status header, the easy way. Just need status code
-		/**
-		 * @params integer $code
-		 * @return void
-		 * @link http://www.w3schools.com/tags/ref_httpmessages.asp
-		 */
-		switch($code) {
-			case 100:
-				$desc = 'Continue';
-				break;
-			case 101:
-				$desc = 'Switching Protocols';
-				break;
-			case 103:
-				$desc = 'Checkpoint';
-				break;
-			case 200:
-				$desc = 'OK';
-				break;
-			case 201:
-				$desc = 'Created';
-				break;
-			case 202:
-				$desc = 'Accepted';
-				break;
-			case 203:
-				$desc = 'Non-Authoritative Information';
-				break;
-			case 204:
-				$desc = 'No Content';
-				break;
-			case 205:
-				$desc = 'Reset Content';
-				break;
-			case 206:
-				$desc = 'Partial Content';
-				break;
-			case 300:
-				$desc = 'Multiple Choices';
-				break;
-			case 301:
-				$desc = 'Moved Permanently';
-				break;
-			case 302:
-				$desc = 'Found';
-				break;
-			case 303:
-				$desc = 'See Other';
-				break;
-			case 304:
-				$desc = 'Not Modified';
-				break;
-			case 306:
-				$desc = 'Switch Proxy';
-				break;
-			case 307:
-				$desc = 'Temporary Redirect';
-				break;
-			case 308:
-				$desc = 'Resume Incomplete';
-				break;
-			case 400:
-				$desc = 'Bad Request';
-				break;
-			case 401:
-				$desc = 'Unauthorized';
-				break;
-			case 402:
-				$desc = 'Payment Required';
-				break;
-			case 403:
-				$desc = 'Forbidden';
-				break;
-			case 404:
-				$desc = 'Not Found';
-				break;
-			case 405:
-				$desc = 'Method Not Allowed';
-				break;
-			case 406:
-				$desc = 'Not Acceptable';
-				break;
-			case 407:
-				$desc = 'Proxy Authentication Required';
-				break;
-			case 408:
-				$desc = 'Request Timeout';
-				break;
-			case 409:
-				$desc = 'Conflict';
-				break;
-			case 410:
-				$desc = 'Gone';
-				break;
-			case 411:
-				$desc = 'Length Required';
-				break;
-			case 412:
-				$desc = 'Precondition Failed';
-				break;
-			case 413:
-				$desc = 'Request Entity Too Large';
-				break;
-			case 414:
-				$desc = 'Request-URI Too Long';
-				break;
-			case 415:
-				$desc = 'Unsupported Media Type';
-				break;
-			case 416:
-				$desc = 'Requested Range Not Satisfiable';
-				break;
-			case 417:
-				$desc = 'Expectation Failed';
-				break;
-			case 500:
-				$desc = 'Internal Server Error';
-				break;
-			case 501:
-				$desc = 'Not Implemented';
-				break;
-			case 502:
-				$desc = 'Bad Gateway';
-				break;
-			case 503:
-				$desc = 'Service Unavailable';
-				break;
-			case 504:
-				$desc = 'Gateway Timeout';
-				break;
-			case 505:
-				$desc = 'HTTP Version Not Supported';
-				break;
-			case 511:
-				$desc = 'Network Authentication Required';
-				break;
-			default:
-				http_status(500);
-				return;
-		}
-		header("HTTP/1.1 {$code} {$desc}");
-		return;
-	}
-
-	function header_type($type) {							// Set content-type header.
-		/**
-		 * @params string $type
-		 * @return void
-		 */
-		header("Content-Type: {$type}\n");
 	}
 
 	function inline_min($file = null) {						// Strips tabs and new lines.

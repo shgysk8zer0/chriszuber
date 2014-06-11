@@ -14,33 +14,32 @@
 		public $user_data = array();
 		protected static $instance = null;
 
-		public static function load() {
+		public static function load($ini = 'connect') {
 			/**
 			 * Static load function avoids creating multiple instances/connections
 			 * It checks if an instance has been created and returns that or a new instance
 			 *
-			 * @params void
+			 * @param string $ini (ini file to use for database connection configuration)
 			 * @return login object/class
 			 * @example $login = _login::load
 			 */
 
 			if(is_null(self::$instance)) {
-				self::$instance = new self();
+				self::$instance = new self($ini);
 			}
 			return self::$instance;
 		}
 
-		public function __construct() {
+		public function __construct($ini = 'connect') {
 			/**
 			 * Gets database connection info from /connect.ini (stored in $site)
 			 * Uses that data to create a new PHP Data Object
 			 *
-			 * @param void
+			 * @param string $ini (ini file to use for database connection configuration)
 			 * @return void
 			 * @example $login = new login()
 			 */
-
-			parent::__construct();					#login extends _pdo, so create new instance of parent.
+			parent::__construct($ini);					#login extends _pdo, so create new instance of parent.
 			#[TODO] Use static parent::load() instead, but this causes errors
 
 			$this->user_data = array(

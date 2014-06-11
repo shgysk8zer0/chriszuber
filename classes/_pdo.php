@@ -477,7 +477,7 @@
 			$table_data = $this->get_table($table_name);
 			if(!is_array($table_data)) return false;
 			(count($table_data)) ? $cols = array_keys(get_object_vars($table_data[0])) : $cols = $this->table_headers($table_name);
-			$table = "<table border=\"1\" data-nonce=\"{$_SESSION['nonce']}\" data-sql-table=\"{$table_name}\">";
+			$table = "<table border=\"1\" data-nonce=\"{$_SESSION['nonce']}\" data-sql-table=\"{$table_name}\"><caption>{$table_name}</caption>";
 			$thead = '<thead><tr>';
 			foreach($cols as $col) {
 				if($col !== 'id') {
