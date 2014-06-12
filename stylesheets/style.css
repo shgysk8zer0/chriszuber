@@ -177,9 +177,11 @@ aside h3 {
 	}
 	main article {
 		flex: 0 1 100%;
+		order: 1;
 	}
 	main aside {
 		flex: 0 1 100%;
+		order: 2;
 	}
 }
 article header {
