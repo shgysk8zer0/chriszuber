@@ -494,7 +494,7 @@
 	}
 
 	elseif(array_key_exists('datalist', $_REQUEST)) {
-		$resp->prepend(
+		$resp->before(
 			"[list=\"{$_REQUEST['datalist']}\"]",
 			get_datalist($_REQUEST['datalist'])
 		);
