@@ -146,25 +146,40 @@ main > article, main > .tags{
 	flex: 0 1 67%;
 	order:2;
 }
+article header, aside h3 {
+	font-family: 'Acme';
+	font-size: 1.3rem;
+	text-shadow: 0.1rem 0.1rem 0 dimgray, 0.15rem 0.15rem 0 black;
+	padding: 0.4rem;
+	background-image: linear-gradient(rgba(40,40,40, 1), rgba(80,80,80,0.97));
+	box-shadow: 0 0 1rem black;
+	color: whitesmoke;
+	position: sticky;
+	top: 0;
+	left: 0;
+}
+article section {
+	font-family: 'Alice';
+	font-size: 1.05rem;
+	color: #333;
+	text-shadow: 0.1rem 0.1rem 0.1rem black;
+}
 main aside{
 	flex: 0 1 30%;
 	order:1;
 }
-aside > * {
+aside h3 {
+	padding: 0.2rem;
+	border-bottom: 0.2rem solid cyan;
+	border-radius:1rem 1rem 0 0;
+}
+aside > :not(h3) {
 	color: #333;
 	background-image: linear-gradient(whitesmoke ,#ddd);
 	border: 0.2rem outset black;
 	border-radius: 1rem 1rem 0 0;
 	margin: 2rem 0.2rem;
 	box-shadow:-1rem 1rem 1rem black,0 0 1rem 0 black inset;
-}
-aside h3 {
-	background-color: cyan;
-	padding: 0.3rem;
-	border-bottom: 0.2rem solid black;
-	border-radius:1rem 1rem 0 0;
-	position: sticky;
-	top: 0;
 }
 @media screen and (max-width:999px) {
 	header nav {
@@ -184,23 +199,6 @@ aside h3 {
 		flex: 0 1 100%;
 		order: 2;
 	}
-}
-article header {
-	font-family: 'Acme';
-	font-size: 1.3rem;
-	text-shadow: 0.1rem 0.1rem 0 dimgray, 0.15rem 0.15rem 0 black;
-	padding: 0.4rem;
-	background-image: linear-gradient(rgba(40,40,40, 0.9), rgba(60,60,60,0.9));
-	color: whitesmoke;
-	position: sticky;
-	top: 0;
-	left: 0;
-}
-article section {
-	font-family: 'Alice';
-	font-size: 1.05rem;
-	color: #333;
-	text-shadow: 0.1rem 0.1rem 0.1rem black;
 }
 form[name="new_post"] {
 	width: 95%;
