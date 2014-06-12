@@ -185,14 +185,21 @@ aside h3 {
 	}
 }
 article header {
-	font-family: Alice;
+	font-family: 'Acme';
 	font-size: 1.3rem;
+	text-shadow: 0.1rem 0.1rem 0 dimgray, 0.15rem 0.15rem 0 black;
 	padding: 0.4rem;
 	background-image: linear-gradient(rgba(40,40,40, 0.9), rgba(60,60,60,0.9));
 	color: whitesmoke;
 	position: sticky;
 	top: 0;
 	left: 0;
+}
+article section {
+	font-family: 'Alice';
+	font-size: 1.05rem;
+	color: #333;
+	text-shadow: 0.1rem 0.1rem 0.1rem black;
 }
 form[name="new_post"] {
 	width: 95%;
