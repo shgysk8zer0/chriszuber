@@ -123,7 +123,8 @@ body > header h1::after {
 }
 main {
 	width: 90vw;
-	transform: translate(5vw, 2vw);
+	transform: translateX(5vw);
+	margin-top: 2rem;
 	padding: 2rem;
 	background-image:linear-gradient(315deg,rgba(80,80,80,0.7),rgba(140,140,140,0.8),rgba(40,40,40,0.7));
 	border-radius:2rem;
