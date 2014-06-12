@@ -128,6 +128,7 @@ main {
 	background-image:linear-gradient(315deg,rgba(80,80,80,0.7),rgba(140,140,140,0.8),rgba(40,40,40,0.7));
 	border-radius:2rem;
 	display:flex;
+	flex-direction: row;
 	justify-content: space-between;
 	align-content: flex-start;
 	-webkit-transform-origin: top;
@@ -142,30 +143,27 @@ main > article, main > .tags{
 	border: 0.3rem outset black;
 	word-wrap: break-word;
 	flex: 0 1 67%;
-	order:1;
+	order:2;
 }
 main aside{
-	padding: 1.3rem;
-	background-image: linear-gradient(whitesmoke ,#ddd);
-	color: #333;
-	background-size: cover;
-	border-radius:1rem;
-	border:0.3rem inset black;
-	box-shadow:-1rem 1rem 1rem black,0 0 1rem 0 black inset;
 	flex: 0 1 30%;
-	order:2;
+	order:1;
+}
+aside > * {
+	color: #333;
+	background-image: linear-gradient(whitesmoke ,#ddd);
+	border: 0.2rem outset black;
+	border-radius: 1rem 1rem 0 0;
+	margin: 2rem 0.2rem;
+	box-shadow:-1rem 1rem 1rem black,0 0 1rem 0 black inset;
 }
 aside h3 {
 	background-color: cyan;
 	padding: 0.3rem;
 	border-bottom: 0.2rem solid black;
+	border-radius:1rem 1rem 0 0;
 	position: sticky;
 	top: 0;
-}
-aside .recent {
-	border: 0.2rem outset black;
-	margin: 0.2rem;
-	box-shadow: 0.3rem 0.3rem 0.3rem black;
 }
 @media screen and (max-width:999px) {
 	header nav {
