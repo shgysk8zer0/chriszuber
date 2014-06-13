@@ -10,3 +10,5 @@ video/
 demos/
 /chriszuber.odb
 /_pdo.log
+stylesheets/contact_card.css
+components/contact_card.php
