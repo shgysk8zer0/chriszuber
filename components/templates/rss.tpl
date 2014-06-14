@@ -1,1 +1,7 @@
-<item><title>%FEED_TITLE%</title><link>%FEED_URL%</link><description>%FEED_DESCRIPTION%</description></item>
+<item>
+	<title>%TITLE%</title>
+	<link>%URL%</link>
+	<description>%DESCRIPTION%</description>
+	<pubDate>%CREATED%</pubDate>
+	<guid>%URL%</guid>
+</item>
