@@ -33,6 +33,7 @@
 		");
 
 		fputs($rss, '<?xml version="1.0" encoding="UTF-8" ?>');
+		fputs($rss, '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">');
 		fputs($rss, '<channel>');
 		fputs($rss, "<title>{$head->title}</title>");
 		fputs($rss, "<link>" . URL . "</link>");
@@ -42,6 +43,7 @@
 			fputs($rss, $template->feed_title($page->title)->feed_url(URL . "/{$page->url}")->feed_description($page->description)->out());
 		}
 
+		fputs($rss, '</rss>');
 		fputs($rss, '</channel>');
 		fclose($rss);
 
