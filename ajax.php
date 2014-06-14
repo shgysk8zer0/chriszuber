@@ -552,7 +552,9 @@
 			}break;
 
 			case 'Clear PHP_errors': {
+				require_login('admin');
 				$pdo = _pdo::load();
+
 				$pdo->reset_table('PHP_errors');
 				file_put_contents(BASE . '/errors.log', null, LOCK_EX);
 				$resp->notify(
@@ -587,6 +589,28 @@
 				$resp->notify(
 					'Success',
 					"The database has been backed up to {$connect->database}.sql",
+					'images/icons/db.png'
+				);
+			} break;
+
+			case 'update_sitemap': {
+				require_login('admin');
+
+				update_sitemap();
+				$resp->notify(
+					'Sitemap has been updated',
+					'View ' . URL . '/sitemap.xml',
+					'images/icons/db.png'
+				);
+			} break;
+
+			case 'update_rss': {
+				require_login('admin');
+
+				update_rss();
+				$resp->notify(
+					'Rss Feed has been updated',
+					'View ' . URL . '/feed.rss',
 					'images/icons/db.png'
 				);
 			} break;

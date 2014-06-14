@@ -31,6 +31,8 @@
 	<menu label="Post Management">
 		<menuitem label="New Post" icon="images/icons/db.svgz" data-request="load_form=new_post"></menuitem>
 		<menuitem label="Edit Post" icon="images/icons/db.svgz"></menuitem>
+		<menuitem label="Update Sitemap" icon="images/icons/db.svgz" data-request="action=update_sitemap"></menuitem>
+		<menuitem label="Update RSS" icon="images/icons/db.svgz" data-request="action=update_rss"></menuitem>
 	</menu>
 	<?php if($login->role === 'admin'):?>
 	<menu label="PHP Defaults">
