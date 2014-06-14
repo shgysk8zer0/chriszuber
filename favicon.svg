@@ -1,7 +1,7 @@
 <svg id="svg2844" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" height="100%" width="100%" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
 <title id="title2988">Super User</title>
 <defs id="defs11">
-<linearGradient id="linearGradient2994" x1="110.01459" spreadMethod="reflect" gradientUnits="userSpaceOnUse" y1="62.865494" gradientTransform="matrix(1,0,0,1.11922,0.74839877,20.114522)" x2="109.23652" y2="163.21393">
+<linearGradient id="linearGradient2994" y2="163.21393" spreadMethod="reflect" gradientUnits="userSpaceOnUse" x2="109.23652" gradientTransform="matrix(1,0,0,1.11922,0.74839877,20.114522)" y1="62.865494" x1="110.01459">
 <stop id="stop3779" stop-color="#1a1a1a" offset="0"/>
 <stop id="stop3781" stop-color="#505050" offset="1"/>
 </linearGradient>
@@ -11,7 +11,7 @@
 <cc:Work>
 <dc:format>image/svg+xml</dc:format>
 <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-<cc:license rdf:resource="http://creativecommons.org/licenses/by-sa/3.0/"/>
+<cc:license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/3.0/"/>
 <dc:publisher>
 <cc:Agent rdf:about="http://openclipart.org/">
 <dc:title>Openclipart</dc:title>
@@ -35,11 +35,12 @@
 </dc:subject>
 <dc:identifier>favicon</dc:identifier>
 </cc:Work>
-<cc:License rdf:about="http://creativecommons.org/licenses/by-sa/3.0/">
+<cc:License rdf:about="http://creativecommons.org/licenses/by-nc-sa/3.0/">
 <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
 <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
 <cc:requires rdf:resource="http://creativecommons.org/ns#Notice"/>
 <cc:requires rdf:resource="http://creativecommons.org/ns#Attribution"/>
+<cc:prohibits rdf:resource="http://creativecommons.org/ns#CommercialUse"/>
 <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
 <cc:requires rdf:resource="http://creativecommons.org/ns#ShareAlike"/>
 </cc:License>
