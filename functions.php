@@ -28,7 +28,7 @@
 			 * @return array $info
 			 */
 
-		set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . PATH_SEPARATOR . __DIR__  . DIRECTORY_SEPARATOR . 'classes');
+		set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . PATH_SEPARATOR . __DIR__  . DIRECTORY_SEPARATOR . 'config' . PATH_SEPARATOR . __DIR__  . DIRECTORY_SEPARATOR . 'classes');
 
 		$connect = ini::load('connect');
 		if(!isset($connect->site)) {
@@ -42,10 +42,9 @@
 		if(!isset($connect->server)) $connect->server = 'localhost';
 		if(!isset($connect->debug)) $connect->debug = true;
 		if(!isset($connect->type)) $connect->type = 'mysql';
-		if($connect->server !== 'localhost' and is_null($connect->port)) $connect->port = '3306';
 
-		if(file_exists('./define.ini')) {
-			foreach(parse_ini_file('./define.ini') as $key => $value) {
+		if(file_exists('./config/define.ini')) {
+			foreach(parse_ini_file('./config/define.ini') as $key => $value) {
 				define(strtoupper(preg_replace('/\s|-/', '_', $key)), $value);
 			}
 		}
@@ -596,16 +595,16 @@
 		 * @return string
 		 */
 
-	if(array_key_exists('nonce', $_SESSION)) {	// Use existing nonce instead of a new one
-		return $_SESSION['nonce'];
-	}
-	//We are going to shuffle an alpha-numeric string to get random characters
-	$str = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
-	if(strlen($str) < $length) {					// $str length is limited to length of available characters. Be recursive for extra length
-		$str .= nonce($length - strlen($str));
-	}
-	$_SESSION['nonce'] = $str;							// Save this to session for re-use
-	return $str;
+		if(array_key_exists('nonce', $_SESSION)) {	// Use existing nonce instead of a new one
+			return $_SESSION['nonce'];
+		}
+		//We are going to shuffle an alpha-numeric string to get random characters
+		$str = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
+		if(strlen($str) < $length) {					// $str length is limited to length of available characters. Be recursive for extra length
+			$str .= nonce($length - strlen($str));
+		}
+		$_SESSION['nonce'] = $str;							// Save this to session for re-use
+		return $str;
 	}
 
 	function same_origin() {							// Determine if request is from us
@@ -647,21 +646,21 @@
 	}
 
 	function array_keys_exist() {						// Check if all keys exist in array
-	/**
-		* Use array_key_exists on each key.
-		* Return false as soon as one is missing
-		* $args is all arguments given to function
-		* Since final argument is array, seperate that and remove from length
-		*
-		 * @params string[, string, .... string] array
-		 * @return boolean
-		 */
-	$args = func_get_args();
-	$arr = end($args);
-	$length = func_num_args() - 1;
-	for($i = 0; $i < $length; $i++) {
-		if(!array_key_exists($args[$i], $arr)) return false;
-	}
+		/**
+			* Use array_key_exists on each key.
+			* Return false as soon as one is missing
+			* $args is all arguments given to function
+			* Since final argument is array, seperate that and remove from length
+			*
+			 * @params string[, string, .... string] array
+			 * @return boolean
+			 */
+		$args = func_get_args();
+		$arr = end($args);
+		$length = func_num_args() - 1;
+		for($i = 0; $i < $length; $i++) {
+			if(!array_key_exists($args[$i], $arr)) return false;
+		}
 	return true;
 }
 
