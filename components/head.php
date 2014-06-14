@@ -39,7 +39,7 @@
 <link rel="stylesheet" type="text/css" href="stylesheets/style.css" media="all"/>
 <link rel="stylesheet" type="text/css" href="stylesheets/fonts.css" media="all"/>
 <link rel="stylesheet" type="text/css" href="stylesheets/animations.css" media="screen"/>
-<link href="<?=URL?>/feed.rss" rel="alternate" type="application/rss+xml" title="Latest Posts" />
+<link href="<?=URL?>/feed.rss" rel="alternate" type="application/rss+xml" title="<?=$head->title?> RSS Feed" />
 <?php if(isset($head->publisher)):?><link rel="publisher" href="https://plus.google.com/<?=$head->publisher?>"><?php endif?>
 <?php if($connect->debug):?>
 	<?php if(BROWSER === 'Firefox'):?>
