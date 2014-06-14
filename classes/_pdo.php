@@ -50,17 +50,17 @@
 				$connect_string = (isset($connect->type)) ? "{$connect->type}:" : 'mysql:';
 				$connect_string .= (isset($connect->database)) ?  "dbname={$connect->database}" : "dbname={$connect->user}";
 				if(isset($connect->server)) $connect_string .= ";host={$connect->server}";
-				if(isset($connect->port)) $connect_string .= ";port={$connect->port}";
+				if(isset($connect->port) and $connect->server !== 'localhost') $connect_string .= ";port={$connect->port}";
 				$this->pdo = new PDO($connect_string, $connect->user, $connect->password);
 			}
 			catch(Exception $e) {
-				$this->log(__METHOD__, __LINE__, $connect_string);
+				$this->log(__METHOD__, __LINE__, $connect_string . PHP_EOL . $e->getMessage());
 				exit('Failed to connect to database.');
 			}
 		}
 
 		public function log($method, $line, $message = '') {
-			file_put_contents(BASE . '/' . __CLASS__ . '.log', "Error in $method in line $line: $message\n", FILE_APPEND | LOCK_EX);
+			file_put_contents(BASE . '/' . __CLASS__ . '.log', "Error in $method in line $line: $message" . PHP_EOL, FILE_APPEND | LOCK_EX);
 		}
 
 		public function __set($key, $value) {
