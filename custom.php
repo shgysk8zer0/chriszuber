@@ -42,11 +42,11 @@
 		fputs($rss, "<description>{$head->description}</description>" . PHP_EOL);
 
 		foreach($pages as $page) {
-			fputs($rss, $template->title($page->title)->url(URL . "/{$page->url}")->description($page->description)->created($page->created)->out());
+			fputs($rss, $template->title($page->title)->url(URL . "/{$page->url}")->description($page->description)->created(date('r', strtotime($page->created)))->out());
 		}
 
-		fputs($rss, '</rss>');
 		fputs($rss, '</channel>');
+		fputs($rss, '</rss>');
 		fclose($rss);
 
 	}
