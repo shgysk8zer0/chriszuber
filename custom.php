@@ -37,6 +37,8 @@
 		fputs($rss, '<channel>');
 		fputs($rss, "<title>{$head->title}</title>");
 		fputs($rss, "<link>" . URL . "</link>");
+		fputs($rss, "<lastBuildDate>" . time('r') ."</lastBuildDate>");
+		fputs($rss, "<language>en-US</language>");
 		fputs($rss, "<description>{$head->description}</description>");
 
 		foreach($pages as $page) {
