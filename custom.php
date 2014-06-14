@@ -11,12 +11,13 @@
 		$pages = $pdo->fetch_array("
 			SELECT `url`, `created`
 			FROM `posts`
+			WHERE `url` != ''
 		");
 		fputs($sitemap, '<?xml version="1.0" encoding="UTF-8"?>');
 		fputs($sitemap, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
 		foreach($pages as $page) {
 			$time = new simple_date($page->created);
-			fputs($sitemap, $template->url(URL . "/{$page->url}")->mod($time->out('Y-m-d'))->priority('0.8')->out());
+			fputs($sitemap, $template->url(URL . "/posts/$page->url}")->mod($time->out('Y-m-d'))->priority('0.8')->out());
 		}
 		fputs($sitemap, '</urlset>');
 		fclose($sitemap);
@@ -30,6 +31,7 @@
 		$pages = $pdo->fetch_array("
 			SELECT `title`, `url`, `description`, `created`
 			FROM `posts`
+			WHERE `url` != ''
 		");
 
 		fputs($rss, '<?xml version="1.0" encoding="UTF-8" ?>' . PHP_EOL);
@@ -42,7 +44,7 @@
 		fputs($rss, "<description>{$head->description}</description>" . PHP_EOL);
 
 		foreach($pages as $page) {
-			fputs($rss, $template->title($page->title)->url(URL . "/{$page->url}")->description($page->description)->created(date('r', strtotime($page->created)))->out());
+			fputs($rss, $template->title($page->title)->url(URL . "/posts/{$page->url}")->description($page->description)->created(date('r', strtotime($page->created)))->out());
 		}
 
 		fputs($rss, '</channel>');
