@@ -4,7 +4,7 @@
 <form name="new_post" action="<?=URL?>" method="post">
 	<fieldset form="new_post">
 		<legend>New Post</legend>
-		<article>
+		<article contextmenu="wysiwyg_menu">
 			<header>
 				<h1 contenteditable="true" data-input-name="title" itemprop="headline">TITLE</h1>
 				<nav contenteditable="true" data-input-name="keywords">
