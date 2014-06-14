@@ -22,6 +22,31 @@
 		fclose($sitemap);
 	}
 
+	function update_rss($lim = 10) {
+		$pdo = _pdo::load('connect');
+		$head = $pdo->name_value('head');
+		$template = template::load('rss');
+		$rss = fopen(BASE . '/feed.rss', 'w');
+		$pages = $pdo->fetch_array("
+			SELECT `title`, `url`, `description`
+			FROM `posts`
+		");
+
+		fputs($rss, '<?xml version="1.0" encoding="UTF-8" ?>');
+		fputs($rss, '<channel>');
+		fputs($rss, "<title>{$head->title}</title>");
+		fputs($rss, "<link>" . URL . "</link>");
+		fputs($rss, "<description>{$head->description}</description>");
+
+		foreach($pages as $page) {
+			fputs($rss, $template->feed_title($page->title)->feed_url(URL . "/{$page->url}")->feed_description($page->description)->out());
+		}
+
+		fputs($rss, '</channel>');
+		fclose($rss);
+
+	}
+
 	function get_all_tags(){
 		$pdo = _pdo::load();
 		$keywords = flatten($pdo->fetch_array("
