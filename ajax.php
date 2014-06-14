@@ -494,10 +494,22 @@
 	}
 
 	elseif(array_key_exists('datalist', $_REQUEST)) {
-		$resp->before(
-			"[list=\"{$_REQUEST['datalist']}\"]",
-			get_datalist($_REQUEST['datalist'])
-		);
+		switch($_REQUEST['datalist']) {
+			case 'tags': {
+				$datalist = get_datalist('tags');
+			} break;
+
+			case 'PHP_errors_files': {
+				require_login('admin');
+				$datalist = get_datalist('PHP_errors_files');
+			} break;
+		}
+		if(isset($datalist)) {
+			$resp->before(
+				"[list=\"{$_REQUEST['datalist']}\"]",
+				$datalist
+			);
+		}
 	}
 
 	elseif(array_key_exists('template', $_REQUEST)) {
