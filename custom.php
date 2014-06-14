@@ -4,6 +4,25 @@
 		return file_get_contents(BASE . "/components/templates/{$template}.tpl");
 	}
 
+	function update_sitemap() {
+		$pdo = _pdo::load('connect');
+		$template = template::load('sitemap');
+		$sitemap = fopen(BASE . '/sitemap.xml', 'w');
+		$pages = $pdo->fetch_array("
+			SELECT `url`, `created`
+			FROM `posts`
+		");
+		fputs($sitemap, '<?xml version="1.0" encoding="UTF-8"?>');
+		fputs($sitemap, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
+		foreach($pages as $page) {
+			$time = new simple_date($page->created);
+			fputs($sitemap, $template->url(URL . "/{$page->url}")->mod($time->out('Y-m-d'))->priority('0.8')->out());
+		}
+		fputs($sitemap, '</urlset>');
+		fclose($sitemap);
+		return $pages;
+	}
+
 	function get_all_tags(){
 		$pdo = _pdo::load();
 		$keywords = flatten($pdo->fetch_array("
