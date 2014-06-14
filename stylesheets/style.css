@@ -48,7 +48,7 @@
 	background-attachment:fixed;
 	color: whitesmoke;
 	text-shadow:var(shadow);
-	cursor: url(../images/cursors/Arch.svgz), url(../images/cursors/Arch.png), url(../images/cursors/Arch.cur), auto;
+	cursor: url(../images/cursors/Arch.svgz), auto;
 }
 :root.offline {
 	pointer-events: none;
