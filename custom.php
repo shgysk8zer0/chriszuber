@@ -37,7 +37,7 @@
 		fputs($rss, '<channel>' . PHP_EOL);
 		fputs($rss, "<title>{$head->title}</title>" . PHP_EOL);
 		fputs($rss, "<link>" . URL . "</link>" . PHP_EOL);
-		fputs($rss, "<lastBuildDate>" . time('r') ."</lastBuildDate>" . PHP_EOL);
+		fputs($rss, "<lastBuildDate>" . date('r') ."</lastBuildDate>" . PHP_EOL);
 		fputs($rss, "<language>en-US</language>" . PHP_EOL);
 		fputs($rss, "<description>{$head->description}</description>" . PHP_EOL);
 
