@@ -33,6 +33,7 @@
 <meta name="viewport" content="<?=$head->viewport?>"/>
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="canonical" itemprop="url" href="<?=URL . $_SERVER['REQUEST_URI']?>"/>
+<link rel="favorite icon" type="image/x-icon" href="favicon.ico"/>
 <link rel="icon" type="image/svg" sizes="any" href="favicon.svgz?t=<?=time()?>"/>
 <link rel="alternate icon" type="image/png" sizes="16x16" href="favicon.png"/>
 <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="all"/>
