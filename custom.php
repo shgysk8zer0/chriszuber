@@ -20,7 +20,6 @@
 		}
 		fputs($sitemap, '</urlset>');
 		fclose($sitemap);
-		return $pages;
 	}
 
 	function get_all_tags(){
