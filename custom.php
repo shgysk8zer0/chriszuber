@@ -28,21 +28,21 @@
 		$template = template::load('rss');
 		$rss = fopen(BASE . '/feed.rss', 'w');
 		$pages = $pdo->fetch_array("
-			SELECT `title`, `url`, `description`
+			SELECT `title`, `url`, `description`, `created`
 			FROM `posts`
 		");
 
-		fputs($rss, '<?xml version="1.0" encoding="UTF-8" ?>');
-		fputs($rss, '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">');
-		fputs($rss, '<channel>');
-		fputs($rss, "<title>{$head->title}</title>");
-		fputs($rss, "<link>" . URL . "</link>");
-		fputs($rss, "<lastBuildDate>" . time('r') ."</lastBuildDate>");
-		fputs($rss, "<language>en-US</language>");
-		fputs($rss, "<description>{$head->description}</description>");
+		fputs($rss, '<?xml version="1.0" encoding="UTF-8" ?>' . PHP_EOL);
+		fputs($rss, '<rss version="2.0">' . PHP_EOL);
+		fputs($rss, '<channel>' . PHP_EOL);
+		fputs($rss, "<title>{$head->title}</title>" . PHP_EOL);
+		fputs($rss, "<link>" . URL . "</link>" . PHP_EOL);
+		fputs($rss, "<lastBuildDate>" . time('r') ."</lastBuildDate>" . PHP_EOL);
+		fputs($rss, "<language>en-US</language>" . PHP_EOL);
+		fputs($rss, "<description>{$head->description}</description>" . PHP_EOL);
 
 		foreach($pages as $page) {
-			fputs($rss, $template->feed_title($page->title)->feed_url(URL . "/{$page->url}")->feed_description($page->description)->out());
+			fputs($rss, $template->title($page->title)->url(URL . "/{$page->url}")->description($page->description)->created($page->created)->out());
 		}
 
 		fputs($rss, '</rss>');
@@ -86,9 +86,21 @@
 	}
 
 	function get_datalist($list) {
+		$pdo = _pdo::load();
 		switch(strtolower($list)) {
 			case 'tags': {
 				$options = get_all_tags();
+			} break;
+
+			case 'php_errors_files': {
+				$options = $pdo->fetch_array("
+					SELECT DISTINCT(`file`)
+					FROM `PHP_errors`
+				");
+				foreach($options as &$option) {
+					//$datalist .= "<option>" . preg_replace('/^' . preg_quote(BASE . '/', '/') . '/', null, $option->file) . '</option>';
+					$option = preg_replace('/^' . preg_quote(BASE . '/', '/') . '/', null, $option->file);
+				}
 			} break;
 		}
 		if(isset($options)) {
