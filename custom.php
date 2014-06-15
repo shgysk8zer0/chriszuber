@@ -13,6 +13,7 @@
 			SELECT `url`, `created`
 			FROM `posts`
 			WHERE `url` != ''
+			ORDER BY `created` DESC
 		");
 		fputs($sitemap, '<?xml version="1.0" encoding="UTF-8"?>');
 		fputs($sitemap, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
@@ -34,6 +35,7 @@
 			SELECT `title`, `url`, `description`, `created`
 			FROM `posts`
 			WHERE `url` != ''
+			ORDER BY `created` DESC
 		");
 
 		fputs($rss, '<?xml version="1.0" encoding="UTF-8" ?>' . PHP_EOL);
