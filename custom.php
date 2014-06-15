@@ -6,6 +6,7 @@
 
 	function update_sitemap() {
 		$pdo = _pdo::load('connect');
+		$url = preg_replace('/^https/', 'http', URL);
 		$template = template::load('sitemap');
 		$sitemap = fopen(BASE . '/sitemap.xml', 'w');
 		$pages = $pdo->fetch_array("
@@ -17,7 +18,7 @@
 		fputs($sitemap, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
 		foreach($pages as $page) {
 			$time = new simple_date($page->created);
-			fputs($sitemap, $template->url(URL . "/posts/$page->url}")->mod($time->out('Y-m-d'))->priority('0.8')->out());
+			fputs($sitemap, $template->url( "/{$url}posts/$page->url}")->mod($time->out('Y-m-d'))->priority('0.8')->out());
 		}
 		fputs($sitemap, '</urlset>');
 		fclose($sitemap);
@@ -25,6 +26,7 @@
 
 	function update_rss($lim = 10) {
 		$pdo = _pdo::load('connect');
+		$url = preg_replace('/^https/', 'http', URL);
 		$head = $pdo->name_value('head');
 		$template = template::load('rss');
 		$rss = fopen(BASE . '/feed.rss', 'w');
@@ -38,13 +40,13 @@
 		fputs($rss, '<rss version="2.0">' . PHP_EOL);
 		fputs($rss, '<channel>' . PHP_EOL);
 		fputs($rss, "<title>{$head->title}</title>" . PHP_EOL);
-		fputs($rss, "<link>" . URL . "</link>" . PHP_EOL);
+		fputs($rss, "<link>{$url}</link>" . PHP_EOL);
 		fputs($rss, "<lastBuildDate>" . date('r') ."</lastBuildDate>" . PHP_EOL);
 		fputs($rss, "<language>en-US</language>" . PHP_EOL);
 		fputs($rss, "<description>{$head->description}</description>" . PHP_EOL);
 
 		foreach($pages as $page) {
-			fputs($rss, $template->title($page->title)->url(URL . "/posts/{$page->url}")->description($page->description)->created(date('r', strtotime($page->created)))->out());
+			fputs($rss, $template->title($page->title)->url("{$url}/posts/{$page->url}")->description($page->description)->created(date('r', strtotime($page->created)))->out());
 		}
 
 		fputs($rss, '</channel>');
