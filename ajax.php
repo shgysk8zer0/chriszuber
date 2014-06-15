@@ -306,7 +306,7 @@
 						'images/icons/db.png'
 					);
 				}
-			}
+			} break;
 
 			case 'php_errors': {
 				check_nonce();
