@@ -64,6 +64,9 @@
 	background-color: cyan;
 	text-shadow:none;
 }
+:root.loading {
+	cursor: progress;
+}
 body> header {
 	background-image: linear-gradient(rgba(40,40,40,0.8), rgba(80,80,80,0.7));
 	border-bottom: 0.2rem solid dimgray;

@@ -427,6 +427,7 @@ function ajax(data) {
 		}
 		else if(typeof navigator.onLine !== 'boolean' || navigator.onLine) {
 			var req = new XMLHttpRequest();
+			document.documentElement.classList.add('loading');
 			req.open(
 				data.type || 'POST',
 				data.url || document.baseURI,
@@ -435,6 +436,7 @@ function ajax(data) {
 			req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 			req.setRequestHeader('Request-Type', 'AJAX');
 			req.onload = function () {
+				document.documentElement.classList.remove('loading');
 				if(req.status == 200) {
 					if(data.cache) {
 						cache.set(data.cache, req.response.trim());
