@@ -236,15 +236,23 @@
 						'content' => $content,
 						'url' => $url
 					]);
-					($DB->execute()) ? $resp->notify(
-						'Post submitted',
-						'Check for new posts'
-					)->remove(
-						'main > *'
-					) : $resp->notify(
-						'Post failed',
-						'Look into what went wrong'
-					);
+
+					if($DB->execute()) {
+						$resp->notify(
+							'Post submitted',
+							'Check for new posts'
+						)->remove(
+							'main > *'
+						);
+						update_sitemap();
+						update_rss();
+					}
+					else {
+						$resp->notify(
+							'Post failed',
+							'Look into what went wrong'
+						);
+					}
 				}
 				else {
 					$resp->notify(
@@ -274,15 +282,22 @@
 						'content' => urldecode(trim($_POST['content'])),
 						'old_title' => urldecode(trim($_POST['old_title']))
 					]);
-					($DB->execute()) ? $resp->notify(
-						"Post has been updated.",
-						"{$_POST['old_title']} has been updated.",
-						'images/icons/db.png'
-					) : $resp->notify(
-						'Something went wrong :(',
-						"There was a problem updating {$_POST['old_title']}",
-						'images/icons/db.png'
-					);
+					if($DB->execute()) {
+						$resp->notify(
+							"Post has been updated.",
+							"{$_POST['old_title']} has been updated.",
+							'images/icons/db.png'
+						);
+						update_sitemap();
+						update_rss();
+					}
+					else {
+						$resp->notify(
+							'Something went wrong :(',
+							"There was a problem updating {$_POST['old_title']}",
+							'images/icons/db.png'
+						);
+					}
 				}
 				else {
 					$resp->notify(
