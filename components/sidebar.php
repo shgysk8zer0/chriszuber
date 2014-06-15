@@ -11,10 +11,10 @@
 			<p><?=$post->description?></p>
 		</a><br/>
 		<?php endforeach?>
-		<?php load('forms/tag_search')?>
 	</div>
 	<div class="recent tags">
 		<h3>Tags</h3>
+		<?php load('forms/tag_search')?>
 		<?php foreach(get_all_tags() as $tag):?>
 		<a href="<?=URL?>/tags/<?=urlencode($tag)?>"><?=$tag?></a><br/>
 		<?php endforeach?>
