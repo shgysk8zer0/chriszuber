@@ -413,6 +413,16 @@ function ajax(data) {
 	if ((typeof data.type !== 'undefined' && data.type.toLowerCase() === 'get') && (typeof data.request === 'string')) {
 		data.url += '?' + data.request;
 	}
+	if(typeof data.form !== 'undefined') {
+		if(typeof data.form === 'string') {
+			data.form = document.forms[data.form];
+		}
+		data.request = new FormData(data.form);
+		data.request.append('form', data.form.name);
+		data.form.querySelectorAll('[contenteditable][data-input-name]').forEach(function(input) {
+			data.request.append(input.data('input-name'), input.innerHTML);
+		});
+	}
 	return new Promise(function (success, fail) {
 		var canonical = $('[rel=canonical]');
 		/*https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise*/
@@ -426,18 +436,33 @@ function ajax(data) {
 			success(cache.get(data.cache));
 		}
 		else if(typeof navigator.onLine !== 'boolean' || navigator.onLine) {
-			var req = new XMLHttpRequest();
-			document.documentElement.classList.add('loading');
+			var req = new XMLHttpRequest(),
+				progress = document.createElement('progress');
+			if(typeof data.contentType !== 'string') {
+				data.contentType = 'application/x-www-form-urlencoded';
+			}
+			progress.min = 0;
+			progress.max = 1;
+			progress.value = 0;
+			progress.className = 'ajax_progress'
+			document.body.appendChild(progress);
 			req.open(
 				data.type || 'POST',
 				data.url || document.baseURI,
 				data.async || true
 			);
-			req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+			if(typeof data.request === 'string') {
+				req.setRequestHeader('Content-type', data.contentType);
+			}
 			req.setRequestHeader('Request-Type', 'AJAX');
-			req.onload = function () {
-				document.documentElement.classList.remove('loading');
+			req.addEventListener('progress', function(event) {
+				if(event.lengthComputable) {
+					progress.value = event.loaded / event.total;
+				}
+			});
+			req.addEventListener('load', function () {
 				if(req.status == 200) {
+					progress.parentElement.removeChild(progress);
 					if(data.cache) {
 						cache.set(data.cache, req.response.trim());
 					}
@@ -452,11 +477,17 @@ function ajax(data) {
 				else {
 					fail(Error(req.statusText));
 				}
-			};
-			req.onerror = function () {
+			});
+			req.addEventListener('error', function () {
 				fail(Error('Network Error'));
-			};
-			(typeof data.request === 'string') ? req.send(data.request)  : req.send();
+				progress.parentElement.removeChild(progress);
+			});
+			if(typeof data.request !== 'undefined') {
+				req.send(data.request);
+			}
+			else {
+				req.send();
+			}
 		}
 		else {
 			notify({
@@ -472,7 +503,6 @@ function handleJSON(json){
 	if(typeof json === 'undefined') {
 		return false;
 	}
-	/*var json = JSON.parse(data.trim());*/
 	if(typeof json === 'string') {
 		json = JSON.parse(json.trim());
 	}
@@ -543,28 +573,6 @@ function handleJSON(json){
 	if(json.error){
 		console.error(json.error);
 	}
-}
-Element.prototype.ajaxSubmit = function() {
-	return new Promise(function (success, fail) {
-		if(this.tagName.toLowerCase() !== 'form'){
-			fail(Error(this.tagName + ' is not a form'));
-		}
-		var formData = new FormData(this),
-			req = new XMLHttpRequest();
-		formData.append('form', this.name);
-		this.querySelectorAll('[contenteditable][data-input-name]').forEach(function(input) {
-			formData.append(input.data('input-name'), input.innerHTML);
-		});
-		req.open(this.method, this.action);
-		req.setRequestHeader('Request-Type', 'AJAX');
-		req.send(formData);
-		req.onload = function () {
-			(req.status == 200) ? success(req.response)  : fail(Error(req.statusText));
-		};
-		req.onerror = function () {
-			fail(Error('Network Error'));
-		};
-	}.bind(this));
 }
 function cache() {
 	return this;

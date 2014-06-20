@@ -121,68 +121,6 @@ NodeList.prototype.bootstrap = function() {
 				target = event.target;
 			});
 		});
-		node.query('#wysiwyg_menu menuitem[data-editor-command]').forEach(function(item) {
-			item.addEventListener('click', function() {
-				var arg = null;
-				if(this.data('editor-value')) {
-					arg = this.data('editor-value');
-				}
-				else if(this.data('prompt')) {
-					arg = prompt(this.data('prompt'));
-				}
-				document.execCommand(this.data('editor-command'), null, arg);
-			})
-		});
-		node.query('a[href^="' + document.location.origin + '"]:not([target="_blank"]):not([download])').forEach(function(a) {
-			a.addEventListener('click', function(event) {
-				event.preventDefault();
-				ajax({
-					url: this.href,
-					type: 'GET',
-					history: this.href,
-					cache: this.data('cache')
-				}).then(
-					handleJSON,
-					console.error
-				);
-			});
-		});
-		node.query('[data-link]').forEach(function(link) {
-			link.addEventListener('click', function(){
-				ajax({
-					url: this.data('link'),
-					type: 'GET',
-					history: this.data('link'),
-					cache: this.data('cache')
-				}).then(
-					handleJSON,
-					console.error
-				);
-			});
-		});
-		node.query('form').forEach(function(el){
-			el.addEventListener('submit', function(event){
-				event.preventDefault();
-				this.ajaxSubmit().then(handleJSON, console.error);
-
-			});
-		});
-		node.query('[data-request]').forEach(function(el) {
-			el.addEventListener('click', function(event) {
-				event.preventDefault();
-				if(!this.data('confirm') || confirm(this.data('confirm'))){
-					ajax({
-						url: this.data('url')|| document.baseURI,
-						request: (this.data('prompt')) ? this.data('request') + '&prompt_value=' + encodeURIComponent(prompt(this.data('prompt'))) : this.data('request'),
-						history: this.data('history') || null,
-						cache: el.data('cache')
-					}).then(
-						handleJSON,
-						console.error
-					);
-				}
-			});
-		});
 		if(supports('menuitem')) {
 			node.query('[contextmenu]').forEach(function(el) {
 				var menu = el.attr('contextmenu');
@@ -213,8 +151,81 @@ NodeList.prototype.bootstrap = function() {
 				}
 			});
 		}
+		node.query('a[href^="' + document.location.origin + '"]:not([target="_blank"]):not([download])').forEach(function(a) {
+			a.addEventListener('click', function(event) {
+				event.preventDefault();
+				ajax({
+					url: this.href,
+					type: 'GET',
+					history: this.href,
+					cache: this.data('cache')
+				}).then(
+					handleJSON,
+					console.error
+				);
+			});
+		});
+		node.query('form[name]').forEach(function(el){
+			el.addEventListener('submit', function(event){
+				event.preventDefault();
+				ajax({
+					url: this.action || document.baseURI,
+					type: this.method || 'POST',
+					contentType: this.enctype,
+					form: this
+				}).then(
+					handleJSON,
+					console.error
+				);
+
+			});
+		});
+		node.query('input[data-dropzone]') .forEach(function (finput) {
+			document.querySelector(finput.data('dropzone')).DnD(finput)
+		});
+		node.query('#wysiwyg_menu menuitem[data-editor-command]').forEach(function(item) {
+			item.addEventListener('click', function() {
+				var arg = null;
+				if(this.data('editor-value')) {
+					arg = this.data('editor-value');
+				}
+				else if(this.data('prompt')) {
+					arg = prompt(this.data('prompt'));
+				}
+				document.execCommand(this.data('editor-command'), null, arg);
+			})
+		});
 		node.query('script:not([src])').forEach(function(script) {
 			eval(script.textContent);
+		});
+		node.query('[data-link]').forEach(function(link) {
+			link.addEventListener('click', function(){
+				ajax({
+					url: this.data('link'),
+					type: 'GET',
+					history: this.data('link'),
+					cache: this.data('cache')
+				}).then(
+					handleJSON,
+					console.error
+				);
+			});
+		});
+		node.query('[data-request]').forEach(function(el) {
+			el.addEventListener('click', function(event) {
+				event.preventDefault();
+				if(!this.data('confirm') || confirm(this.data('confirm'))){
+					ajax({
+						url: this.data('url')|| document.baseURI,
+						request: (this.data('prompt')) ? this.data('request') + '&prompt_value=' + encodeURIComponent(prompt(this.data('prompt'))) : this.data('request'),
+						history: this.data('history') || null,
+						cache: el.data('cache')
+					}).then(
+						handleJSON,
+						console.error
+					);
+				}
+			});
 		});
 		node.query('[data-svg-icon]').forEach(function(el) {
 			el.ajax({
@@ -329,4 +340,35 @@ Element.prototype.worker_clock=function(){
 		clock.setAttribute('datetime',e.data.datetime);
 	});
 	clockWorker.postMessage('');
+}
+Element.prototype.DnD = function (sets) {
+	this.ondragover = function () {
+		this.classList.add('receiving');
+		return false;
+	};
+	this.ondragend = function () {
+		this.classList.remove('receiving');
+		return false;
+	};
+	this.ondrop = function (e) {
+		this.classList.remove('receiving');
+		e.preventDefault();
+		var file = e.dataTransfer.files[0],
+			reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.addEventListener('progress', function(event) {
+			console.log(event);
+		});
+		reader.onload = function (event) {
+			console.log(event);
+			if(typeof sets !== 'undefined') {
+				sets.value = event.target.result;
+			}
+		};
+		reader.onerror = function (event) {
+			console.error(event);
+		}
+		console.log(file);
+		return false;
+	}
 }
