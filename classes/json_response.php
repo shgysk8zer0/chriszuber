@@ -225,7 +225,7 @@
 			return $this;
 		}
 
-		public function attributes($selector, $attribute, $value) {
+		public function attributes($selector, $attribute, $value = true) {
 			/**
 			 * @param string $selector
 			 * @param string $attribute
