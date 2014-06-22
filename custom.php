@@ -86,7 +86,7 @@
 			SELECT `title`, `url`, `description`
 			FROM `posts`
 			WHERE `url` != ''
-			ORDER BY `created`
+			ORDER BY `created` DESC
 			LIMIT {$n}
 		");
 	}
