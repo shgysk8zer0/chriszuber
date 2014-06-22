@@ -217,7 +217,8 @@
 							`author`,
 							`author_url`,
 							`content`,
-							`url`
+							`url`,
+							`created`
 						) VALUE(
 							:title,
 							:description,
@@ -225,7 +226,8 @@
 							:author,
 							:author_url,
 							:content,
-							:url
+							:url,
+							:created
 						)
 					")->bind([
 						'title' => $title,
@@ -234,15 +236,24 @@
 						'author' => $user->name,
 						'author_url' => $user->g_plus,
 						'content' => $content,
-						'url' => $url
+						'url' => $url,
+						'created' => date('Y-m-d H:i:s')
 					]);
 
 					if($DB->execute()) {
+						$url = URL . '/posts/' . $url;
 						$resp->notify(
 							'Post submitted',
 							'Check for new posts'
 						)->remove(
-							'main > *'
+							'main > :not(aside)'
+						)->prepend(
+							'body > header nav',
+							"<a href=\"{$url}\">{$title}</a>"
+						)->after(
+							'#main_menu > menu[label="Posts"] > menuitem[label="Home"]',
+							"<menuitem label=\"{$title}\" icon=\"images/icons/coffee.svgz\" data-link=\"{$url}\"></menuitem>"
+
 						);
 						update_sitemap();
 						update_rss();
@@ -279,7 +290,7 @@
 						'title' => urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['title']))),
 						'keywords' => urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['keywords']))),
 						'description' => trim($_POST['description']),
-						'content' => urldecode(trim($_POST['content'])),
+						'content' => trim($_POST['content']),
 						'old_title' => urldecode(trim($_POST['old_title']))
 					]);
 					if($DB->execute()) {
@@ -628,6 +639,10 @@
 					'View ' . URL . '/feed.rss',
 					'images/icons/db.png'
 				);
+			} break;
+
+			case 'keep-alive': {
+				$resp->log('Kept-alive @ ' . date('h:i A'));
 			} break;
 
 			case 'test': {
