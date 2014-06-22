@@ -19,7 +19,7 @@
 		fputs($sitemap, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
 		foreach($pages as $page) {
 			$time = new simple_date($page->created);
-			fputs($sitemap, $template->url( "/{$url}posts/$page->url}")->mod($time->out('Y-m-d'))->priority('0.8')->out());
+			fputs($sitemap, $template->url( "{$url}/posts/{$page->url}")->mod($time->out('Y-m-d'))->priority('0.8')->out());
 		}
 		fputs($sitemap, '</urlset>');
 		fclose($sitemap);
