@@ -66,7 +66,7 @@
 			 * @usage $template->url = $url
 			 */
 
-			$this->replace('%' . trim(strtoupper($replace)) . '%')->with($with);
+			$this->replace('%' . strtoupper($replace) . '%')->with($with);
 		}
 
 		public function set($arr) {
