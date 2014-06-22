@@ -172,6 +172,17 @@ article section {
 	color: #333;
 	text-shadow: 0.1rem 0.1rem 0.1rem black;
 }
+article img {
+	border: 0.2rem outset cyan;
+	box-shadow: 0.3rem 0.3rem 0.5rem black;
+	margin: 1.5rem;
+	-webkit-transition: all 500ms;
+	transition: all 500ms;
+}
+article img:hover {
+	-webkit-transform: scale(1.5);
+	transform: scale(1.5);
+}
 main aside{
 	flex: 0 1 30%;
 	order:1;
