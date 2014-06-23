@@ -5,7 +5,7 @@
 		SELECT `title`, `url`
 		FROM `posts`
 		WHERE `url` != ''
-		ORDER BY `created`
+		ORDER BY `created` DESC
 		LIMIT 10
 	");
 ?>
