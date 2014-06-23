@@ -4,17 +4,9 @@
 	$storage->site_info = $head;
 	define_UA();						// Firefox handles JavaScript versions, whereas Chrome does not.
 	$connect = ini::load('connect');
+	$pages = pages::load();
 
-	$DB->prepare("
-		SELECT `title`, `keywords`, `description`, `author`
-		FROM `posts`
-		WHERE `url` = :url
-		LIMIT 1
-	")->bind([
-		'url' => end(explode('/', urldecode($_SERVER['REQUEST_URI'])))
-	])->execute();
-	$results = $DB->get_results(0);
-	$page = ($results) ? $results : $head;
+	$page = ($pages->descriptions) ? $pages : $head;
 ?>
 <head>
 <meta charset="<?=$head->charset?>"/>
@@ -58,7 +50,9 @@
 	<?php endif?>
 <?php endif?>
 <?php if(!localhost() and isset($head->google_analytics_code)):?>
-	<script type="application/javascript" nonce="<?=$_SESSION['nonce']?>"><?=preg_replace('/' . preg_quote('%GOOGLE_ANALYTICS_CODE%', '/') .'/', $head->google_analytics_code, file_get_contents(BASE . '/scripts/analytics.js'))?></script>
+	<script type="application/javascript" nonce="<?=$_SESSION['nonce']?>">
+		<?=preg_replace('/' . preg_quote('%GOOGLE_ANALYTICS_CODE%', '/') .'/', $head->google_analytics_code, file_get_contents(BASE . '/scripts/analytics.js'))?>
+	</script>
 <?php endif?>
 <!--[if lte IE 8]>
 <script type="text/javascript">
