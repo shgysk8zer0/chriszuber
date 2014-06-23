@@ -72,6 +72,50 @@ body> header {
 	border-bottom: 0.2rem solid dimgray;
 	box-shadow: 0 0 3rem black inset;
 }
+body > header h1 {
+	text-align: center;
+	text-shadow: 0.1rem 0.1rem dimgray, 0.2rem .02rem 0.3rem black, 0 0 3rem cyan;
+	margin-bottom: 1rem;
+}
+body > header nav {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+body > header nav a {
+	flex: 1 1 auto;
+	color: whitesmoke;
+	text-shadow: 0.15rem 0.15rem 0 dimgray, 0.15rem 0.15rem 0.3rem black;
+	font-size: 1.1rem;
+	font-family: 'Acme';
+	font-weight: 600;
+	text-align: center;
+	overflow: elipsis;
+	padding: 0.7rem 0;
+	background-image: linear-gradient(cyan, rgb(59, 117, 218), cyan);
+	border: 0.2rem outset black;
+	-webkit-transition: all 300ms;
+	transition: all 300ms;
+}
+body > header nav a:hover {
+	text-shadow: 0 0 0.1rem black, 0 0 0.5rem blue;
+	-webkit-transform: translateY(-0.3rem);
+	transform: translateY(-0.3rem);
+	box-shadow: 0 0 1rem black;
+
+}
+body > header nav a:first-of-type {
+	border-radius: 1rem 0 0 1rem;
+}
+body > header nav a:last-of-type {
+	border-radius: 0 1rem 1rem 0;
+}
+body > header nav a:not(:last-of-type) {
+	border-right: 0.2rem outset dimgray;
+}
+body > header nav form {
+	flex: 0 1 100%;
+}
 a, [download] {
 	font-family: inherit;
 	color: inherit;
@@ -175,16 +219,12 @@ article section {
 	font-size: 1.1rem;
 	color: #222;
 }
-article img {
+article > :not(footer) img {
 	border: 0.2rem outset cyan;
 	box-shadow: 0.3rem 0.3rem 0.5rem black;
 	margin: 1.5rem;
 	-webkit-transition: all 500ms;
 	transition: all 500ms;
-}
-article img:hover {
-	-webkit-transform: scale(1.5);
-	transform: scale(1.5);
 }
 main aside{
 	flex: 0 1 30%;
