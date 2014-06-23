@@ -6,7 +6,7 @@
 	$connect = ini::load('connect');
 	$pages = pages::load();
 
-	$page = ($pages->descriptions) ? $pages : $head;
+	$page = ($pages->description) ? $pages : $head;
 ?>
 <head>
 <meta charset="<?=$head->charset?>"/>
