@@ -425,7 +425,7 @@ Element.prototype.DnD = function (sets) {
 								img.alt = file.name;
 								sets.appendChild(img);
 							}
-							else {
+							else if(/text\/*/.test(file.type)){
 								sets.innerHTML = event.target.result;
 							}
 						}
