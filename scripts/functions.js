@@ -710,6 +710,9 @@ zQ.prototype.on = function (event, callback) {
 		return this.on(ev, callback);
 	}
 });
+zQ.prototype.ready = function(callback) {
+	return this.on('DOMContentLoaded', callback);
+}
 zQ.prototype.networkChange = function (callback) {
 	return this.online(callback) .offline(callback);
 };
