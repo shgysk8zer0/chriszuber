@@ -95,39 +95,52 @@ if (!'requestFullScreen' in document) {
 }
 /*===============================================================================================================================================*/
 Object.prototype.isaN = function () {
-	/*Boolean... is this a number?*/
 	return parseFloat(this) == this;
-}
-Element.prototype.delete = function() {
-	this.parentElement.removeChild(this);
 }
 Object.prototype.camelCase = function () {
 	return this.toLowerCase() .replace(/\ /g, '-') .replace(/-(.)/g, function (match, group1) {
 		return group1.toUpperCase();
 	});
 }
+Element.prototype.delete = function() {
+	this.parentElement.removeChild(this);
+}
 Element.prototype.after = function (content) {
-	this.insertAdjacentHTML('afterend', content);
+	(typeof content === 'string') ? this.insertAdjacentHTML('afterend', content) : this.parentElement.insertBefore(content, this.nextSibling);
 	return this;
 };
 Element.prototype.before = function (content) {
-	this.insertAdjacentHTML('beforebegin', content);
+	(typeof content === 'string') ? this.insertAdjacentHTML('beforebegin', content) : this.parentElement.insertBefore(content, this);
 	return this;
 }
-Element.prototype.prev = function (){ /*Returns the node just prior to Element*/
-	return this.previousSibling;
-}
 Element.prototype.prepend = function(content) {
-	this.insertAdjacentHTML('afterbegin', content);
+	(typeof content === 'string') ? this.insertAdjacentHTML('afterbegin', content) : this.insertBefore(content, this.firstChild);
 	return this;
 }
 Element.prototype.append = function(content) {
-	this.insertAdjacentHTML('beforeend', content);
+	(typeof content === 'string') ? this.insertAdjacentHTML('beforeend', content) : this.appendChild(content);
 	return this;
+}
+Element.prototype.next = function (){
+	return this.nextSibling;
+}
+Element.prototype.prev = function (){
+	return this.previousSibling;
 }
 Element.prototype.html = function(html) {
 	this.innerHTML = html;
 	return this;
+}
+Element.prototype.ancestor = function (sel) {
+	if(this.parentElement.matches(sel)) {
+		return this.parentElement;
+	}
+	else if(this === document.body) {
+		return false;
+	}
+	else {
+		return this.parentElement.ancestor(sel);
+	}
 }
 Element.prototype.data = function(set, value) {
 	var val = null;
@@ -153,19 +166,6 @@ Element.prototype.attr = function(attr, val) {
 			return this.getAttribute(attr);
 	}
 }
-Element.prototype.ancestor = function (sel) {
-	/*return (this.parentElement.tagName.toLowerCase() === tag) ? this.parentElement : this.parentElement.ancestor(tag);*/
-	if(this.parentElement.matches(sel)) {
-		return this.parentElement;
-	}
-	else if(this === document.body) {
-		return false;
-	}
-	else {
-		return this.parentElement.ancestor(sel);
-	}
-
-}
 Element.prototype.ajax = function(args) {
 	ajax(args).then(
 		this.html.bind(this),
@@ -175,21 +175,6 @@ Element.prototype.ajax = function(args) {
 }
 String.prototype.toBase64 = btoa;
 String.prototype.fromBase64 = atob;
-/*Element.prototype.addClass = function(cname) {
-	(supports('classList')) ? this.classList.add(cname) : this.classlist().add(cname);
-	return this;
-}
-Element.prototype.removeClass = function(cname) {
-	(supports('classList')) ? this.classList.remove(cname) : this.classlist().remove(cname);
-	return this;
-}
-Element.prototype.hasClass = function(cname) {
-	return (supports('classList')) ? this.classList.contains(cname) : this.classlist().constains(cname);
-}
-Element.prototype.toggleClass = function(cname, condition) {
-	(supports('classlist')) ? this.classList.toggle(cname, condition || !this.hasClass(cname)) : this.classlist().toggle(cname, condition || !this.hasClass(cname));
-	return this;
-}*/
 Element.prototype.values = function () {
 	var inputs = this.querySelectorAll('input:not([type=submit]):not([type=reset]),select,textarea'),
 	results = [
@@ -261,6 +246,18 @@ window.addEventListener('load', function () {
 		});
 	}
 });
+function getLocation(options) {
+	/*https://developer.mozilla.org/en-US/docs/Web/API/Geolocation.getCurrentPosition*/
+	if (typeof options === 'undefined') {
+		options = {};
+	}
+	return new Promise(function(success, fail){
+		if (!'geolocation' in navigator) {
+			fail('Your browser does not support GeoLocation');
+		}
+		navigator.geolocation.getCurrentPosition(success, fail, options);
+	});
+}
 function supports(type) {
 	/*Feature detection. Returns boolean value of suport for type*/
 	/**
@@ -441,10 +438,6 @@ function ajax(data) {
 			if(typeof data.contentType !== 'string') {
 				data.contentType = 'application/x-www-form-urlencoded';
 			}
-			progress.min = 0;
-			progress.max = 1;
-			progress.value = 0;
-			progress.className = 'ajax_progress'
 			document.body.appendChild(progress);
 			req.open(
 				data.type || 'POST',
@@ -461,8 +454,8 @@ function ajax(data) {
 				}
 			});
 			req.addEventListener('load', function () {
+				progress.parentElement.removeChild(progress);
 				if(req.status == 200) {
-					progress.parentElement.removeChild(progress);
 					if(data.cache) {
 						cache.set(data.cache, req.response.trim());
 					}
