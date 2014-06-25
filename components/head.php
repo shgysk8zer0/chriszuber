@@ -24,7 +24,7 @@
 <meta itemprop="image" content="<?=URL?>/super-user.png"/>
 <meta name="viewport" content="<?=$head->viewport?>"/>
 <meta name="mobile-web-app-capable" content="yes">
-<link rel="canonical" itemprop="url" href="<?=URL . $_SERVER['REQUEST_URI']?>"/>
+<link rel="canonical" itemprop="url" href="<?=preg_replace('/^http(s)?' . preg_quote('://', '/')  .'(www\.)?/', 'http://', URL) . $_SERVER['REQUEST_URI']?>"/>
 <link rel="favorite icon" type="image/x-icon" href="favicon.ico"/>
 <link rel="icon" type="image/svg" sizes="any" href="favicon.svgz?t=<?=time()?>"/>
 <link rel="alternate icon" type="image/png" sizes="16x16" href="favicon.png"/>
@@ -37,7 +37,7 @@
 <?php if($connect->debug):?>
 	<?php if(BROWSER === 'Firefox'):?>
 		<script type="application/javascript;version=1.8" src="scripts/functions.js" async></script>
-		<script type="application/javascript;version=1.8" src="scripts/custom.js" defer></script>
+		<script type="application/javascript;version=1.8" src="scripts/custom.js" async></script>
 	<?php else:?>
 		<script type="application/javascript" src="scripts/functions.js" async></script>
 		<script type="application/javascript" src="scripts/custom.js" defer></script>
