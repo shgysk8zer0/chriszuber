@@ -1,5 +1,5 @@
 CACHE MANIFEST
-#VERSION 2014-06-07
+#VERSION 2014-06-24
 CACHE:
 
 #SCRIPTS
@@ -16,7 +16,7 @@ stylesheets/animations.css
 #IMAGES
 favicon.svgz
 favicon.png
-images/backgrounds/red-curls.svgz
+images/backgrounds/tree.svgz
 images/logos/CreativeCommons.svgz
 
 #CURSORS
