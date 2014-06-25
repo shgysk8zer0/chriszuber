@@ -41,7 +41,7 @@
 	var-glass:linear-gradient(to top left,rgba(80,80,80,0.7), rgba(140,140,140,0.9),rgba(40, 40, 40, 0.7));
 	var-shadow:0.15em 0.15em 0.15em rgba(20,20,20,0.9);
 	var-grad: linear-gradient(to bottom right, rgb(100,100,100), rgb(40,40,40));
-	background-image:url(../images/backgrounds/space.svgz);
+	background-image:url(../images/backgrounds/tree.svgz);
 	background-size:cover;
 	background-position:center;
 	background-repeat:no-repeat;
@@ -248,17 +248,18 @@ aside > :not(h3) {
 		display: none;
 	}
 	main {
-		width: 95vw;
-		transform: translateX(2.5vw);
-		padding: 1rem;
 		flex-direction: column;
+		padding: 1rem;
+		width: 95vw;
+		-webkit-transform: translateX(2.5vw);
+		transform: translateX(2.5vw);
 	}
 	main article {
-		flex: 0 1 100%;
+		flex: 0 1 auto;
 		order: 1;
 	}
 	main aside {
-		flex: 0 1 100%;
+		flex: 0 1 auto;
 		order: 2;
 	}
 }
@@ -294,6 +295,12 @@ a.logo svg {
 }
 a.logo svg:hover {
 	transform: scale(2)rotateZ(360deg)
+}
+body > progress {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
 }
 [data-icon]::after  {
 	all: unset;
