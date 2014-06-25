@@ -370,6 +370,19 @@ Element.prototype.worker_clock=function(){
 	});
 	clockWorker.postMessage('');
 }
+function notifyLocation() {
+	getLocation({
+		enableHighAccuracy: true,
+		maximumAge: 0
+	}).then(function(pos){
+		console.log(pos.coords);
+		notify({
+			title: 'Your current location:',
+			body: 'Longitude: ' + pos.coords.longitude + "\nLatitude: " + pos.coords.latitude,
+			icon: document.baseURI + 'images/icons/map.png'
+		});
+	});
+}
 Element.prototype.DnD = function (sets) {
 	/**
 	 * Use Promises for this!
