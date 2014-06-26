@@ -24,7 +24,7 @@
 <!--[if lt IE 7]>      <html class="lt-ie9 lt-ie8 lt-ie7 no-js"> <![endif]-->
 <!--[if IE 7]>         <html class="lt-ie9 lt-ie8 no-js"> <![endif]-->
 <!--[if IE 8]>         <html class="lt-ie9 no-js"> <![endif]-->
-<!--[if gt IE 8]><!--> <html itemscope itemtype="http://schema.org/WebPage" class="no-js" <?php if(!localhost()):?> manifest="files.php?file=manifest.appcache"<?php endif?>> <!--<![endif]-->
+<!--[if gt IE 8]><!--> <html itemscope itemtype="http://schema.org/WebPage" class="no-js" <?php if(!localhost()) and false:?> manifest="files.php?file=manifest.appcache"<?php endif?>> <!--<![endif]-->
 <!--<?=date('Y-m-d H:i:s')?>-->
 <?php load('head');?>
 <body lang="en" contextmenu="main_menu">
