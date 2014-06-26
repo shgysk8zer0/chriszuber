@@ -1,33 +1,28 @@
 CACHE MANIFEST
-#VERSION 2014-06-24
+#VERSION 2014-06-25
 CACHE:
 
 #SCRIPTS
-scripts/functions.js
-#scripts/polyfill.js
-scripts/custom.js
+scripts/combined.js
 
 #STYLESHEETS
-stylesheets/normalize.css
-stylesheets/style.css
-stylesheets/fonts.css
-stylesheets/animations.css
+stylesheets/combined.css
 
 #IMAGES
 favicon.svgz
 favicon.png
-images/backgrounds/darg-bg.svgz
+images/backgrounds/dark-bg.svgz
 images/logos/CreativeCommons.svgz
 
 #CURSORS
 images/cursors/Arch.svgz
-images/cursors/3D_hand_cursor.svgz
 
 #FONTS
 fonts/Alice.woff
+fonts/Acme.woff
 fonts/WebSymbols-Regular.woff
 fonts/gnome-typewriter.woff
-fonts/URW-Chancery-Med-Italic.woff
+fonts/PressStart2P.woff
 
 #AUDIO
 
