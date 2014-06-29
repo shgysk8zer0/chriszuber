@@ -17,6 +17,8 @@
 		)->prepend(
 			'main',
 			$page->content
+		)->scrollTo(
+			'main :first-child'
 		);
 
 		if($page->type === 'posts') {
@@ -32,9 +34,16 @@
 				'meta[name=author], meta[itemprop=author]',
 				'content',
 				$page->author
-			)->html(
+			)->text(
 				'head > title',
 				"{$page->title} | {$head->value}"
+			);
+		}
+
+		elseif($page->type === 'tags') {
+			$resp->text(
+				'head > title',
+				"Tags | {$head->value}"
 			);
 		}
 	}
