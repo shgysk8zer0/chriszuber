@@ -1,12 +1,17 @@
 <?php
-	//require_once('./custom.php');
 	$session = session::load();
+	$DB = _pdo::load('connect');
 	$login = login::load();
 	$connect = ini::load('connect');
 	$resp = new json_response();
 
 	if(!count($_REQUEST)) {
 		$page = pages::load();
+		$head = $DB->fetch_array("
+			SELECT `value` FROM `head`
+			WHERE `name` = 'title'
+		", 0);
+
 		$resp->remove(
 			'main > :not(aside)'
 		)->prepend(
@@ -27,6 +32,9 @@
 				'meta[name=author], meta[itemprop=author]',
 				'content',
 				$page->author
+			)->html(
+				'head > title',
+				"{$page->title} | {$head->value}"
 			);
 		}
 	}
