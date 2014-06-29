@@ -1,6 +1,7 @@
 <?php
 	$storage = storage::load();
 	$head = $DB->name_value('head');
+	define('TITLE', $head->title);
 	$storage->site_info = $head;
 	define_UA();						// Firefox handles JavaScript versions, whereas Chrome does not.
 	$connect = ini::load('connect');
@@ -10,7 +11,7 @@
 ?>
 <head>
 <meta charset="<?=$head->charset?>"/>
-<title><?=$head->title?></title>
+<title><?=($pages->head === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?></title>
 <base href="<?=URL?>/"/>
 <meta name="description" content="<?=$page->description?>"/>
 <meta name="keywords" content="<?=$page->keywords?>"/>
@@ -24,7 +25,7 @@
 <meta itemprop="image" content="<?=URL?>/super-user.png"/>
 <meta name="viewport" content="<?=$head->viewport?>"/>
 <meta name="mobile-web-app-capable" content="yes">
-<link rel="canonical" itemprop="url" href="<?=preg_replace('/^http(s)?' . preg_quote('://', '/')  .'(www\.)?/', 'http://', URL) . $_SERVER['REQUEST_URI']?>"/>
+<link rel="canonical" href="<?=preg_replace('/^http(s)?' . preg_quote('://', '/')  .'(www\.)?/', 'http://', URL) . $_SERVER['REQUEST_URI']?>"/>
 <link rel="favorite icon" type="image/x-icon" href="favicon.ico"/>
 <link rel="icon" type="image/svg" sizes="any" href="favicon.svgz?t=<?=time()?>"/>
 <link rel="alternate icon" type="image/png" sizes="16x16" href="favicon.png"/>
