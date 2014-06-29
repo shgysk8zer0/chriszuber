@@ -121,6 +121,9 @@ Element.prototype.append = function(content) {
 	(typeof content === 'string') ? this.insertAdjacentHTML('beforeend', content) : this.appendChild(content);
 	return this;
 }
+Element.prototype.clone = function() {
+	return this.cloneNode(true);
+}
 Element.prototype.next = function (){
 	return this.nextSibling;
 }
@@ -565,6 +568,9 @@ function handleJSON(json){
 	}
 	if(json.error){
 		console.error(json.error);
+	}
+	if(json.scrollTo) {
+		document.querySelectorAll(json.scrollTo.sel)[json.scrollTo.nth].scrollIntoView();
 	}
 }
 function cache() {

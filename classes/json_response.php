@@ -309,6 +309,24 @@
 			return $this;
 		}
 
+		public function scrollTo($sel = 'body', $nth = 0) {
+			/**
+			 * Will use document.querySellectorAll($sel)[$nth].scrollIntoView()
+			 * which means that you can scroll to any given element (body
+			 * is default)
+			 *
+			 * @param string $sel (CSS selector)
+			 * @param int $nth
+			 * @example $resp->scrollTo('ul.myList', 3)
+			 */
+
+			$this->response['scrollTo'] = [
+				'sel' => $sel,
+				'nth' => $nth
+			];
+			return $this;
+		}
+
 		/*public function template($template) {
 			$this->response['template'] = $template;
 		}*/
@@ -343,7 +361,7 @@
 				(isset($key)) ? exit(json_encode([$key => $this->response[$key]])) : exit(json_encode($this->response));
 			}
 			else {
-				http_status(403);
+				http_status_code(403);
 				exit();
 			}
 		}
