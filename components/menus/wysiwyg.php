@@ -50,7 +50,8 @@
 			<menuitem label="Ordered" data-editor-command="insertorderedlist"></menuitem>
 			<menuitem label="Unordered" data-editor-command="insertunorderedlist"></menuitem>
 		</menu>
-		<menuitem label="link" data-editor-command="createlink" data-prompt="Enter link location"></menuitem>
+		<menuitem label="Link" data-editor-command="createlink" data-prompt="Enter link location"></menuitem>
+		<menuitem label="Image" data-editor-command="insertimage" data-prompt="Enter image location"></menuitem>
 	</menu>
 	<menu label="History">
 		<menuitem label="Undo" data-editor-command="undo"></menuitem>
