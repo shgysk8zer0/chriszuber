@@ -63,7 +63,7 @@
 		* @parmam void
 		* @return void
 		*/
-		
+
 		date_default_timezone_set('America/Los_Angeles');
 
 		$settings = ini::load($settings_file);
@@ -94,19 +94,23 @@
 				} break;
 
 				case 'core': {
-					set_error_handler($error_handler, E_CORE_ERROR|E_CORE_WARNING);
+					set_error_handler($error_handler, E_CORE_ERROR | E_CORE_WARNING);
 				} break;
 
 				case 'strict': {
-					set_error_handler($error_handler, E_ALL & ~E_USER_ERROR & ~E_USER_WARNING & ~E_USER_NOTICE);
+					set_error_handler($error_handler, E_ALL^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
+				} break;
+
+				case 'warning': {
+					set_error_handler($error_handler, E_ALL^E_STRICT^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
 				} break;
 
 				case 'notice': {
-					set_error_handler($error_handler, E_ALL & ~E_STRICT & ~E_USER_ERROR & ~E_USER_WARNING & ~E_USER_NOTICE);
+					set_error_handler($error_handler, E_ALL^E_STRICT^E_WARNING^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
 				} break;
 
 				case 'developement': {
-					set_error_handler($error_handler, E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+					set_error_handler($error_handler, E_ALL^E_NOTICE^E_WARNING^E_STRICT^E_DEPRECATED);
 				} break;
 
 				case 'production': {
@@ -142,16 +146,34 @@
 
 	function load() {									// Load resource from components directory
 		/**
-			 * @usage(string | array[string | array[, ...]]*)
-			 * @params mixed args
-			 * @return void
-			 */
+		 * Optimized resource loading using static variables and closures
+		 * Intended to minimize resource usage as well as limit scope
+		 * of variables from inluce()s
+		 *
+		 * Similar to include(), except that it shares limited resources
+		 * and does not load into the current scope for security reasons.
+		 *
+		 * @params mixed args
+		 * @return boolean
+		 * @usage load(string | array[string | array[, ...]]*)
+		 */
+
+		static $DB = null;
+		static $load = null;
 		$found = true;
-		$DB = _pdo::load();								// Include $DB here, so it is in the currecnt scope. Saves multiple uses of global
-		foreach(flatten(func_get_args()) as $fname) {	// Unknown how many arguments passed. Loop through fucntion arguments array
-			(include(BASE . "/components/{$fname}.php")) or $found = false;
+
+		if(is_null($DB)) {
+			$DB = _pdo::load();
 		}
-		unset($DB);
+		if(is_null($load)) {
+			$load = function($fname, &$found) use ($DB){
+				(include(BASE . "/components/{$fname}.php")) or $found = false;
+			};
+		}
+
+		foreach(flatten(func_get_args()) as $fname) {	// Unknown how many arguments passed. Loop through fucntion arguments array
+			$load($fname, $found);
+		}
 		return $found;
 	}
 
@@ -273,7 +295,7 @@
 				}
 
 				case 403: case '403': case 'exit': {
-					http_status(403);
+					http_status_code(403);
 					exit();
 				}
 
@@ -417,7 +439,7 @@
 	 * @depreciated Use http_response_code instead
 	 */
 		http_response_code($code);
-}
+	}
 
 	function header_type($type) {							// Set content-type header.
 	/**
@@ -560,7 +582,7 @@
 		 * @param [string $path[, string $ext[, boolean $strip_ext]]]
 		 * @return array
 		 */
-		
+
 		if(is_null($path)) $path = BASE;
 		$files = array_diff(scandir($path), array('.', '..'));				// Get array of files. Remove current and previous directory (. & ..)
 		$results = array();
