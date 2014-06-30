@@ -570,7 +570,13 @@ function handleJSON(json){
 		console.error(json.error);
 	}
 	if(json.scrollTo) {
-		document.querySelectorAll(json.scrollTo.sel)[json.scrollTo.nth].scrollIntoView();
+		document.querySelectorAll(json.scrollTo.sel).item(json.scrollTo.nth).scrollIntoView();
+	}
+	if(json.focus) {
+		document.querySelector(json.focus).focus();
+	}
+	if(json.select) {
+		document.querySelector(json.select).se();
 	}
 }
 function cache() {

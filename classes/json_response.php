@@ -311,19 +311,43 @@
 
 		public function scrollTo($sel = 'body', $nth = 0) {
 			/**
-			 * Will use document.querySellectorAll($sel)[$nth].scrollIntoView()
+			 * Will use document.querySellectorAll($sel).item($nth).scrollIntoView()
 			 * which means that you can scroll to any given element (body
 			 * is default)
 			 *
 			 * @param string $sel (CSS selector)
 			 * @param int $nth
-			 * @example $resp->scrollTo('ul.myList', 3)
+			 * @example $resp->scrollTo('ul.myList li', 3)
 			 */
 
 			$this->response['scrollTo'] = [
 				'sel' => $sel,
 				'nth' => $nth
 			];
+			return $this;
+		}
+
+		public function focus($sel = 'input') {
+			/**
+			 * Will use document.querySellector($sel).focus()
+			 *
+			 * @param string $sel (CSS selector)
+			 * @example $resp->focus('input[name="password"]')
+			 */
+
+			$this->response['focus'] = $sel;
+			return $this;
+		}
+
+		public function select($sel = 'input') {
+			/**
+			 * Will use document.querySellector($sel).sselect()
+			 *
+			 * @param string $sel (CSS selector)
+			 * @example $resp->select('input[name="password"]')
+			 */
+
+			$this->response['focus'] = $sel;
 			return $this;
 		}
 
