@@ -433,10 +433,7 @@ Element.prototype.DnD = function (sets) {
 						} break;
 						default: {
 							if(/image\/*/.test(file.type)) {
-								var img = new Image();
-								img.src = event.target.result;
-								img.alt = file.name;
-								sets.appendChild(img);
+								document.execCommand('insertimage', null, event.target.result);
 							}
 							else if(/text\/*/.test(file.type)){
 								sets.innerHTML = event.target.result;
