@@ -388,12 +388,10 @@ Element.prototype.DnD = function (sets) {
 	 * Use Promises for this!
 	 */
 	this.ondragover = function (event) {
-		console.log(event);
 		this.classList.add('receiving');
 		return false;
 	};
 	this.ondragend = function (event) {
-		console.log(event);
 		this.classList.remove('receiving');
 		return false;
 	};
@@ -422,7 +420,6 @@ Element.prototype.DnD = function (sets) {
 				progress.parentElement.removeChild(progress);
 				console.log(event);
 				if(typeof sets !== 'undefined') {
-					/*sets.value = event.target.result;*/
 					switch(sets.tagName.toLowerCase()) {
 						case 'input':
 						case 'textarea': {
@@ -447,7 +444,7 @@ Element.prototype.DnD = function (sets) {
 				console.error(event);
 			}
 			console.log(file);
-		}
+		};
 		return false;
 	}
 }
