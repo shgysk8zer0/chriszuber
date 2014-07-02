@@ -171,7 +171,7 @@ input[type=search] {
 input[type=search]:focus {
 	width: 20rem;
 }
-body > header h1::after {
+body > header h1::before {
 	content: '';
 	display: inline-block;
 	width: 1.2em;
