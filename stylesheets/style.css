@@ -73,9 +73,18 @@ body> header {
 	box-shadow: 0 0 3rem black inset;
 }
 body > header h1 {
+	font-family: 'PressStart';
 	text-align: center;
-	text-shadow: 0.1rem 0.1rem dimgray, 0.2rem .02rem 0.3rem black, 0 0 3rem cyan;
+	text-shadow: 0.1rem 0.1rem black, 0.2rem .02rem 0.3rem gray, 0 0 3rem darkblue;
 	margin-bottom: 1rem;
+}
+body header > h1 > a {
+	padding-right: 0.75rem;
+	border-width: 0 0.5rem 0 0;
+	border-style: solid;
+	border-color: transparent;
+	-webkit-animation: cursor 750ms infinite linear alternate;
+	animation: cursor 750ms infinite linear alternate;
 }
 body > header nav {
 	display: flex;

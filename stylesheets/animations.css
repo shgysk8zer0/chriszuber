@@ -1,4 +1,26 @@
 /*==============================Collection of Simple CSS3 Animations=================================*/
+@-webkit-keyframes cursor {
+   49% {
+	   border-color: transparent;
+   }
+   50%{
+	   border-color: inherit;
+   }
+   100% {
+	   border-color: inherit;
+   }
+}
+@keyframes cursor {
+   49% {
+	   border-color: transparent;
+   }
+   50%{
+	   border-color: inherit;
+   }
+   100% {
+	   border-color: inherit;
+   }
+}
 @-webkit-keyframes slide{
 	from{left:100%}
 	to{left:0;}
