@@ -202,7 +202,7 @@
 					$description = trim($_POST['description']);
 					$keywords = urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['keywords'])));
 					$author = $user->name;
-					$content = urldecode(trim($_POST['content']));
+					$content = trim($_POST['content']);
 					$url = urlencode(strtolower(preg_replace('/\W+/', ' ', $title)));
 
 					$tags = [];
@@ -219,11 +219,11 @@
 						'date' => $time->out('m/d/Y'),
 						'datetime' => $time->out()
 					]);
-					ob_start();
-					$template->out();
-					$resp->html(
+					$resp->remove(
+						'main > :not(aside)'
+					)->prepend(
 						'main',
-						ob_get_clean()
+						$template->out()
 					);
 
 					$DB->prepare("
