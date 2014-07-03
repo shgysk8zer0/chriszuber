@@ -400,50 +400,52 @@ Element.prototype.DnD = function (sets) {
 		e.preventDefault();
 		console.log(e);
 		if(e.dataTransfer.files.length) {
-			var file = e.dataTransfer.files[0],
-				reader = new FileReader(),
-				progress = document.createElement('progress');
-			progress.min = 0;
-			progress.max = 1;
-			progress.value= 0;
-			progress.classList.add('uploading');
-			sets.appendChild(progress);
-			console.log(e, reader);
-			reader.readAsDataURL(file);
-			reader.addEventListener('progress', function(event) {
-				if(event.lengthComputable){
-					progress.value = event.loaded / event.total;
-				}
-				console.log(event);
-			});
-			reader.onload = function (event) {
-				progress.parentElement.removeChild(progress);
-				console.log(event);
-				if(typeof sets !== 'undefined') {
-					switch(sets.tagName.toLowerCase()) {
-						case 'input':
-						case 'textarea': {
-							sets.value = event.target.result;
-						} break;
-						case 'img': {
-							sets.src = event.target.result;
-						} break;
-						default: {
-							if(/image\/*/.test(file.type)) {
-								document.execCommand('insertimage', null, event.target.result);
-							}
-							else if(/text\/*/.test(file.type)){
-								sets.innerHTML = event.target.result;
+			for(var i=0; i < e.dataTransfer.files.length; i++) {
+				let file = e.dataTransfer.files[i],
+					reader = new FileReader(),
+					progress = document.createElement('progress');
+				progress.min = 0;
+				progress.max = 1;
+				progress.value= 0;
+				progress.classList.add('uploading');
+				sets.appendChild(progress);
+				console.log(e, reader);
+				reader.readAsDataURL(file);
+				reader.addEventListener('progress', function(event) {
+					if(event.lengthComputable){
+						progress.value = event.loaded / event.total;
+					}
+					console.log(event);
+				});
+				reader.onload = function (event) {
+					progress.parentElement.removeChild(progress);
+					console.log(event);
+					if(typeof sets !== 'undefined') {
+						switch(sets.tagName.toLowerCase()) {
+							case 'input':
+							case 'textarea': {
+								sets.value = event.target.result;
+							} break;
+							case 'img': {
+								sets.src = event.target.result;
+							} break;
+							default: {
+								if(/image\/*/.test(file.type)) {
+									document.execCommand('insertimage', null, event.target.result);
+								}
+								else if(/text\/*/.test(file.type)){
+									sets.innerHTML = event.target.result;
+								}
 							}
 						}
 					}
+				};
+				reader.onerror = function (event) {
+					progress.parentElement.removeChild(progress);
+					console.error(event);
 				}
-			};
-			reader.onerror = function (event) {
-				progress.parentElement.removeChild(progress);
-				console.error(event);
-			}
 			console.log(file);
+			}
 		};
 		return false;
 	}
