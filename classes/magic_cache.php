@@ -83,60 +83,10 @@
 		}
 
 		protected function http_status(){
-			//Description of Status Codes may be found here http://www.w3schools.com/tags/ref_httpmessages.asp
-			switch($this->status){
-				case 100: $desc = 'Continue'; break;
-				case 101: $desc = 'Switching Protocols'; break;
-				case 103: $desc = 'Checkpoint'; break;
-				case 200: $desc = 'OK'; break;
-				case 201: $desc = 'Created'; break;
-				case 202: $desc = 'Accepted'; break;
-				case 203: $desc = 'Non-Authoritative Information'; break;
-				case 204: $desc = 'No Content'; break;
-				case 205: $desc = 'Reset Content'; break;
-				case 206: $desc = 'Partial Content'; break;
-				case 300: $desc = 'Multiple Choices'; break;
-				case 301: $desc = 'Moved Permanently'; break;
-				case 302: $desc = 'Found'; break;
-				case 303: $desc = 'See Other'; break;
-				case 304: $desc = 'Not Modified'; break;
-				case 306: $desc = 'Switch Proxy'; break;
-				case 307: $desc = 'Temporary Redirect'; break;
-				case 308: $desc = 'Resume Incomplete'; break;
-				case 400: $desc = 'Bad Request'; break;
-				case 401: $desc = 'Unauthorized'; break;
-				case 402: $desc = 'Payment Required'; break;
-				case 403: $desc = 'Forbidden'; break;
-				case 404: $desc = 'Not Found'; break;
-				case 405: $desc = 'Method Not Allowed'; break;
-				case 406: $desc = 'Not Acceptable'; break;
-				case 407: $desc = 'Proxy Authentication Required'; break;
-				case 408: $desc = 'Request Timeout'; break;
-				case 409: $desc = 'Conflict'; break;
-				case 410: $desc = 'Gone'; break;
-				case 411: $desc = 'Length Required'; break;
-				case 412: $desc = 'Precondition Failed'; break;
-				case 413: $desc = 'Request Entity Too Large'; break;
-				case 414: $desc = 'Request-URI Too Long'; break;
-				case 415: $desc = 'Unsupported Media Type'; break;
-				case 416: $desc = 'Requested Range Not Satisfiable'; break;
-				case 417: $desc = 'Expectation Failed'; break;
-				case 500: $desc = 'Internal Server Error'; break;
-				case 501: $desc = 'Not Implemented'; break;
-				case 502: $desc = 'Bad Gateway'; break;
-				case 503: $desc = 'Service Unavailable'; break;
-				case 504: $desc = 'Gateway Timeout'; break;
-				case 505: $desc = 'HTTP Version Not Supported'; break;
-				case 511: $desc = 'Network Authentication Required'; break;
-				default: header("HTTP/1.1 500 Internal Server Error");
-				exit;
+			http_status_code($this->status);
+			if(!preg_match('/^2[\d]{2}$/', $this->status)) {
+				exit();
 			}
-			header("HTTP/1.1 {$this->status} {$desc}");
-			if(!preg_match('/^2[\d]{2}$/', $this->status)) { //If it it is not 2**, exit.
-			//This is the case for not modified, not found, or other errors
-				exit;
-			}
-			return;
 		}
 	}
 ?>

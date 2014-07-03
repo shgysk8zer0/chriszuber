@@ -135,10 +135,11 @@
 
 	function load_results() {
 		/**
-			 * @usage(string | array[string | array[, ...]]*)
-			 * @param mixed (string, arrays, ... whatever. They'll be converted to an array)
-			 * @return string (results echoed from load())
-			 */
+		 * @usage(string | array[string | array[, ...]]*)
+		 * @param mixed (string, arrays, ... whatever. They'll be converted to an array)
+		 * @return string (results echoed from load())
+		 */
+
 		ob_start();
 		load(func_get_args());
 		return ob_get_clean();
@@ -179,21 +180,25 @@
 
 	function load_file() {
 		$resp = '';
-		$files = flatten(func_get_args());
-		foreach($files as $file) $resp .= file_get_content(BASE . "components/{$file}");
+		foreach(flatten(func_get_args()) as $file) {
+			$resp .= file_get_content(BASE . "components/{$file}");
+		};
+		return $resp;
 	}
 
 	function load_class($class) {						// Load class from Classes directory
 		//PHP uses include_path, so use that. I've added the classes directory to include_path already
 		/**
-			 * @params string $class
-			 * @return void
-			 */
+		 * @params string $class
+		 * @return void
+		 */
+
 		require_once "{$class}.php";
 	}
 
 	function regexp($str) {								//Make regular expression from string
 		/**
+		 * @depreciated
 		 * @param string $str
 		 * @return string in regular expression format /string\.\.\./
 		 */
@@ -250,6 +255,7 @@
 		 * 		'on[event]' => function(){}		//Not sure if this will work, depending on Content-Security-Policy for script handling of eval
 		 * 	]
 		 * ]
+		 * @depreciated
 		 * @param array $response
 		 * @return null
 		 */
@@ -304,7 +310,7 @@
 				}
 
 				default: {
-					http_status(403);
+					http_status_code(403);
 					exit();
 				}
 			}
@@ -658,6 +664,11 @@
 		 * @return string
 		 */
 		return ucwords(strtolower($str));
+	}
+
+	function average() {
+		$args = flatten(func_get_args());
+		return array_sum($args) / count($args);
 	}
 
 	function list_array($array) {						// Lists array as <ul>
