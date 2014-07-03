@@ -576,7 +576,7 @@ function handleJSON(json){
 		document.querySelector(json.focus).focus();
 	}
 	if(json.select) {
-		document.querySelector(json.select).se();
+		document.querySelector(json.select).select();
 	}
 }
 function cache() {
