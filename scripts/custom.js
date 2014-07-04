@@ -31,6 +31,9 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 								request: 'load_menu=' + menu.replace(/\_menu$/ ,''),
 								cache: this.target.data('cache')
 							}).then(
+								JSON.parse,
+								console.error
+							).then(
 								handleJSON,
 								console.error
 							);
@@ -45,6 +48,9 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 								request: (this.data('prompt')) ? this.data('request') + '&prompt_value=' + encodeURIComponent(prompt(this.data('prompt'))) : this.data('request'),
 								cache: el.data('cache')
 							}).then(
+								JSON.parse,
+								console.error
+							).then(
 								handleJSON,
 								console.error
 							);
@@ -97,6 +103,9 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 		ajax({
 			request: 'request=nonce'
 		}).then(
+			JSON.parse,
+			console.error
+		).then(
 			handleJSON,
 			console.error
 		);
@@ -122,6 +131,9 @@ NodeList.prototype.bootstrap = function() {
 							request: 'load_menu=' + menu.replace(/\_menu$/ ,''),
 							cache: el.data('cache')
 						}).then(
+							JSON.parse,
+							console.error
+						).then(
 							handleJSON,
 							console.error
 						);
@@ -136,6 +148,9 @@ NodeList.prototype.bootstrap = function() {
 						request: 'datalist=' + list.getAttribute('list'),
 						type: 'POST'
 					}).then(
+					JSON.parse,
+					console.error
+					).then(
 						handleJSON,
 						console.error
 					);
@@ -151,6 +166,9 @@ NodeList.prototype.bootstrap = function() {
 					history: this.href,
 					cache: this.data('cache')
 				}).then(
+					JSON.parse,
+					console.error
+				).then(
 					handleJSON,
 					console.error
 				);
@@ -165,6 +183,9 @@ NodeList.prototype.bootstrap = function() {
 					contentType: this.enctype,
 					form: this
 				}).then(
+					JSON.parse,
+					console.error
+				).then(
 					handleJSON,
 					console.error
 				);
@@ -175,12 +196,10 @@ NodeList.prototype.bootstrap = function() {
 						url: document.baseURI,
 						request: 'action=keep-alive'
 					}).then(
-						JSON.parse
-					).catch(
+						JSON.parse,
 						console.error
 					).then(
-						handleJSON
-					).catch(
+						handleJSON,
 						console.error
 					);
 				}, 60000);
@@ -215,6 +234,9 @@ NodeList.prototype.bootstrap = function() {
 					history: this.data('link'),
 					cache: this.data('cache')
 				}).then(
+					JSON.parse,
+					console.error
+				).then(
 					handleJSON,
 					console.error
 				);
@@ -230,6 +252,9 @@ NodeList.prototype.bootstrap = function() {
 						history: this.data('history') || null,
 						cache: el.data('cache')
 					}).then(
+						JSON.parse,
+						console.error
+					).then(
 						handleJSON,
 						console.error
 					);
@@ -249,6 +274,9 @@ NodeList.prototype.bootstrap = function() {
 				type: el.data('type') || 'GET',
 				cache: el.data('cache')
 			}).then(
+				JSON.parse,
+				console.error
+			).then(
 				handleJSON,
 				console.error
 			);
@@ -258,6 +286,9 @@ NodeList.prototype.bootstrap = function() {
 		});
 		node.query('.clock').forEach(function(el) {
 			el.worker_clock();
+		});
+		node.query('[autofocus]').forEach(function(input) {
+			input.focus();
 		});
 		node.query('[data-encode]').forEach(function(el) {
 			ajax({
@@ -275,7 +306,6 @@ NodeList.prototype.bootstrap = function() {
 						el[el.data('prop') || 'src'] = el.data('fallback');
 					}
 				}
-
 			);
 		});
 		node.query('menuitem[label="Edit Post"]').forEach(function(el) {
@@ -337,12 +367,10 @@ NodeList.prototype.bootstrap = function() {
 						url: document.baseURI,
 						request: 'action=keep-alive'
 					}).then(
-						JSON.parse
-					).catch(
+						JSON.parse,
 						console.error
 					).then(
-						handleJSON
-					).catch(
+						handleJSON,
 						console.error
 					);
 				}, 60000);
