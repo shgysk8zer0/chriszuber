@@ -310,21 +310,22 @@ NodeList.prototype.bootstrap = function() {
 		});
 		node.query('menuitem[label="Edit Post"]').forEach(function(el) {
 			el.addEventListener('click', function() {
-				var form = document.createElement('form');
+				var form = document.createElement('form'),
+					article = document.querySelector('article'),
+					title = document.querySelector('article header h1'),
+					keywords = document.querySelector('article header nav'),
+					content = document.querySelector('article section'),
+					submit = document.createElement('button'),
+					nonce = document.createElement('input'),
+					fieldset = document.createElement('fieldset'),
+					legend = document.createElement('legend'),
+					oldTitle = document.createElement('input'),
+					tags = [],
+					description = document.createElement('textarea');
 				form.name = 'edit_post';
 				form.method = 'POST';
 				form.action = document.baseURI;
 				form.attr('contextmenu', 'wysiwyg_menu');
-				var title = document.querySelector('article header h1');
-				var keywords = document.querySelector('article header nav');
-				var content = document.querySelector('article section');
-				var submit = document.createElement('button');
-				var nonce = document.createElement('input');
-				var fieldset = document.createElement('fieldset');
-				var legend = document.createElement('legend');
-				var oldTitle = document.createElement('input');
-				var tags = [];
-				var description = document.createElement('textarea');
 				keywords.querySelectorAll('a').forEach(function(tag) {
 					tags.push(tag.textContent);
 				});
@@ -354,12 +355,7 @@ NodeList.prototype.bootstrap = function() {
 				oldTitle.readonly = true;
 				oldTitle.required = true;
 				oldTitle.value = title.textContent;
-				fieldset.appendChild(legend);
-				fieldset.appendChild(document.querySelector('article'));
-				fieldset.appendChild(oldTitle);
-				fieldset.appendChild(nonce);
-				fieldset.appendChild(description);
-				fieldset.appendChild(submit);
+				fieldset.append(legend, article, oldTitle, nonce, description, submit);
 				form.appendChild(fieldset);
 				document.querySelector('main').appendChild(form);
 				var retain = setInterval(function(){
@@ -412,9 +408,6 @@ function notifyLocation() {
 	});
 }
 Element.prototype.DnD = function (sets) {
-	/**
-	 * Use Promises for this!
-	 */
 	this.ondragover = function (event) {
 		this.classList.add('receiving');
 		return false;
@@ -443,7 +436,6 @@ Element.prototype.DnD = function (sets) {
 					if(event.lengthComputable){
 						progress.value = event.loaded / event.total;
 					}
-					console.log(event);
 				});
 				reader.onload = function (event) {
 					progress.parentElement.removeChild(progress);
