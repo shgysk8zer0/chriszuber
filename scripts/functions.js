@@ -105,20 +105,28 @@ Object.prototype.camelCase = function () {
 Element.prototype.delete = function() {
 	this.parentElement.removeChild(this);
 }
-Element.prototype.after = function (content) {
-	(typeof content === 'string') ? this.insertAdjacentHTML('afterend', content) : this.parentElement.insertBefore(content, this.nextSibling);
+Element.prototype.after = function () {
+	for(var i = 0; i < arguments.length; i++) {
+		(typeof arguments[i] === 'string') ? this.insertAdjacentHTML('afterend', arguments[i]) : this.parentElement.insertBefore(arguments[i], this.nextSibling);
+	}
 	return this;
 };
-Element.prototype.before = function (content) {
-	(typeof content === 'string') ? this.insertAdjacentHTML('beforebegin', content) : this.parentElement.insertBefore(content, this);
+Element.prototype.before = function() {
+	for(var i = 0; i < arguments.length; i++) {
+		(typeof arguments[i] === 'string') ? this.insertAdjacentHTML('beforebegin', arguments[i]) : this.parentElement.insertBefore(arguments[i], this);
+	}
 	return this;
 }
-Element.prototype.prepend = function(content) {
-	(typeof content === 'string') ? this.insertAdjacentHTML('afterbegin', content) : this.insertBefore(content, this.firstChild);
+Element.prototype.prepend = function() {
+	for(var i = 0; i < arguments.length; i++) {
+		(typeof arguments[i] === 'string') ? this.insertAdjacentHTML('afterbegin', arguments[i]) : this.insertBefore(arguments[i], this.firstChild);
+	}
 	return this;
 }
-Element.prototype.append = function(content) {
-	(typeof content === 'string') ? this.insertAdjacentHTML('beforeend', content) : this.appendChild(content);
+Element.prototype.append = function() {
+	for(var i = 0; i < arguments.length; i++) {
+		(typeof arguments[i] === 'string') ? this.insertAdjacentHTML('beforeend', arguments[i]) : this.appendChild(arguments[i]);
+	}
 	return this;
 }
 Element.prototype.clone = function() {
