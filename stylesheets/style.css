@@ -50,9 +50,6 @@
 	text-shadow:var(shadow);
 	cursor: url(../images/cursors/Arch.svgz), auto;
 }
-:root.offline {
-	pointer-events: none;
-}
 ::-moz-selection{
 	background-color:rgb(0,250,250);
 	background-color:rgba(0,250,250,0.7);
@@ -151,29 +148,22 @@ button[type=button], [type=submit], [type=reset] {
 	background-image: linear-gradient(cyan, rgb(59, 117, 218));
 	font-family: inherit;
 }
-menu[type=list] li {
-	display: inline;
-}
-img {
-	max-width: 100%;
-	height: auto;
-}
 select, input:not([type=checkbox]):not([type=submit]):not([type=reset]):not([type=file]) {
 	background-color: transparent;
 	color: inherit;
 	border-color: transparent transparent lightgray transparent;
-	border-width: 0 0 0.15rem 0;
+	border-width: 0 0 1px 0;
 	border-style: solid;
 }
 label[data-icon]:empty {
 	display: inline-block;
 	width: 2rem;
+	font-size: 0.7em;
 	text-align: center;
 	color: dimgray;
 	border-color: transparent transparent lightgray transparent;
-	border-width: 0 0 0.15rem 0;
+	border-width: 0 0 1px 0;
 	border-style: solid;
-	transform: translateY(-1px);
 }
 label[data-icon]:empty + input {
 	display: inline-block;
@@ -198,11 +188,18 @@ input[type=checkbox]:checked+label::after {
 input[type=search] {
 	width: 7rem;
 	max-width: 80%;
-	-webkit-transition: all 500ms;
-	transition: all 500ms;
+	-webkit-transition: width 500ms;
+	transition: width 500ms;
 }
 input[type=search]:focus {
 	width: 20rem;
+}
+menu[type=list] li {
+	display: inline;
+}
+img {
+	max-width: 100%;
+	height: auto;
 }
 body > header h1::before {
 	content: '';
@@ -217,7 +214,7 @@ body > header h1::before {
 main {
 	width: 90vw;
 	transform: translateX(5vw);
-	margin-top: 2rem;
+	margin: 2rem 0;
 	padding: 2rem;
 	background-image:linear-gradient(315deg,rgba(80,80,80,0.7),rgba(140,140,140,0.8),rgba(40,40,40,0.7));
 	border-radius:2rem;
@@ -228,6 +225,7 @@ main {
 	-webkit-transform-origin: top;
 	-webkit-transform-style: preserve-3d;
 	transform-origin: top;
+	transform-style: preserve-3d;
 }
 main > article, main > form, main > .tags{
 	color:#333;
@@ -285,6 +283,12 @@ aside > :not(h3) {
 	margin: 2rem 0.2rem;
 	box-shadow:-1rem 1rem 1rem black,0 0 1rem 0 black inset;
 }
+body > footer {
+	border-top: 0.3rem solid cyan;
+	padding: 1rem;
+	background-image: linear-gradient(whitesmoke, gainsboro);
+	box-shadow: 0 -1rem 2rem black inset;
+}
 @media screen and (max-width:999px) {
 	header nav {
 		display: none;
@@ -312,14 +316,12 @@ form[name="new_post"] textarea {
 	width: 35rem;
 	height: 8rem;
 }
-input[type=search] {
-	width: 7rem;
-	-webkit-transition: width 500ms;
-	transition: width 500ms;
-}
-body.hidden *{
+:root.hidden *{
 	-webkit-animation-play-state:paused;
 	animation-play-state:paused;
+}
+:root.offline {
+	pointer-events: none;
 }
 a[rel=license]>img[src$=svgz] {
 	width: calc(30rem / 5);
@@ -345,7 +347,6 @@ body > progress {
 	width: 100%;
 }
 [data-icon]::after  {
-	all: unset;
 	display: inline;
 	font-family: 'Web Symbols';
 	font-style: normal;
@@ -355,4 +356,5 @@ body > progress {
 	font-size-adjust: none;
 	font-stretch: none;
 	content: ' 'attr(data-icon)' ';
+	vertical-align: baseline;
 }
