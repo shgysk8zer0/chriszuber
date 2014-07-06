@@ -17,6 +17,34 @@
 		transform: scale(0);
 	}
 }
+@-webkit-keyframes cursor {
+	0% {
+		border-color: transparent;
+	}
+	50% {
+		border-color: transparent;
+	}
+	51% {
+		border-color: currentColor;
+	}
+	100% {
+		border-color: currentColor;
+	}
+}
+@keyframes cursor {
+	0% {
+		border-color: transparent;
+	}
+	50% {
+		border-color: transparent;
+	}
+	51% {
+		border-color: currentColor;
+	}
+	100% {
+		border-color: currentColor;
+	}
+}
 @-webkit-keyframes hanger{
 	from {-webkit-transform:rotateX(-90deg);transform:rotateX(-90deg);-webkit-transform-origin:center top;transform-origin:center top;}
 	to {transform:none;-webkit-transform:none;}
