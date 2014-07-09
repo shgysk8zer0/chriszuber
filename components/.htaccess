@@ -1,0 +1,3 @@
+deny from all
+ErrorDocument 404 /mother_brain/index.php
+ErrorDocument 403 /mother_brain/index.php
