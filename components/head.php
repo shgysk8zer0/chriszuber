@@ -1,10 +1,8 @@
 <?php
 	$storage = storage::load();
 	$head = $DB->name_value('head');
-	define('TITLE', $head->title);
 	$storage->site_info = $head;
 	define_UA();						// Firefox handles JavaScript versions, whereas Chrome does not.
-	$connect = ini::load('connect');
 	$pages = pages::load();
 
 	$page = ($pages->description) ? $pages : $head;
@@ -55,7 +53,7 @@
 	<?php endif?>
 <?php endif?>
 <?php if(!localhost() and isset($head->google_analytics_code)):?>
-	<script type="application/javascript" nonce="<?=$_SESSION['nonce']?>">
+	<script type="application/javascript" nonce="<?=$session->nonce?>">
 		<?=preg_replace('/' . preg_quote('%GOOGLE_ANALYTICS_CODE%', '/') .'/', $head->google_analytics_code, file_get_contents(BASE . '/scripts/analytics.js'))?>
 	</script>
 <?php endif?>

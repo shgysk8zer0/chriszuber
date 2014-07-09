@@ -1,5 +1,4 @@
 <?php
-	$session = session::load();
 	$storage = storage::load();
 	$posts = $DB->fetch_array("
 		SELECT `title`, `url`

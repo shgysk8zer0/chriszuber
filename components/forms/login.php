@@ -1,6 +1,3 @@
-<?php
-	$session = session::load();
-?>
 <form name="login" action="." method="post">
 	<fieldset form="login">
 		<legend>Login</legend>

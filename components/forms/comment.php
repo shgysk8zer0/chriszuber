@@ -1,7 +1,3 @@
-<?php
-	$session = session::load();
-	$login = login::load();
-?>
 <form name="comments" method="post" action="<?=URL?>">
 	<fieldset form="comments">
 		<legend>Comment on post</legend>

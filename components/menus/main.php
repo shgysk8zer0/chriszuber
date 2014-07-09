@@ -1,6 +1,4 @@
 <?php
-	$session = session::load();
-	$login = login::load();
 	$posts = $DB->fetch_array("
 		SELECT `title`, `url`
 		FROM `posts`

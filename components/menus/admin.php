@@ -20,12 +20,9 @@
 	* and Mutation Observers handle applying the listeners for ajax requests.
 	*/
 
-	$session = session::load();
-	$pdo = _pdo::load();
-	$login = login::load();
 	$connect = ini::load('connect');
 
-	$tables = $pdo->show_tables();
+	$tables = $DB->show_tables();
 ?>
 <menu type="context" id="admin_menu">
 	<menu label="Post Management">

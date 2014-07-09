@@ -1,6 +1,3 @@
-<?php
-	$session = session::load();
-?>
 <form name="new_post" action="<?=URL?>" method="post">
 	<fieldset form="new_post">
 		<legend>New Post</legend>

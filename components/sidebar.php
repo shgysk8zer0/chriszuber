@@ -1,5 +1,4 @@
 <?php
-	require_once(BASE . '/custom.php');
 	$posts = get_recent_posts();
 ?>
 <aside class="sidebar" rel="sidebar">
