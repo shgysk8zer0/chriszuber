@@ -388,7 +388,7 @@ function supports(type) {
 			supports = ('XMLHttpRequest' in window);
 			break;
 		case 'cssvars':
-			supports = (!!CSS.supports('var-x','x'));
+			supports = (!!CSS.supports('--x','x'));
 			break;
 		case 'formdata':
 			supports = ('FormData' in window);
