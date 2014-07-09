@@ -148,8 +148,8 @@ NodeList.prototype.bootstrap = function() {
 						request: 'datalist=' + list.getAttribute('list'),
 						type: 'POST'
 					}).then(
-					JSON.parse,
-					console.error
+						JSON.parse,
+						console.error
 					).then(
 						handleJSON,
 						console.error
