@@ -29,11 +29,11 @@
 <link rel="alternate icon" type="image/png" sizes="16x16" href="favicon.png"/>
 <?php if(localhost()):?>
 	<link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="all"/>
-	<link rel="stylesheet" type="text/css" href="stylesheets/style.css" media="all"/>
+	<link rel="stylesheet" type="text/css" href="stylesheets/style.out.css" media="all"/>
 	<link rel="stylesheet" type="text/css" href="stylesheets/fonts.css" media="all"/>
 	<link rel="stylesheet" type="text/css" href="stylesheets/animations.css" media="screen"/>
 <?php else:?>
-	<link rel="stylesheet" type="text/css" href="stylesheets/combined.css" media="all"/>
+	<link rel="stylesheet" type="text/css" href="stylesheets/combined.out.css" media="all"/>
 <?php endif?>
 <link href="<?=URL?>/feed.rss" rel="alternate" type="application/rss+xml" title="<?=$head->title?> RSS Feed" />
 <?php if(isset($head->publisher)):?><link rel="publisher" href="https://plus.google.com/<?=$head->publisher?>"><?php endif?>
