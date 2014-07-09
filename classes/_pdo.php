@@ -35,7 +35,7 @@
 			 * Gets database connection info from /connect.ini (using ini::load)
 			 * The default ini file to use is connect, but can be passed another
 			 * in the $ini argument.
-			 * 
+			 *
 			 * Uses that data to create a new PHP Data Object
 			 *
 			 * @param string $ini (.ini file to use for database credentials)
@@ -177,7 +177,12 @@
 			 *
 			 * @param array $array
 			 * @return self
+			 * @example $pdo->prepare(...)->bind([
+			 * 	'col_name' => $value,
+			 * 	'col2' => 'something else'
+			 * ])
 			 */
+
 			foreach($array as $paramater => $value) {
 				$this->prepared->bindValue(':' . $paramater, $value);
 			}
@@ -259,7 +264,7 @@
 			 * array, it is intended to be used for things
 			 * like array_insert that use a simple array where
 			 * the keys are columns and the values are the values
-			 * 
+			 *
 			 * It takes a pointer to the array as its argument,
 			 * so $arr = $pdo->prepare_key_value($arr) is the same as
 			 * $$pdo->prepare_key_value($arr)
