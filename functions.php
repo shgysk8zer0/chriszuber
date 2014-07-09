@@ -68,7 +68,6 @@
 
 		$settings = ini::load($settings_file);
 		if(isset($settings->path)) {
-			//ini_set('include_path', ini_get('include_path') . ':' . join(':' . __DIR__ . '/', explode(',', preg_replace('/\w/', null, $settings->path))));
 			set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
 		}
 
