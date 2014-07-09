@@ -83,7 +83,7 @@ audio:not([controls]){
 	display:none;
 	height:0;
 }
-[hidden]{
+[hidden], menu[type=context], datalist{
 	display:none;
 }
 html{
@@ -163,9 +163,6 @@ nav ul,nav ol{
 }
 menu[type=list]{
 	list-style:none;
-}
-menu[type=context]{
-	display:none;
 }
 img{
 	border:0;
