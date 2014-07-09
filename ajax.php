@@ -548,7 +548,7 @@
 			} break;
 		}
 		if(isset($datalist)) {
-			$resp->before(
+			$resp->after(
 				"[list=\"{$_REQUEST['datalist']}\"]",
 				$datalist
 			);
