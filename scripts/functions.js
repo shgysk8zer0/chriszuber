@@ -42,7 +42,7 @@ Array.prototype.unique = function() {
 Array.prototype.end = function() {
 	return this[this.length - 1];
 }
-
+HTMLCollection.prototype.indexOf = Array.prototype.indexOf;
 function selection() {
 	var selected = getSelection();
 	//this.target = selected.focusNode;
@@ -155,7 +155,7 @@ Element.prototype.ancestor = function (sel) {
 }
 Element.prototype.data = function(set, value) {
 	var val = null;
-	if(!!document.body.dataset){
+	if(supports('dataset')){
 		(typeof value !== 'undefined') ? this.dataset[set.camelCase()] = value : val = this.dataset[set.camelCase()];
 	}
 	else {
@@ -177,28 +177,32 @@ Element.prototype.attr = function(attr, val) {
 			return this.getAttribute(attr);
 	}
 }
+Element.prototype.uniqueSelector = function () {
+	if (this.nodeType !== 1) {
+		return null;
+	}
+	var path = [],
+	current = this;
+	while (current !== document.documentElement) {
+		if(current === document.body) {
+			path.push('body');
+			break;
+		}
+		else if(current.hasAttribute('id')) {
+			path.push('#' + current.id);
+			break;
+		}
+		path.push(current.tagName.toLowerCase() + ':nth-child(' + (current.parentElement.children.indexOf(current) + 1).toString() + ')');
+		current = current.parentElement;
+	}
+	return path.reverse() .join(' > ');
+}
 Element.prototype.ajax = function(args) {
 	ajax(args).then(
 		this.html.bind(this),
 		console.error
 	);
 	return this;
-}
-String.prototype.toBase64 = btoa;
-String.prototype.fromBase64 = atob;
-Element.prototype.values = function () {
-	var inputs = this.querySelectorAll('input:not([type=submit]):not([type=reset]),select,textarea'),
-	results = [
-		'form=' + this.name
-	],
-	val;
-	inputs.forEach(function (input) {
-		if (input.name && input.value) {
-			(input.type === 'checkbox') ? val = input.checked : val = input.value;
-			results.push(encodeURIComponent(input.name) + '=' + encodeURIComponent(val));
-		}
-	});
-	return results.join('&');
 }
 function notify(options) {
 	/*Creates a notification, with alert fallback*/
@@ -300,7 +304,7 @@ function supports(type) {
 			supports = (document.implementation.hasFeature('http://www.w3.org/TR/SVG11/feature#Shape', '1.1'));
 			break;
 		case 'dataset':
-			supports = (!!document.body.dataset);
+			supports = ('DOMStringMap' in window);
 			break;
 		case 'geolocation':
 			supports = ('geolocation' in navigator);
@@ -363,7 +367,7 @@ function supports(type) {
 			supports = (!!document.cancelFullScreen);
 			break;
 		case 'workers':
-			supports = (!!window.Worker);
+			supports = ('Worker' in window);
 			break;
 		case 'promises':
 			supports = ('Promise' in window);
@@ -595,10 +599,10 @@ cache.prototype.has = function(key) {
 	return localStorage.keys().indexOf(('cache ' + key).camelCase()) !== -1;
 }
 cache.prototype.get = function(key) {
-	return (this.has(key)) ? localStorage[('cache ' + key).camelCase()] : false;
+	return localStorage.getItem(('cache ' + key).camelCase()) || false;
 }
 cache.prototype.set = function(key, value) {
-	localStorage[('cache ' + key).camelCase()] = value;
+	localStorage.setItem(('cache ' + key).camelCase(), value);
 	return this;
 }
 cache.prototype.unset = function(key) {
