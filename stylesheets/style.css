@@ -15,41 +15,44 @@
 	}
 }
 :root {
+	--default-color: whitesmoke;
+	--alt-color: #333;
+	--primary-color: cyan;
+	--highlight-color: rgb(59, 117, 218);
+	--border-color: dimgray;
 	--glass-grad:linear-gradient(to top left,rgba(80,80,80,0.7), rgba(140,140,140,0.9),rgba(40, 40, 40, 0.7));
-	--shadow-color:0.15em 0.15em 0.15em rgba(20,20,20,0.9);
-	--tint-glass: linear-gradient(to bottom right, rgb(100,100,100), rgb(40,40,40));
+	--shadow: rgba(20,20,20,0.9);
+	--tint-glass: linear-gradient(rgba(40,40,40,0.8), rgba(80,80,80,0.7));
+	--header-bg: linear-gradient(rgba(40,40,40, 1), rgba(80,80,80,0.97));
 	background-image:url(../images/backgrounds/dark-bg.svgz);
 	background-size:cover;
 	background-position:center;
 	background-repeat:no-repeat;
 	background-attachment:fixed;
-	color: whitesmoke;
-	text-shadow:var(shadow);
+	color: var(--default-color);
+	text-shadow:var(--shadow);
 	cursor: url(../images/cursors/Arch.svgz), auto;
 }
 ::-moz-selection{
-	background-color:rgb(0,250,250);
-	background-color:rgba(0,250,250,0.7);
+	background-color: var(--primary-color);
 	text-shadow:none;
 }
 ::selection{
-	background-color:rgb(0,250,250);
-	background-color:rgba(0,250,250,0.7);
-	background-color: cyan;
+	background-color: var(--primary-color);
 	text-shadow:none;
 }
 :root.loading {
 	cursor: progress;
 }
 body> header {
-	background-image: linear-gradient(rgba(40,40,40,0.8), rgba(80,80,80,0.7));
-	border-bottom: 0.2rem solid dimgray;
-	box-shadow: 0 0 3rem black inset;
+	background-image: var(--tint-glass);
+	border-bottom: 0.2rem solid var(--border-color);
+	box-shadow: 0 0 3rem var(--shadow) inset;
 }
 body > header h1 {
 	font-family: 'PressStart';
 	text-align: center;
-	text-shadow: 0.1rem 0.1rem black, 0.2rem .02rem 0.3rem gray, 0 0 3rem darkblue;
+	text-shadow: 0.1rem 0.1rem var(--shadow), 0.2rem .02rem 0.3rem gray, 0 0 3rem var(--highlight-color);
 	margin-bottom: 1rem;
 }
 body header > h1 > a {
@@ -74,14 +77,14 @@ body > header nav a {
 	text-align: center;
 	overflow: elipsis;
 	padding: 0.7rem 0;
-	background-image: linear-gradient(cyan, rgb(59, 117, 218), cyan);
-	border: 0.2rem outset black;
+	background-image: linear-gradient(var(--primary-color), var(--highlight-color), var(--primary-color));
+	border: 0.2rem outset var(--border-color);
 	transition: all 300ms;
 }
 body > header nav a:hover {
-	text-shadow: 0 0 0.1rem black, 0 0 0.5rem blue;
+	text-shadow: 0 0 0.1rem black, 0 0 0.5rem var(--highlight-color);
 	transform: translateY(-0.3rem);
-	box-shadow: 0 0 1rem black;
+	box-shadow: 0 0 1rem var(--shadow);
 
 }
 body > header nav a:first-of-type {
@@ -91,7 +94,7 @@ body > header nav a:last-of-type {
 	border-radius: 0 1rem 1rem 0;
 }
 body > header nav a:not(:last-of-type) {
-	border-right: 0.2rem outset dimgray;
+	border-right: 0.2rem outset var(--border-color);
 }
 body > header nav form {
 	flex: 0 1 100%;
@@ -116,16 +119,16 @@ a[target="_blank"]::after {
 	content:'  A';
 }
 button[type=button], [type=submit], [type=reset] {
-	border: 0.2rem outset cyan;
+	border: 0.2rem outset var(--primary-color);
 	min-width: 2rem;
 	padding: 0.2rem;
-	background-image: linear-gradient(cyan, rgb(59, 117, 218));
+	background-image: linear-gradient(var(--primary-color), var(--highlight-color));
 	font-family: inherit;
 }
 select, input:not([type=checkbox]):not([type=submit]):not([type=reset]):not([type=file]) {
 	background-color: transparent;
 	color: inherit;
-	border-color: transparent transparent lightgray transparent;
+	border-color: transparent transparent var(--border-color) transparent;
 	border-width: 0 0 1px 0;
 	border-style: solid;
 }
@@ -135,7 +138,7 @@ label[data-icon]:empty {
 	font-size: 0.7em;
 	text-align: center;
 	color: dimgray;
-	border-color: transparent transparent lightgray transparent;
+	border-color: transparent transparent var(--border-color) transparent;
 	border-width: 0 0 1px 0;
 	border-style: solid;
 }
@@ -143,6 +146,13 @@ label[data-icon]:empty + input {
 	display: inline-block;
 	padding-left: 1rem;
 	margin-left: -0.4em;
+}
+label > img, label > svg {
+	height: 1em;
+	width: auto;
+}
+label > svg, label > svg * {
+	fill: currentColor;
 }
 input[type=checkbox] {
 	display: none;
@@ -162,7 +172,6 @@ input[type=checkbox]:checked+label::after {
 input[type=search] {
 	width: 7rem;
 	max-width: 80%;
-	-webkit-transition: width 500ms;
 	transition: width 500ms;
 }
 input[type=search]:focus {
@@ -190,7 +199,7 @@ main {
 	transform: translateX(5vw);
 	margin: 2rem 0;
 	padding: 2rem;
-	background-image:linear-gradient(315deg,rgba(80,80,80,0.7),rgba(140,140,140,0.8),rgba(40,40,40,0.7));
+	background-image: var(--glass-grad);
 	border-radius:2rem;
 	display:flex;
 	flex-direction: row;
@@ -200,11 +209,11 @@ main {
 	transform-style: preserve-3d;
 }
 main > article, main > form, main > .tags{
-	color:#333;
+	color: var(--alt-color);
 	background-color: whitesmoke;
 	border-radius: inherit;
 	padding: inherit;
-	border: 0.3rem outset black;
+	border: 0.3rem outset var(--border-color);
 	word-wrap: break-word;
 	flex: 0 1 67%;
 	order:2;
@@ -214,9 +223,9 @@ article header, aside h3 {
 	font-size: 1.3rem;
 	text-shadow: 0.1rem 0.1rem 0 dimgray, 0.15rem 0.15rem 0 black;
 	padding: 0.4rem;
-	background-image: linear-gradient(rgba(40,40,40, 1), rgba(80,80,80,0.97));
-	box-shadow: 0 0 1rem black;
-	color: whitesmoke;
+	background-image: var(--header-bg);
+	box-shadow: 0 0 1rem var(--shadow);
+	color: var(--default-color);
 	position: sticky;
 	top: 0;
 	left: 0;
@@ -232,10 +241,9 @@ article section {
 	color: #222;
 }
 article > :not(footer) img {
-	border: 0.2rem outset cyan;
-	box-shadow: 0.3rem 0.3rem 0.5rem black;
+	border: 0.2rem outset var(--primary-color);
+	box-shadow: 0.3rem 0.3rem 0.5rem var(--shadow);
 	margin: 1.5rem;
-	-webkit-transition: all 500ms;
 	transition: all 500ms;
 }
 main aside{
@@ -244,22 +252,22 @@ main aside{
 }
 aside h3 {
 	padding: 0.2rem;
-	border-bottom: 0.2rem solid cyan;
+	border-bottom: 0.2rem solid var(--primary-color);
 	border-radius:1rem 1rem 0 0;
 }
 aside > :not(h3) {
 	color: #333;
 	background-image: linear-gradient(whitesmoke ,#ddd);
-	border: 0.2rem outset black;
+	border: 0.2rem outset var(--border-color);
 	border-radius: 1rem 1rem 0 0;
 	margin: 2rem 0.2rem;
-	box-shadow:-1rem 1rem 1rem black,0 0 1rem 0 black inset;
+	box-shadow:-1rem 1rem 1rem var(--shadow),0 0 1rem 0 var(--shadow) inset;
 }
 body > footer {
-	border-top: 0.3rem solid cyan;
+	border-top: 0.3rem solid var(--primary-color);
 	padding: 1rem;
 	background-image: linear-gradient(whitesmoke, gainsboro);
-	box-shadow: 0 -1rem 2rem black inset;
+	box-shadow: 0 -1rem 2rem var(--shadow) inset;
 }
 @media screen and (max-width:999px) {
 	header nav {
@@ -319,9 +327,6 @@ body > progress {
 [data-icon]::after  {
 	display: inline;
 	font-family: 'Web Symbols';
-	font-style: normal;
-	font-weight: normal;
-	font-variant: normal;
 	font-size: inherit;
 	font-size-adjust: none;
 	font-stretch: none;
