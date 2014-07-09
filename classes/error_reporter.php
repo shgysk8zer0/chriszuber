@@ -3,7 +3,7 @@
 		/**
 		 * Custom error handling.
 		 * Catch errors using custom function using set_error_handler($callback_function, ERROR_LEVEL)
-		 * 
+		 *
 		 * @link http://us3.php.net/set_error_handler
 		 * @author Chris Zuber <shgysk8zer0@gmail.com>
 		 * @copyright 2014, Chris Zuber
@@ -13,10 +13,10 @@
 		 */
 
 		protected static $instance = null;
-		
+
 		private $defined_levels = [];
 
-		public $method, $log;
+		public $method, $log = 'errors.log';
 
 		public static function load($method) {
 			if(is_null(self::$instance)) {
@@ -29,7 +29,7 @@
 			/**
 			 * Custom error handling.
 			 * Catch errors using custom function using set_error_handler($callback_function, ERROR_LEVEL)
-			 * 
+			 *
 			 * @link http://us3.php.net/set_error_handler
 			 * @link http://us3.php.net/manual/en/errorfunc.constants.php
 			 * @param int $error_level (Type of error, see E_*)
@@ -42,35 +42,35 @@
 			 */
 
 			$this->method = strtolower($method);
-			
+
 			/**
 			 * Get defined constants using get_defined_constants(true)
 			 * Then get 'Core' section (Which includes the error constants)
-			 * Next, convert the int $error_level into its definer by doing array_search, 
+			 * Next, convert the int $error_level into its definer by doing array_search,
 			 * which returns the array key for the array value.
-			 * 
+			 *
 			 * This method should always work because we are looking the information
 			 * that is used to define it to begin with.
-			 * 
+			 *
 			 * To define error level constants, PHP must be reading some ini file somewhere,
 			 * and then loops through [Core] and doing define($key, $value) where Core is
 			 * [$key => $value, ...]. What we are doing here is getting is the array used
 			 * to define them, and getting back $key from $value.
-			 * 
+			 *
 			 * We could use a local array written as $value = $key and then
 			 * use $error_array[$error_level], but the constants are changing
 			 * (ironic, right?) between various versions of PHP, so while E_NOTICE
 			 * is currently 8, there is no guarentee that this will always be the case.
-			 * 
+			 *
 			 * Do this during class construction to avoid running through
 			 * multiple times.
-			 * 
+			 *
 			 * A bit of hacekry, but should avoid issues where PHP
 			 * uses different values for different versions of PHP
 			 */
-			
+
 			$this->defined_levels = get_defined_constants(true)['Core'];
-			
+
 			if($this->method === 'database') {
 				/**
 				 * construct the _pdo class and create prepared
@@ -78,7 +78,7 @@
 				 * method to load this class, we will avoid
 				 * both of these steps in subsequent calls.
 				*/
-				
+
 				parent::__construct();
 
 				$this->prepare("
@@ -103,18 +103,18 @@
 				/**
 				 * Open the file during class construct. Same reasons as above.
 				 */
-				
-				$this->log = fopen(BASE . '/' . ERROR_LOG, 'a');
+
+				$this->log = fopen(BASE . '/' . $this->log, 'a');
 			}
 		}
-		
+
 		public function report($error_level, $error_message, $file, $line, $scope) {
 			/**
 			 * Public method to report errors. Just calls the private private
 			 * method according to a switch on $this->method
 			 * The default is to return false, which will handle the error
 			 * with PHP's built in error reporting.
-			 * 
+			 *
 			 * @param int $error_level (Error level. Numeric value for E_*)
 			 * @param string $error_message (The message provided by PHP for the error)
 			 * @param string $file (absolute path for the file)
@@ -122,16 +122,16 @@
 			 * @param mixed $scope (All variables set in the current scope when the error occured).
 			 * @return boolean (false will tell PHP to handle the error by its own means)
 			 */
-			
+
 			switch($this->method) {
 				case 'database': {
 					return $this->database($error_level, $error_message, $file, $line, $scope);
 				} break;
-				
+
 				case 'log': {
 					return $this->logger($error_level, $error_message, $file, $line, $scope);
 				} break;
-				
+
 				default: {
 					return false;
 				}
@@ -141,10 +141,10 @@
 		private function logger($error_level, $error_message, $file, $line, $scope) {
 			/**
 			 * Writes errors to the already open log file.
-			 * 
+			 *
 			 * @return boolean (Whether or not the write was successful)
 			 */
-			
+
 			$error_level = array_search($error_level, $this->defined_levels);
 			return !!fwrite($this->log, "{$error_level}: {$error_message} in {$file} on line {$line} at " . date('Y-m-d\TH:i:s') . PHP_EOL);
 		}
@@ -152,10 +152,10 @@
 		private function database($error_level, $error_message, $file, $line, $scope) {
 			/**
 			 * Binds to and executes a prepared statement, created during construct.
-			 * 
+			 *
 			 * @return boolean (Whether or not it executed)
 			 */
-			
+
 			return $this->bind([
 				'datetime' => date('Y-m-d\TH:i:s'),
 				'file' => $file,
