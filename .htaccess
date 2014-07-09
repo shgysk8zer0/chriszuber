@@ -7,11 +7,6 @@
 		AddOutputFilterByType INCLUDES application/javascript application/json
 		SetOutputFilter INCLUDES
 	</FilesMatch>
-	<FilesMatch "\.?combined\.css$">
-		Options +Includes
-		AddOutputFilterByType INCLUDES text/css
-		SetOutputFilter INCLUDES
-	</FilesMatch>
  </IfModule>
 <IfModule mod_rewrite.c>
 	# Redirect all none-existing to index.php
