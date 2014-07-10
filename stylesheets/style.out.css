@@ -247,6 +247,61 @@ img {
   height: auto;
 }
 
+.no-details details[open] > summary::before {
+  font-family: 'Web Symbols';
+  content: '[';
+}
+
+.no-details details:not([open]) > summary::before {
+  font-family: 'Web Symbols';
+  content: ']';
+}
+
+.no-details details:not([open]) > :not(summary) {
+  display: none;
+}
+
+progress {
+  display: inline-block;
+  width: 100%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+}
+
+progress:not([value]) {
+  -webkit-animation: progress 1s infinite linear alternate;
+  animation: progress 1s infinite linear alternate;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(lime), color-stop(green), to(lime));
+  background-image: -webkit-linear-gradient(lime, green, lime);
+  background-image: linear-gradient(lime, green, lime);
+  -webkit-background-size: 10vw 100%;
+  background-size: 10vw 100%;
+  background-repeat: no-repeat;
+  background-position: left;
+}
+
+progress:not([value])::-moz-progress-bar {
+  width: auto;
+}
+
+progress:not([value])::-webkit-progress-value {
+  width: auto;
+}
+
+progress[value]::-webkit-progress-value {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(lime), color-stop(green), to(lime));
+  background-image: -webkit-linear-gradient(lime, green, lime);
+  background-image: linear-gradient(lime, green, lime);
+  background-color: black;
+}
+
+progress[value]::-moz-progress-bar {
+  background-image: linear-gradient(lime, green, lime);
+  background-color: black;
+}
+
 body > header h1::before {
   content: '';
   display: inline-block;
