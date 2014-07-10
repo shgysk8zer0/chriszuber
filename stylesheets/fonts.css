@@ -32,7 +32,7 @@
 @font-face{
 	font-family:'ConsolaMono';
 	font-weight:bold;
-	font-style:bold;
+	font-style:normal;
 	src:local('ConsolaMono'),url('../fonts/ConsolaMono-Bold.woff')format('woff');
 }
 @font-face{
