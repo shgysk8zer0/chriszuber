@@ -12,7 +12,9 @@
 	<div class="recent tags">
 		<h3>Tags</h3>
 		<?php foreach(get_all_tags() as $tag):?>
-		<a href="<?=URL?>/tags/<?=urlencode($tag)?>" data-icon=","><?=$tag?></a><br/>
+		<div>
+			<a href="<?=URL?>/tags/<?=urlencode($tag)?>" data-icon=","><?=$tag?></a>
+		</div><br/>
 		<?php endforeach?>
-	</div>
+	</div><br />
 </aside>
