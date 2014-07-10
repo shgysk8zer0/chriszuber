@@ -1,5 +1,5 @@
 <details class="tag">
-	<summary>%TITLE%</summary>
+	<summary><b>%TITLE%</b></summary>
 	<a href="%URL%">
 		<p>%DESCRIPTION%</p>
 	</a>
