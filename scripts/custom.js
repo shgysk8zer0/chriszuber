@@ -6,7 +6,7 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 		head = $('head');
 		cache = new cache();
 		html.removeClass('no-js').addClass('js');
-	['svg', 'audio', 'video', 'canvas', 'menuitem', 'dataset', 'classList', 'connectivity', 'visibility', 'notifications', 'ApplicationCache', 'indexedDB', 'localStorage', 'sessionStorage', 'CSSgradients', 'transitions', 'animations',  'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll', 'workers', 'promises', 'ajax', 'FormData'].forEach(function(support){
+	['svg', 'audio', 'video', 'canvas', 'menuitem', 'details', 'dataset', 'classList', 'connectivity', 'visibility', 'notifications', 'ApplicationCache', 'indexedDB', 'localStorage', 'sessionStorage', 'CSSgradients', 'transitions', 'animations',  'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll', 'workers', 'promises', 'ajax', 'FormData'].forEach(function(support){
 		(supports(support)) ? html.addClass(support) : html.addClass('no-' + support);
 	});
 	(supports('connectivity') && !navigator.onLine) ? html.addClass('offline') : html.addClass('online');
