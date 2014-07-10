@@ -24,6 +24,8 @@
 	--shadow: rgba(20,20,20,0.9);
 	--tint-glass: linear-gradient(rgba(40,40,40,0.8), rgba(80,80,80,0.7));
 	--header-bg: linear-gradient(rgba(40,40,40, 1), rgba(80,80,80,0.97));
+	--progress-grad: linear-gradient(lime, green, lime);
+	--icon-font: 'Web Symbols';
 	background-image:url(../images/backgrounds/dark-bg.svgz);
 	background-size:cover;
 	background-position:center;
@@ -183,6 +185,46 @@ menu[type=list] li {
 img {
 	max-width: 100%;
 	height: auto;
+}
+.no-details details[open] > summary::before {
+	font-family: var(--icon-font);
+	content: '['
+}
+.no-details details:not([open]) > summary::before {
+	font-family: var(--icon-font);
+	content: ']'
+}
+.no-details details:not([open]) > :not(summary) {
+	display: none;
+}
+progress {
+	display: inline-block;
+	width: 100%;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	border: none;
+}
+progress:not([value]) {
+	animation: progress 1s infinite linear alternate;
+	background-image: var(--progress-grad);
+	background-size: 10vw 100%;
+	background-repeat: no-repeat;
+	background-position: left;
+}
+progress:not([value])::-moz-progress-bar {
+	width: auto;
+}
+progress:not([value])::-webkit-progress-value {
+	width: auto;
+}
+progress[value]::-webkit-progress-value {
+	background-image: var(--progress-grad);
+	background-color: black;
+}
+progress[value]::-moz-progress-bar {
+	background-image: var(--progress-grad);
+	background-color: black;
 }
 body > header h1::before {
 	content: '';

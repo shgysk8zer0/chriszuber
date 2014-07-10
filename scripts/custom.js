@@ -121,6 +121,13 @@ NodeList.prototype.bootstrap = function() {
 				target = event.target;
 			});
 		});
+		if(!supports('details')) {
+			node.query('details > summary').forEach(function(details) {
+				details.addEventListener('click', function() {
+					(this.parentElement.hasAttribute('open')) ? this.parentElement.removeAttribute('open') : this.parentElement.setAttribute('open', '');
+				});
+			});
+		}
 		if(supports('menuitem')) {
 			node.query('[contextmenu]').forEach(function(el) {
 				var menu = el.attr('contextmenu');
