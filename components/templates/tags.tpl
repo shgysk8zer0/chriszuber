@@ -6,4 +6,4 @@
 	<p>
 		By <a href="https://plus.google.com/%AUTHOR_URL%">%AUTHOR%</a> on %DATE%
 	</p>
-</details>
+</details><br />
