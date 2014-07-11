@@ -19,24 +19,24 @@
 }
 
 :root {
-  background-image: url(../images/backgrounds/dark-bg.svgz);
+  background-image: url(../images/backgrounds/red-curls.svgz);
   -webkit-background-size: cover;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  color: whitesmoke;
+  color: rgba(252, 252, 252, 1);
   text-shadow: rgba(20,20,20,0.9);
   cursor: url(../images/cursors/Arch.svgz), auto;
 }
 
 ::-moz-selection {
-  background-color: cyan;
+  background-color: rgba(237, 24, 24, 1);
   text-shadow: none;
 }
 
 ::selection {
-  background-color: cyan;
+  background-color: rgba(237, 24, 24, 1);
   text-shadow: none;
 }
 
@@ -48,7 +48,7 @@ body> header {
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(40,40,40,0.8)), to(rgba(80,80,80,0.7)));
   background-image: -webkit-linear-gradient(rgba(40,40,40,0.8), rgba(80,80,80,0.7));
   background-image: linear-gradient(rgba(40,40,40,0.8), rgba(80,80,80,0.7));
-  border-bottom: 0.2rem solid dimgray;
+  border-bottom: 0.2rem solid rgba(45, 45, 45, 1);
   -webkit-box-shadow: 0 0 3rem rgba(20,20,20,0.9) inset;
   box-shadow: 0 0 3rem rgba(20,20,20,0.9) inset;
 }
@@ -56,7 +56,7 @@ body> header {
 body > header h1 {
   font-family: 'PressStart';
   text-align: center;
-  text-shadow: 0.1rem 0.1rem rgba(20,20,20,0.9), 0.2rem .02rem 0.3rem gray, 0 0 3rem rgb(59, 117, 218);
+  text-shadow: 0.1rem 0.1rem rgba(20,20,20,0.9), 0.2rem .02rem 0.3rem gray, 0 0 3rem rgba(129, 23, 23, 1);
   margin-bottom: 1rem;
 }
 
@@ -97,16 +97,16 @@ body > header nav a {
   text-align: center;
   overflow: elipsis;
   padding: 0.7rem 0;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(cyan), color-stop(rgb(59, 117, 218)), to(cyan));
-  background-image: -webkit-linear-gradient(cyan, rgb(59, 117, 218), cyan);
-  background-image: linear-gradient(cyan, rgb(59, 117, 218), cyan);
-  border: 0.2rem outset dimgray;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(237, 24, 24, 1)), color-stop(rgba(129, 23, 23, 1)), to(rgba(237, 24, 24, 1)));
+  background-image: -webkit-linear-gradient(rgba(237, 24, 24, 1), rgba(129, 23, 23, 1), rgba(237, 24, 24, 1));
+  background-image: linear-gradient(rgba(237, 24, 24, 1), rgba(129, 23, 23, 1), rgba(237, 24, 24, 1));
+  border: 0.2rem outset rgba(45, 45, 45, 1);
   -webkit-transition: all 300ms;
   transition: all 300ms;
 }
 
 body > header nav a:hover {
-  text-shadow: 0 0 0.1rem black, 0 0 0.5rem rgb(59, 117, 218);
+  text-shadow: 0 0 0.1rem black, 0 0 0.5rem rgba(129, 23, 23, 1);
   -webkit-transform: translateY(-0.3rem);
   -ms-transform: translateY(-0.3rem);
   transform: translateY(-0.3rem);
@@ -123,7 +123,7 @@ body > header nav a:last-of-type {
 }
 
 body > header nav a:not(:last-of-type) {
-  border-right: 0.2rem outset dimgray;
+  border-right: 0.2rem outset rgba(45, 45, 45, 1);
 }
 
 body > header nav form {
@@ -162,12 +162,12 @@ a[target="_blank"]::after {
 button[type=button],
 [type=submit],
 [type=reset] {
-  border: 0.2rem outset cyan;
+  border: 0.2rem outset rgba(237, 24, 24, 1);
   min-width: 2rem;
   padding: 0.2rem;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(cyan), to(rgb(59, 117, 218)));
-  background-image: -webkit-linear-gradient(cyan, rgb(59, 117, 218));
-  background-image: linear-gradient(cyan, rgb(59, 117, 218));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(237, 24, 24, 1)), to(rgba(129, 23, 23, 1)));
+  background-image: -webkit-linear-gradient(rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
+  background-image: linear-gradient(rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
   font-family: inherit;
 }
 
@@ -175,7 +175,7 @@ select,
 input:not([type=checkbox]):not([type=submit]):not([type=reset]):not([type=file]) {
   background-color: transparent;
   color: inherit;
-  border-color: transparent transparent dimgray transparent;
+  border-color: transparent transparent rgba(45, 45, 45, 1) transparent;
   border-width: 0 0 1px 0;
   border-style: solid;
 }
@@ -186,7 +186,7 @@ label[data-icon]:empty {
   font-size: 0.7em;
   text-align: center;
   color: dimgray;
-  border-color: transparent transparent dimgray transparent;
+  border-color: transparent transparent rgba(45, 45, 45, 1) transparent;
   border-width: 0 0 1px 0;
   border-style: solid;
 }
@@ -352,11 +352,11 @@ main {
 main > article,
 main > form,
 main > .tags {
-  color: #333;
+  color: rgba(41, 41, 41, 1);
   background-color: whitesmoke;
   border-radius: inherit;
   padding: inherit;
-  border: 0.3rem outset dimgray;
+  border: 0.3rem outset rgba(45, 45, 45, 1);
   word-wrap: break-word;
   -webkit-box-flex: 0;
   -webkit-flex: 0 1 67%;
@@ -379,7 +379,7 @@ aside h3 {
   background-image: linear-gradient(rgba(40,40,40, 1), rgba(80,80,80,0.97));
   -webkit-box-shadow: 0 0 1rem rgba(20,20,20,0.9);
   box-shadow: 0 0 1rem rgba(20,20,20,0.9);
-  color: whitesmoke;
+  color: rgba(252, 252, 252, 1);
   position: sticky;
   top: 0;
   left: 0;
@@ -394,11 +394,11 @@ article section {
   font-family: 'Alice';
   max-width: 100%;
   font-size: 1.1rem;
-  color: #222;
+  color: rgba(41, 41, 41, 1);
 }
 
 article > :not(footer) img {
-  border: 0.2rem outset cyan;
+  border: 0.2rem outset rgba(237, 24, 24, 1);
   -webkit-box-shadow: 0.3rem 0.3rem 0.5rem rgba(20,20,20,0.9);
   box-shadow: 0.3rem 0.3rem 0.5rem rgba(20,20,20,0.9);
   margin: 1.5rem;
@@ -419,7 +419,7 @@ main aside {
 
 aside h3 {
   padding: 0.2rem;
-  border-bottom: 0.2rem solid cyan;
+  border-bottom: 0.2rem solid rgba(237, 24, 24, 1);
   border-radius: 1rem 1rem 0 0;
 }
 
@@ -428,7 +428,7 @@ aside > :not(h3) {
   background-image: -webkit-gradient(linear, left top, left bottom, from(whitesmoke), to(#ddd));
   background-image: -webkit-linear-gradient(whitesmoke, #ddd);
   background-image: linear-gradient(whitesmoke ,#ddd);
-  border: 0.2rem outset dimgray;
+  border: 0.2rem outset rgba(45, 45, 45, 1);
   border-radius: 1rem 1rem 0 0;
   margin: 2rem 0.2rem;
   -webkit-box-shadow: -1rem 1rem 1rem rgba(20,20,20,0.9),0 0 1rem 0 rgba(20,20,20,0.9) inset;
@@ -436,7 +436,7 @@ aside > :not(h3) {
 }
 
 body > footer {
-  border-top: 0.3rem solid cyan;
+  border-top: 0.3rem solid rgba(237, 24, 24, 1);
   padding: 1rem;
   background-image: -webkit-gradient(linear, left top, left bottom, from(whitesmoke), to(gainsboro));
   background-image: -webkit-linear-gradient(whitesmoke, gainsboro);
