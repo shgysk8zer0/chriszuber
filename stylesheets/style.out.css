@@ -90,7 +90,7 @@ body > header nav a {
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   color: whitesmoke;
-  text-shadow: 0.15rem 0.15rem 0 dimgray, 0.15rem 0.15rem 0.3rem black;
+  text-shadow: 0.1rem 0.1rem 0.1rem dimgray;
   font-size: 1.1rem;
   font-family: 'Acme';
   font-weight: 600;
