@@ -570,7 +570,7 @@
 		else return null;
 	}
 
-	function array_keys_exist() {						// Check if all keys exist in array
+	function array_keys_exist() {
 		/**
 		* Use array_key_exists on each key.
 		* Return false as soon as one is missing
@@ -721,15 +721,30 @@
 		/**
 		 * Returns the extension for the specified file
 		 *
-		 * Works by assuming that the extension is the final segment
-		 * of text after the last '.', so will not work correctly
-		 * for files with multiple extension such as tar.gz
+		 * Does not depend on whether or not the file exists.
+		 * This function operates with the string, not the
+		 * filesystem
 		 *
 		 * @param string $file
-		 * @return string (file extention)
+		 * @return string
+		 * @example extension('path/to/file.ext') //returns '.ext'
 		 */
 
-		return end(explode('.', $file));
+		return '.' . pathinfo($file, PATHINFO_EXTENSION);
+	}
+
+	function filename($file) {
+		/**
+		 * Returns the filename without path or extension
+		 * Does not depend on whether or not the file exists.
+		 * This function operates with the string, not the
+		 * filesystem
+		 *
+		 * @param string $file
+		 * @return string
+		 * @example filename('/path/to/file.ext') //returns 'file'
+		 */
+		return pathinfo($file, PATHINFO_FILENAME);
 	}
 
 	function unquote($str) {

@@ -58,6 +58,9 @@ selection.prototype.constructor = selection;
 selection.prototype.replace = function(rep) {
 	this.parent.innerHTML = this.before + rep + this.after;
 }
+RegExp.prototype.escape = function(){
+	return this.source.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+}
 /*===========================De-Prefix several JavaScript methods==========================================================================*/
 
 if (!'Notification' in window) {

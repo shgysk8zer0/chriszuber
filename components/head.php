@@ -30,7 +30,11 @@
 <link rel="alternate icon" type="image/png" sizes="16x16" href="favicon.png"/>
 <?php if(localhost()):?>
 	<link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="all"/>
+	<?php if(BROWSER === 'Firefox'):?>
+	<link rel="stylesheet" type="text/css" href="stylesheets/style.css" media="all"/>
+	<?php else:?>
 	<link rel="stylesheet" type="text/css" href="stylesheets/style.out.css" media="all"/>
+	<?php endif?>
 	<link rel="stylesheet" type="text/css" href="stylesheets/fonts.css" media="all"/>
 	<link rel="stylesheet" type="text/css" href="stylesheets/animations.css" media="screen"/>
 <?php else:?>

@@ -2,7 +2,10 @@
 			<header>
 				<h1 itemprop="headline">%TITLE%</h1>
 				<nav>
-					%TAGS%
+					<details>
+						<summary title="Tags"><span data-icon=","></span></summary>
+						<div>%TAGS%</div>
+					</details>
 				</nav>
 			</header>
 			<section itemprop="text">%CONTENT%</section>

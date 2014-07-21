@@ -8,9 +8,10 @@
 		 * @version 2014-04-19
 		 */
 
-		protected $pdo, $prepared, $data = array();
+		protected $pdo, $prepared, $connect, $data = array();
 		private $query;
 		protected static $instances = [];
+		public $connected;
 
 		public static function load($ini = 'connect') {
 			/**
@@ -42,20 +43,26 @@
 			 * @return void
 			 * @example $pdo = new _pdo()
 			 */
-
-			$connect = ini::load($ini);
+			if(is_string($ini)) {
+				$this->connect = ini::load($ini);
+			}
+			elseif(is_object($ini)) {
+				$this->connect = $ini;
+			}
 
 			try{
-				if(!(isset($connect->user) and isset($connect->password))) throw new Exception('Missing credentials to connect to database');
-				$connect_string = (isset($connect->type)) ? "{$connect->type}:" : 'mysql:';
-				$connect_string .= (isset($connect->database)) ?  "dbname={$connect->database}" : "dbname={$connect->user}";
-				if(isset($connect->server)) $connect_string .= ";host={$connect->server}";
-				if(isset($connect->port) and $connect->server !== 'localhost') $connect_string .= ";port={$connect->port}";
-				$this->pdo = new PDO($connect_string, $connect->user, $connect->password);
+				if(!(isset($this->connect->user) and isset($this->connect->password))) throw new Exception('Missing credentials to connect to database');
+				$connect_string = (isset($this->connect->type)) ? "{$this->connect->type}:" : 'mysql:';
+				$connect_string .= (isset($this->connect->database)) ?  "dbname={$this->connect->database}" : "dbname={$this->connect->user}";
+				if(isset($this->connect->server)) $connect_string .= ";host={$this->connect->server}";
+				if(isset($this->connect->port) and $this->connect->server !== 'localhost') $connect_string .= ";port={$this->connect->port}";
+				$this->pdo = new PDO($connect_string, $this->connect->user, $this->connect->password);
+				$this->connected = true;
 			}
 			catch(Exception $e) {
 				$this->log(__METHOD__, __LINE__, $connect_string . PHP_EOL . $e->getMessage());
-				exit('Failed to connect to database.');
+				//exit('Failed to connect to database.');
+				$this->connected = false;
 			}
 		}
 
@@ -400,8 +407,8 @@
 			 */
 
 			if(is_null($fname)) {
-				$connect = ini::load('connect');
-				$fname = $connect->database;
+				//$connect = ini::load('connect');
+				$fname = $this->connect->database;
 			}
 
 			$sql = file_get_contents(BASE ."/{$fname}.sql");
@@ -414,19 +421,19 @@
 		}
 
 		public function dump($filename = null) {
-			$connect = ini::load('connect');
+			//$connect = ini::load('connect');
 
 			if(is_null($filename)) {
-				$filename = $connect->database;
+				$filename = $this->connect->database;
 			}
 
-			$command = "mysqldump -u {$connect->user} -p" . escapeshellcmd($connect->password);
+			$command = "mysqldump -u {$this->connect->user} -p" . escapeshellcmd($this->connect->password);
 
-			if(isset($connect->server) and $connect->server !== 'localhost') {
-				$command .= " -h {$connect->server}";
+			if(isset($this->connect->server) and $this->connect->server !== 'localhost') {
+				$command .= " -h {$this->connect->server}";
 			}
 
-			$command .= " {$connect->database} > {$filename}.sql";
+			$command .= " {$this->connect->database} > {$filename}.sql";
 
 			exec($command);
 		}
@@ -529,6 +536,20 @@
 			$results = $this->pdo->query($query);
 			$tables = $results->fetchAll(PDO::FETCH_COLUMN, 0);
 			return $tables;
+		}
+
+		public function show_databases() {
+			/**
+			 * Returns a 0 indexed array of tables in database
+			 *
+			 * @param void
+			 * @return array
+			 */
+
+			$query = 'SHOW DATABASES';
+			$results = $this->pdo->query($query);
+			$databases = $results->fetchAll(PDO::FETCH_COLUMN, 0);
+			return $databases;
 		}
 
 		public function table_headers($table) {

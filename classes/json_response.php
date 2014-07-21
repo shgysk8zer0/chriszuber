@@ -350,6 +350,17 @@
 			$this->response['focus'] = $sel;
 			return $this;
 		}
+		
+		public function reload() {
+			/**
+			 * Triggers window.location.reload() in handleJSON
+			 * 
+			 * @param void
+			 * @example $resp->reload()
+			 */
+			
+			$this->response['reload'] = null;
+		}
 
 		/*public function template($template) {
 			$this->response['template'] = $template;

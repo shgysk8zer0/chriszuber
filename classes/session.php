@@ -47,7 +47,7 @@
 			 * @example $session = new session([$site])
 			 */
 
-			if(!isset($_SESSION)) {							#Do not create new session of one has already been created
+			if(session_status() !== PHP_SESSION_ACTIVE) {							#Do not create new session of one has already been created
 				$this->expires = 0;
 				$this->path = preg_replace('/^' . preg_quote("{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}", '/') . '/', '', URL);
 				$this->domain =$_SERVER['HTTP_HOST'];
@@ -153,13 +153,25 @@
 			* @param void
 			* @return void
 			*/
-			session_regenerate_id(true);
+
 			session_destroy();
 			unset($_SESSION);
 			if(array_key_exists($this->name, $_COOKIE)){
 				unset($_COOKIE[$this->name]);
 				setcookie($this->name, null, -1, $this->path, $this->domain, $this->secure, $this->httponly);
 			}
+		}
+
+		public function restart() {
+			/**
+			 * Clear $_SESSION. All data in $_SESSION is unset
+			 *
+			 * @param void
+			 * @example $session->restart()
+			 */
+
+			session_unset();
+			return $this;
 		}
 
 		public function debug() {
