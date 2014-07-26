@@ -297,6 +297,30 @@
 			return $this;
 		}
 
+		public function info() {
+			/**
+			 * handleJSON in functions.js will console.info functions arguments
+			 *
+			 * @param mixed (arguments passed to function)
+			 * @usage $resp->info($session->nonce, $_SERVER['SERVER_NAME']);
+			 */
+
+			$this->response['info'] = func_get_args();
+			return $this;
+		}
+
+		public function warn() {
+			/**
+			 * handleJSON in functions.js will console.warn functions arguments
+			 *
+			 * @param mixed (arguments passed to function)
+			 * @usage $resp->warn($session->nonce, $_SERVER['SERVER_NAME']);
+			 */
+
+			$this->response['warn'] = func_get_args();
+			return $this;
+		}
+
 		public function error() {
 			/**
 			 * handleJSON in functions.js will console.error functions arguments
@@ -350,16 +374,91 @@
 			$this->response['focus'] = $sel;
 			return $this;
 		}
-		
+
 		public function reload() {
 			/**
 			 * Triggers window.location.reload() in handleJSON
-			 * 
+			 *
 			 * @param void
 			 * @example $resp->reload()
 			 */
-			
+
 			$this->response['reload'] = null;
+		}
+
+		public function clear($form) {
+			/**
+			 * Triggers document.forms[$form].reset() in handleJSON
+			 *
+			 * @param string $form (name of the form)
+			 * @example $resp->clear('login')
+			 */
+			$this->response['clear'] = $form;
+			return $this;
+		}
+
+		public function triggerEvent($selector, $event) {
+			/**
+			 * Will trigger an event ($event) on targets ($selector) in handleJSON
+			 *
+			 * handleJSON needs to determine which type of event to trigger
+			 *
+			 * @link https://developer.mozilla.org/en-US/docs/Web/Events
+			 * @param string $selector (CSS selector for target(s))
+			 * @param $event (Event to be triggered)
+			 * @example $resp->triggerEvent('button[type=submit]', 'click')
+			 */
+			if(!array_key_exists('triggerEvent', $this->response)) {
+				$this->response['triggerEvent'] = [];
+			}
+			$this->response['triggerEvent'][$selector] = $event;
+			return $this;
+		}
+
+		public function open($url = null, $paramaters = null, $replace = false, $name = '_blank') {
+			/**
+			 * Creates a popup window via JavaScript's window.open()
+			 *
+			 * @link http://www.w3schools.com/jsref/met_win_open.asp
+			 * @param string $url
+			 * @param array $paramaters,
+			 * @param boolean $replace
+			 * @example $resp->open(
+			 * 	'http://example.com',
+			 * 	[
+			 * 		'height' => 500,
+			 * 		'width' => 500
+			 * 	],
+			 * 	false
+			 * )
+			 */
+
+			$specs = [
+				'height' => 500,
+				'width' => 500,
+				'top' => 0,
+				'left' => 0,
+				'resizable' => 1,
+				'titlebar' => 0,
+				'menubar' => 0,
+				'toolbar' => 0,
+				'status' => 0
+			];
+
+			if(is_array($paramaters)) {
+				foreach($paramaters as $key => $value) {
+					$specs[$key] = $value;
+				}
+			}
+
+			$this->response['open'] = [
+				'url' => $url,
+				'name' => $name,
+				'specs' => $specs,
+				'replace' => $replace
+			];
+
+			return $this;
 		}
 
 		/*public function template($template) {
