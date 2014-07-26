@@ -284,8 +284,8 @@ function supports(type) {
 	* Which works by testing if the browser considers it unknown element type
 	*/
 	type = type.toLowerCase();
-	if(typeof sessionStorage['Supports_' + type] !== 'undefined') {
-		return sessionStorage['Supports_' + type] === 'true';
+	if(sessionStorage.hasOwnProperty('Supports_' + type)) {
+		return sessionStorage.getItem('Supports_' + type) == 'true';
 	}
 	var supports = false,
 	prefixes = [
@@ -380,7 +380,7 @@ function supports(type) {
 			for(i = 0; i < matches.length; i++) {
 				try {
 					supports = Boolean(document.querySelector(matches[i] + '(body)') === document.body);
-					sessionStorage.MatchesPre = matches[i];
+					sessionStorage.setItem('MatchesPre', matches[i]);
 				}
 				catch(e) {
 					null;
@@ -408,7 +408,7 @@ function supports(type) {
 		default:
 			supports = (document.createElement(type.toLowerCase()) .toString() !== document.createElement('DNE') .toString());
 	}
-	sessionStorage['Supports_' + type] = supports;
+	sessionStorage.setItem('Supports_' + type, supports);
 	return supports;
 }
 Element.prototype.query = function(query) {
@@ -434,7 +434,8 @@ function ajax(data) {
 		}
 		data.request = new FormData(data.form);
 		data.request.append('form', data.form.name);
-		data.form.querySelectorAll('[contenteditable][data-input-name]').forEach(function(input) {
+		data.request.append('nonce', sessionStorage.getItem('nonce'));
+		data.form.querySelectorAll('[data-input-name]').forEach(function(input) {
 			data.request.append(input.data('input-name'), input.innerHTML);
 		});
 	}
@@ -567,10 +568,10 @@ function handleJSON(json){
 		});
 	});
 	Object.keys(json.sessionStorage || []).forEach(function(key) {
-		(json.sessionStorage[key] === '') ? delete sessionStorage[key] : sessionStorage[key] = json.sessionStorage[key];
+		(json.sessionStorage[key] === '') ? sessionStorage.removeItem(key) : sessionStorage.setItem(key, json.sessionStorage[key]);
 	});
 	Object.keys(json.localStorage || []).forEach(function(key) {
-		(json.localStorage[key] === '') ? delete sessionStorage[key] : localStorage[key] = json.localStorage[key];
+		(json.localStorage[key] === '') ? sessionStorage.removeItem(key) : localStorag.setItem(key, json.localStorage[key]);
 	});
 	if (json.notify) {
 		notify(json.notify);
@@ -580,6 +581,12 @@ function handleJSON(json){
 	}
 	if(json.log){
 		console.log(json.log);
+	}
+	if(json.info){
+		console.info(json.info);
+	}
+	if(json.warn){
+		console.log(json.warn);
 	}
 	if(json.error){
 		console.error(json.error);
@@ -592,6 +599,33 @@ function handleJSON(json){
 	}
 	if(json.select) {
 		document.querySelector(json.select).select();
+	}
+	if(json.reload) {
+		window.location.reload();
+	}
+	if(json.clear) {
+		document.forms[json.clear].reset();
+	}
+	if(json.open) {
+		let specs = [];
+		json.open.specs.keys().forEach(function(spec) {
+			specs.push(spec + '=' + json.open.specs[spec]);
+		});
+		window.open(json.open.url, '_blank', specs.join(','), json.open.replace);
+	}
+	if(json.triggerEvent) {
+		console.log(json.triggerEvent);
+		Object.keys(json.triggerEvent).forEach(function(selector) {
+			document.querySelectorAll(selector).forEach(function(target){
+				let event = json.triggerEvent[selector].toLowerCase();
+				if(event === 'click') {
+					target.dispatchEvent(new MouseEvent(event));
+				}
+				else {
+					target.dispatchEvent(new Event(event));
+				}
+			});
+		});
 	}
 }
 function cache() {
@@ -609,7 +643,7 @@ cache.prototype.set = function(key, value) {
 	return this;
 }
 cache.prototype.unset = function(key) {
-	delete localStorage[('cache ' + key).camelCase()];
+	localStorage.removeItem(('cache ' + key).camelCase());
 	return this;
 }
 cache.prototype.keys = function() {
@@ -622,7 +656,7 @@ cache.prototype.each = function(callback) {
 }
 cache.prototype.clear = function() {
 	this.each(function(key){
-		delete localStorage[key];
+		localStorage.removeItem(key);
 	});
 	return this;
 }
@@ -795,7 +829,7 @@ zQ.prototype.watch = function(watching, options, attributeFilter) {
 zQ.prototype.$ = function (q) {
 	if((typeof this.query === 'string') && supports('cssmatches')) {
 		/*Only works for $().$(), but not for $().$().[*].$()*/
-		this.query = sessionStorage.MatchesPre + '(' + this.query +') '+ ' ' + sessionStorage.MatchesPre + '(' + q +')';
+		this.query = sessionStorage.getItem('MatchesPre') + '(' + this.query +') '+ ' ' + sessionStorage.getItem('MatchesPre') + '(' + q +')';
 		return $(this.query);
 	}
 	this.results = [];
