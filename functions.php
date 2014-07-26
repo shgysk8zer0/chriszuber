@@ -572,22 +572,35 @@
 
 	function array_keys_exist() {
 		/**
-		* Use array_key_exists on each key.
-		* Return false as soon as one is missing
-		* $args is all arguments given to function
-		* Since final argument is array, seperate that and remove from length
+		* Checks if the array that is the product
+		* of array_diff is empty or not.
+		*
+		* First, store all arguments as an array using
+		* func_get_arg() as $keys.
+		*
+		* Then, pop off the last argument as $arr, which is assumed
+		* to be the array to be searched and save it as its
+		* own variable. This will also remove it from
+		* the arguments array.
+		*
+		* Then, convert the array to its keys using $arr = array_keys($arr)
+		*
+		* Finally, compare the $keys by lopping through and checking if
+		* each $key is in $arr using in_array($key, $arr)
 		*
 		 * @params string[, string, .... string] array
 		 * @return boolean
+		 * @example array_keys_exist('red', 'green', 'blue', ['red' => '#f00', 'green' => '#0f0', 'blue' => '#00f']) // true
 		 */
 
-		$args = func_get_args();
-		$arr = end($args);
-		$length = func_num_args() - 1;
-		for($i = 0; $i < $length; $i++) {
-			if(!array_key_exists($args[$i], $arr)) return false;
+		$keys = func_get_args();
+		$arr = array_pop($keys);
+		$arr = array_keys($arr);
+
+		foreach($keys as $key) {
+			if(!in_array($key, $arr, true)) return false;
 		}
-	return true;
+		return true;
 }
 
 	function flatten() {
