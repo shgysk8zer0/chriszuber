@@ -8,7 +8,6 @@
 		<input type="text" name="username" id="username" value="root" placeholder="Default MySQL user" required/><br />
 		<label for="password">Password</label>
 		<input type="password" name="password" id="password" placeholder="Default user's password"/>
-		<input type="hidden" name="nonce" value="<?=$session->nonce?>" required readonly/>
 		<button type="submit" title="Submit Form" data-icon="."></button>
 		<button type="reset" data-icon="V" title="Clear Form"></button>
 		<details>

@@ -20,7 +20,6 @@
 			<option value="<?=$lvl?>"><?=$lvl?></option>
 			<?php endforeach?>
 		</select>
-		<input type="hidden" name="nonce" value="<?=$_SESSION['nonce']?>" required readonly/>
 		<button type="submit" data-icon="L"></button>
 		<button type="reset" data-icon="V" title="Clear Form"></button>
 	</fieldset>

@@ -10,7 +10,6 @@
 		<input type="text" name="user" id="user" value="<?=end(explode('/', BASE))?>" autofocus required/><br />
 		<label for="password" data-icon="x">Password</label>
 		<input type="password" name="password" id="password" pattern="<?=pattern('password')?>" required/><br />
-		<input type="hidden" name="nonce" value="<?=$session->nonce?>" required readonly/>
 		<button type="submit" title="Submit Form" data-icon="."></button>
 		<button type="reset" data-icon="V" title="Clear Form"></button>
 		<details>
