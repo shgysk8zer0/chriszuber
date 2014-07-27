@@ -11,7 +11,7 @@
 }
 @media screen and (max-width:499px){
 	:root{
-		font-size:2.5vw;
+		font-size:3vw;
 	}
 }
 :root {
@@ -26,6 +26,8 @@
 	--header-bg: linear-gradient(rgba(40,40,40, 1), rgba(80,80,80,0.97));
 	--progress-grad: linear-gradient(lime, green, lime);
 	--icon-font: 'Web Symbols';
+	--default-cursor: url(../images/cursors/Arch-black.svgz), auto;
+	--pointer: url('../images/cursors/3D_hand_cursor.svgz'), pointer;
 	background-image:url(../images/backgrounds/red-curls.svgz);
 	background-size:cover;
 	background-position:center;
@@ -33,7 +35,7 @@
 	background-attachment:fixed;
 	color: var(--default-color);
 	text-shadow:var(--shadow);
-	cursor: url(../images/cursors/Arch.svgz), auto;
+	cursor: var(--default-cursor);
 }
 ::-moz-selection{
 	background-color: var(--primary-color);
@@ -186,6 +188,9 @@ img {
 	max-width: 100%;
 	height: auto;
 }
+a, button, button, input[type=submit], input[type=reset], input[type=image], details > summary {
+	cursor: var(--pointer);
+}
 .no-details details[open] > summary::before {
 	font-family: var(--icon-font);
 	content: '['
@@ -286,6 +291,9 @@ article section {
 	font-size: 1.1rem;
 	color: var(--alt-color);
 }
+article header + :first-of-type {
+	margin-top: 1rem;
+}
 article > :not(footer) img {
 	border: 0.2rem outset var(--primary-color);
 	box-shadow: 0.3rem 0.3rem 0.5rem var(--shadow);
@@ -300,6 +308,19 @@ aside h3 {
 	padding: 0.2rem;
 	border-bottom: 0.2rem solid var(--primary-color);
 	border-radius:1rem 1rem 0 0;
+}
+aside li {
+	margin-bottom: 0.5rem;
+	list-style: square outside;
+	font-size: 1.2rem;
+}
+aside li a {
+	transition: all 300ms;
+}
+aside li a:hover {
+	color: var(--primary-color);
+	padding-left: 1.2rem;
+	text-shadow: -0.4rem 0rem 0.2rem var(--highlight-color);
 }
 aside > :not(h3) {
 	color: #333;

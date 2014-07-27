@@ -14,7 +14,7 @@
 
 @media screen and (max-width:499px) {
   :root {
-    font-size: 2.5vw;
+    font-size: 3vw;
   }
 }
 
@@ -27,7 +27,7 @@
   background-attachment: fixed;
   color: rgba(252, 252, 252, 1);
   text-shadow: rgba(20,20,20,0.9);
-  cursor: url(../images/cursors/Arch.svgz), auto;
+  cursor: url(../images/cursors/Arch-black.svgz), auto;
 }
 
 ::-moz-selection {
@@ -247,6 +247,16 @@ img {
   height: auto;
 }
 
+a,
+button,
+button,
+input[type=submit],
+input[type=reset],
+input[type=image],
+details > summary {
+  cursor: url('../images/cursors/3D_hand_cursor.svgz'), pointer;
+}
+
 .no-details details[open] > summary::before {
   font-family: 'Web Symbols';
   content: '[';
@@ -300,6 +310,11 @@ progress[value]::-webkit-progress-value {
 progress[value]::-moz-progress-bar {
   background-image: linear-gradient(lime, green, lime);
   background-color: black;
+}
+
+[data-close]::after {
+  font-family: 'Web Symbols';
+  content: '\'';
 }
 
 body > header h1::before {
@@ -397,6 +412,10 @@ article section {
   color: rgba(41, 41, 41, 1);
 }
 
+article header + :first-of-type {
+  margin-top: 1rem;
+}
+
 article > :not(footer) img {
   border: 0.2rem outset rgba(237, 24, 24, 1);
   -webkit-box-shadow: 0.3rem 0.3rem 0.5rem rgba(20,20,20,0.9);
@@ -421,6 +440,23 @@ aside h3 {
   padding: 0.2rem;
   border-bottom: 0.2rem solid rgba(237, 24, 24, 1);
   border-radius: 1rem 1rem 0 0;
+}
+
+aside li {
+  margin-bottom: 0.5rem;
+  list-style: square outside;
+  font-size: 1.2rem;
+}
+
+aside li a {
+  -webkit-transition: all 300ms;
+  transition: all 300ms;
+}
+
+aside li a:hover {
+  color: rgba(237, 24, 24, 1);
+  padding-left: 1.2rem;
+  text-shadow: -0.4rem 0rem 0.2rem rgba(129, 23, 23, 1);
 }
 
 aside > :not(h3) {
