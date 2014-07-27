@@ -7,6 +7,14 @@ if (!window.Element) {
 	Element = function () {
 	};
 }
+if(!('show' in Element.prototype)) {
+	Element.prototype.show = function() {
+		this.setAttribute('open', '');
+	}
+	Element.prototype.close = function() {
+		this.removeAttribute('open');
+	}
+}
 if (!Element.prototype.matches) {
 	/*Check if Element matches a given CSS selector*/
 	Element.prototype.matches = function (sel) {
