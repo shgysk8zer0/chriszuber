@@ -1,5 +1,5 @@
 <?php
-	$posts = get_recent_posts();
+	$posts = get_recent_posts(10);
 	$template = template::load('recent_posts');
 ?>
 <aside class="sidebar" rel="sidebar">
