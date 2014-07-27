@@ -226,6 +226,10 @@ progress[value]::-moz-progress-bar {
 	background-image: var(--progress-grad);
 	background-color: black;
 }
+[data-close]::after {
+	font-family: 'Web Symbols';
+	content: '\'';
+}
 body > header h1::before {
 	content: '';
 	display: inline-block;
