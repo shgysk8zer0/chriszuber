@@ -6,7 +6,7 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 		head = $('head');
 		cache = new cache();
 		html.removeClass('no-js').addClass('js');
-	['svg', 'audio', 'video', 'canvas', 'menuitem', 'details', 'dataset', 'classList', 'connectivity', 'visibility', 'notifications', 'ApplicationCache', 'indexedDB', 'localStorage', 'sessionStorage', 'CSSgradients', 'transitions', 'animations',  'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll', 'workers', 'promises', 'ajax', 'FormData'].forEach(function(support){
+	['svg', 'audio', 'video', 'canvas', 'menuitem', 'details', 'dialog', 'dataset', 'classList', 'connectivity', 'visibility', 'notifications', 'ApplicationCache', 'indexedDB', 'localStorage', 'sessionStorage', 'CSSgradients', 'transitions', 'animations',  'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll', 'workers', 'promises', 'ajax', 'FormData'].forEach(function(support){
 		(supports(support)) ? html.addClass(support) : html.addClass('no-' + support);
 	});
 	(supports('connectivity') && !navigator.onLine) ? html.addClass('offline') : html.addClass('online');
@@ -214,6 +214,16 @@ NodeList.prototype.bootstrap = function() {
 					clearInterval(retain);
 				});
 			}
+		});
+		node.query('[data-close]').forEach(function(el) {
+			el.addEventListener('click', function() {
+				document.querySelector(this.data('close')).close();
+			});
+		});
+		node.query('[data-show]').forEach(function(el) {
+			el.addEventListener('click', function() {
+				document.querySelector(this.data('show')).show();
+			});
 		});
 		node.query('[data-dropzone]') .forEach(function (el) {
 			document.querySelector(el.data('dropzone')).DnD(el);
