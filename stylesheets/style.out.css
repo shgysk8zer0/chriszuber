@@ -334,11 +334,15 @@ dialog {
   border-radius: 1rem;
   -webkit-box-shadow: 1rem 1rem 1rem black;
   box-shadow: 1rem 1rem 1rem black;
+  z-index: 9;
 }
 
 @supports (transition:transform) {
   dialog:not([open]) {
     display: block;
+    -webkit-transform-origin: top left;
+    -ms-transform-origin: top left;
+    transform-origin: top left;
     -webkit-transform: scale(0);
     -ms-transform: scale(0);
     transform: scale(0);
