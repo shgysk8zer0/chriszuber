@@ -5,5 +5,5 @@
 		<img src="<?=URL?>/images/<?=$link->icon?>" alt="<?=$link->alt?>"/>
 	</a>
 	<?php endforeach?>
-	<span title="Copyleft" class="copyleft" data-show="#copyleftDialog"><?=date('Y')?></span>
+	<span title="Copyleft" class="copyleft" data-show="#copyleftDialog"></span>
 </footer>
