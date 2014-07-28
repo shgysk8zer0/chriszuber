@@ -220,11 +220,6 @@ NodeList.prototype.bootstrap = function() {
 				});
 			}
 		});
-		node.query('dialog form[name]').forEach(function(form) {
-			form.addEventListener('submit', function() {
-				this.ancestor('dialog').close();
-			});
-		})
 		node.query('[data-close]').forEach(function(el) {
 			el.addEventListener('click', function() {
 				document.querySelector(this.data('close')).close();
