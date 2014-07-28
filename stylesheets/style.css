@@ -116,7 +116,7 @@ main a::after {
 a[rel=tag]::after {
 	content: '  ,';
 }
-a[target="_blank"]::after {
+main a[target="_blank"]::after {
 	content:'  D';
 }
 [download]::after {
