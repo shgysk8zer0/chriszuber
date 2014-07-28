@@ -113,9 +113,7 @@
 							'body > main' => [
 								'contextmenu' => 'admin_menu'
 							]
-						])->remove(
-							'main > :not(aside)'
-						)->notify(
+						])->notify(
 							'Login successful',
 							"Welcome back {$login->user}",
 							'images/icons/people.png'
@@ -738,9 +736,7 @@
 					'body > main' => [
 						'contextmenu' => false
 					]
-				])->remove(
-					'main > :not(aside)'
-				)->sessionStorage(
+				])->sessionStorage(
 					'nonce',
 					$session->nonce
 				)->notify(
