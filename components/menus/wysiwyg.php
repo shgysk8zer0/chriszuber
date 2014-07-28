@@ -11,8 +11,8 @@
 		<menuitem label="Subscript" data-editor-command="subscript"></menuitem>
 	</menu>
 	<menu label="Font">
-		<menuitem label="Big" data-editor-command="increasefontsize"></menuitem>
-		<menuitem label="Small" data-editor-command="decreasefontsize"></menuitem>
+		<menuitem label="Larger" data-editor-command="increasefontsize"></menuitem>
+		<menuitem label="Smaller" data-editor-command="decreasefontsize"></menuitem>
 		<menu label="Font Family">
 			<menuitem label="Alice" data-editor-command="fontname" data-editor-value="Alice"></menuitem>
 			<menuitem label="Web Symbols" data-editor-command="fontname" data-editor-value="Web Symbols"></menuitem>
@@ -51,7 +51,8 @@
 			<menuitem label="Unordered" data-editor-command="insertunorderedlist"></menuitem>
 		</menu>
 		<menuitem label="Link" data-editor-command="createlink" data-prompt="Enter link location"></menuitem>
-		<menuitem label="Image" data-editor-command="insertimage" data-prompt="Enter image location"></menuitem>
+		<menuitem label="Image" data-editor-command="insertimage" data-prompt="Enter image location"></menuitem>=
+		<menuitem label="Custom HTML" data-editor-command="inserthtml" data-prompt="Enter the HTML to insert."></menuitem>
 	</menu>
 	<menu label="History">
 		<menuitem label="Undo" data-editor-command="undo"></menuitem>
