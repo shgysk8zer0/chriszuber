@@ -235,6 +235,15 @@ progress[value]::-moz-progress-bar {
 	font-family: 'Web Symbols';
 	content: '\'';
 }
+code {
+	border: 1px dashed dimgray;
+	background-color: rgba(220,220,220,0.8);
+}
+pre > code {
+	display: block;
+}
+code {
+}
 body > header h1::before {
 	content: '';
 	display: inline-block;
