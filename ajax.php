@@ -112,6 +112,9 @@
 							],
 							'body > main' => [
 								'contextmenu' => 'admin_menu'
+							],
+							'#loginDialog' => [
+								'open' => false
 							]
 						])->notify(
 							'Login successful',
