@@ -122,12 +122,13 @@ main a[target="_blank"]::after {
 [download]::after {
 	content:'  A';
 }
-button[type=button], [type=submit], [type=reset] {
-	border: 0.2rem outset var(--primary-color);
+button {
 	min-width: 2rem;
 	padding: 0.2rem;
 	background-image: linear-gradient(var(--primary-color), var(--highlight-color));
 	font-family: inherit;
+	color: var(--default-color);
+	border: 0.2rem outset var(--primary-color);
 }
 select, input:not([type=checkbox]):not([type=submit]):not([type=reset]):not([type=file]) {
 	background-color: transparent;
@@ -188,7 +189,7 @@ img {
 	max-width: 100%;
 	height: auto;
 }
-a, button, button, input[type=submit], input[type=reset], input[type=image], details > summary {
+a, button, button, input[type=submit], input[type=reset], input[type=image], details > summary , [data-show], [data-close]{
 	cursor: var(--pointer);
 }
 .no-details details[open] > summary::before {
@@ -243,6 +244,23 @@ code {
 }
 pre > code {
 	display: block;
+}
+dialog {
+	border: 0.4rem outset var(--primary-color);
+	border-radius: 1rem;
+	box-shadow: 1rem 1rem 1rem black;
+	z-index: 9;
+}
+@supports (transition:transform) {
+	dialog:not([open]) {
+		display: block;
+		transform-origin: top left;
+		transform: scale(0);
+		transition: transform 800ms;
+	}
+	dialog[open] {
+			transform: scale(1);
+	}
 }
 body > header h1::before {
 	content: '';

@@ -159,16 +159,15 @@ main a[target="_blank"]::after {
   content: '  A';
 }
 
-button[type=button],
-[type=submit],
-[type=reset] {
-  border: 0.2rem outset rgba(237, 24, 24, 1);
+button {
   min-width: 2rem;
   padding: 0.2rem;
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(237, 24, 24, 1)), to(rgba(129, 23, 23, 1)));
   background-image: -webkit-linear-gradient(rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
   background-image: linear-gradient(rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
   font-family: inherit;
+  color: rgba(252, 252, 252, 1);
+  border: 0.2rem outset rgba(237, 24, 24, 1);
 }
 
 select,
@@ -253,7 +252,9 @@ button,
 input[type=submit],
 input[type=reset],
 input[type=image],
-details > summary {
+details > summary,
+[data-show],
+[data-close] {
   cursor: url('../images/cursors/3D_hand_cursor.svgz'), pointer;
 }
 
@@ -326,6 +327,30 @@ code {
 
 pre > code {
   display: block;
+}
+
+dialog {
+  border: 0.4rem outset rgba(237, 24, 24, 1);
+  border-radius: 1rem;
+  -webkit-box-shadow: 1rem 1rem 1rem black;
+  box-shadow: 1rem 1rem 1rem black;
+}
+
+@supports (transition:transform) {
+  dialog:not([open]) {
+    display: block;
+    -webkit-transform: scale(0);
+    -ms-transform: scale(0);
+    transform: scale(0);
+    -webkit-transition: -webkit-transform 800ms;
+    transition: transform 800ms;
+  }
+
+  dialog[open] {
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+  }
 }
 
 body > header h1::before {
