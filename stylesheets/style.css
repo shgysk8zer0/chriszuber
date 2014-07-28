@@ -392,7 +392,7 @@ a.logo svg, a.logo img {
 	transition:all 1s;
 }
 a.logo svg:hover, a.logo img:hover {
-	transform: scale(2)rotateZ(360deg)
+	transform: scale(2)rotateZ(360deg);
 }
 body > progress {
 	position: fixed;
@@ -408,4 +408,13 @@ body > progress {
 	font-stretch: none;
 	content: ' 'attr(data-icon)' ';
 	vertical-align: baseline;
+}
+.copyleft {
+	color: var(--alt-color);
+	font-size: 3rem;
+}
+.copyleft::before {
+	content: '©';
+	display: inline-block;
+	transform: rotateY(180deg);
 }

@@ -595,3 +595,16 @@ body > progress {
   content: ' 'attr(data-icon)' ';
   vertical-align: baseline;
 }
+
+.copyleft {
+  color: rgba(41, 41, 41, 1);
+  font-size: 3rem;
+}
+
+.copyleft::before {
+  content: '©';
+  display: inline-block;
+  -webkit-transform: rotateY(180deg);
+  -ms-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+}
