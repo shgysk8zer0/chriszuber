@@ -236,13 +236,13 @@ progress[value]::-moz-progress-bar {
 	content: '\'';
 }
 code {
-	border: 1px dashed dimgray;
-	background-color: rgba(220,220,220,0.8);
+	font-size: 0.9rem;
+	padding: 0.1rem;
+	background-color: hsl(0, 0%, 93%);
+	border-radius: 0.2rem;
 }
 pre > code {
 	display: block;
-}
-code {
 }
 body > header h1::before {
 	content: '';
