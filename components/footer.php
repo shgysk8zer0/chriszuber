@@ -4,5 +4,5 @@
 			<img src="<?=URL?>/images/<?=$link->icon?>" alt="<?=$link->alt?>"/>
 		</a>
 		<?php endforeach?>
-		<a href="https://www.gnu.org/copyleft/" class="copyleft" title="Copyleft"><?=date('Y')?></a>
+		<a href="https://www.gnu.org/copyleft/" target="_blank" title="Copyleft" class="copyleft"><?=date('Y')?></a>
 	</footer>
