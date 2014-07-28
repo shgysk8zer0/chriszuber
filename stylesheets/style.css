@@ -368,21 +368,21 @@ form[name="new_post"] textarea {
 :root.offline {
 	pointer-events: none;
 }
-a[rel=license]>img[src$=svgz] {
-	width: calc(30rem / 5);
-	height: calc(13rem / 5);
+img[src$="CreativeCommons.svgz"] {
+	width: 6rem;
+	height: 2.6rem;
 }
 a.logo {
 	display:inline-block;
 	width:3rem;
 	overflow:visible;
 }
-a.logo svg {
+a.logo svg, a.logo img {
 	overflow: visible;
 	transform-origin: center;
 	transition:all 1s;
 }
-a.logo svg:hover {
+a.logo svg:hover, a.logo img:hover {
 	transform: scale(2)rotateZ(360deg)
 }
 body > progress {

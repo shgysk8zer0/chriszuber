@@ -540,7 +540,7 @@ form[name="new_post"] textarea {
   pointer-events: none;
 }
 
-a[rel=license]>img[src$=svgz] {
+img[src$="CreativeCommons.svgz"] {
   width: 6rem;
   height: 2.6rem;
 }
@@ -551,7 +551,8 @@ a.logo {
   overflow: visible;
 }
 
-a.logo svg {
+a.logo svg,
+a.logo img {
   overflow: visible;
   -webkit-transform-origin: center;
   -ms-transform-origin: center;
@@ -560,7 +561,8 @@ a.logo svg {
   transition: all 1s;
 }
 
-a.logo svg:hover {
+a.logo svg:hover,
+a.logo img:hover {
   -webkit-transform: scale(2)rotateZ(360deg);
   -ms-transform: scale(2)rotateZ(360deg);
   transform: scale(2)rotateZ(360deg);
