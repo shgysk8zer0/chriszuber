@@ -52,7 +52,7 @@
 		</menu>
 		<menuitem label="Link" data-editor-command="createlink" data-prompt="Enter link location"></menuitem>
 		<menuitem label="Image" data-editor-command="insertimage" data-prompt="Enter image location"></menuitem>
-		<menuitem label="Code" data-editor-command="inserthtml" data-editor-value="<code>&nbsp;&nbsp;&nbsp;</code>"></menuitem>
+		<menuitem label="Code" data-editor-command="inserthtml" data-editor-value="<code>&nbsp;&nbsp;</code>"></menuitem>
 		<menuitem label="Custom HTML" data-editor-command="inserthtml" data-prompt="Enter the HTML to insert."></menuitem>
 	</menu>
 	<menu label="History">
