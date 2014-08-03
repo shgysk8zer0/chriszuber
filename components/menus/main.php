@@ -13,7 +13,7 @@
 		<menuitem label="Login" icon="images/icons/people.svgz" data-show-modal="#loginDialog" disabled></menuitem>
 		<menuitem label="Logout" icon="images/icons/people.svgz" data-request="action=logout"></menuitem>
 	<?php else:?>
-		<menuitem label="Login" icon="images/icons/people.svgz" data-show="#loginDialog"></menuitem>
+		<menuitem label="Login" icon="images/icons/people.svgz" data-show-modal="#loginDialog"></menuitem>
 		<menuitem label="Logout" icon="images/icons/people.svgz" data-request="action=logout" disabled></menuitem>
 	<?php endif?>
 	</menu>
