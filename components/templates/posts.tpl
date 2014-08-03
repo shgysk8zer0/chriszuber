@@ -19,5 +19,4 @@
 						</div>
 				</details>
 			</footer>
-			%COMMENTS%
 		</article>
