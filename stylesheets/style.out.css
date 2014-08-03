@@ -247,8 +247,7 @@ img {
 }
 
 a,
-button,
-button,
+button:not(:disabled),
 input[type=submit],
 input[type=reset],
 input[type=image],
@@ -335,6 +334,15 @@ dialog {
   -webkit-box-shadow: 1rem 1rem 1rem black;
   box-shadow: 1rem 1rem 1rem black;
   z-index: 9;
+}
+
+dialog[open]::backdrop {
+  background-color: rgba(0,0,0,0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }
 
 @supports (transition:transform) {
