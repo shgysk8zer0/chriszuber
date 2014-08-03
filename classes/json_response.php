@@ -461,6 +461,84 @@
 			return $this;
 		}
 
+		public function show($sel) {
+			/**
+			 * Causes handleJSON to run show() on all $sel.
+			 *
+			 * For <deails>, this will add the 'open' attribute.
+			 * For <dialog> this will run the native show() method, if
+			 * available. Otherwise, just adds the 'open' attribute there as well.
+			 *
+			 * @param string $sel (CSS selector)
+			 * @example $resp->show('dialog')
+			 */
+
+			$this->response['show'] = $sel;
+			return $this;
+		}
+
+		public function close($sel) {
+			/**
+			 * Inverse of show() method. This removes
+			 * the 'open' attribute or runs the native close() method
+			 * for <dialog>
+			 *
+			 * @param string $sel (CSS selector)
+			 * @example $resp->close('dialog,details')
+			 */
+
+			$this->response['close'] = $sel;
+			return $this;
+		}
+
+		public function enable($sel) {
+			/**
+			 * Removes the 'disabled' attribute on all nodes matching $sel
+			 *
+			 * @param string $sel (CSS selector)
+			 * @example $resp->enable(:disabled)
+			 */
+
+			return $this->attributes(
+				$sel,
+				'disabled',
+				false
+			);
+			return $this;
+		}
+
+		public function disable($sel) {
+			/**
+			 * Sets the 'disabled' attribute on all nodes
+			 * matching $sel.
+			 *
+			 * @param string $sel (CSS selector)
+			 * @example $resp->disable('button, menuitem, fieldset')
+			 */
+
+			return $this->attributes(
+				$sel,
+				'disabled',
+				true
+			);
+		}
+
+		public function hidden($sel, $hide = true) {
+			/**
+			 * Sets/removes the hidden attribute on all nodes matching $sel
+			 *
+			 * @param string $sel (CSS selector)
+			 * @param boolean $hide (true will add hidden, false will remove it)
+			 * @example $resp->hidden('[hidden]', false)
+			 */
+
+			return $this->attributes(
+				$sel,
+				'hidden',
+				$hide
+			);
+		}
+
 		/*public function template($template) {
 			$this->response['template'] = $template;
 		}*/
@@ -472,10 +550,10 @@
 			 */
 
 			if($format) {
-				echo json_encode($this->response);
+				return json_encode($this->response);
 			}
 			else {
-				debug($this);
+				return print_r($this, true);
 			}
 		}
 

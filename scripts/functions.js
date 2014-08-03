@@ -11,6 +11,9 @@ if(!('show' in Element.prototype)) {
 	Element.prototype.show = function() {
 		this.setAttribute('open', '');
 	}
+	Element.prototype.showModal = function() {
+		this.show();
+	}
 	Element.prototype.close = function() {
 		this.removeAttribute('open');
 	}
@@ -620,6 +623,16 @@ function handleJSON(json){
 			specs.push(spec + '=' + json.open.specs[spec]);
 		});
 		window.open(json.open.url, '_blank', specs.join(','), json.open.replace);
+	}
+	if(json.show) {
+		document.querySelectorAll(json.show).forEach(function(el) {
+			el.show();
+		});
+	}
+	if(json.close) {
+		document.querySelectorAll(json.close).forEach(function(el) {
+			el.close();
+		});
 	}
 	if(json.triggerEvent) {
 		console.log(json.triggerEvent);
