@@ -15,8 +15,8 @@ if(!('show' in Element.prototype)) {
 		var backdrop = document.createElement('div');
 		backdrop.classList.add('backdrop');
 		this.after(backdrop);
-		this.show();
 		this.classList.add('modal');
+		this.show();
 	}
 	Element.prototype.close = function() {
 		this.removeAttribute('open');

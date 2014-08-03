@@ -226,14 +226,19 @@ NodeList.prototype.bootstrap = function() {
 				});
 			}
 		});
+		node.query('[data-show]').forEach(function(el) {
+			el.addEventListener('click', function() {
+				document.querySelector(this.data('show')).show();
+			});
+		});
+		node.query('[data-show-modal]').forEach(function(el) {
+			el.addEventListener('click', function() {
+				document.querySelector(this.data('show-modal')).showModal();
+			});
+		});
 		node.query('[data-close]').forEach(function(el) {
 			el.addEventListener('click', function() {
 				document.querySelector(this.data('close')).close();
-			});
-		});
-		node.query('[data-show]').forEach(function(el) {
-			el.addEventListener('click', function() {
-				document.querySelector(this.data('show')).showModal();
 			});
 		});
 		node.query('fieldset button[type=button].toggle').forEach(function(toggle) {

@@ -10,7 +10,7 @@
 	</menu>
 	<menu label="Account">
 	<?php if($login->logged_in):?>
-		<menuitem label="Login" icon="images/icons/people.svgz" data-show="#loginDialog" disabled></menuitem>
+		<menuitem label="Login" icon="images/icons/people.svgz" data-show-modal="#loginDialog" disabled></menuitem>
 		<menuitem label="Logout" icon="images/icons/people.svgz" data-request="action=logout"></menuitem>
 	<?php else:?>
 		<menuitem label="Login" icon="images/icons/people.svgz" data-show="#loginDialog"></menuitem>
