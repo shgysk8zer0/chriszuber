@@ -169,6 +169,12 @@ NodeList.prototype.bootstrap = function() {
 				}
 			});
 		}
+		node.query('[autofocus]').forEach(function(input) {
+			input.focus();
+		});
+		node.query('script:not([src])').forEach(function(script) {
+			eval(script.textContent);
+		});
 		node.query('a[href^="' + document.location.origin + '"]:not([target="_blank"]):not([download])').forEach(function(a) {
 			a.addEventListener('click', function(event) {
 				event.preventDefault();
@@ -230,8 +236,56 @@ NodeList.prototype.bootstrap = function() {
 				document.querySelector(this.data('show')).show();
 			});
 		});
+		node.query('fieldset button[type=button].toggle').forEach(function(toggle) {
+			toggle.addEventListener('click', function() {
+				this.ancestor('fieldset').querySelectorAll('input[type=checkbox]').forEach(function(checkbox) {
+					(checkbox.checked) ? checkbox.checked = false : checkbox.checked = true;
+				});
+			});
+		});
+		node.query('[data-request]').forEach(function(el) {
+			el.addEventListener('click', function() {
+				let request = this.data('request').split('&');
+				if(this.data('value-from')) {
+					this.data('value-from').split(',').forEach(function(name) {
+						request.push(encodeURIComponent(name.trim()) + '=' + encodeURIComponent(document.querySelector('[name="' +name.trim() + '"]').value));
+					});
+				}
+				if(this.data('prompt')) {
+					request.push('prompt_value=' + encodeURIComponent(prompt(this.data('prompt'))));
+				}
+				if(!this.data('confirm') || confirm(this.data('confirm'))){
+					ajax({
+						url: this.data('url')|| document.baseURI,
+						request: request.join('&'),
+						cache: el.data('cache')
+					}).then(
+						JSON.parse,
+						console.error
+					).then(
+						handleJSON,
+						console.error
+					);
+				}
+			});
+		});
+		node.query('[data-must-match]').forEach(function(match) {
+			match.pattern = new RegExp(document.querySelector('[name="' + match.data('must-match') + '"]').value).escape();
+			document.querySelector('[name="' + match.data('must-match') + '"]').addEventListener('change', function() {
+				document.querySelector('[data-must-match="' +this.name + '"]').pattern = new RegExp(this.value).escape();
+			});
+		});
 		node.query('[data-dropzone]') .forEach(function (el) {
 			document.querySelector(el.data('dropzone')).DnD(el);
+		});
+		node.query('input[data-equal-input]').forEach(function(input) {
+			input.addEventListener('input', function() {
+				document.querySelectorAll('input[data-equal-input="' + this.data('equal-input') + '"]').forEach(function(other) {
+					if(other !== input) {
+						other.value = input.value;
+					}
+				});
+			});
 		});
 		node.query('#wysiwyg_menu menuitem[data-editor-command]').forEach(function(item) {
 			item.addEventListener('click', function() {
@@ -244,9 +298,6 @@ NodeList.prototype.bootstrap = function() {
 				}
 				document.execCommand(this.data('editor-command'), null, arg);
 			})
-		});
-		node.query('script:not([src])').forEach(function(script) {
-			eval(script.textContent);
 		});
 		node.query('[data-link]').forEach(function(link) {
 			link.addEventListener('click', function(){
@@ -308,9 +359,6 @@ NodeList.prototype.bootstrap = function() {
 		});
 		node.query('.clock').forEach(function(el) {
 			el.worker_clock();
-		});
-		node.query('[autofocus]').forEach(function(input) {
-			input.focus();
 		});
 		node.query('[data-encode]').forEach(function(el) {
 			ajax({
