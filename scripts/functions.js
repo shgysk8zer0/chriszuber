@@ -12,10 +12,18 @@ if(!('show' in Element.prototype)) {
 		this.setAttribute('open', '');
 	}
 	Element.prototype.showModal = function() {
+		var backdrop = document.createElement('div');
+		backdrop.classList.add('backdrop');
+		this.after(backdrop);
 		this.show();
+		this.classList.add('modal');
 	}
 	Element.prototype.close = function() {
 		this.removeAttribute('open');
+		this.classList.remove('modal');
+		if(this.nextElementSibling.classList.contains('backdrop')) {
+			this.nextElementSibling.delete();
+		}
 	}
 }
 if (!Element.prototype.matches) {
