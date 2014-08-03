@@ -698,7 +698,10 @@
 
   dialog.modal {
     position: fixed;
-    top: 40vh;
+    top: 10vh;
+    max-height: 85vh;
+    max-width: 100vw;
+    overflow: auto;
   }
 
   dialog.modal + .backdrop {
