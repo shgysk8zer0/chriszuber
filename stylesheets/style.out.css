@@ -545,10 +545,6 @@ body > footer {
 }
 
 @media screen and (max-width:999px) {
-  header nav {
-    display: none;
-  }
-
   main {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;

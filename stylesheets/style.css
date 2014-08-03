@@ -385,9 +385,6 @@ body > footer {
 	box-shadow: 0 -1rem 2rem var(--shadow) inset;
 }
 @media screen and (max-width:999px) {
-	header nav {
-		display: none;
-	}
 	main {
 		flex-direction: column;
 		padding: 1rem;
