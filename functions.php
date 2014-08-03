@@ -209,18 +209,6 @@
 		return ob_get_clean();
 	}
 
-	function load_file() {
-		/**
-		 * @depreciated
-		 */
-
-		$resp = '';
-		foreach(flatten(func_get_args()) as $file) {
-			$resp .= file_get_content(BASE . "components/{$file}");
-		};
-		return $resp;
-	}
-
 	function load_class($class) {
 		/**
 		 * Loads a class script from wherever found in include_path
@@ -236,15 +224,6 @@
 		 */
 
 		require_once "{$class}.php";
-	}
-
-	function regexp($str) {								//Make regular expression from string
-		/**
-		 * @depreciated
-		 * @param string $str
-		 * @return string in regular expression format /string\.\.\./
-		 */
-		return '/' . preg_quote($str, '/') . '/';
 	}
 
 	function strip_enclosing_tag($html) {
@@ -815,54 +794,6 @@
 		echo "</ul>";
 	}
 
-	function array_to_table($table) {					// Converts an associative array to a table
-		/**
-		 * @params array $tabel
-		 * @return void
-		 */
-		//[TODO] Use array keys instead of looping through and grabbing keys
-		$headers = table_headers($table);
-		echo "<table border=\"1\">";
-			echo "<thead>";
-			foreach($headers as $header) echo "<th>{$header}</th>";
-			echo "</thead>\n<tbody>";
-			foreach($table as $row) {
-				echo "<tr>";
-				foreach($row as $cell) {
-					echo "<td>{$cell}</td>";
-				}
-				echo "</tr>";
-			}
-		echo "</tbody>\n</table>";
-	}
-
-	function table_headers($table) {
-		/**
-		 * @depreciated
-		 * @params array $table
-		 * @return array
-		 */
-
-		$headers = array();
-		$row = $table[0];
-		foreach($row as $key => $value) {
-			array_push($headers, $key);
-		}
-		return $headers;
-	}
-
-	function clean($string, $rep=null) {				//Strips dangerous characters from string.
-		/**
-		 * @depreciated
-		 * @params string $string[, string $rep]
-		 * @return string
-		 */
-
-		if($rep === null) $rep = array("<",">","/",";","\\","&","'","\"","{","}","[","]","(",")");
-		else $rep = explode(" ",$rep);
-		return str_replace($rep,"",$string);
-	}
-
 	function curl($request, $method = 'get') {
 		/**
 		 * Returns http content from request.
@@ -919,21 +850,6 @@
 		 */
 
 		return preg_replace(array('/\t/', '/\n/', '/\r\n/'), array(), trim($src));
-	}
-
-	function strip_path() {
-		/**
-		 * For use with server redirects. Gets just redirect path as array
-		 *
-		 * @depreciated
-		 * @params void
-		 * @return array
-		 */
-
-		$path = explode('/',$_SERVER['REQUEST_URI']);
-		$_PASSED = array();
-		for($n = 1;$n < count($path); $n++) $_PASSED[$path[$n]] = $path[++$n];
-		return $_PASSED;
 	}
 
 	function pattern($type = null) {
@@ -1000,30 +916,6 @@
 		return $pattern;
 	}
 
-	function today($timestamp = null) {							//Returns data as 'Y-m-d'. Defaults to current timestamp
-		/**
-		 * @depreciated
-		 * @param [int $timestamp]
-		 * @return string
-		 */
-
-		if(!$timestamp) $timestamp = time();
-		$date = date('Y-m-d', $timestamp);
-		return $date;
-	}
-
-	function long_date($timestamp = null) {						//Returns long-date format for timestamp
-		/**
-		 * @depreciated
-		 * @param [int $timestamp]
-		 * @return string
-		 */
-
-		if(!$timestamp) $timestamp = time();
-		$date = date('l, F jS Y, g:i A', $timestamp);
-		return $date;
-	}
-
 	function utf($string) {
 		/**
 		 * Concerts characters to UTF-8. Replaces special chars.
@@ -1034,52 +926,5 @@
 		 */
 
 		return htmlentities($string, ENT_QUOTES | ENT_HTML5,"UTF-8");
-	}
-
-	function inline_min($file = null) {
-		/**
-		 * Strips tabs and new lines.
-		 *
-		 * @depreciated
-		 * @params string $file
-		 * @return string
-		 */
-		if(!is_null($file)) return preg_replace("/\t|\n/","", file_get_contents(BASE . "/$file"));
-	}
-
-	function date_taken($filename) {
-		/**
-		 * Get date-taken from photo data
-		 *
-		 * @depreciated
-		 * @params string $filename
-		 * @return string
-		 */
-		$exif_data = exif_read_data ($filename);
-		if (!empty($exif_data['DateTimeOriginal'])) {
-			$timestamp = to_timestamp(substr($exif_data['DateTimeOriginal'], 0, 10), substr($exif_data['DateTimeOriginal'], 11));
-		}
-		else if (!empty($exif_data['DateTime'])) {
-			$timestamp = to_timestamp(substr($exif_data['DateTime'], 0, 10), substr($exif_data['DateTime'], 11));
-		}
-		else $timestamp = filemtime($filename);
-		return $timestamp;
-	}
-
-	function to_timestamp($date, $time="00:00") {
-		/**
-		 * Gets date("Y-m-d") [and time("H:i")] and returns timestamp
-		 *
-		 * @depreciated
-		 * @params string $date[, string $time]
-		 * @return string
-		 */
-		$h = substr($time, 0, 2);
-		$m = substr($time, 3, 2);
-		$y = substr($date, 0, 4);
-		$M = substr($date, 5, 2);
-		$d = substr($date, 8, 2);
-		$timestamp = mktime($h, $m, 0, $M, $d, $y);
-		return $timestamp;
 	}
 ?>
