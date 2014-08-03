@@ -112,11 +112,10 @@
 							],
 							'body > main' => [
 								'contextmenu' => 'admin_menu'
-							],
-							'#loginDialog' => [
-								'open' => false
 							]
-						])->notify(
+						])->close(
+							'#loginDialog'
+						)->notify(
 							'Login successful',
 							"Welcome back {$login->user}",
 							'images/icons/people.png'
