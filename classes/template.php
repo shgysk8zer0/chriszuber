@@ -1,5 +1,5 @@
 <?php
-	class template extends regexp{
+	class template {
 		/**
 		 * @author Chris Zuber <shgysk8zer0@gmail.com>
 		 * @copyright 2014, Chris Zuber
@@ -9,9 +9,9 @@
 		 */
 
 		private static $instance = [];
-		private $path;
+		private $path, $source = '', $replacements = [], $seperator;
 
-		public static function load($tpl) {
+		public static function load($tpl, $seperator = '%') {
 			/**
 			 * Static load function avoids creating multiple instances
 			 * It checks if an instance has been created and returns that or a new instance
@@ -26,12 +26,12 @@
 			 */
 
 			if(!array_key_exists($tpl, self::$instance)) {
-				self::$instance[$tpl] = new self($tpl);
+				self::$instance[$tpl] = new self($tpl, $seperator);
 			}
 			return self::$instance[$tpl];
 		}
 
-		public function __construct($tpl) {
+		public function __construct($tpl, $seperator = '%') {
 			/**
 			 * Reads the template specified by $tpl
 			 * Reads the file from BASE . "/components/templates/{$tpl}.tpl"
@@ -43,8 +43,9 @@
 			 */
 
 			$this->path = BASE . "/components/templates/{$tpl}.tpl";
+			$this->seperator = $seperator;
 			if(file_exists($this->path)) {
-				parent::__construct(file_get_contents($this->path));
+				$this->source = file_get_contents($this->path);
 			}
 			else {
 				exit("Attempted to load a template that cannot be read. {$tpl} cannot be read");
@@ -66,7 +67,9 @@
 			 * @usage $template->url = $url
 			 */
 
-			$this->replace('%' . strtoupper($replace) . '%')->with($with);
+			$this->replacements[$this->seperator . strtoupper($replace) . $this->seperator] = $with;
+
+			//$this->replace('%' . strtoupper($replace) . '%')->with($with);
 		}
 
 		public function set($arr) {
@@ -80,60 +83,64 @@
 			 */
 
 			foreach($arr as $replace => $with) {
-				$this->replace('%' . trim(strtoupper(preg_replace('/-/', '_', $replace))) . '%')->with($with);
+				$this->replacements[$this->seperator . strtoupper($replace) . $this->seperator] = $with;
 			}
 			return $this;
 		}
-		
+
 		public function __call($name, $arguments) {
 			/**
 			 * The magic method __call for the class.
 			 * Used in cases where no such method exists in
 			 * this class or its parent.
-			 * 
+			 *
 			 * Unlike most __call methods, this is a 'set' only
 			 * method. More specifically, it will set a new replace/
 			 * with in its parent. No set/get prefixes required.
-			 * 
+			 *
 			 * Use with caution, as it can be difficult to determine when
 			 * a it is causing errors because there is another method
 			 * that already exists, and you might not realize that the
 			 * existing method is being called instead of this method.
-			 * 
+			 *
 			 * Can be easily chained to do multiple replacements at once.
-			 * 
+			 *
 			 * @param string $name (placeholder in template, case-insensitive)
 			 * @param array $arguments (arguments passed to method. Only uses first)
 			 * @return self
 			 * @example $template->testing('Works')->another_test('Still Works')
 			 */
-			
-			return $this->replace('%' . strtoupper($name) . '%')->with($arguments[0]);
+
+			$this->replacements[$this->seperator . strtoupper($name) . $this->seperator] = $arguments[0];
+			return $this;
 		}
 
-		public function out($print = false) {
+		public function out($print = false, $clear = true) {
 			/**
-			 * Executes the Regular Expression replacement without updating
+			 * Executes string replacement without updating
 			 * the source (original template content).
 			 *
 			 * Will either return the result (default), or will
 			 * echo it (if $print evaluates as true)
 			 *
 			 * @param boolean $print
+			 * @param boolean $clear
 			 * @return string or void
-			 * @usage $conntent = $template->out([false]);
-			 * or to print the results $template->out(true)
+			 * @usage $conntent = $template->out([false[, true]]);
 			 */
 
-			$html = $this->execute(false);
-			$this->pattern = [];
-			$this->replacement = [];
+			$result = str_replace(array_keys($this->replacements), array_values($this->replacements), $this->source);
+
+			if($clear) {
+				$this->replacements = [];
+			}
+
 			if($print){
-				echo preg_replace('/\%[A-Z_]+%/', null, $html);
+				echo $result;
 				return $this;
 			}
 			else {
-				return preg_replace('/\%[A-Z_]+%/', null, $html);
+				return $result;
 			}
 		}
 	}
