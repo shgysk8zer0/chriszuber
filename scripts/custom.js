@@ -233,7 +233,7 @@ NodeList.prototype.bootstrap = function() {
 		});
 		node.query('[data-show]').forEach(function(el) {
 			el.addEventListener('click', function() {
-				document.querySelector(this.data('show')).show();
+				document.querySelector(this.data('show')).showModal();
 			});
 		});
 		node.query('fieldset button[type=button].toggle').forEach(function(toggle) {
