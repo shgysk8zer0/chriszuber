@@ -365,7 +365,6 @@ NodeList.prototype.bootstrap = function() {
 					keywords = document.querySelector('article header nav'),
 					content = document.querySelector('article section'),
 					submit = document.createElement('button'),
-					nonce = document.createElement('input'),
 					fieldset = document.createElement('fieldset'),
 					legend = document.createElement('legend'),
 					oldTitle = document.createElement('input'),
@@ -384,11 +383,6 @@ NodeList.prototype.bootstrap = function() {
 				description.maxLength = 160;
 				description.placeholder = 'Description will appear in searches. 160 character limit';
 				legend.textContent = 'Update Post';
-				nonce.type = 'hidden';
-				nonce.name = 'nonce';
-				nonce.required = true;
-				nonce.readonly = true;
-				nonce.value = sessionStorage.nonce;
 				submit.type = "Submit";
 				submit.textContent = 'Update Post';
 				title.attr('contenteditable', 'true');
@@ -404,7 +398,7 @@ NodeList.prototype.bootstrap = function() {
 				oldTitle.readonly = true;
 				oldTitle.required = true;
 				oldTitle.value = title.textContent;
-				fieldset.append(legend, article, oldTitle, nonce, description, submit);
+				fieldset.append(legend, article, oldTitle, description, submit);
 				form.appendChild(fieldset);
 				document.querySelector('main').appendChild(form);
 				var retain = setInterval(function(){
