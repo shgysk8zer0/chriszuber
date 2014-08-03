@@ -125,3 +125,9 @@
 	font-weight: 400;
 	src: local('Amarante'),url('../fonts/DroidSansMono.woff')format('woff'),url('../fonts/Amarante.ttf')format('truetype'),url('//themes.googleusercontent.com/static/fonts/amarante/v1/5dF-vhm2PDTNvpxu3h5td_esZW2xOQ-xsNqO47m55DA.woff')format('woff');
 }
+@font-face {
+	font-family: 'Comfortaa';
+	src: url('../fonts/Comfortaa.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
