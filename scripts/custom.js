@@ -248,32 +248,6 @@ NodeList.prototype.bootstrap = function() {
 				});
 			});
 		});
-		node.query('[data-request]').forEach(function(el) {
-			el.addEventListener('click', function() {
-				let request = this.data('request').split('&');
-				if(this.data('value-from')) {
-					this.data('value-from').split(',').forEach(function(name) {
-						request.push(encodeURIComponent(name.trim()) + '=' + encodeURIComponent(document.querySelector('[name="' +name.trim() + '"]').value));
-					});
-				}
-				if(this.data('prompt')) {
-					request.push('prompt_value=' + encodeURIComponent(prompt(this.data('prompt'))));
-				}
-				if(!this.data('confirm') || confirm(this.data('confirm'))){
-					ajax({
-						url: this.data('url')|| document.baseURI,
-						request: request.join('&'),
-						cache: el.data('cache')
-					}).then(
-						JSON.parse,
-						console.error
-					).then(
-						handleJSON,
-						console.error
-					);
-				}
-			});
-		});
 		node.query('[data-must-match]').forEach(function(match) {
 			match.pattern = new RegExp(document.querySelector('[name="' + match.data('must-match') + '"]').value).escape();
 			document.querySelector('[name="' + match.data('must-match') + '"]').addEventListener('change', function() {
