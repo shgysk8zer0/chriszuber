@@ -478,39 +478,58 @@
 			")->bind($content)->execute();
 		}
 
-		public function sql_table($table_name) {
+		public function sql_table($query, $caption = null) {
 			/**
-			 * Prints out a SQL table in HTML formnatting. Used for updating via Ajax
+			 * Converts a MySQL query into an HTML <table>
+			 * complete with thead and tfoot and optional caption
 			 *
-			 * @param string $table_name
-			 * @return string (html table)
+			 * @param string $query (MySQL Query)
+			 * @return string (HTML <table>)
+			 * @example $pdo->sql_table('SELECT * FROM `table`')
 			 */
 
-			$table_data = $this->get_table($table_name);
-			if(!is_array($table_data)) return false;
-			(count($table_data)) ? $cols = array_keys(get_object_vars($table_data[0])) : $cols = $this->table_headers($table_name);
-			$table = "<table border=\"1\" data-nonce=\"{$_SESSION['nonce']}\" data-sql-table=\"{$table_name}\"><caption>{$table_name}</caption>";
-			$thead = '<thead><tr>';
-			foreach($cols as $col) {
-				if($col !== 'id') {
-					$thead .= "<th>{$col}</th>";
+			$results = $this->fetch_array($query);
+
+			if(is_array($results) and count($results)) {
+				$table = '<table>';
+				$thead = '<thead><tr>';
+				$tfoot = '<tfoot><tr>';
+				$tbody = '<tbody>';
+
+				if(isset($caption)) {
+					$table .= "<caption>{$caption}</caption>";
+					unset($caption);
 				}
-			}
-			$thead .= "</tr></thead>";
-			$tbody = "<tbody>";
-			if(count($table_data)) {
-				foreach($table_data as $tr) {
-					$tbody .= "<tr data-sql-id=\"{$tr->id}\">";
-					foreach($tr as $key => $td) {
-						if($key !== 'id') {
-							$tbody .= "<td><input name={$key} type=\"text\" value=\"{$td}\" class=\"sql\">";
-						}
+
+				foreach(array_keys(get_object_vars($results[0])) as $th) {
+					$thead .= "<th>{$th}</th>";
+					$tfoot .= "<th>{$th}</th>";
+				}
+				$thead .= '</tr></thead>';
+				$tfoot .= '</tr></tfoot>';
+				$table .= $thead;
+				$table .= $tfoot;
+				unset($thead);
+				unset($tfoot);
+
+				foreach($results as $result) {
+					$tbody .= '<tr>';
+					foreach(get_object_vars($result) as $td) {
+						$tbody .= "<td>{$td}</td>";
 					}
+					$tbody .= '</tr>';
 				}
+
+				$tbody .= '</tbody>';
+				$table .= $tbody;
+				unset($tbody);
+				$table .= '</table>';
+
+				return $table;
+
 			}
-			$tbody .="</tbody>";
-			$table .= $thead . $tbody .= "</table>";
-			return $table;
+
+			return null;
 		}
 
 		public function update($table, $name, $value, $where) {
