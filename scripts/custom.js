@@ -6,7 +6,7 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 		head = $('head');
 		cache = new cache();
 		html.removeClass('no-js').addClass('js');
-	['svg', 'audio', 'video', 'canvas', 'menuitem', 'details', 'dialog', 'dataset', 'classList', 'connectivity', 'visibility', 'notifications', 'ApplicationCache', 'indexedDB', 'localStorage', 'sessionStorage', 'CSSgradients', 'transitions', 'animations',  'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll', 'workers', 'promises', 'ajax', 'FormData'].forEach(function(support){
+	['svg', 'audio', 'video', 'picture', 'canvas', 'menuitem', 'details', 'dialog', 'dataset', 'classList', 'connectivity', 'visibility', 'notifications', 'ApplicationCache', 'indexedDB', 'localStorage', 'sessionStorage', 'CSSgradients', 'transitions', 'animations',  'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll', 'workers', 'promises', 'ajax', 'FormData'].forEach(function(support){
 		(supports(support)) ? html.addClass(support) : html.addClass('no-' + support);
 	});
 	(supports('connectivity') && !navigator.onLine) ? html.addClass('offline') : html.addClass('online');
@@ -166,6 +166,22 @@ NodeList.prototype.bootstrap = function() {
 						handleJSON,
 						console.error
 					);
+				}
+			});
+		}
+		if(!supports('picture')) {
+			node.query('picture').forEach(function(picture) {
+				if('matchMedia' in window) {
+					let sources = picture.querySelectorAll('source[media][srcset]');
+					for(let n = 0; n < sources.length; n++) {
+						if(matchMedia(sources[n].getAttribute('media')).matches) {
+							picture.getElementsByTagName('img')[0].src = sources[n].getAttribute('srcset');
+							break;
+						}
+					}
+				}
+				else {
+					picture.getElementsByTagName('img')[0].src = picture.querySelector('source[media][srcset]').getAttribute('srcset');
 				}
 			});
 		}
