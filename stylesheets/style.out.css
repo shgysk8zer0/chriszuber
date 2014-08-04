@@ -559,6 +559,51 @@ body > footer {
   }
 }
 
+address {
+  font-size: 0.8rem;
+  padding: 2rem 2rem 0 2rem;
+  -moz-columns: 2 300px;
+  -webkit-columns: 2 300px;
+  columns: 2 300px;
+  -moz-column-gap: 3rem;
+  -webkit-column-gap: 3rem;
+  column-gap: 3em;
+  -moz-column-rule: 0.2em solid rgba(237, 24, 24, 1);
+  -webkit-column-rule: 0.2em solid rgba(237, 24, 24, 1);
+  column-rule: 0.2em solid rgba(237, 24, 24, 1);
+}
+
+address a {
+  color: rgba(237, 24, 24, 1);
+  -webkit-transition: color 600ms;
+  transition: color 600ms;
+}
+
+address a:hover {
+  color: hsl(209, 62%, 45%);
+}
+
+address svg {
+  height: 1rem;
+  width: auto;
+  fill: currentColor;
+}
+
+address svg * {
+  fill: inherit;
+}
+
+address a svg {
+  -webkit-transition: all 600ms;
+  transition: all 600ms;
+}
+
+address a:hover > svg {
+  -webkit-transform: translateX(0.5em)scale(1.2)skew(-15deg);
+  -ms-transform: translateX(0.5em)scale(1.2)skew(-15deg);
+  transform: translateX(0.5em)scale(1.2)skew(-15deg);
+}
+
 form[name="new_post"] {
   width: 95%;
 }
@@ -582,14 +627,14 @@ img[src$="CreativeCommons.svgz"] {
   height: 2.6rem;
 }
 
-a.logo {
+.logo {
   display: inline-block;
   width: 3rem;
   overflow: visible;
 }
 
-a.logo svg,
-a.logo img {
+.logo svg,
+.logo img {
   overflow: visible;
   -webkit-transform-origin: center;
   -ms-transform-origin: center;
@@ -598,8 +643,8 @@ a.logo img {
   transition: all 1s;
 }
 
-a.logo svg:hover,
-a.logo img:hover {
+.logo svg:hover,
+.logo img:hover {
   -webkit-transform: scale(2)rotateZ(360deg);
   -ms-transform: scale(2)rotateZ(360deg);
   transform: scale(2)rotateZ(360deg);
