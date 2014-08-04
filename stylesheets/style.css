@@ -19,6 +19,7 @@
 	--alt-color: rgba(41, 41, 41, 1);
 	--primary-color: rgba(237, 24, 24, 1);
 	--highlight-color: rgba(129, 23, 23, 1);
+	--link-color: hsl(209, 62%, 45%);
 	--border-color: rgba(45, 45, 45, 1);
 	--glass-grad:linear-gradient(to top left,rgba(80,80,80,0.7), rgba(140,140,140,0.9),rgba(40, 40, 40, 0.7));
 	--shadow: rgba(20,20,20,0.9);
@@ -60,6 +61,7 @@ body > header h1 {
 	margin-bottom: 1rem;
 }
 body header > h1 > a {
+	color: inherit;
 	padding-right: 0.75rem;
 	border-width: 0 0.5rem 0 0;
 	border-style: solid;
@@ -105,7 +107,8 @@ body > header nav form {
 }
 a, [download] {
 	font-family: inherit;
-	color: inherit;
+	color: var(--link-color);
+	text-decoration: none;
 }
 a::after {
 	font-family: 'Web Symbols';
@@ -313,6 +316,9 @@ article header, aside h3 {
 	top: 0;
 	left: 0;
 }
+article nav a {
+	color: inherit;
+}
 article header h1 {
 	font-family: 'PressStart';
 	font-size: 1.8rem;
@@ -347,6 +353,7 @@ aside li {
 	font-size: 1.2rem;
 }
 aside li a {
+	color: inherit;
 	transition: all 300ms;
 }
 aside li a:hover {
