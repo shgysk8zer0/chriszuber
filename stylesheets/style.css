@@ -189,7 +189,7 @@ img {
 	max-width: 100%;
 	height: auto;
 }
-a, button:not(:disabled), input[type=submit], input[type=reset], input[type=image], details > summary , [data-show], [data-close]{
+a, button:not(:disabled), input[type=submit], input[type=reset], input[type=image], details > summary , [data-show], [data-show-modal], [data-close]{
 	cursor: var(--pointer);
 }
 .no-details details[open] > summary::before {
