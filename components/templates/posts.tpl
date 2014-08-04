@@ -4,7 +4,7 @@
 				<nav>
 					<details>
 						<summary title="Tags"><span data-icon=","></span></summary>
-						<div>%TAGS%</div>
+						<div itemprop="keywords">%TAGS%</div>
 					</details>
 				</nav>
 			</header>
