@@ -24,7 +24,7 @@
 	--shadow: rgba(20,20,20,0.9);
 	--tint-glass: linear-gradient(rgba(40,40,40,0.8), rgba(80,80,80,0.7));
 	--header-bg: linear-gradient(rgba(40,40,40, 1), rgba(80,80,80,0.97));
-	--progress-grad: linear-gradient(lime, green, lime);
+	--progress-grad: linear-gradient(var(--highlight-color), var(--primary-color), var(--highlight-color));
 	--icon-font: 'Web Symbols';
 	--default-cursor: url(../images/cursors/Arch-black.svgz), auto;
 	--pointer: url('../images/cursors/3D_hand_cursor.svgz'), pointer;
@@ -274,17 +274,6 @@ dialog[open]::backdrop {
 	left: 0;
 	bottom: 0;
 	right: 0;
-}
-@supports (transition:transform) {
-	dialog:not([open]) {
-		display: block;
-		transform-origin: top left;
-		transform: scale(0);
-		transition: transform 800ms;
-	}
-	dialog[open] {
-			transform: scale(1);
-	}
 }
 body > header h1::before {
 	content: '';

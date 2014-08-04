@@ -284,9 +284,9 @@ progress {
 progress:not([value]) {
   -webkit-animation: progress 1s infinite linear alternate;
   animation: progress 1s infinite linear alternate;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(lime), color-stop(green), to(lime));
-  background-image: -webkit-linear-gradient(lime, green, lime);
-  background-image: linear-gradient(lime, green, lime);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(129, 23, 23, 1)), color-stop(rgba(237, 24, 24, 1)), to(rgba(129, 23, 23, 1)));
+  background-image: -webkit-linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
+  background-image: linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
   -webkit-background-size: 10vw 100%;
   background-size: 10vw 100%;
   background-repeat: no-repeat;
@@ -302,14 +302,14 @@ progress:not([value])::-webkit-progress-value {
 }
 
 progress[value]::-webkit-progress-value {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(lime), color-stop(green), to(lime));
-  background-image: -webkit-linear-gradient(lime, green, lime);
-  background-image: linear-gradient(lime, green, lime);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(129, 23, 23, 1)), color-stop(rgba(237, 24, 24, 1)), to(rgba(129, 23, 23, 1)));
+  background-image: -webkit-linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
+  background-image: linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
   background-color: black;
 }
 
 progress[value]::-moz-progress-bar {
-  background-image: linear-gradient(lime, green, lime);
+  background-image: linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
   background-color: black;
 }
 
@@ -362,26 +362,6 @@ dialog[open]::backdrop {
   left: 0;
   bottom: 0;
   right: 0;
-}
-
-@supports (transition:transform) {
-  dialog:not([open]) {
-    display: block;
-    -webkit-transform-origin: top left;
-    -ms-transform-origin: top left;
-    transform-origin: top left;
-    -webkit-transform: scale(0);
-    -ms-transform: scale(0);
-    transform: scale(0);
-    -webkit-transition: -webkit-transform 800ms;
-    transition: transform 800ms;
-  }
-
-  dialog[open] {
-    -webkit-transform: scale(1);
-    -ms-transform: scale(1);
-    transform: scale(1);
-  }
 }
 
 body > header h1::before {
