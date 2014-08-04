@@ -1,0 +1,31 @@
+<?php
+	$contact = $DB->name_value('contact');
+?>
+<span title="contact Info" class="logo" data-show-modal="#contactDialog"><?php include(BASE . '/images/icons/people.svg')?></span>
+<dialog id="contactDialog">
+	<address itemprop="author" itemtype="http://schema.org/Person" itemscope>
+		<div>
+			<?php if(isset($contact->picture)):?><img itemprop="image" src="<?=URL?>/images/<?=$contact->picture?>" alt="Picture of Chris Zuber"/><br /><?php endif?>
+			<span itemprop="name">
+				<b itemprop="givenName"><?=ucwords($contact->first_name)?></b>
+				<b itemprop="familyName"><?=ucwords($contact->last_name)?></b><br />
+			</span>
+			<?php if(isset($contact->job_title)):?><i itemprop="jobTitle"><?=ucwords($contact->job_title)?></i><?php endif?>
+			- <b itemprop="worksFor">
+				<a itemprop="url" title="<?=ucwords($contact->company_name)?> Homepage" href="<?=ucwords($contact->company_url)?>"><?=ucwords($contact->company)?></a>
+			</b>
+		</div><br />
+		<div>
+			<?php if(isset($contact->cell_phone)):?><a href="tel:<?=$contact->cell_phone?>" target="_blank" title="Call my cell phone" itemprop="telephone">Cell: <?=$contact->cell_phone?> <?php include('images/icons/mobile_icon.svg')?></a><br /><?php endif?>
+			<?php if(isset($contact->email)):?><a href="mailto:<?=$contact->email?>" target="_blank" title="Send me an email" itemprop="email"><?=$contact->email?> <?php include('images/icons/envelope.svg')?></a><br /><br /><?php endif?>
+		</div>
+		<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+			<span itemprop="streetAddress"><?=ucwords($contact->street_address)?></span><br />
+			<span itemprop="addressLocality"><?=ucwords($contact->city)?></span>,
+			<span itemprop="addressRegion"><?=strtoupper($contact->state)?></span>
+			<span itemprop="postalCode"><?=$contact->zip?></span><br />
+		</div>
+		<br /><br />
+	</address>
+	<button type="button" title="Close Contact Info" data-close="#contactDialog"></button>
+</dialog>
