@@ -104,7 +104,7 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 			icon: 'images/icons/network-server.png'
 		});
 	});
-	if(typeof sessionStorage.nonce !== 'string') {
+	if(!sessionStorage.hasOwnProperty('nonce')) {
 		ajax({
 			request: 'request=nonce'
 		}).then(
