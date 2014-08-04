@@ -5,11 +5,11 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 		body = $('body'),
 		head = $('head');
 		cache = new cache();
-		html.removeClass('no-js').addClass('js');
-	['svg', 'audio', 'video', 'picture', 'canvas', 'menuitem', 'details', 'dialog', 'dataset', 'classList', 'connectivity', 'visibility', 'notifications', 'ApplicationCache', 'indexedDB', 'localStorage', 'sessionStorage', 'CSSgradients', 'transitions', 'animations',  'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll', 'workers', 'promises', 'ajax', 'FormData'].forEach(function(support){
-		(supports(support)) ? html.addClass(support) : html.addClass('no-' + support);
+		document.documentElement.classList.swap('no-js', 'js');
+	['svg', 'audio', 'video', 'picture', 'canvas', 'menuitem', 'details', 'dialog', 'dataset', 'classList', 'connectivity', 'visibility', 'notifications', 'ApplicationCache', 'indexedDB', 'localStorage', 'sessionStorage', 'CSSgradients', 'transitions', 'animations',  'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll', 'workers', 'promises', 'ajax', 'FormData'].forEach(function(feat){
+		document.documentElement.classList.pick(feat, 'no-' + feat, supports(feat))
 	});
-	(supports('connectivity') && !navigator.onLine) ? html.addClass('offline') : html.addClass('online');
+	document.documentElement.classList.pick('offline', 'online', (supports('connectivity') && !navigator.onLine));
 	setTimeout(
 		function(){
 			body.results.bootstrap();
