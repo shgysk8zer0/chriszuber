@@ -16,7 +16,7 @@
 <meta name="keywords" content="<?=$page->keywords?>"/>
 <meta name="robots" content="<?=$head->robots?>"/>
 <meta name="author" content="<?=$page->author?>"/>
-<meta itemprop="name" content="<?=$head->title?>"/>
+<meta itemprop="name" content="<?=($pages->head === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?>"/>
 <meta itemprop="url" content="<?=URL . $_SERVER['REQUEST_URI']?>"/>
 <meta itemprop="description" content="<?=$page->description?>"/>
 <meta itemprop="keywords" content="<?=$page->keywords?>"/>
@@ -25,7 +25,7 @@
 <meta name="viewport" content="<?=$head->viewport?>"/>
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="canonical" href="<?=preg_replace('/^http(s)?' . preg_quote('://', '/')  .'(www\.)?/', 'http://', URL) . $_SERVER['REQUEST_URI']?>"/>
-<link rel="favorite icon" type="image/x-icon" href="favicon.ico"/>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
 <link rel="icon" type="image/svg" sizes="any" href="favicon.svgz?t=<?=time()?>"/>
 <link rel="alternate icon" type="image/png" sizes="16x16" href="favicon.png"/>
 <?php if(localhost()):?>
