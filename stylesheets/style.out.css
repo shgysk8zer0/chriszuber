@@ -275,22 +275,11 @@ details > summary,
 progress {
   display: inline-block;
   width: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   border: none;
-}
-
-progress:not([value]) {
-  -webkit-animation: progress 1s infinite linear alternate;
-  animation: progress 1s infinite linear alternate;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(129, 23, 23, 1)), color-stop(rgba(237, 24, 24, 1)), to(rgba(129, 23, 23, 1)));
-  background-image: -webkit-linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
-  background-image: linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
-  -webkit-background-size: 10vw 100%;
-  background-size: 10vw 100%;
-  background-repeat: no-repeat;
-  background-position: left;
 }
 
 progress:not([value])::-moz-progress-bar {
@@ -305,12 +294,10 @@ progress[value]::-webkit-progress-value {
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(129, 23, 23, 1)), color-stop(rgba(237, 24, 24, 1)), to(rgba(129, 23, 23, 1)));
   background-image: -webkit-linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
   background-image: linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
-  background-color: black;
 }
 
 progress[value]::-moz-progress-bar {
   background-image: linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
-  background-color: black;
 }
 
 [data-close]::after {

@@ -206,17 +206,11 @@ a, button:not(:disabled), input[type=submit], input[type=reset], input[type=imag
 progress {
 	display: inline-block;
 	width: 100%;
+	background-color: rgba(0, 0, 0, 0.3);
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
 	border: none;
-}
-progress:not([value]) {
-	animation: progress 1s infinite linear alternate;
-	background-image: var(--progress-grad);
-	background-size: 10vw 100%;
-	background-repeat: no-repeat;
-	background-position: left;
 }
 progress:not([value])::-moz-progress-bar {
 	width: auto;
@@ -225,12 +219,10 @@ progress:not([value])::-webkit-progress-value {
 	width: auto;
 }
 progress[value]::-webkit-progress-value {
-	background-image: var(--progress-grad);
-	background-color: black;
+	background-image: var(--progress-grad);;
 }
 progress[value]::-moz-progress-bar {
 	background-image: var(--progress-grad);
-	background-color: black;
 }
 [data-close]::after {
 	font-family: 'Web Symbols';
