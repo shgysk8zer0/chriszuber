@@ -29,6 +29,19 @@ if(!('showModal' in Element.prototype)) {
 		}
 	}
 }
+DOMTokenList.prototype.pick = function(cname1, cname2, condition) {
+	(condition) ? this.add(cname1) : this.add(cname2);
+}
+DOMTokenList.prototype.swap = function(cname1, cname2) {
+	if(this.contains(cname1)) {
+		this.remove(cname1);
+		this.add(cname2);
+	}
+	else {
+		this.remove(cname2);
+		this.add(cname1);
+	}
+}
 if (!Element.prototype.matches) {
 	/*Check if Element matches a given CSS selector*/
 	Element.prototype.matches = function (sel) {
@@ -705,14 +718,20 @@ zQ.prototype.isZQ = true;
 ['forEach', 'indexOf', 'some', 'every', 'map', 'filter'].forEach(function(feat){
 	NodeList.prototype[feat] = Array.prototype[feat];
 });
-function $(e) {
-	if(e.isZQ){
-		return e;
+function $(q) {
+	if(typeof q === 'undefined') {
+		q = document.documentElement;
 	}
-	return new zQ(e);
+	if(q.isZQ){
+		return q;
+	}
+	return new zQ(q);
 }
 zQ.prototype.constructor = zQ;
 function zQ(q) {
+	if(typeof q === 'undefined') {
+		q = document.documentElement;
+	}
 	this.query = q;
 	try {
 		switch(typeof this.query) {
@@ -729,14 +748,25 @@ function zQ(q) {
 	}
 	this.length = this.results.length;
 	this.found = (!!this.results.length);
+	this.filters = [];
 	return this;
 }
 zQ.prototype.get = function(n) {
-	return this.results[n];
+	return this.results.item(n);
 }
 zQ.prototype.each = function(callback) {
 	if(this.found) {
 		this.results.forEach(callback);
+	}
+	return this;
+}
+zQ.prototype.toArray = function() {
+	if(!this.results.isArray) {
+		var temp = [];
+		this.each(function(node) {
+			temp.push(node);
+		});
+		this.results = temp;
 	}
 	return this;
 }
@@ -750,7 +780,10 @@ zQ.prototype.every = function(callback) {
 	return this.results.every(callback);
 }
 zQ.prototype.filter = function(callback) {
-	return this.results.filter(callback);
+	this.filters.push(callback.toString());
+	this.results = this.results.filter(callback);
+	this.length = this.results.length;
+	return this;
 }
 zQ.prototype.map = function(callback) {
 	return this.results.map(callback);
@@ -769,19 +802,58 @@ zQ.prototype.removeClass = function(cname) {
 }
 zQ.prototype.hasClass = function(cname) {
 	return this.some(function(el){
-		return el.classList.contains(cname)
+		return el.classList.contains(cname);
 	});
 }
 zQ.prototype.toggleClass = function(cname, condition) {
-	this.each(function(el){
-		el.classList.toggle(cname, condition || !el.classList.contains(cname));
+	if(typeof condition ==='undefined') {
+		this.each(function(el){
+			el.classList.toggle(cname);
+		});
+	}
+	else {
+		this.each(function(el){
+			el.classList.toggle(cname, condition);
+		});
+	}
+	return this;
+}
+zQ.prototype.swapClass = function(cname1, cname2) {
+	this.each(function(el) {
+		el.classList.swap(cname1, cname2);
 	});
+	return this;
+}
+zQ.prototype.pickClass = function(cname1, cname2, condition) {
+	(condition) ? this.addClass(cname1) : this.addClass(cname2);
 	return this;
 }
 zQ.prototype.delete = function() {
 	this.each(function(el){
 		el.parentElement.removeChild(el);
 	});
+}
+zQ.prototype.hasAttribute = function(attr) {
+	return this.some(function(el) {
+		return el.hasAttribute(attr);
+	});
+}
+zQ.prototype.attr = function(attr, val) {
+	if(typeof val == 'undefined' || val === true) {
+		val = '';
+	}
+	if(val === false) {
+		this.each(function(el) {
+			el.removeAttribute(attr);
+		});
+	}
+	else {
+		this.each(function(el) {
+			el.setAttribute(attr, val);
+		});
+	}
+	return this;
+
 }
 zQ.prototype.pause = function() {
 	this.each(function(media){
@@ -859,22 +931,11 @@ zQ.prototype.watch = function(watching, options, attributeFilter) {
 }
 /*====================================================================================================================*/
 zQ.prototype.$ = function (q) {
-	if((typeof this.query === 'string') && supports('cssmatches')) {
-		/*Only works for $().$(), but not for $().$().[*].$()*/
-		this.query = sessionStorage.getItem('MatchesPre') + '(' + this.query +') '+ ' ' + sessionStorage.getItem('MatchesPre') + '(' + q +')';
-		return $(this.query);
-	}
-	this.results = [];
-	(this.query.isArray) ? this.query.push(q) : this.query = [this.query, q];
-	/*What happesn with this.query?*/
-	this.each(function(el){
-		el.querySelectorAll(q).forEach(function(e){
-			this.results.push(e);
+	return $(this.query.split(',').map(function(str){
+		return q.split(',').map(function(q) {
+			return str.trim() + ' ' + q.trim();
 		});
-	});
-	this.results = this.results.unique();
-	this.length = this.results.length;
-	return this;
+	}).join(', '));
 }
 $(window) .popstate(function () {
 		ajax({
