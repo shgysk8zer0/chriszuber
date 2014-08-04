@@ -20,7 +20,6 @@
 <meta itemprop="url" content="<?=URL . $_SERVER['REQUEST_URI']?>"/>
 <meta itemprop="description" content="<?=$page->description?>"/>
 <meta itemprop="keywords" content="<?=$page->keywords?>"/>
-<meta itemprop="author" content="<?=$page->author?>"/>
 <meta itemprop="image" content="<?=URL?>/super-user.png"/>
 <meta name="viewport" content="<?=$head->viewport?>"/>
 <meta name="mobile-web-app-capable" content="yes">
