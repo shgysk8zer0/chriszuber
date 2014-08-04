@@ -253,6 +253,7 @@ input[type=reset],
 input[type=image],
 details > summary,
 [data-show],
+[data-show-modal],
 [data-close] {
   cursor: url('../images/cursors/3D_hand_cursor.svgz'), pointer;
 }
