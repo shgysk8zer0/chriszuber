@@ -40,7 +40,7 @@
 <?php else:?>
 	<link rel="stylesheet" type="text/css" href="stylesheets/combined.out.css" media="all"/>
 <?php endif?>
-<link href="<?=URL?>/feed.rss" rel="alternate" type="application/rss+xml" title="<?=$head->title?> RSS Feed" />
+<link href="<?=$head->rss?>" rel="alternate" type="application/rss+xml" title="<?=$head->title?> RSS Feed" />
 <?php if(isset($head->publisher)):?><link rel="publisher" href="https://plus.google.com/<?=$head->publisher?>"><?php endif?>
 <?php if(localhost()):?>
 	<?php if(BROWSER === 'Firefox'):?>
