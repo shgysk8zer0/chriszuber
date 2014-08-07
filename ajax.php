@@ -48,20 +48,6 @@
 		}
 	}
 
-	elseif(array_key_exists('load', $_POST)){
-		switch($_POST['load']) {
-			default:
-				/*$resp->html(
-					'main',
-					load_results($_POST['load'])
-				);*/
-			$resp->notify(
-				'The basic load method is depreciated',
-				'Please update to a more specific request'
-			);
-		}
-	}
-
 	elseif(array_key_exists('load_form', $_POST)) {
 		switch($_POST['load_form']) {
 			case 'login': {
@@ -95,30 +81,25 @@
 	}
 
 	elseif(array_key_exists('form', $_POST)) {
+		check_nonce();
 		switch(trim($_POST['form'])) {
 			case 'login': {
 				if(array_keys_exist('user', 'password', $_POST)) {
-					check_nonce();
 					$login->login_with($_POST);
 
 					if($login->logged_in) {
 						$session->setUser($login->user)->setPassword($login->password)->setRole($login->role)->setLogged_In(true);
-						$resp->setAttributes([
-							'menu[label=Account] menuitem:not([label=Logout])' => [
-								'disabled' => true
-							],
-							'menuitem[label=Logout]' => [
-								'disabled' => false
-							],
-							'body > main' => [
-								'contextmenu' => 'admin_menu'
-							]
-						])->close(
+
+						$resp->close(
 							'#loginDialog'
-						)->notify(
-							'Login successful',
-							"Welcome back {$login->user}",
-							'images/icons/people.png'
+						)->disable(
+							'menu[label=Account] menuitem:not([label=Logout])'
+						)->enable(
+							'menuitem[label=Logout]'
+						)->attributes(
+							'body > main',
+							'contextmenu',
+							'admin_menu'
 						);
 					}
 					else {
@@ -156,14 +137,19 @@
 
 						foreach($posts as $post) {
 							$datetime = new simple_date($post->created);
-							$content .= $template->set([
-								'title' => $post->title,
-								'description' => $post->description,
-								'author' => $post->author,
-								'author_url' => $post->author_url,
-								'url' => ($post->url === '')? URL : URL .'/posts/' . $post->url,
-								'date' => $datetime->out('D M jS, Y \a\t h:iA')
-							])->out();
+							$content .= $template->title(
+								$post->title
+							)->description(
+								$post->description
+							)->author(
+								$post->author
+							)->author_url(
+								$post->author_url
+							)->url(
+								($post->url === '')? URL : URL .'/posts/' . $post->url
+							)->date(
+								$datetime->out('D M jS, Y \a\t h:iA')
+							)->out();
 						}
 						$content .= '</div>';
 
@@ -184,7 +170,6 @@
 			} break;
 
 			case 'new_post': {
-				check_nonce();
 				require_login('admin');
 
 				if(array_keys_exist('title', 'description', 'keywords', 'content', $_POST)) {
@@ -205,20 +190,27 @@
 					$content = trim($_POST['content']);
 					$url = urlencode(strtolower(preg_replace('/\W+/', ' ', $title)));
 
-					$tags = [];
-					foreach(explode(',', $keywords) as $tag) $tags[] = '<a href="tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
-
 					$template = template::load('posts');
 					$time = new simple_date();
-					$template->set([
-						'title' => $title,
-						'tags' => join(PHP_EOL, $tags),
-						'content' => $content,
-						'author' => $user->name,
-						'author_url' => $user->g_plus,
-						'date' => $time->out('m/d/Y'),
-						'datetime' => $time->out()
-					]);
+
+					foreach(explode(',', $keywords) as $tag) {
+						$template->tags .= '<a href="tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
+					}
+
+					$template->title(
+						$title
+					)->content(
+						$content
+					)->author(
+						$user->author
+					)->author_url(
+						$user->g_plus
+					)->date(
+						$time->out('m/d/Y')
+					)->datetime(
+						$time->out()
+					);
+
 					$resp->remove(
 						'main > :not(aside)'
 					)->prepend(
@@ -288,10 +280,9 @@
 						'There seems to be some missing info.'
 					);
 				}
-			}break;
+			} break;
 
 			case 'edit_post': {
-				check_nonce();
 				require_login('admin');
 
 				if(array_keys_exist('title', 'keywords', 'content', 'old_title', 'description', $_POST)) {
@@ -337,7 +328,6 @@
 			} break;
 
 			case 'php_errors': {
-				check_nonce();
 				require_login('admin');
 
 				/**
@@ -728,17 +718,16 @@
 				$session->destroy();
 				$session = new session($connect->site);
 				nonce();
-				$resp->setAttributes([
-					'menu[label=Account] menuitem[label=Login]' => [
-						'disabled' => false
-					],
-					'menu[label=Account] menuitem[label=Logout]' => [
-						'disabled' => true
-					],
-					'body > main' => [
-						'contextmenu' => false
-					]
-				])->sessionStorage(
+
+				$resp->enable(
+					'menu[label=Account] menuitem[label=Login]'
+				)->disable(
+					'menu[label=Account] menuitem[label=Logout]'
+				)->attributes(
+					'body > main',
+					'contextmenu',
+					false
+				)->sessionStorage(
 					'nonce',
 					$session->nonce
 				)->notify(
@@ -764,7 +753,6 @@
 			} break;
 
 			case 'restore database': {
-				check_nonce();
 				require_login('admin');
 
 				($DB->restore($connect->database)) ? $resp->notify(
@@ -779,7 +767,6 @@
 			} break;
 
 			case 'backup database': {
-				check_nonce();
 				require_login('admin');
 
 				$DB->dump();
