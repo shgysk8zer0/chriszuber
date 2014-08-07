@@ -25,7 +25,7 @@ if(!('showModal' in Element.prototype)) {
 		this.removeAttribute('open');
 		this.classList.remove('modal');
 		if(this.nextElementSibling.classList.contains('backdrop')) {
-			this.nextElementSibling.delete();
+			this.nextElementSibling.parentElement.removeChild(this.nextElementSibling)
 		}
 	}
 }
@@ -652,6 +652,9 @@ function handleJSON(json){
 		document.querySelectorAll(json.show).forEach(function(el) {
 			el.show();
 		});
+	}
+	if(json.showModal) {
+		document.querySelector(json.showModal).showModal();
 	}
 	if(json.close) {
 		document.querySelectorAll(json.close).forEach(function(el) {

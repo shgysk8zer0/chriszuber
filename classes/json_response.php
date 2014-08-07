@@ -476,6 +476,22 @@
 			$this->response['show'] = $sel;
 			return $this;
 		}
+		
+		public function showModal($sel) {
+			/**
+			 * Causes handleJSON to run show() on all $sel.
+			 *
+			 * For <deails>, this will add the 'open' attribute.
+			 * For <dialog> this will run the native show() method, if
+			 * available. Otherwise, just adds the 'open' attribute there as well.
+			 *
+			 * @param string $sel (CSS selector)
+			 * @example $resp->show('dialog')
+			 */
+
+			$this->response['showModal'] = $sel;
+			return $this;
+		}
 
 		public function close($sel) {
 			/**
