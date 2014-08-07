@@ -73,24 +73,29 @@
 
 		public function get_content() {
 			$login = login::load();
+
 			switch($this->type) {
 				case 'posts': {
 					$template = template::load('posts');
 					$time = new simple_date($this->data->created);
-					$keywords = explode(',', $this->data->keywords);
-					$tags = [];
-					//foreach($keywords as $tag) $tags[] = '<a href="' . URL . '/tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
-				foreach($keywords as $tag) $tags[] = '<a href="' . URL . '/tags/' . urlencode(trim($tag)) . '" rel="tag">' . trim($tag) . "</a>";
-					$this->content = $template->set([
-						'title' => $this->data->title,
-						'tags' => join(PHP_EOL, $tags),
-						'content' => $this->data->content,
-						'author' => $this->data->author,
-						'author_url' => $this->data->author_url,
-						'date' => $time->out('m/d/Y'),
-						'datetime' => $time->out()
-						//'comments' => load_results('forms/comment')
-					])->out();
+
+					foreach(explode(',', $this->data->keywords) as $tag) {
+						$template->tags .= '<a href="' . URL . '/tags/' . urlencode(trim($tag)) . '" rel="tag">' . trim($tag) . "</a>";
+					}
+					$this->content = $template->title(
+						$this->data->title
+					)->content(
+						$this->data->content
+					)->author(
+						$this->data->author
+					)->author_url(
+						$this->data->author_url
+					)->date(
+						$time->out('m/d/Y')
+					)->datetime(
+						$time->out()
+					)->out();
+
 				} break;
 
 				case 'tags': {
@@ -100,14 +105,20 @@
 
 					foreach($this->data as $post) {
 						$datetime = new simple_date($post->created);
-						$this->content .= $template->set([
-							'title' => $post->title,
-							'description' => $post->description,
-							'author' => $post->author,
-							'author_url' => $post->author_url,
-							'url' => ($post->url === '')? URL : URL .'/posts/' . $post->url,
-							'date' => $datetime->out('D M jS, Y \a\t h:iA')
-						])->out();
+
+						$this->content .= $template->title(
+							$post->title
+						)->description(
+							$post->description
+						)->author(
+							$post->author
+						)->author_url(
+							$post->author_url
+						)->url(
+							($post->url === '')? URL : URL .'/posts/' . $post->url
+						)->date(
+							$datetime->out('D M jS, Y \a\t h:iA')
+						)->out();
 					}
 					$this->content .= '</div>';
 				} break;
