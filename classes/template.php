@@ -6,12 +6,18 @@
 		 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
 		 * @package core_shared
 		 * @version 2014-06-01
+		 * @example
+		 * 	$template = new template('path/to/tempalte', '^', true);
+		 * 	$template->old = 'New';
+		 * 	$template->replace = 'Updated';
+		 * 	$table .= $template->out();
+		 * 	$table .= $template->old('Newer')->replace('Updated Again')->out();
 		 */
 
 		private static $instance = [];
 		private $path, $source = '', $replacements = [], $seperator;
 
-		public static function load($tpl, $seperator = '%') {
+		public static function load($tpl, $seperator = '%', $minify = false) {
 			/**
 			 * Static load function avoids creating multiple instances
 			 * It checks if an instance has been created and returns that or a new instance
@@ -20,25 +26,30 @@
 			 * multiple files. It stores them as an array, with the file as the
 			 * array key and the instance as the value
 			 *
-			 * @params void
+			 * @params string $tpl (Path of template, no extension)
+			 * @param string $seperator (Character to mark beginning and end of placeholders)
+			 * @param boolean $minify (whether or not to eliminate tabs and newlines)
 			 * @return template object/class
-			 * @example $template = template::load($template_file)
+			 * @example $template = template::load($template_file, '^', true)
 			 */
 
 			if(!array_key_exists($tpl, self::$instance)) {
-				self::$instance[$tpl] = new self($tpl, $seperator);
+				self::$instance[$tpl] = new self($tpl, $seperator, $minify);
 			}
 			return self::$instance[$tpl];
 		}
 
-		public function __construct($tpl, $seperator = '%') {
+		public function __construct($tpl, $seperator = '%', $minify = false) {
 			/**
 			 * Reads the template specified by $tpl
 			 * Reads the file from BASE . "/components/templates/{$tpl}.tpl"
 			 * Will exit if file cannot be read (either DNE or denied by permissions)
 			 *
-			 * @param string $tpl
-			 * @return void
+			 * @params string $tpl (Path of template, no extension)
+			 * @param string $seperator (Character to mark beginning and end of placeholders)
+			 * @param boolean $minify (whether or not to eliminate tabs and newlines)
+			 * @return template object/class
+			 * @example $template = template::load($template_file, '^', true)
 			 * @usage $template = new template($template_file)
 			 */
 
@@ -50,6 +61,66 @@
 			else {
 				exit("Attempted to load a template that cannot be read. {$tpl} cannot be read");
 			}
+			if($minify) {
+				$this->minify();
+			}
+		}
+
+		private function minify() {
+			/**
+			 * Private method to remove all tabs and newlines from source
+			 * 
+			 * @param void
+			 * @return self
+			 * @example $this->minify()
+			 */
+
+			$this->source = preg_replace('/[\f\r\n\t]+/', null, $this->source);
+			return $this;
+		}
+
+		private function replace($replace, $with) {
+			/*
+			 * Private method to prepare replacements
+			 * 
+			 * Adds to the replacements array with a key of $replace
+			 * and a value of $with
+			 * 
+			 * @param string $replace (placeholder text in the template)
+			 * @param sting $with (What it is being replace with)
+			 * @return self
+			 * @example $this->replace('old', 'new')
+			 */
+
+			$this->replacements[$this->seperator . strtoupper((string)$replace) . $this->seperator] = (string)$with;
+
+			return $this;
+		}
+
+		private function get_results() {
+			/**
+			 * Private method for replacing all placeholders with their
+			 * replacements. Returns the results, but does not update the original
+			 * 
+			 * @param void
+			 * @return string
+			 * @example $results = $this->get_results()
+			 */
+
+			return str_replace(array_keys($this->replacements), array_values($this->replacements), $this->source);
+		}
+
+		private function clear() {
+			/*
+			 * Private method to reset the array of replacements
+			 * 
+			 * @param void
+			 * @return self
+			 * @example $this->clear()
+			 */
+
+			$this->replacements = [];
+			return $this;
 		}
 
 		public function __set($replace, $with) {
@@ -67,28 +138,30 @@
 			 * @usage $template->url = $url
 			 */
 
-			$this->replacements[$this->seperator . strtoupper($replace) . $this->seperator] = $with;
-
-			//$this->replace('%' . strtoupper($replace) . '%')->with($with);
+			$this->replace($replace, $with);
 		}
-
-		public function set($arr) {
+		
+		public function __get($replace) {
 			/**
-			 * Loops through $arr using, replacing array_key with array_value in $template
-			 * See __set() documentation for description of template formatting.
-			 *
-			 * @param array $arr
-			 * @return self
-			 * @usage $template->set([$placeholder => $replacement][, ...])
+			 * Magic getter method for the class.
+			 * Not directly useful, since the class is for setting data,
+			 * but this does allow for $template->key .= 'Some value';
+			 * 
+			 * @param string $replace (the key to be retrrieved)
+			 * @return string
+			 * @example $template->key //returns $this->replacements[$key]
+			 * @example $template->key .= 'More texty goodness' //Appends to current value
 			 */
-
-			foreach($arr as $replace => $with) {
-				$this->replacements[$this->seperator . strtoupper($replace) . $this->seperator] = $with;
+			
+			if(array_key_exists($this->seperator . strtoupper((string)$replace) . $this->seperator, $this->replacements)) {
+				return $this->replacements[$this->seperator . strtoupper((string)$replace) . $this->seperator];
 			}
-			return $this;
+			else {
+				return '';
+			}
 		}
 
-		public function __call($name, $arguments) {
+		public function __call($replace, $arguments) {
 			/**
 			 * The magic method __call for the class.
 			 * Used in cases where no such method exists in
@@ -111,11 +184,26 @@
 			 * @example $template->testing('Works')->another_test('Still Works')
 			 */
 
-			$this->replacements[$this->seperator . strtoupper($name) . $this->seperator] = $arguments[0];
+			return $this->replace($replace, $arguments[0]);
+		}
+
+		public function set($arr) {
+			/**
+			 * Loops through $arr using, replacing array_key with array_value in $template
+			 * See __set() documentation for description of template formatting.
+			 *
+			 * @param array $arr
+			 * @return self
+			 * @example $template->set([$placeholder => $replacement][, ...])
+			 */
+
+			foreach($arr as $replace => $with) {
+				$this->replace($replace, $with);
+			}
 			return $this;
 		}
 
-		public function out($print = false, $clear = true) {
+		public function out($print = false) {
 			/**
 			 * Executes string replacement without updating
 			 * the source (original template content).
@@ -124,22 +212,19 @@
 			 * echo it (if $print evaluates as true)
 			 *
 			 * @param boolean $print
-			 * @param boolean $clear
 			 * @return string or void
 			 * @usage $conntent = $template->out([false[, true]]);
 			 */
 
-			$result = str_replace(array_keys($this->replacements), array_values($this->replacements), $this->source);
-
-			if($clear) {
-				$this->replacements = [];
-			}
 
 			if($print){
-				echo $result;
+				echo $this->get_results();
+				return $this->clear();
 				return $this;
 			}
 			else {
+				$result = $this->get_results();
+				$this->clear();
 				return $result;
 			}
 		}
