@@ -122,20 +122,6 @@
 					}
 					$this->content .= '</div>';
 				} break;
-
-				case 'forms': {
-					switch($this->path[1]) {
-						case 'login': {
-							$this->content = load_results('forms/login');
-						} break;
-
-						default: {
-							require_login();
-
-							$this->content = load_results("forms/{$this->path[1]}");
-						}
-					} break;
-				} break;
 			}
 		}
 
