@@ -98,38 +98,34 @@ RegExp.prototype.escape = function(){
 }
 /*===========================De-Prefix several JavaScript methods==========================================================================*/
 
-if (!'Notification' in window) {
+if (!('Notification' in window)) {
 	Notification = mozNotification || false;
 }
-if (!'notifications' in window) {
+if (!('notifications' in window)) {
 	window.notifications = window.webkitNotifications || window.oNotifications || window.msNotifications || false;
 }
-if (!'indexedDB' in window) {
+if (!('indexedDB' in window)) {
 	window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || false;
 }
-if (!'hidden' in document) {
+if (!('hidden' in document)) {
 	document.hidden = function () {
 		return document.webkitHidden || document.msHidden || document.mozHidden || false;
 	}
 }
-if (!'visibilityState' in document) {
+if (!('visibilityState' in document)) {
 	document.visibilityState = document.webkitVisibilityState || document.msVisibilityState || document.mozVisibilityState || false;
 }
-if (!'fullScreenElement' in document) {
-	document.fullScreenElement = document.mozFullScreenElement || document.webkitFullscreenElement || false;
+if(!('requestFullscreen' in Element.prototype)) {
+	Element.prototype.requestFullscreen = Element.prototype.mozRequestFullScreen || Element.prototype.webkitRequestFullscreen || Element.prototype.msRequestFullscreen || false;
 }
-//document.fullscreen = document.fullscreen || document.mozFullScreen || document.webkitFullscreen || false;
-
-if (!'requestAnimationFrame' in window) {
+/*if (!('fullScreenElement' in Document.prototype)) {
+	Document.prototype.fullScreenElement = Document.prototype.mozFullScreenElement || Document.prototype.webkitFullscreenElement || false;
+}*/
+if (!('requestAnimationFrame' in window)) {
 	window.requestAnimationFrame = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || false;
 }
-if (!'cancelFullScreen' in document) {
+if (!('cancelFullScreen' in document)) {
 	document.cancelFullScreen = document.mozCancelFullScreen || document.webkitCancelFullScreen || document.msCancelFullScreen || false;
-}
-if (!'requestFullScreen' in document) {
-	Element.prototype.requestFullScreen = function () {
-		return this.mozRequestFullScreen() || this.webkitRequestFullScreen() || false;
-	}
 }
 /*===============================================================================================================================================*/
 Object.prototype.isaN = function () {
