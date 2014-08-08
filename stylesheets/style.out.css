@@ -549,7 +549,8 @@ body > footer {
     transform: translateX(2.5vw);
   }
 
-  main article {
+  main article,
+  main .tags {
     -webkit-box-flex: 0;
     -webkit-flex: 0 1 auto;
     -ms-flex: 0 1 auto;
@@ -561,8 +562,7 @@ body > footer {
     order: 1;
   }
 
-  main aside,
-  main .tags {
+  main aside {
     -webkit-box-flex: 0;
     -webkit-flex: 0 1 auto;
     -ms-flex: 0 1 auto;

@@ -394,12 +394,12 @@ body > footer {
 		width: 95vw;
 		transform: translateX(2.5vw);
 	}
-	main article {
+	main article, main .tags {
 		flex: 0 1 auto;
 		min-width: 100%;
 		order: 1;
 	}
-	main aside, main .tags {
+	main aside {
 		flex: 0 1 auto;
 		min-width: 100%;
 		order: 2;
