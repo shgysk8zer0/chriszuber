@@ -29,6 +29,7 @@
 	--icon-font: 'Web Symbols';
 	--default-cursor: url(../images/cursors/Arch-black.svgz), auto;
 	--pointer: url('../images/cursors/3D_hand_cursor.svgz'), pointer;
+	background-color: rgb(19, 0, 0);
 	background-image:url(../images/backgrounds/red-curls.svgz);
 	background-size:cover;
 	background-position:center;
@@ -50,7 +51,9 @@
 	cursor: progress;
 }
 body> header {
-	background-image: var(--tint-glass);
+	background: rgb(60, 60, 60) none;
+	background: rgba(60, 60, 60, 0.7) none;
+	background: transparent var(--tint-glass);
 	border-bottom: 0.2rem solid var(--border-color);
 	box-shadow: 0 0 3rem var(--shadow) inset;
 }
@@ -83,7 +86,10 @@ body > header nav a {
 	text-align: center;
 	overflow: elipsis;
 	padding: 0.7rem 0;
+	background-image: url('../images/gradients/header_links.png');
 	background-image: linear-gradient(var(--primary-color), var(--highlight-color), var(--primary-color));
+	background-size: 1px 100%;
+	background-repeat: repeat-x;
 	border: 0.2rem outset var(--border-color);
 	transition: all 300ms;
 }
@@ -234,7 +240,7 @@ progress[value]::-moz-progress-bar {
 code {
 	font-size: 0.9rem;
 	padding: 0.1rem;
-	background-color: rgb(225, 225, 225);
+	background-color: hsl(0, 0%, 93%);
 	border-radius: 0.2rem;
 }
 pre > code {
@@ -254,6 +260,7 @@ dialog.modal {
 	overflow: auto;
 }
 dialog.modal + .backdrop {
+	background-color: rgb(0,0,0);
 	background-color: rgba(0,0,0,0.7);
 	position: fixed;
 	top: 0;
@@ -285,7 +292,9 @@ main {
 	transform: translateX(5vw);
 	margin: 2rem 0;
 	padding: 2rem;
-	background-image: var(--glass-grad);
+	background: rgb(110, 110, 110) none;
+	background: rgba(110, 110, 110, 0.8) none;
+	background: transparent var(--glass-grad);
 	border-radius:2rem;
 	display:flex;
 	flex-direction: row;
@@ -309,7 +318,9 @@ article header, aside h3 {
 	font-size: 1.3rem;
 	text-shadow: 0.1rem 0.1rem 0 dimgray, 0.15rem 0.15rem 0 black;
 	padding: 0.4rem;
-	background-image: var(--header-bg);
+	background: rgb(60,60,60) none;
+	background: rgba(60,60,60,0.9) none;
+	background: transparent var(--header-bg);
 	box-shadow: 0 0 1rem var(--shadow);
 	color: var(--default-color);
 	position: sticky;
@@ -372,7 +383,8 @@ aside > :not(h3) {
 body > footer {
 	border-top: 0.3rem solid var(--primary-color);
 	padding: 1rem;
-	background-image: linear-gradient(whitesmoke, gainsboro);
+	background: whitesmoke none;
+	background: transparent linear-gradient(whitesmoke, gainsboro);
 	box-shadow: 0 -1rem 2rem var(--shadow) inset;
 }
 @media screen and (max-width:999px) {
