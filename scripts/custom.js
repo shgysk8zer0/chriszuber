@@ -1,5 +1,4 @@
 'use strict';
-var target = document.body;
 window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to work, so use this instead*/
 	var html = $('html'),
 		body = $('body'),
@@ -121,11 +120,6 @@ NodeList.prototype.bootstrap = function() {
 		if(node.nodeType !== 1) {
 			return this;
 		}
-		node.querySelectorAll('*').forEach(function(child) {
-			child.addEventListener('contextmenu', function(event){
-				target = event.target;
-			});
-		});
 		if(!supports('details')) {
 			node.query('details > summary').forEach(function(details) {
 				details.addEventListener('click', function() {
