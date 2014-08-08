@@ -8,6 +8,11 @@
 
 	require_once('./functions.php');
 	config();
+	define_UA();
+
+	if(BROWSER === 'Chrome' and $_SERVER['HTTP_HOST'] === 'localhost') {
+		header("Location: {$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_ADDR']}{$_SERVER['REQUEST_URI']}");
+	}
 	$DB = _pdo::load('connect');
 	$login = login::load('connect');
 	$session = session::load();
