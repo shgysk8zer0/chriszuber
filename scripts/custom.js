@@ -352,6 +352,11 @@ NodeList.prototype.bootstrap = function() {
 		node.query('[data-dropzone]') .forEach(function (finput) {
 			document.querySelector(finput.data('dropzone')).DnD(finput)
 		});
+		node.query('[data-fullscreen]').forEach(function(el) {
+			el.addEventListener(el.data('fullscreen'), function() {
+				this.requestFullscreen();
+			});
+		});
 		node.query('.clock').forEach(function(el) {
 			el.worker_clock();
 		});
