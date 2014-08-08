@@ -952,7 +952,7 @@ Object.prototype.$ = function(q) {
 	return $(this).$(q);
 }
 zQ.prototype.css = function (args) { /*Set style using CSS syntax*/
-	/*var n,
+	var n,
 		i,
 		e,
 		value = [
@@ -966,8 +966,8 @@ zQ.prototype.css = function (args) { /*Set style using CSS syntax*/
 		this.each(function (e) {
 			e.style[args[i]] = value[i];
 		});
-	}*/
-	var style = document.styleSheets[document.styleSheets.length - 1];
-	style.insertRule(this.query + '{' + args +'}', style.cssRules.length);
+	}
+	/*var style = document.styleSheets[document.styleSheets.length - 1];
+	style.insertRule(this.query + '{' + args +'}', style.cssRules.length);*/
 	return this;
 };
