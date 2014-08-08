@@ -396,10 +396,12 @@ body > footer {
 	}
 	main article {
 		flex: 0 1 auto;
+		min-width: 100%;
 		order: 1;
 	}
-	main aside {
+	main aside, main .tags {
 		flex: 0 1 auto;
+		min-width: 100%;
 		order: 2;
 	}
 }
