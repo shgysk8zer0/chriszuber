@@ -17,10 +17,11 @@
 		<menuitem label="Image" data-editor-command="insertimage" data-prompt="Enter image location"></menuitem>
 		<menuitem label="Citation" data-editor-command="inserthtml" data-selection-to="cite"></menuitem>
 		<menuitem label="Quote" data-editor-command="inserthtml" data-selection-to="q"></menuitem>
-		<menuitem label="Code" data-editor-command="inserthtml" data-selection-to="code"></menuitem>
 		<menuitem label="Figure" data-editor-command="inserthtml" data-selection-to="figure"></menuitem>
 		<menuitem label="Figure Caption" data-editor-command="inserthtml" data-selection-to="figcaption"></menuitem>
 		<menuitem label="Highlighted Text" data-editor-command="inserthtml" data-selection-to="mark"></menuitem>
+		<menuitem label="Code" data-editor-command="inserthtml" data-selection-to="code"></menuitem>
+		<menuitem label="Pre-formatted Text" data-editor-command="inserthtml" data-selection-to="pre"></menuitem>
 		<menuitem label="Custom HTML" data-editor-command="inserthtml" data-prompt="Enter the HTML to insert."></menuitem>
 	</menu>
 	<menu label="Text Style">
