@@ -310,7 +310,7 @@ progress[value]::-moz-progress-bar {
 code {
   font-size: 0.9rem;
   padding: 0.1rem;
-  background-color: hsl(0, 0%, 93%);
+  background-color: rgb(225, 225, 225);
   border-radius: 0.2rem;
 }
 
