@@ -15,7 +15,12 @@
 		</menu>
 		<menuitem label="Link" data-editor-command="createlink" data-prompt="Enter link location"></menuitem>
 		<menuitem label="Image" data-editor-command="insertimage" data-prompt="Enter image location"></menuitem>
-		<menuitem label="Code" data-editor-command="inserthtml" data-editor-value="<code>&nbsp;&nbsp;</code>"></menuitem>
+		<menuitem label="Citation" data-editor-command="inserthtml" data-selection-to="cite"></menuitem>
+		<menuitem label="Quote" data-editor-command="inserthtml" data-selection-to="q"></menuitem>
+		<menuitem label="Code" data-editor-command="inserthtml" data-selection-to="code"></menuitem>
+		<menuitem label="Figure" data-editor-command="inserthtml" data-selection-to="figure"></menuitem>
+		<menuitem label="Figure Caption" data-editor-command="inserthtml" data-selection-to="figcaption"></menuitem>
+		<menuitem label="Highlighted Text" data-editor-command="inserthtml" data-selection-to="mark"></menuitem>
 		<menuitem label="Custom HTML" data-editor-command="inserthtml" data-prompt="Enter the HTML to insert."></menuitem>
 	</menu>
 	<menu label="Text Style">
@@ -51,9 +56,51 @@
 		<menuitem label="Right" data-editor-command="justifyright"></menuitem>
 		<menuitem label="Full" data-editor-command="justifyfull"></menuitem>
 	</menu>
+	<menu label="Special Characters">
+		<menu label="Punctuation">
+			<?php foreach(['ldquo', 'ldquo', 'lsquo', 'rsquo', 'rdquo', 'sbquo', 'laquo', 'raquo', 'iquest', 'ndash', 'mdash', '#133', 'dagger', 'Dagger'] as $character):?>
+			<menuitem label="&<?=$character?>;" data-editor-command="inserthtml" data-editor-value="&<?=$character?>;"></menuitem>
+			<?php endforeach?>
+		</menu>
+		<menu label="Legal">
+			<?php foreach(['copy', 'trade', 'reg'] as $character):?>
+			<menuitem label="&<?=$character?>;" data-editor-command="inserthtml" data-editor-value="&<?=$character?>;"></menuitem>
+			<?php endforeach?>
+		</menu>
+		<menu label="Currency">
+			<?php foreach(['curren', 'cent', 'pound', 'yen', 'euro'] as $character):?>
+			<menuitem label="&<?=$character?>;" data-editor-command="inserthtml" data-editor-value="&<?=$character?>;"></menuitem>
+			<?php endforeach?>
+		</menu>
+		<menu label="Mathematics">
+			<menuitem label="&#8734;" data-editor-command="inserthtml" data-editor-value="&#8734;"></menuitem>
+			<menu label="Fractions">
+				<?php foreach(['frac12', 'frac13', 'frac14', 'frac18', 'frac38', 'frac58', 'frac34', 'frac78'] as $character):?>
+				<menuitem label="&<?=$character?>;" data-editor-command="inserthtml" data-editor-value="&<?=$character?>;"></menuitem>
+				<?php endforeach?>
+			</menu>
+			<menu label="Operators">
+				<?php foreach(['plusmn', 'times', '#8729', 'divide', '#8730', '#8800', '#8776', '#8804', '#8805', '#8747', '#8721', '#8706', '#8710', '#131', 'deg'] as $character):?>
+				<menuitem label="&<?=$character?>;" data-editor-command="inserthtml" data-editor-value="&<?=$character?>;"></menuitem>
+				<?php endforeach?>
+			</menu>
+			<menu label="Exponents">
+				<?php foreach(range(1, 3) as $character):?>
+				<menuitem label="&sup<?=$character?>;" data-editor-command="inserthtml" data-editor-value="&<?=$character?>;"></menuitem>
+				<?php endforeach?>
+			</menu>
+		</menu>
+		<menu label="Other">
+			<?php foreach(['spades', 'clubs', 'diams', 'hearts', '#9792', '#9794', 'larr', 'rarr', 'uarr', 'darr', '#9833','#9834', '#9836', '#9837', '#9839'] as $character):?>
+			<menuitem label="&<?=$character?>;" data-editor-command="inserthtml" data-editor-value="&<?=$character?>;"></menuitem>
+			<?php endforeach?>
+		</menu>
+	</menu>
+	<menuitem label="Horizontal Rule" data-editor-command="inserthorizontalrule"></menuitem>
 	<menu label="Selection">
 		<menuitem label="Select All" data-editor-command="selectall"></menuitem>
 		<menuitem label="Clear Formatting" data-editor-command="removeformat"></menuitem>
+		<menuitem label="Remove Links" data-editor-command="unlink"></menuitem>
 	</menu>
 	<menu label="History">
 		<menuitem label="Undo" data-editor-command="undo"></menuitem>
