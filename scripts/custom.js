@@ -287,13 +287,7 @@ NodeList.prototype.bootstrap = function() {
 				}
 				else if(this.data('selection-to')) {
 					let createdEl = document.createElement(this.data('selection-to'));
-					createdEl.textContent = window.getSelection().toString();
-					if(this.data('attributes')) {
-						let attributes = JSON.parse(this.data('attributes'));
-						Object.keys(attributes).forEach(function(attribute) {
-							createdEl.setAttribute(attribute, attributes[attribute]);
-						})
-					}
+					createdEl.textContent = getSelection().toString();
 					arg = createdEl.outerHTML;
 				}
 				document.execCommand(this.data('editor-command'), null, arg);
