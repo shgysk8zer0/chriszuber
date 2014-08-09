@@ -17,7 +17,7 @@
 		private static $instance = [];
 		private $path, $source = '', $replacements = [], $seperator;
 
-		public static function load($tpl, $seperator = '%', $minify = false) {
+		public static function load($tpl, $seperator = '%', $minify = true) {
 			/**
 			 * Static load function avoids creating multiple instances
 			 * It checks if an instance has been created and returns that or a new instance
@@ -69,23 +69,26 @@
 		private function minify() {
 			/**
 			 * Private method to remove all tabs and newlines from source
-			 * 
+			 * Also strips out HTML comments but leaves conditional statements
+			 * such as <!--[if IE 6]>Conditional content<![endif]-->
+			 *
 			 * @param void
 			 * @return self
 			 * @example $this->minify()
 			 */
 
 			$this->source = preg_replace('/[\f\r\n\t]+/', null, $this->source);
+			$this->source = preg_replace('/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/', null, $this->source);
 			return $this;
 		}
 
 		private function replace($replace, $with) {
 			/*
 			 * Private method to prepare replacements
-			 * 
+			 *
 			 * Adds to the replacements array with a key of $replace
 			 * and a value of $with
-			 * 
+			 *
 			 * @param string $replace (placeholder text in the template)
 			 * @param sting $with (What it is being replace with)
 			 * @return self
@@ -101,7 +104,7 @@
 			/**
 			 * Private method for replacing all placeholders with their
 			 * replacements. Returns the results, but does not update the original
-			 * 
+			 *
 			 * @param void
 			 * @return string
 			 * @example $results = $this->get_results()
@@ -113,7 +116,7 @@
 		private function clear() {
 			/*
 			 * Private method to reset the array of replacements
-			 * 
+			 *
 			 * @param void
 			 * @return self
 			 * @example $this->clear()
@@ -140,19 +143,19 @@
 
 			$this->replace($replace, $with);
 		}
-		
+
 		public function __get($replace) {
 			/**
 			 * Magic getter method for the class.
 			 * Not directly useful, since the class is for setting data,
 			 * but this does allow for $template->key .= 'Some value';
-			 * 
+			 *
 			 * @param string $replace (the key to be retrrieved)
 			 * @return string
 			 * @example $template->key //returns $this->replacements[$key]
 			 * @example $template->key .= 'More texty goodness' //Appends to current value
 			 */
-			
+
 			if(array_key_exists($this->seperator . strtoupper((string)$replace) . $this->seperator, $this->replacements)) {
 				return $this->replacements[$this->seperator . strtoupper((string)$replace) . $this->seperator];
 			}
