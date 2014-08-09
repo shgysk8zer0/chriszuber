@@ -276,7 +276,7 @@ NodeList.prototype.bootstrap = function() {
 				});
 			});
 		});
-		node.query('#wysiwyg_menu menuitem[data-editor-command]').forEach(function(item) {
+		node.query('[data-editor-command]').forEach(function(item) {
 			item.addEventListener('click', function() {
 				var arg = null;
 				if(this.data('editor-value')) {
