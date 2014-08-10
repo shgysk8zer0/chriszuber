@@ -119,6 +119,9 @@ a, [download] {
 a::after {
 	font-family: 'Web Symbols';
 }
+article a:visited {
+	color: var(--primary-color);
+}
 main a::after {
 	content: '  K';
 }

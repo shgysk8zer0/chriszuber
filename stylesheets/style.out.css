@@ -152,6 +152,10 @@ a::after {
   font-family: 'Web Symbols';
 }
 
+article a:visited {
+  color: rgba(237, 24, 24, 1);
+}
+
 main a::after {
   content: '  K';
 }
@@ -190,6 +194,8 @@ input:not([type=checkbox]):not([type=submit]):not([type=reset]):not([type=file])
 
 label[data-icon]:empty {
   display: inline-block;
+  *display: inline;
+  *zoom: 1;
   width: 2rem;
   font-size: 0.7em;
   text-align: center;
@@ -201,6 +207,8 @@ label[data-icon]:empty {
 
 label[data-icon]:empty + input {
   display: inline-block;
+  *display: inline;
+  *zoom: 1;
   padding-left: 1rem;
   margin-left: -0.4em;
 }
@@ -283,6 +291,8 @@ details > summary,
 
 progress {
   display: inline-block;
+  *display: inline;
+  *zoom: 1;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.3);
   -webkit-appearance: none;
@@ -364,6 +374,8 @@ dialog[open]::backdrop {
 body > header h1::before {
   content: '';
   display: inline-block;
+  *display: inline;
+  *zoom: 1;
   width: 1.2em;
   height: 1.2em;
   background-image: url('/favicon.svgz');
@@ -645,6 +657,8 @@ img[src$="CreativeCommons.svgz"] {
 
 .logo {
   display: inline-block;
+  *display: inline;
+  *zoom: 1;
   width: 3rem;
   overflow: visible;
 }
@@ -691,6 +705,8 @@ body > progress {
 .copyleft::before {
   content: '©';
   display: inline-block;
+  *display: inline;
+  *zoom: 1;
   -webkit-transform: rotateY(180deg);
   -ms-transform: rotateY(180deg);
   transform: rotateY(180deg);
