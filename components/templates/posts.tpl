@@ -3,7 +3,7 @@
 				<h1 itemprop="headline">%TITLE%</h1>
 				<nav>
 					<details>
-						<summary title="Tags"><span data-icon=","></span></summary>
+						<summary title="Tags" data-icon=","></summary>
 						<div itemprop="keywords">%TAGS%</div>
 					</details>
 				</nav>
