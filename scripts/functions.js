@@ -675,6 +675,20 @@ function handleJSON(json){
 			});
 		});
 	}
+	if(json.serverEvent) {
+		let serverEvent = new EventSource(json.serverEvent);
+		serverEvent.addEventListener('ping', function(event) {
+			handleJSON(JSON.parse(event.data));
+		});
+		serverEvent.addEventListener('close', function(event) {
+			serverEvent.close();
+			handleJSON(JSON.parse(event.data));
+		});
+		serverEvent.addEventListener('error', function(error) {
+			console.error(new Error(error));
+			console.error(error);
+		});
+	}
 }
 function cache() {
 	return this;

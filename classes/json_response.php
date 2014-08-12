@@ -476,7 +476,7 @@
 			$this->response['show'] = $sel;
 			return $this;
 		}
-		
+
 		public function showModal($sel) {
 			/**
 			 * Causes handleJSON to run show() on all $sel.
@@ -553,6 +553,22 @@
 				'hidden',
 				$hide
 			);
+		}
+
+		public function serverEvent($uri) {
+			/**
+			 * Creates a new server event using handleJSON.
+			 *
+			 * Server Events are events sent by the server in specific time intervals,
+			 * allowing continuous communication from server to browser
+			 *
+			 * @link https://developer.mozilla.org/en-US/docs/Server-sent_events/Using_server-sent_events
+			 * @param string $uri (location of the source of the server event)
+			 * @example $resp->serverEvent('event_source.php')
+			 */
+
+			$this->response['serverEvent'] = $uri;
+			return $this;
 		}
 
 		/*public function template($template) {
