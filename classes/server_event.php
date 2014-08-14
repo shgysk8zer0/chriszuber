@@ -18,7 +18,7 @@
 		 * $event->close();
 		 */
 
-		public function __construct($data = null) {
+		public function __construct(array $data = null) {
 			/**
 			 * Constructor for class. Class method to set headers
 			 * and initialize first (optional) set of data.
@@ -58,8 +58,11 @@
 					echo 'data: ' . json_encode($this->response) . PHP_EOL . PHP_EOL;
 				}
 				$this->response = [];
-				return $this;
 			}
+
+			ob_flush();
+			flush();
+			return $this;
 		}
 
 		private function set_headers() {
@@ -78,8 +81,6 @@
 			 * previous response.
 			 */
 
-			ob_flush();
-			flush();
 			sleep($delay);
 			return $this;
 		}
@@ -106,11 +107,14 @@
 					echo 'data: ' . json_encode($this->response) . PHP_EOL . PHP_EOL;
 				}
 				$this->response = [];
-				return $this;
 			}
 			else {
 				echo 'data: "{}"' . PHP_EOL . PHP_EOL;
 			}
+
+			ob_flush();
+			flush();
+			return $this;
 		}
 	}
 ?>

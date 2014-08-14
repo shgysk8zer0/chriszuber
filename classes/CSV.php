@@ -106,22 +106,22 @@
 			return $this;
 		}
 		
-		public function out() {
+		public function out($newline = null) {
 			/*
 			 * Returns all $data as a CSV formatted string
 			 * 
 			 * Uses private build_CSV() method to convert $data
 			 * array into CSV
 			 * 
-			 * @param void
+			 * @param string $newline (optional newline conversion)
 			 * @return string (CSV formatted string from $data)
 			 */
 			
-			$this->build_CSV();
+			$this->build_CSV($newline);
 			return $this->csv;
 		}
 		
-		public function save($fname = 'out') {
+		public function save($fname = 'out', $newline = null) {
 			/*
 			 * Saves all $data as a CSV file
 			 * 
@@ -129,10 +129,11 @@
 			 * array into CSV
 			 * 
 			 * @param string $fname (name without extension which is automatically added)
+			 * @param string $newline (optional newline conversion)
 			 * @return boolean (whether or not save was successful)
 			 */
 			
-			$this->build_CSV();
+			$this->build_CSV($newline);
 			return file_put_contents(BASE . "/{$fname}.csv", $this->csv);
 		}
 		
@@ -162,7 +163,7 @@
 			return false;
 		}
 		
-		private function build_CSV() {
+		private function build_CSV($newline = null) {
 			/**
 			 * Private method for converting a multi-dimensional associate array into CSV string
 			 * 
@@ -170,12 +171,20 @@
 			 * loops through $data, appending each row to CSV formatted string
 			 * using fputscsv(). If print_headers is true, the first row will be all $fields.
 			 * 
+			 * If $newline is passed, it will convert PHP_EOl to $newline (Must use double quotes)
+			 * 
 			 * Once all $data has been looped through, it sets $csv to the value of the CSV string
 			 * 
-			 * @param void
+			 * @param string $newline
 			 * @return void
 			 * @example $this->build_CSV()
 			 */
+			
+			/*$mk_csv = function(&$str, $key) {
+				$str = $this->enclosure . str_replace($this->enclosure, $this->enclosure . $this->enclosure, $str) . $this->enclosure;
+			}
+			array_walk_recursive($this->data, $mk_csv);
+			$this->csv = join($this->delimiter, $this->data);*/
 			
 			if(is_null($this->csv)) {
 				 // Open a memory "file" for read/write...
@@ -191,11 +200,11 @@
 				// ... rewind the "file" so we can read what we just wrote...
 				rewind($fp);
 				// ... read the entire line into a variable...
-				$data = stream_get_contents($fp);
-				// ... close the "file"...
+				$this->csv = rtrim(stream_get_contents($fp));
 				fclose($fp);
-				// ... and return the $data to the caller, with the trailing newline from fgets() removed.
-				$this->csv = rtrim($data);
+				if(is_string($newline)) {
+					$this->csv = str_replace(PHP_EOL, $newline, $this->csv);
+				}
 			}
 		}
 	}

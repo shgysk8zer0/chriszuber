@@ -15,7 +15,7 @@
 		 */
 
 		private static $instance = [];
-		private $path, $source = '', $replacements = [], $seperator;
+		private $path, $source = '', $replacements = [], $seperator, $minify_results;
 
 		public static function load($tpl, $seperator = '%', $minify = true) {
 			/**
@@ -55,30 +55,31 @@
 
 			$this->path = BASE . "/components/templates/{$tpl}.tpl";
 			$this->seperator = $seperator;
+			$this->minify_results = $minify;
 			if(file_exists($this->path)) {
 				$this->source = file_get_contents($this->path);
 			}
 			else {
 				exit("Attempted to load a template that cannot be read. {$tpl} cannot be read");
 			}
-			if($minify) {
-				$this->minify();
+			if($this->minify_results) {
+				$this->minify($this->source);
 			}
 		}
 
-		private function minify() {
+		private function minify(&$string) {
 			/**
 			 * Private method to remove all tabs and newlines from source
 			 * Also strips out HTML comments but leaves conditional statements
 			 * such as <!--[if IE 6]>Conditional content<![endif]-->
 			 *
-			 * @param void
+			 * @param string $string (Pointer to string to minify)
 			 * @return self
 			 * @example $this->minify()
 			 */
 
-			$this->source = preg_replace('/[\f\r\n\t]+/', null, $this->source);
-			$this->source = preg_replace('/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/', null, $this->source);
+			$string = str_replace(["\r", "\n", "\t"], [], $string);
+			$string = preg_replace('/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/', null, $string);
 			return $this;
 		}
 
@@ -94,7 +95,11 @@
 			 * @return self
 			 * @example $this->replace('old', 'new')
 			 */
-
+			
+			if($this->minify_results) {
+				$this->minify($with);
+			}
+			
 			$this->replacements[$this->seperator . strtoupper((string)$replace) . $this->seperator] = (string)$with;
 
 			return $this;
@@ -190,7 +195,7 @@
 			return $this->replace($replace, $arguments[0]);
 		}
 
-		public function set($arr) {
+		public function set(array $arr) {
 			/**
 			 * Loops through $arr using, replacing array_key with array_value in $template
 			 * See __set() documentation for description of template formatting.

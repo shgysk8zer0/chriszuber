@@ -20,7 +20,7 @@
 			 * It uses $ini as the key to the array, and the _pdo instance as
 			 * the value.
 			 *
-			 * @params string $ini (.ini file to use for database credentials)
+			 * @param string $ini (.ini file to use for database credentials)
 			 * @return pdo_object/class
 			 * @example $pdo = _pdo::load or $pdo = _pdo::load('connect')
 			 */
@@ -178,7 +178,7 @@
 			return $this;
 		}
 
-		public function bind($array) {
+		public function bind(array $array) {
 			/**
 			 * Binds values to prepared statements
 			 *
@@ -246,7 +246,7 @@
 			unset($this);
 		}
 
-		public function prepare_keys($arr) {
+		public function prepare_keys(array $arr) {
 			/**
 			 * Converts array_keys to something safe for
 			 * queries
@@ -265,7 +265,7 @@
 			return $arr;
 		}
 
-		public function prepare_key_value(&$arr) {
+		public function prepare_key_value(array &$arr) {
 			/**
 			 * While this works with multi-dimensional
 			 * array, it is intended to be used for things
@@ -347,7 +347,7 @@
 			return $val;
 		}
 
-		public function binders($arr, $prefix = null, $suffix = null) {
+		public function binders(array $arr, $prefix = null, $suffix = null) {
 			/**
 			 * Make setting up prepared statements much easier by
 			 * setting up all of the components using $key => $value of $arr
@@ -463,7 +463,7 @@
 			return $this->fetch_array("SELECT {$these} FROM {$this->escape($table)}");
 		}
 
-		public function array_insert($table, $content) {
+		public function array_insert($table, array $content) {
 			/**
 			 *
 			 * @param string $table, array $content

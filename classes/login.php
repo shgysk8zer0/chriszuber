@@ -50,7 +50,7 @@
 			);
 		}
 
-		public function create_from($source) {
+		public function create_from(array $source) {
 			/**
 			 * Creates new user using an array passed as source. Usually $_POST or $_SESSION
 			 *
@@ -82,7 +82,7 @@
 			}
 		}
 
-		public function login_with($source) {
+		public function login_with(array $source) {
 			/**
 			 * Intended to find login info from $_COOKIE, $_SESSION, or $_POST
 			 *

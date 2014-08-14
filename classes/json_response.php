@@ -24,7 +24,7 @@
 			return self::$instance;
 		}
 
-		public function __construct($arr = null) {
+		public function __construct(array $arr = null) {
 			if(is_array($arr)) {
 				$this->response = $arr;
 			}
@@ -415,7 +415,7 @@
 			return $this;
 		}
 
-		public function open($url = null, $paramaters = null, $replace = false, $name = '_blank') {
+		public function open($url = null, array $paramaters = null, $replace = false, $name = '_blank') {
 			/**
 			 * Creates a popup window via JavaScript's window.open()
 			 *

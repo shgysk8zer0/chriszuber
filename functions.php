@@ -775,10 +775,10 @@
 		return array_sum($args) / count($args);
 	}
 
-	function list_array($array) {
+	function list_array(array $array) {
 		/**
 		 * Prints out an unordered list from an array
-		 * @params array
+		 * @param array $array
 		 * @return void
 		 */
 
