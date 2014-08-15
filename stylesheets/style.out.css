@@ -20,15 +20,19 @@
 
 :root {
   background-color: rgb(19, 0, 0);
-  background-image: url(../images/backgrounds/red-curls.svgz);
-  -webkit-background-size: cover;
-  background-size: cover;
+  background-image: url('../images/backgrounds/static.svgz');
   background-position: center;
-  background-repeat: no-repeat;
   background-attachment: fixed;
   color: rgba(252, 252, 252, 1);
   text-shadow: rgba(20,20,20,0.9);
   cursor: url(../images/cursors/Arch-black.svgz), auto;
+}
+
+html {
+  background-image: url('../images/backgrounds/static.jpg');
+  font-size: 17px;
+  color: rgba(252, 252, 252, 1);
+  background-color: rgb(19, 0, 0);
 }
 
 ::-moz-selection {
