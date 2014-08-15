@@ -49,19 +49,20 @@
 
 			if(session_status() !== PHP_SESSION_ACTIVE) {							#Do not create new session of one has already been created
 				$this->expires = 0;
-				$this->path = preg_replace('/^' . preg_quote("{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}", '/') . '/', '', URL);
+				$this->path = str_replace("{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}", '/', URL);
 				$this->domain =$_SERVER['HTTP_HOST'];
 				$this->secure = https();
 				$this->httponly = true;
-				if(isset($name)) {
-					$name = trim(strtolower($name));
-					session_name($name);
-					$this->name = $name;
+
+				if(is_null($name)) {
+					$name = end(explode('/', trim(URL, '/')));
 				}
-				else {										#If session has already started, get the name of it
-					$this->name = session_name();
+				$name = trim(strtolower($name));
+				session_name($name);
+				$this->name = $name;
+				if(!array_key_exists($this->name, $_COOKIE)) {
+					session_set_cookie_params($this->expires, $this->path, $this->domain, $this->secure, $this->httponly);
 				}
-				session_set_cookie_params($this->expires, $this->path, $this->domain, $this->secure, $this->httponly);
 				session_start();
 			}
 		}
