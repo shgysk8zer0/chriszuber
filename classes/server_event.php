@@ -71,8 +71,11 @@
 			 */
 
 			header('Content-Type: text/event-stream');
-			header('Cache-Control: no-cache');
-			header('Connection: Close');
+			header_remove('X-Powered-By');
+			header_remove('Expires');
+			header_remove('Pragma');
+			header_remove('X-Frame-Options');
+			header_remove('Server');
 			return $this;
 		}
 
