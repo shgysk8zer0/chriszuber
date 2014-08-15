@@ -37,19 +37,6 @@
 
 		date_default_timezone_set('America/Los_Angeles');
 
-		$connect = ini::load('connect');
-		if(!isset($connect->site)) {
-			if(is_null($site)) {
-				($_SERVER['DOCUMENT_ROOT'] === __DIR__ . DIRECTORY_SEPARATOR or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? $connect->site = end(explode('/', preg_replace('/' . preg_quote(DIRECTORY_SEPARATOR, '/') .'$/', null, $_SERVER['DOCUMENT_ROOT']))) : $connect->site = explode(DIRECTORY_SEPARATOR, $_SERVER['PHP_SELF'])[1];
-			}
-		}
-
-		if(!isset($connect->user)) $conenct->user = $connect->site;
-		if(!isset($connect->database)) $connect->database = $connect->user;
-		if(!isset($connect->server)) $connect->server = 'localhost';
-		if(!isset($connect->debug)) $connect->debug = true;
-		if(!isset($connect->type)) $connect->type = 'mysql';
-
 		if(file_exists('./config/define.ini')) {
 			foreach(parse_ini_file('./config/define.ini') as $key => $value) {
 				define(strtoupper(preg_replace('/\s|-/', '_', $key)), $value);
@@ -57,8 +44,8 @@
 		}
 
 		if(!defined('BASE')) define('BASE', __DIR__);
-		if(!defined('URL')) ($_SERVER['DOCUMENT_ROOT'] === __DIR__ . DIRECTORY_SEPARATOR or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/{$connect->site}");
-		new session($connect->site);
+		if(!defined('URL')) ($_SERVER['DOCUMENT_ROOT'] === __DIR__ . DIRECTORY_SEPARATOR or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/" . end(explode('/', BASE)));
+		session::load();
 		nonce(50);									// Set a nonce of n random characters
 	}
 
