@@ -70,8 +70,9 @@
 			 * Sets headers required to be handled as a server event.
 			 */
 
-			header('Content-Type: text/event-stream' . PHP_EOL . PHP_EOL);
+			header('Content-Type: text/event-stream');
 			header('Cache-Control: no-cache');
+			header('Connection: Close');
 			return $this;
 		}
 
