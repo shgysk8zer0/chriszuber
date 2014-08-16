@@ -128,6 +128,19 @@ main a::after {
 a[rel=tag]::after {
 	content: '  ,';
 }
+a[rel=next]::after {
+	font-size: 3rem;
+	color: var(--alt-color);
+	content: ')';
+}
+[rel=prev]::after {
+	font-size: 3rem;
+	color: var(--alt-color);
+	content: '(';
+}
+a[rel=bookmark]::after {
+	content: '';
+}
 main a[target="_blank"]::after {
 	content:'  D';
 }
