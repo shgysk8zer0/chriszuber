@@ -55,7 +55,7 @@
 				$this->httponly = true;
 
 				if(is_null($name)) {
-					$name = end(explode('/', trim(URL, '/')));
+					$name = preg_replace('/[^A-z]/', null, end(explode('/', trim(URL, '/'))));
 				}
 				$name = trim(strtolower($name));
 				session_name($name);
