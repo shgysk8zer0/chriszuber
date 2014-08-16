@@ -8,6 +8,26 @@
 		left: 0;
 	}
 }
+@-webkit-keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+}
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+}
+@-webkit-keyframes fadeOut {
+	to {
+		opacity: 0;
+	}
+}
+@keyframes fadeOut {
+	to {
+		opacity: 0;
+	}
+}
 @keyframes slide {
 	from {
 		left: 100%;
