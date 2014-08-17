@@ -1,4 +1,4 @@
-<div itemscope itemtype="http://schema.org/UserComments">
+<div itemscope itemprop="comment" itemtype="http://schema.org/UserComments">
 	By&nbsp;<b itemprop="creator">%AUTHOR%</b>&nbsp;on&nbsp;
 	<i><u><time itemprop="CommentTime">%TIME%</time></u></i>
 	<blockquote itemprop="commentText">%COMMENT%</blockquote>
