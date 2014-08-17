@@ -1,6 +1,6 @@
 'use strict';
 window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to work, so use this instead*/
-	var html = $('html'),
+	let html = $('html'),
 		body = $('body'),
 		head = $('head');
 		cache = new cache();
@@ -21,7 +21,7 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 		attributes: function(){
 			switch(this.attributeName) {
 				case 'contextmenu': {
-					var menu = this.target.attr('contextmenu');
+					let menu = this.target.attr('contextmenu');
 					(this.oldValue !== '') && $('menu#' + this.oldValue).delete();
 					if(menu && menu !== '') {
 						if(!$('menu#'+ menu).found){
@@ -129,7 +129,7 @@ NodeList.prototype.bootstrap = function() {
 		}
 		if(supports('menuitem')) {
 			node.query('[contextmenu]').forEach(function(el) {
-				var menu = el.attr('contextmenu');
+				let menu = el.attr('contextmenu');
 				if(menu && menu !== '') {
 					if(!$('menu#'+ menu).found){
 						ajax({
@@ -221,7 +221,7 @@ NodeList.prototype.bootstrap = function() {
 				}
 			});
 			if(form.name === 'new_post') {
-				var retain = setInterval(function(){
+				let retain = setInterval(function(){
 					ajax({
 						url: document.baseURI,
 						request: 'action=keep-alive'
@@ -280,7 +280,7 @@ NodeList.prototype.bootstrap = function() {
 		});
 		node.query('[data-editor-command]').forEach(function(item) {
 			item.addEventListener('click', function() {
-				var arg = null;
+				let arg = null;
 				if(this.data('editor-value')) {
 					arg = this.data('editor-value');
 				}
@@ -381,7 +381,7 @@ NodeList.prototype.bootstrap = function() {
 		});
 		node.query('menuitem[label="Edit Post"]').forEach(function(el) {
 			el.addEventListener('click', function() {
-				var form = document.createElement('form'),
+				let form = document.createElement('form'),
 					article = document.querySelector('article'),
 					title = document.querySelector('article header h1'),
 					keywords = document.querySelector('article header nav'),
@@ -423,7 +423,7 @@ NodeList.prototype.bootstrap = function() {
 				fieldset.append(legend, article, oldTitle, description, submit);
 				form.appendChild(fieldset);
 				document.querySelector('main').appendChild(form);
-				var retain = setInterval(function(){
+				let retain = setInterval(function(){
 					ajax({
 						url: document.baseURI,
 						request: 'action=keep-alive'
@@ -451,7 +451,7 @@ NodeList.prototype.bootstrap = function() {
 	return this;
 }
 Element.prototype.worker_clock=function(){
-	var clockWorker = new Worker(document.baseURI + 'scripts/workers/clock.js'),
+	let clockWorker = new Worker(document.baseURI + 'scripts/workers/clock.js'),
 		time = this;
 	clockWorker.addEventListener('message', function(e){
 		time.textContent = e.data.norm;
@@ -486,7 +486,7 @@ Element.prototype.DnD = function (sets) {
 		e.preventDefault();
 		console.log(e);
 		if(e.dataTransfer.files.length) {
-			for(var i=0; i < e.dataTransfer.files.length; i++) {
+			for(let i=0; i < e.dataTransfer.files.length; i++) {
 				let file = e.dataTransfer.files[i],
 					reader = new FileReader(),
 					progress = document.createElement('progress');
