@@ -99,7 +99,10 @@ RegExp.prototype.escape = function(){
 /*===========================De-Prefix several JavaScript methods==========================================================================*/
 
 if (!('Notification' in window)) {
-	Notification = mozNotification || false;
+	/*Notification = mozNotification || false;*/
+	if('mozNotification' in window) {
+		Notification = mozNotification;
+	}
 }
 if (!('notifications' in window)) {
 	window.notifications = window.webkitNotifications || window.oNotifications || window.msNotifications || false;
