@@ -232,6 +232,9 @@ a, button:not(:disabled), input[type=submit], input[type=reset], input[type=imag
 .no-details details:not([open]) > :not(summary) {
 	display: none;
 }
+details > summary:only-child, details > summary:only-child::before, details > summary:only-child::after {
+	display: none;
+}
 progress {
 	display: inline-block;
 	*display: inline;
@@ -520,4 +523,7 @@ body > progress {
 	*display: inline;
 	*zoom: 1;
 	transform: rotateY(180deg);
+}
+details > summary:only-child, details > summary:only-child::before, details > summary:only-child::after {
+	display: none;
 }
