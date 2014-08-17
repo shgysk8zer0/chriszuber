@@ -164,6 +164,22 @@ a[rel=tag]::after {
   content: '  ,';
 }
 
+a[rel=next]::after {
+  font-size: 3rem;
+  color: rgba(41, 41, 41, 1);
+  content: ')';
+}
+
+[rel=prev]::after {
+  font-size: 3rem;
+  color: rgba(41, 41, 41, 1);
+  content: '(';
+}
+
+a[rel=bookmark]::after {
+  content: '';
+}
+
 main a[target="_blank"]::after {
   content: '  D';
 }

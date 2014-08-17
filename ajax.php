@@ -656,6 +656,80 @@
 					);
 				}
 			} break;
+
+			case 'comments': {
+				$invalid = find_invalid_inputs([
+					'comment_author' => '[\w\- ]+',
+					'comment_email' => '.+'
+				]);
+
+				if(is_null($invalid)) {
+					$comment =str_replace(
+						["\r", "\n", "\r\n"],
+						['<br />'],
+						strip_tags(
+							preg_replace_callback(
+								'/(?<=\<code\>)(.*)(?=' . preg_quote('</code>', '/') . ')/',
+								function($code) {
+									return htmlentities($code[0]);
+								},
+								$_POST['comment']
+							),
+							'<br><p><span><div><a><ul><ol><li><i><u><b><em><u><h1><h2><h3><h4><h5><h6><pre><s><samp><strong><big><small><sup><sub><del><ins><code><var><kbd><cite>'
+						)
+					);
+					$post = $_POST['for_post'];
+					$template = template::load('comments');
+					$author = $_POST['comment_author'];
+					$author_url = (array_key_exists('comment_url', $_POST)) ? $_POST['comment_url'] : '';
+					$author_email = $_POST['comment_email'];
+					$time = date('Y-m-d H:i:s');
+
+					$DB->prepare("
+						INSERT INTO `comments`(
+							`comment`,
+							`author`,
+							`author_url`,
+							`author_email`,
+							`post`
+						) VALUES (
+							:comment,
+							:author,
+							:author_url,
+							:author_email,
+							:post
+						)
+					")->bind([
+						'comment' => $comment,
+						'author' => $author,
+						'author_url' => $author_url,
+						'author_email' => $author_email,
+						'post' => $post
+					])->execute();
+
+					$resp->close(
+						'#new_comment'
+					)->append(
+						'#comments_section',
+						$template->comment(
+							$comment
+						)->time(
+							date('l, F jS Y h:i A')
+						)->author(
+							$author
+						)->out()
+					)->notify(
+						'Comment Submitted',
+						"Your comment has been added to “{$_POST['post_title']}”"
+					)->clear(
+						'comments'
+					)->scrollTo(
+						'[itemtype="http://schema.org/UserComments"]:last-of-type'
+					)->log(
+						$_POST
+					);
+				}
+			} break;
 		}
 
 		if(isset($invalid)) {
@@ -804,10 +878,17 @@
 			} break;
 
 			case 'test': {
+				$str = 'testing <code><p>some text</p></code> testing';
 				$resp->notify(
+					str,
+					preg_replace_callback('/(?<=' . preg_quote('<code>', '/') . ')(.*)(?=' . preg_quote('</code>', '/') . ')/', function($matches) {
+						return htmlentities($matches[0]);
+					}, $str)
+				);
+				/*$resp->notify(
 					'Edit Me',
 					'I am on line ' . __LINE__ . ' in ' . __FILE__
-				);
+				);*/
 			}break;
 		}
 	}
