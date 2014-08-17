@@ -305,6 +305,12 @@ details > summary,
   display: none;
 }
 
+details > summary:only-child,
+details > summary:only-child::before,
+details > summary:only-child::after {
+  display: none;
+}
+
 progress {
   display: inline-block;
   *display: inline;
@@ -726,4 +732,10 @@ body > progress {
   -webkit-transform: rotateY(180deg);
   -ms-transform: rotateY(180deg);
   transform: rotateY(180deg);
+}
+
+details > summary:only-child,
+details > summary:only-child::before,
+details > summary:only-child::after {
+  display: none;
 }
