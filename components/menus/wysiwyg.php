@@ -59,7 +59,7 @@
 	</menu>
 	<menu label="Special Characters">
 		<menu label="Punctuation">
-			<?php foreach(['ldquo', 'ldquo', 'lsquo', 'rsquo', 'rdquo', 'sbquo', 'laquo', 'raquo', 'iquest', 'ndash', 'mdash', '#133', 'dagger', 'Dagger'] as $character):?>
+			<?php foreach(['ldquo', 'lsquo', 'rsquo', 'rdquo', 'sbquo', 'laquo', 'raquo', 'iquest', 'ndash', 'mdash', '#133', 'dagger', 'Dagger'] as $character):?>
 			<menuitem label="&<?=$character?>;" data-editor-command="inserthtml" data-editor-value="&<?=$character?>;"></menuitem>
 			<?php endforeach?>
 		</menu>
@@ -97,6 +97,7 @@
 			<?php endforeach?>
 		</menu>
 	</menu>
+	<menuitem label="Line Break" data-editor-command="inserthtml" data-editor-value="<br />"></menuitem>
 	<menuitem label="Horizontal Rule" data-editor-command="inserthorizontalrule"></menuitem>
 	<menu label="Selection">
 		<menuitem label="Select All" data-editor-command="selectall"></menuitem>
