@@ -166,8 +166,8 @@ NodeList.prototype.bootstrap = function() {
 		if(!supports('picture')) {
 			node.query('picture').forEach(function(picture) {
 				if('matchMedia' in window) {
-					var sources = picture.querySelectorAll('source[media][srcset]');
-					for(var n = 0; n < sources.length; n++) {
+					let sources = picture.querySelectorAll('source[media][srcset]');
+					for(let n = 0; n < sources.length; n++) {
 						if(matchMedia(sources[n].getAttribute('media')).matches) {
 							picture.getElementsByTagName('img')[0].src = sources[n].getAttribute('srcset');
 							break;
@@ -288,7 +288,7 @@ NodeList.prototype.bootstrap = function() {
 					arg = prompt(this.data('prompt'));
 				}
 				else if(this.data('selection-to')) {
-					var createdEl = document.createElement(this.data('selection-to'));
+					let createdEl = document.createElement(this.data('selection-to'));
 					createdEl.textContent = getSelection().toString();
 					arg = createdEl.outerHTML;
 				}
@@ -487,7 +487,7 @@ Element.prototype.DnD = function (sets) {
 		console.log(e);
 		if(e.dataTransfer.files.length) {
 			for(var i=0; i < e.dataTransfer.files.length; i++) {
-				var file = e.dataTransfer.files[i],
+				let file = e.dataTransfer.files[i],
 					reader = new FileReader(),
 					progress = document.createElement('progress');
 				progress.min = 0;
