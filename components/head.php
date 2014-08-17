@@ -15,7 +15,7 @@
 <meta name="keywords" content="<?=$page->keywords?>"/>
 <meta name="robots" content="<?=$head->robots?>"/>
 <meta name="author" content="<?=$page->author?>"/>
-<meta itemprop="name" content="<?=($pages->head === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?>"/>
+<meta itemprop="name" content="<?=($pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?>"/>
 <meta itemprop="url" content="<?=URL . $_SERVER['REQUEST_URI']?>"/>
 <meta itemprop="description" content="<?=$page->description?>"/>
 <meta itemprop="keywords" content="<?=$page->keywords?>"/>
