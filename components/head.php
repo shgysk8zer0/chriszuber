@@ -9,7 +9,7 @@
 ?>
 <head>
 <meta charset="<?=$head->charset?>"/>
-<title><?=($pages->head === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?></title>
+<title><?=($pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?></title>
 <base href="<?=URL?>/"/>
 <meta name="description" content="<?=$page->description?>"/>
 <meta name="keywords" content="<?=$page->keywords?>"/>
