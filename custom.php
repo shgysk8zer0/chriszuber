@@ -1,5 +1,27 @@
 <?php
+	function find_invalid_inputs(array $inputs) {
+		/**
+		 * Checks that each $inputs is set and matches a pattern
+		 *
+		 * Loops through an array of inputs, checking that
+		 * it exists in $_REQUEST, and checks that $_REQUEST[$key]
+		 * matches the specified pattern.
+		 *
+		 * @param array $inputs ([$key => $pattern])
+		 * @return mixed (null if all inputs valid, selector '[name="key"]' of first invalid input if not)
+		 * @usage find_invalid_inputs(['num'] => '\d')
+		 */
 
+		$keys = array_keys($inputs);
+		$patterns  = array_values($inputs);
+
+		for($i = 0; $i < count($inputs); $i++) {
+			if(!array_key_exists($keys[$i], $_REQUEST) or !preg_match('/^' . $patterns[$i] . '$/', $_REQUEST[$keys[$i]])) {
+				return "[name=\"{$keys[$i]}\"]";
+			}
+		}
+		return null;
+	}
 	function get_template($template) {
 		return file_get_contents(BASE . "/components/templates/{$template}.tpl");
 	}
