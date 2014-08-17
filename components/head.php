@@ -62,7 +62,7 @@
 <?php endif?>
 <!--[if lte IE 8]>
 <script type="text/javascript">
-	var html5=new Array('header','hgroup','nav','menu','main','section','article','footer','aside','mark');
+	var html5=new Array('header','hgroup','nav','menu','main','section','article','footer','aside','mark', 'details', 'summary', 'dialog', 'figure', 'figcaption', 'picture', 'source');
 	for(var i=0;i<html5.length;i++){document.createElement(html5[i]);}
 </script>
 <![endif]-->
