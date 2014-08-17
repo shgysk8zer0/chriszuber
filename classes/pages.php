@@ -73,16 +73,18 @@
 
 		public function get_content() {
 			$login = login::load();
+			$DB = _pdo::load();
 
 			switch($this->type) {
 				case 'posts': {
 					$template = template::load('posts');
+					$comments = template::load('comments');
 					$time = new simple_date($this->data->created);
 
 					foreach(explode(',', $this->data->keywords) as $tag) {
 						$template->tags .= '<a href="' . URL . '/tags/' . urlencode(trim($tag)) . '" rel="tag">' . trim($tag) . "</a>";
 					}
-					$this->content = $template->title(
+					$template->title(
 						$this->data->title
 					)->content(
 						$this->data->content
@@ -94,7 +96,36 @@
 						$time->out('m/d/Y')
 					)->datetime(
 						$time->out()
-					)->out();
+					)->home(
+						URL
+					)->comments(
+						''
+					)->url(
+						$this->data->url
+					);
+
+					foreach($DB->prepare("
+						SELECT
+							`comment`,
+							`author`,
+							`author_url`,
+							`time`
+						FROM `comments`
+						WHERE `post` = :post
+					")->bind([
+						'post' => $this->data->url
+					])->execute()->get_results() as $comment) {
+						$time = new simple_date($comment->time);
+						$template->comments .= $comments->comment(
+							$comment->comment
+						)->author(
+							(strlen($comment->author_url)) ? "<a href=\"{$comment->author_url}\" target=\"_blank\">{$comment->author}</a>" : $comment->author
+						)->time(
+							$time->out('l, F jS Y h:i A')
+						)->out();
+					}
+
+					$this->content = $template->out();
 
 				} break;
 
