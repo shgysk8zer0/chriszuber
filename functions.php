@@ -463,7 +463,7 @@
 				else define('OS', 'Unknown');
 			}
 			else{
-				define('BOWSER', 'Unknown');
+				define('BROWSER', 'Unknown');
 				define('OS', 'Unknown');
 			};
 		}
