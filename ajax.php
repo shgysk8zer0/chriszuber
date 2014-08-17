@@ -669,7 +669,7 @@
 						['<br />'],
 						strip_tags(
 							preg_replace_callback(
-								'/(?<=\<code\>)(.*)(?=' . preg_quote('</code>', '/') . ')/',
+								'/(?<=\<code\>).*?(?=\<\/code\>)/',
 								function($code) {
 									return htmlentities($code[0]);
 								},
@@ -878,12 +878,19 @@
 			} break;
 
 			case 'test': {
-				$str = 'testing <code><p>some text</p></code> testing';
+				$str = 'testing <code><p>some text</p></code> and another <code><a href="#">link</a></code> testing';
 				$resp->notify(
 					str,
-					preg_replace_callback('/(?<=' . preg_quote('<code>', '/') . ')(.*)(?=' . preg_quote('</code>', '/') . ')/', function($matches) {
-						return htmlentities($matches[0]);
-					}, $str)
+					strip_tags(
+							preg_replace_callback(
+								'/(?<=\<code\>).*?(?=\<\/code\>)/',
+								function($code) {
+									return htmlentities($code[0]);
+								},
+								$str
+							),
+							'<br><p><span><div><a><ul><ol><li><i><u><b><em><u><h1><h2><h3><h4><h5><h6><pre><s><samp><strong><big><small><sup><sub><del><ins><code><var><kbd><cite>'
+						)
 				);
 				/*$resp->notify(
 					'Edit Me',
