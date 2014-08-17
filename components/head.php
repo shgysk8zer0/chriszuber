@@ -5,20 +5,20 @@
 	$storage->site_info = $head;
 	$pages = pages::load();
 
-	$page = ($pages->description) ? $pages : $head;
+	//$page = ($pages->description) ? $pages : $head;
 ?>
 <head>
 <meta charset="<?=$head->charset?>"/>
-<title><?=($pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?></title>
+<title><?=(!(is_string($pages->title) and strlen($pages->title)) or $pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?></title>
 <base href="<?=URL?>/"/>
-<meta name="description" content="<?=$page->description?>"/>
-<meta name="keywords" content="<?=$page->keywords?>"/>
+<meta name="description" content="<?=isset($pages->description) ? $pages->description : $head->description?>"/>
+<meta name="keywords" content="<?=isset($pages->keywords) ? $pages->keywords : $head->keywords?>"/>
 <meta name="robots" content="<?=$head->robots?>"/>
-<meta name="author" content="<?=$page->author?>"/>
+<meta name="author" content="<?=$head->author?>"/>
 <meta itemprop="name" content="<?=($pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?>"/>
 <meta itemprop="url" content="<?=URL . $_SERVER['REQUEST_URI']?>"/>
 <meta itemprop="description" content="<?=$page->description?>"/>
-<meta itemprop="keywords" content="<?=$page->keywords?>"/>
+<meta itemprop="keywords" content="<?=isset($pagse->keywords) ? $pages->keywords : $head->keywords?>"/>
 <meta itemprop="image" content="<?=URL?>/super-user.png"/>
 <meta name="viewport" content="<?=$head->viewport?>"/>
 <meta name="mobile-web-app-capable" content="yes">

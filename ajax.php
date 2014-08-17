@@ -21,31 +21,18 @@
 			'main :first-child'
 		);
 
-		if($page->type === 'posts') {
-			$resp->attributes(
-				'meta[name=description], meta[itemprop=description]',
-				'content',
-				$page->description
-			)->attributes(
-				'meta[name=keywords], meta[itemprop=keywords]',
-				'content',
-				$page->keywords
-			)->attributes(
-				'meta[name=author], meta[itemprop=author]',
-				'content',
-				$page->author
-			)->text(
-				'head > title',
-				"{$page->title} | {$head->value}"
-			);
-		}
-
-		elseif($page->type === 'tags') {
-			$resp->text(
-				'head > title',
-				"Tags | {$head->value}"
-			);
-		}
+		$resp->attributes(
+			'meta[name=description], meta[itemprop=description]',
+			'content',
+			$page->description
+		)->attributes(
+			'meta[name=keywords], meta[itemprop=keywords]',
+			'content',
+			$page->keywords
+		)->text(
+			'head > title',
+			"{$page->title} | {$head->value}"
+		);
 	}
 
 	elseif(array_key_exists('load_form', $_POST)) {

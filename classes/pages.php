@@ -12,7 +12,6 @@
 		}
 
 		public function __construct($url = null) {
-			$connect = ini::load('connect');
 			$this->status = (array_key_exists('REDIRECT_STATUS', $_SERVER)) ? $_SERVER['REDIRECT_STATUS'] : http_response_code();
 			$pdo = _pdo::load();
 			if(isset($url)) {
@@ -21,7 +20,7 @@
 			else {
 				$this->url = (array_keys_exist('REDIRECT_URL', 'REDIRECT_STATUS', $_SERVER)) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'];
 			}
-			$this->path = explode('/', urldecode(preg_replace('/^(' . preg_quote(URL, '/')  .')?(' .preg_quote($connect->site, '/') . ')?(\/)?/', null, strtolower($this->url))));
+			$this->path = explode('/', urldecode(preg_replace('/^(' . preg_quote(URL, '/')  .')?(\/)?/', null, strtolower($this->url))));
 
 			switch($this->path[0]) {
 				case 'tags': {
@@ -68,7 +67,11 @@
 		}
 
 		public function __get($key) {
-			return $this->data->$key;
+			return isset($this->data->$key) ? $this->data->$key : false;
+		}
+
+		public function __isset($key) {
+			return isset($this->data->$key);
 		}
 
 		public function get_content() {
@@ -130,6 +133,9 @@
 				} break;
 
 				case 'tags': {
+					$this->title = 'Tags';
+					$this->description = "Tags search results for {$this->path[1]}";
+					$this->keywords = "Keywords, tags, search, {$this->path[1]}";
 					$this->content = '<div class="tags">';
 
 					$template = template::load('tags');
