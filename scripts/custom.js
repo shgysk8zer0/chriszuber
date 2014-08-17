@@ -205,18 +205,20 @@ NodeList.prototype.bootstrap = function() {
 		node.query('form[name]').forEach(function(form){
 			form.addEventListener('submit', function(event){
 				event.preventDefault();
-				ajax({
-					url: this.action || document.baseURI,
-					type: this.method || 'POST',
-					contentType: this.enctype,
-					form: this
-				}).then(
-					JSON.parse,
-					console.error
-				).then(
-					handleJSON,
-					console.error
-				);
+				if(!this.data('confirm') || confirm(this.data('confirm'))) {
+					ajax({
+						url: this.action || document.baseURI,
+						type: this.method || 'POST',
+						contentType: this.enctype,
+						form: this
+					}).then(
+						JSON.parse,
+						console.error
+					).then(
+						handleJSON,
+						console.error
+					);
+				}
 			});
 			if(form.name === 'new_post') {
 				var retain = setInterval(function(){
