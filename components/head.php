@@ -4,8 +4,6 @@
 	define('TITLE', $head->title);
 	$storage->site_info = $head;
 	$pages = pages::load();
-
-	//$page = ($pages->description) ? $pages : $head;
 ?>
 <head>
 <meta charset="<?=$head->charset?>"/>
@@ -17,7 +15,7 @@
 <meta name="author" content="<?=$head->author?>"/>
 <meta itemprop="name" content="<?=($pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?>"/>
 <meta itemprop="url" content="<?=URL . $_SERVER['REQUEST_URI']?>"/>
-<meta itemprop="description" content="<?=$page->description?>"/>
+<meta itemprop="description" content="<?=isset($pages->description) ? $pages->description : $head->description?>"/>
 <meta itemprop="keywords" content="<?=isset($pagse->keywords) ? $pages->keywords : $head->keywords?>"/>
 <meta itemprop="image" content="<?=URL?>/super-user.png"/>
 <meta name="viewport" content="<?=$head->viewport?>"/>
