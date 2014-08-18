@@ -14,8 +14,10 @@
 			<?php endif?>
 			<?php if(isset($contact->job_title)):?><i itemprop="jobTitle"><?=ucwords($contact->job_title)?></i><?php endif?>
 			<?php if(isset($contact->company_name)):?>- <b itemprop="worksFor">
-				<a itemprop="url" title="<?=ucwords($contact->company_name)?> Homepage" href="<?=ucwords($contact->company_url)?>"><?=ucwords($contact->company)?></a><?php endif?>
+				<a itemprop="url" title="<?=ucwords($contact->company_name)?> Homepage" href="<?=ucwords($contact->company_url)?>"><?=ucwords($contact->company)?></a>
 			</b>
+			<?php endif?>
+
 		</div><br />
 		<div>
 			<?php if(isset($contact->cell_phone)):?><a href="tel:<?=$contact->cell_phone?>" target="_blank" title="Call my cell phone" itemprop="telephone"><?=$contact->cell_phone?> <?php include('images/icons/mobile_icon.svg')?></a><br /><?php endif?>
