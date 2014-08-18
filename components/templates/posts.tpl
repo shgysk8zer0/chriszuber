@@ -36,7 +36,7 @@
 							<input type="url" name="comment_url" id="comment_url" placeholder="http://www.example.com"/>
 							<hr />
 							<textarea name="comment" rows="6" cols="30" placeholder="Enter your comment here. No MarkDown. Only <a>, <code>, and text-formatting tags allowed" required></textarea><br />
-							<input type="hidden" name="for_post" value="%URL%" requier readonly/>
+							<input type="hidden" name="for_post" value="%URL%" required readonly/>
 							<input type="hidden" name="post_title" value="%TITLE%" required readonly/>
 							<button type="submit" data-icon="."></button>
 						</fieldset>
