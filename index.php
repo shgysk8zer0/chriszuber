@@ -33,6 +33,6 @@
 <!--<?=date('Y-m-d H:i:s')?>-->
 <?php load('head');?>
 <body lang="en" contextmenu="main_menu">
-	<?php load('header', 'main', 'footer');?>
+	<?php load('forms/login', 'header', 'main', 'footer');?>
 </body>
 </html>
