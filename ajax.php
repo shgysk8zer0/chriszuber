@@ -919,7 +919,7 @@
 		if(preg_match('/^[A-z]$/', $_REQUEST['hangman'])) {
 			if(preg_match("/{$_REQUEST['hangman']}/", $session->hangman_phrase)) {
 				$session->hangman_matches++;
-				preg_match_all("/{$_REQUEST['hangman']}/i", str_replace(' ', null, $session->hangman_phrase), $matches, PREG_OFFSET_CAPTURE);
+				preg_match_all("/{$_REQUEST['hangman']}/i", preg_replace('/[^A-z]/', null, $session->hangman_phrase), $matches, PREG_OFFSET_CAPTURE);
 
 				foreach($matches[0] as $index) {
 					$pos = (int)$index[1] + 1;
@@ -931,7 +931,7 @@
 				$resp->disable(
 					"button[data-request=\"hangman={$_REQUEST['hangman']}\"]"
 				);
-				if((int)count(array_unique(str_split(str_replace(' ', null, $session->hangman_phrase)))) === (int)$session->hangman_matches) {
+				if((int)count(array_unique(str_split(preg_replace('/[^A-z]/', null, $session->hangman_phrase)))) === (int)$session->hangman_matches) {
 					$resp->notify(
 						'Congratulation',
 						'You have won'
@@ -983,8 +983,11 @@
 				case 'restart': {
 					$phrases = [
 						'this is the song that never ends',
-						'yes it goes on and on my friends',
-						'testing'
+						'i love php & javascript',
+						'sudo apt-get install life',
+						'supercalifragilisticexpialidocious',
+						'antidisestablishmentarianism',
+						'cards against humanity'
 					];
 
 					$session->hangman_phrase = strtoupper($phrases[mt_rand(0, count($phrases) - 1)]);
