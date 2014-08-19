@@ -155,6 +155,12 @@ button {
 	color: var(--default-color);
 	border: 0.2rem outset var(--primary-color);
 }
+button:disabled, button:active {
+	background-image: linear-gradient(var(--highlight-color), var(--primary-color));
+	border: 0.2rem inset var(--primary-color);
+	box-shadow: 0 0 0.3rem var(--shadow) inset;
+	cursor: not-allowed;
+}
 select, input:not([type=checkbox]):not([type=submit]):not([type=reset]):not([type=file]) {
 	background-color: transparent;
 	color: inherit;

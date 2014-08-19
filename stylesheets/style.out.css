@@ -199,6 +199,17 @@ button {
   border: 0.2rem outset rgba(237, 24, 24, 1);
 }
 
+button:disabled,
+button:active {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(129, 23, 23, 1)), to(rgba(237, 24, 24, 1)));
+  background-image: -webkit-linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1));
+  background-image: linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1));
+  border: 0.2rem inset rgba(237, 24, 24, 1);
+  -webkit-box-shadow: 0 0 0.3rem rgba(20,20,20,0.9) inset;
+  box-shadow: 0 0 0.3rem rgba(20,20,20,0.9) inset;
+  cursor: not-allowed;
+}
+
 select,
 input:not([type=checkbox]):not([type=submit]):not([type=reset]):not([type=file]) {
   background-color: transparent;
