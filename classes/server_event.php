@@ -1,22 +1,41 @@
 <?php
+	/**
+	 * Class to allow continuous updates from server using Server Sent Events
+	 * 
+	 * @author Chris Zuber <shgysk8zer0@gmail.com>
+	 * @copyright 2014, Chris Zuber
+	 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
+	 * @package core_shared
+	 * @version 2014-08-18
+	 * @link https://developer.mozilla.org/en-US/docs/Server-sent_events/Using_server-sent_events
+	 * @example
+	 * $event = new server_event(); $n = 42;
+	 * while($n--) {
+	 * 	$event->notify(
+	 * 	'This is an example of a server event',
+	 * 	'It functions the same has json_response, but can send multiple messages'
+	 * )->html(
+	 * 	'main',
+	 * 	'This is the ' . 43 - $n .'th message'
+	 * )->send()->wait(1)
+	 * }
+	 * $event->close();
+	 */
+
 	class server_event extends json_response {
+		private static $instance = null;
+		
+		public static function load(array $data = null) {
 		/**
-		 * Class to allow continuous updates from server using Server Sent Events
-		 *
-		 * @link https://developer.mozilla.org/en-US/docs/Server-sent_events/Using_server-sent_events
-		 * @usage:
-		 * $event = new server_event(); $n = 42;
-		 * while($n--) {
-		 * 	$event->notify(
-		 * 	'This is an example of a server event',
-		 * 	'It functions the same has json_response, but can send multiple messages'
-		 * )->html(
-		 * 	'main',
-		 * 	'This is the ' . 43 - $n .'th message'
-		 * )->send()->wait(1)
-		 * }
-		 * $event->close();
+		 * Static method to load class
+		 * @param array $data
+		 * @return NULL
 		 */
+			if(is_null(self::$instance)) {
+				self::$instance = new self($data);
+			}
+			return self::$instance;
+		}
 
 		public function __construct(array $data = null) {
 			/**
@@ -68,6 +87,8 @@
 		private function set_headers() {
 			/**
 			 * Sets headers required to be handled as a server event.
+			 * @param void
+			 * @return server_event
 			 */
 
 			header('Content-Type: text/event-stream');
@@ -85,7 +106,7 @@
 			 * previous response.
 			 */
 
-			sleep($delay);
+			sleep((int)$delay);
 			return $this;
 		}
 

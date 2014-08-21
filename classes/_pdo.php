@@ -1,20 +1,26 @@
 <?php
-	class _pdo {
-		/**
-		 * @author Chris Zuber <shgysk8zer0@gmail.com>
-		 * @copyright 2014, Chris Zuber
-		 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
-		 * @package core_shared
-		 * @version 2014-04-19
-		 */
+	/**
+	 * Wrapper for standard PDO class. Allows
+	 * standard MySQL to be used, while giving benefits
+	 * of chained prepare->bind->execute...
+	 * 
+	 * @author Chris Zuber <shgysk8zer0@gmail.com>
+	 * @copyright 2014, Chris Zuber
+	 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
+	 * @package core_shared
+	 * @version 2014-04-19
+	*/
 
-		protected $pdo, $prepared, $connect, $data = array();
+	class _pdo {
+		protected $pdo, $prepared, $connect, $data = [];
 		private $query;
 		protected static $instances = [];
 		public $connected;
 
 		public static function load($ini = 'connect') {
 			/**
+			 * @method load
+			 * @desc
 			 * Static load function avoids creating multiple instances/connections
 			 * It stores an array of instances in the static instances array.
 			 * It uses $ini as the key to the array, and the _pdo instance as
@@ -33,6 +39,8 @@
 
 		public function __construct($ini = 'connect') {
 			/**
+			 * @method __construct
+			 * @desc
 			 * Gets database connection info from /connect.ini (using ini::load)
 			 * The default ini file to use is connect, but can be passed another
 			 * in the $ini argument.
@@ -72,6 +80,7 @@
 
 		public function __set($key, $value) {
 			/**
+			 * @method __set
 			 * Setter method for the class.
 			 *
 			 * @param string $key, mixed $value

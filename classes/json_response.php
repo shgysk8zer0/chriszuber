@@ -555,6 +555,41 @@
 			);
 		}
 
+		public function dataset($sel, $name, $value) {
+			/**
+			 * Sets data-* using $this->attributes.
+			 *
+			 * Makes necessary conversions
+			 *
+			 * @param string $sel (CSS selector)
+			 * @param string $name (data-$name)
+			 * @param mixed $value (string or boolean)
+			 * @return json_response Class/Object
+			 * @example $resp->dataset('menuitem[label="Click Me"]', 'request', 'action=test')
+			 * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement.dataset
+			 */
+
+			if(!is_array($this->response['dataset'])) $this->response['dataset'] = [];
+			$this->response['dataset'][$sel][$name] = $value;
+
+			return $this;
+		}
+
+		public function style($sel, $property, $value) {
+			if(!is_array($this->response['style'])) $this->response['style'] = [];
+			$this->response['style'][$sel][$property] = $value;
+			return $this;
+		}
+
+		public function id($sel, $id = false) {
+			if(is_string($id)) $id = preg_replace(['/\s/', '/[\W]/'], ['_', null], trim($id));
+			return $this->attributes(
+				$sel,
+				'id',
+				$id
+			);
+		}
+
 		public function serverEvent($uri) {
 			/**
 			 * Creates a new server event using handleJSON.
