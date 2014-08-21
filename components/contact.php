@@ -3,6 +3,7 @@
 ?>
 <span title="contact Info" class="logo" data-show-modal="#contactDialog"><?php include(BASE . '/images/icons/people.svg')?></span>
 <dialog id="contactDialog">
+	<button type="button" title="Close Contact Info" data-close="#contactDialog"></button><br />
 	<address itemprop="author" itemtype="http://schema.org/Person" itemscope>
 		<div>
 			<?php if(isset($contact->picture)):?><img itemprop="image" src="<?=URL?>/images/<?=$contact->picture?>" alt="Picture of Chris Zuber"/><br /><?php endif?>
@@ -33,5 +34,4 @@
 		<br /><br />
 		<?php endif?>
 	</address>
-	<button type="button" title="Close Contact Info" data-close="#contactDialog"></button>
 </dialog>
