@@ -556,116 +556,155 @@ function handleJSON(json){
 	if(typeof json === 'string') {
 		json = JSON.parse(json.trim());
 	}
-	if (json.remove) {
+	if ('remove' in json) {
 		document.querySelectorAll(json.remove).forEach(function(el){
 			el.parentElement.removeChild(el);
 		});
 	}
-	Object.keys(json.text || []).forEach(function(key){
-		document.querySelector(key).textContent = json.text[key];
-	});
-	Object.keys(json.html || []).forEach(function(key){
-		document.querySelector(key).innerHTML = json.html[key];
-	});
-	Object.keys(json.after || []).forEach(function(key){
-		document.querySelector(key).insertAdjacentHTML('afterend', json.after[key]);
-	});
-	Object.keys(json.before || []).forEach(function(key){
-		document.querySelector(key).insertAdjacentHTML('beforebegin', json.before[key]);
-	});
-	Object.keys(json.append || []).forEach(function(key){
-		document.querySelector(key).insertAdjacentHTML('beforeend', json.append[key]);
-	});
-	Object.keys(json.prepend || []).forEach(function(key){
-		document.querySelector(key).insertAdjacentHTML('afterbegin', json.prepend[key]);
-	});
-	Object.keys(json.addClass || []).forEach(function(selector){
-		document.querySelectorAll(selector).forEach(function(el){
-			json.addClass[selector].split(',').forEach(function(cname) {
-				el.classList.add(cname);
+	if('text' in json) {
+		Object.keys(json.text).forEach(function(key){
+			document.querySelector(key).textContent = json.text[key];
+		});
+	}
+	if('html' in json) {
+		Object.keys(json.html).forEach(function(key){
+			document.querySelector(key).innerHTML = json.html[key];
+		});
+	}
+	if('after' in json) {
+		Object.keys(json.after).forEach(function(key){
+			document.querySelector(key).insertAdjacentHTML('afterend', json.after[key]);
+		});
+	}
+	if('before' in json) {
+		Object.keys(json.before).forEach(function(key){
+			document.querySelector(key).insertAdjacentHTML('beforebegin', json.before[key]);
+		});
+	}
+	if('append' in json) {
+		Object.keys(json.append).forEach(function(key){
+			document.querySelector(key).insertAdjacentHTML('beforeend', json.append[key]);
+		});
+	}
+	if('prepend' in json) {
+		Object.keys(json.prepend).forEach(function(key){
+			document.querySelector(key).insertAdjacentHTML('afterbegin', json.prepend[key]);
+		});
+	}
+	if('addClass' in json) {
+		Object.keys(json.addClass).forEach(function(selector){
+			document.querySelectorAll(selector).forEach(function(el){
+				json.addClass[selector].split(',').forEach(function(cname) {
+					el.classList.add(cname);
+				});
 			});
 		});
-	});
-	Object.keys(json.removeClass || []).forEach(function(selector){
-		document.querySelectorAll(selector).forEach(function(el){
-			json.removeClass[selector].split(',').forEach(function(cname) {
-				el.classList.remove(cname);
+	}
+	if('removeClass' in json) {
+		Object.keys(json.removeClass).forEach(function(selector){
+			document.querySelectorAll(selector).forEach(function(el){
+				json.removeClass[selector].split(',').forEach(function(cname) {
+					el.classList.remove(cname);
+				});
 			});
 		});
-	});
-	Object.keys(json.attributes || []).forEach(function(selector) {
-		document.querySelectorAll(selector).forEach(function(el) {
-			Object.keys(json.attributes[selector] || []).forEach(function(attribute) {
-				if(typeof json.attributes[selector][attribute] === 'boolean'){
-					(json.attributes[selector][attribute]) ? el.setAttribute(attribute, '') : el.removeAttribute(attribute);
-				}
-				else {
-					el.setAttribute(attribute, json.attributes[selector][attribute]);
-				}
+	}
+	if('attributes' in json) {
+		Object.keys(json.attributes).forEach(function(selector) {
+			document.querySelectorAll(selector).forEach(function(el) {
+				Object.keys(json.attributes[selector]).forEach(function(attribute) {
+					if(typeof json.attributes[selector][attribute] === 'boolean'){
+						(json.attributes[selector][attribute]) ? el.setAttribute(attribute, '') : el.removeAttribute(attribute);
+					}
+					else {
+						(attribute in el) ? el[attribute] = json.attributes[selector][attribute] : el.setAttribute(attribute, json.attributes[selector][attribute]);
+					}
+				});
 			});
 		});
-	});
-	Object.keys(json.sessionStorage || []).forEach(function(key) {
-		(json.sessionStorage[key] === '') ? sessionStorage.removeItem(key) : sessionStorage.setItem(key, json.sessionStorage[key]);
-	});
-	Object.keys(json.localStorage || []).forEach(function(key) {
-		(json.localStorage[key] === '') ? sessionStorage.removeItem(key) : localStorag.setItem(key, json.localStorage[key]);
-	});
-	if (json.notify) {
+	}
+	if('style' in json) {
+		Object.keys(json.style).forEach(function(sel) {
+			document.querySelectorAll(sel).forEach(function(el) {
+				Object.keys(json.style[sel]).forEach(function(prop) {
+					el.style[prop.camelCase()] = json.style[sel][prop];
+				});
+			});
+		});
+	}
+	if('dataset' in json) {
+		Object.keys(json.dataset).forEach(function(sel) {
+			document.querySelectorAll(sel).forEach(function(el) {
+				Object.keys(json.dataset[sel]).forEach(function(prop) {
+					el.data(prop, json.dataset[sel][prop]);
+				});
+			});
+		});
+	}
+	if('sessionStorage' in json) {
+		Object.keys(json.sessionStorage).forEach(function(key) {
+			(json.sessionStorage[key] === '') ? sessionStorage.removeItem(key) : sessionStorage.setItem(key, json.sessionStorage[key]);
+		});
+	}
+	if('localStorage' in json) {
+		Object.keys(json.localStorage).forEach(function(key) {
+			(json.localStorage[key] === '') ? sessionStorage.removeItem(key) : localStorag.setItem(key, json.localStorage[key]);
+		});
+	}
+	if ('notify' in json) {
 		notify(json.notify);
 	}
-	if(json.script) {
+	if('script' in json) {
 		eval(json.script);
 	}
-	if(json.log){
+	if('log' in json){
 		console.log(json.log);
 	}
-	if(json.info){
+	if('info' in json){
 		console.info(json.info);
 	}
-	if(json.warn){
+	if('warn' in json){
 		console.log(json.warn);
 	}
-	if(json.error){
+	if('error' in json){
 		console.error(json.error);
 	}
-	if(json.scrollTo) {
+	if('scrollTo' in json) {
 		document.querySelectorAll(json.scrollTo.sel).item(json.scrollTo.nth).scrollIntoView();
 	}
-	if(json.focus) {
+	if('focus' in json) {
 		document.querySelector(json.focus).focus();
 	}
-	if(json.select) {
+	if('select' in json) {
 		document.querySelector(json.select).select();
 	}
-	if(json.reload) {
+	if('reload' in json) {
 		window.location.reload();
 	}
-	if(json.clear) {
+	if('clear' in json) {
 		document.forms[json.clear].reset();
 	}
-	if(json.open) {
+	if('open' in json) {
 		let specs = [];
 		json.open.specs.keys().forEach(function(spec) {
 			specs.push(spec + '=' + json.open.specs[spec]);
 		});
 		window.open(json.open.url, '_blank', specs.join(','), json.open.replace);
 	}
-	if(json.show) {
+	if('show' in json) {
 		document.querySelectorAll(json.show).forEach(function(el) {
 			el.show();
 		});
 	}
-	if(json.showModal) {
+	if('showModal' in json) {
 		document.querySelector(json.showModal).showModal();
 	}
-	if(json.close) {
+	if('close' in json) {
 		document.querySelectorAll(json.close).forEach(function(el) {
 			el.close();
 		});
 	}
-	if(json.triggerEvent) {
-		console.log(json.triggerEvent);
+	if('triggerEvent' in json) {
 		Object.keys(json.triggerEvent).forEach(function(selector) {
 			document.querySelectorAll(selector).forEach(function(target){
 				let event = json.triggerEvent[selector].toLowerCase();
@@ -678,7 +717,7 @@ function handleJSON(json){
 			});
 		});
 	}
-	if(json.serverEvent) {
+	if('serverEvent' in json) {
 		let serverEvent = new EventSource(json.serverEvent);
 		serverEvent.addEventListener('ping', function(event) {
 			handleJSON(JSON.parse(event.data));
