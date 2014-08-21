@@ -34,5 +34,9 @@
 <?php load('head');?>
 <body lang="en" contextmenu="main_menu">
 	<?php load('forms/login', 'header', 'main', 'footer');?>
+	<dialog id="README">
+		<button data-close="#README"></button><br />
+		<?php load('README')?>
+	</dialog>
 </body>
 </html>
