@@ -496,12 +496,12 @@ img[src$="CreativeCommons.svgz"] {
 	width:3rem;
 	overflow:visible;
 }
-.logo svg, .logo img {
+.logo {
 	overflow: visible;
 	transform-origin: center;
 	transition:all 1s;
 }
-.logo svg:hover, .logo img:hover {
+.logo:hover {
 	transform: scale(2)rotateZ(360deg);
 }
 body > progress {

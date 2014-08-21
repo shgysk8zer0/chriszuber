@@ -5,6 +5,6 @@
 	</a>
 	<?php endforeach?>
 	<?php load('contact', 'copyleft')?>
-	<span title="Copyleft" class="copyleft" data-show-modal="#copyleftDialog"></span>
+	<span title="Copyleft" class="copyleft logo" data-show-modal="#copyleftDialog"></span>
 	<img class="logo" src="images/icons/info.svgz" title="Show README" alt="Show README" data-show-modal="#README"/>
 </footer>
