@@ -4,7 +4,9 @@
 
 >The aim of this project is to provide the best in HTML5, CSS3, JavaScript, and SVG with minimal effort,
 providing support for new elements such as `<dialog>` & `<details>` where required.
-Create a _very_ fast, _very_ SEO friendly blog
+Create a _very_ fast, _very_ SEO friendly blog without worrying about plugins, extensions, etc.
+Designed to be easy enough to use without knowledge of coding (Like a Word document), but without sacrificing
+the power and control that developers want.
 
 ## Features
 * __Attribute-centric Programming__: allows you to focus on the markup and content rather than JavaScript or CSS. Content authors can do their work without being required to to worry about things that are a developer's or designer's job. Knowledge of HTML and a few attributes may be helpful, but are not required.
