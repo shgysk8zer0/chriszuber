@@ -48,29 +48,27 @@ the power and control that developers want.
 * Firefox 30+ & Chrome 35+ (problematic)
 
 ### Required PHP Modules:
-* PDO
+* [PDO](<http://php.net/manual/en/book.pdo.php>)
 * date
-* mcrypt
+* [mcrypt](<http://php.net/manual/en/book.mcrypt.php>)
 
 ### Required Apache Modules:
-* mod_headers
-* mod_mime
-* mod_include
-* mod_rewrite
+* [mod_headers](<http://httpd.apache.org/docs/2.2/mod/mod_headers.html>)
+* [mod_mime](<http://httpd.apache.org/docs/2.2/mod/mod_mime.html>)
+* [mod_include](<http://httpd.apache.org/docs/2.2/mod/mod_include.html>)
+* [mod_rewrite](<http://httpd.apache.org/docs/2.2/mod/mod_rewrite.html>)
 
 ### Recommended for CSS editing
 
-Uses CSS-variables (currently Firefox 31+ only) in default stylesheet.
-The [Node.js](<http://nodejs.org/> "Node.js Homepage") plugin [Myth](<www.myth.io> "Myth Homepage") creates fully vendor-prefixed CSS from the default CSS,
+Uses [CSS-variables](<https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables>) (currently Firefox 31+ only) in default stylesheet.
+The [Node.js](<http://nodejs.org/> "Node.js Homepage") plugin [Myth](<http://www.myth.io> "Myth Homepage") creates fully vendor-prefixed CSS from the default CSS,
 replaces variables with their values, as well as combining CSS files using @import
 while still allowing the original to be used as CSS where supported
 
 *Installation and configurations for Ubuntu*
-
 	sudo apt-get install nodejs npm
 	sudo ln -s /usr/bin/nodejs /usr/bin/node
 	sudo npm install -g myth
-
 Then to generate...
 	myth stylesheets/style.css stylesheets/style.out.css
 	myth -c stylesheets/combined.css stylesheets/combined.out.css
@@ -79,27 +77,28 @@ Then to generate...
 
 *These features only found in current versions of Firefox and Chrome*
 #### HTML5
-* New Element support (header, main, footer, nav, progress, menu, datalist)
-* New input types (email, number, date) with validation (pattern, required, min/max)
-* SVG
-* contenteditable, contextmenu (Not supported in Chrome), and list attributes
+* [New Element support](<https://developer.mozilla.org/en-US/docs/HTML/Element>) (header, main, footer, nav, progress, menu, datalist)
+* [New input types](<https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input>) (email, number, date) with validation (pattern, required, min/max)
+* [SVG](<https://developer.mozilla.org/en-US/docs/Web/SVG>)
+* [contenteditable](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_Editable), [contextmenu](<http://www.w3schools.com/tags/att_global_contextmenu.asp>) (Not supported in Chrome), and [list](<https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist>) attributes
 
 #### JavaScript
-* querySelectorAll
-* XMLHttpRequest
-* Promises
-* Event Listeners
-* FileReader
-* Mutation Observers
-* FormData
-* JSON.parse
-* dataset
-* classList
-* local & sessionStorage
+* [querySelectorAll](<https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll>)
+* [XMLHttpRequest](<https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest>)
+* [Promises](<https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise>)
+* [Event Listeners](<https://developer.mozilla.org/en-US/docs/Web/API/EventTarget.addEventListener>)
+* [FileReader](<https://developer.mozilla.org/en-US/docs/Web/API/FileReader>)
+* [Mutation Observers](<https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver>)
+* [FormData](<https://developer.mozilla.org/en-US/docs/Web/Guide/Using_FormData_Objects>)
+* [JSON.parse](<https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse>)
+* [dataset](<https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement.dataset>)
+* [classList](<https://developer.mozilla.org/en-US/docs/Web/API/Element.classList>)
+* [local & sessionStorage](<https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Storage>)
 
 #### CSS
-* Flexbox
-* @media & @supports
-* linear & radial-gradient
-* Woff fonts
-* Responsive Units (rem, vw, etc)
+* [Variables](<https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables>) for development
+* [Flexbox](<https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Flexible_boxes>)
+* [@media](<https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Media_queries>) & [@supports](<https://developer.mozilla.org/en-US/docs/Web/API/CSS.supports>)
+* [linear & radial-gradient](<https://developer.mozilla.org/en-US/docs/Web/CSS/linear-gradient>)
+* [Woff fonts](<https://developer.mozilla.org/en-US/docs/Web/CSS/font>)
+* [Responsive Units](<https://developer.mozilla.org/en-US/docs/Web/CSS/length>) (rem, vw, etc)

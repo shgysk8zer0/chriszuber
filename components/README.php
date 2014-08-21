@@ -66,35 +66,32 @@ git push --set-upstream origin master
 <h3>Required PHP Modules:</h3>
 
 <ul>
-<li>PDO</li>
+<li><a href="http://php.net/manual/en/book.pdo.php">PDO</a></li>
 <li>date</li>
-<li>mcrypt</li>
+<li><a href="http://php.net/manual/en/book.mcrypt.php">mcrypt</a></li>
 </ul>
 
 <h3>Required Apache Modules:</h3>
 
 <ul>
-<li>mod_headers</li>
-<li>mod_mime</li>
-<li>mod_include</li>
-<li>mod_rewrite</li>
+<li><a href="http://httpd.apache.org/docs/2.2/mod/mod_headers.html">mod_headers</a></li>
+<li><a href="http://httpd.apache.org/docs/2.2/mod/mod_mime.html">mod_mime</a></li>
+<li><a href="http://httpd.apache.org/docs/2.2/mod/mod_include.html">mod_include</a></li>
+<li><a href="http://httpd.apache.org/docs/2.2/mod/mod_rewrite.html">mod_rewrite</a></li>
 </ul>
 
 <h3>Recommended for CSS editing</h3>
 
-<p>Uses CSS-variables (currently Firefox 31+ only) in default stylesheet.
-The <a href="http://nodejs.org/" title="Node.js Homepage">Node.js</a> plugin <a href="www.myth.io" title="Myth Homepage">Myth</a> creates fully vendor-prefixed CSS from the default CSS,
+<p>Uses <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables">CSS-variables</a> (currently Firefox 31+ only) in default stylesheet.
+The <a href="http://nodejs.org/" title="Node.js Homepage">Node.js</a> plugin <a href="http://www.myth.io" title="Myth Homepage">Myth</a> creates fully vendor-prefixed CSS from the default CSS,
 replaces variables with their values, as well as combining CSS files using @import
 while still allowing the original to be used as CSS where supported</p>
 
-<p><em>Installation and configurations for Ubuntu</em></p>
-
-<pre><code>sudo apt-get install nodejs npm
-sudo ln -s /usr/bin/nodejs /usr/bin/node
-sudo npm install -g myth
-</code></pre>
-
-<p>Then to generate...
+<p><em>Installation and configurations for Ubuntu</em>
+    sudo apt-get install nodejs npm
+    sudo ln -s /usr/bin/nodejs /usr/bin/node
+    sudo npm install -g myth
+Then to generate...
     myth stylesheets/style.css stylesheets/style.out.css
     myth -c stylesheets/combined.css stylesheets/combined.out.css</p>
 
@@ -105,34 +102,35 @@ sudo npm install -g myth
 <h4>HTML5</h4>
 
 <ul>
-<li>New Element support (header, main, footer, nav, progress, menu, datalist)</li>
-<li>New input types (email, number, date) with validation (pattern, required, min/max)</li>
-<li>SVG</li>
-<li>contenteditable, contextmenu (Not supported in Chrome), and list attributes</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/HTML/Element">New Element support</a> (header, main, footer, nav, progress, menu, datalist)</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input">New input types</a> (email, number, date) with validation (pattern, required, min/max)</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/SVG">SVG</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_Editable">contenteditable</a>, <a href="http://www.w3schools.com/tags/att_global_contextmenu.asp">contextmenu</a> (Not supported in Chrome), and <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist">list</a> attributes</li>
 </ul>
 
 <h4>JavaScript</h4>
 
 <ul>
-<li>querySelectorAll</li>
-<li>XMLHttpRequest</li>
-<li>Promises</li>
-<li>Event Listeners</li>
-<li>FileReader</li>
-<li>Mutation Observers</li>
-<li>FormData</li>
-<li>JSON.parse</li>
-<li>dataset</li>
-<li>classList</li>
-<li>local &amp; sessionStorage</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll">querySelectorAll</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest">XMLHttpRequest</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promises</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget.addEventListener">Event Listeners</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileReader">FileReader</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver">Mutation Observers</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/Using_FormData_Objects">FormData</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse">JSON.parse</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement.dataset">dataset</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element.classList">classList</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Storage">local &amp; sessionStorage</a></li>
 </ul>
 
 <h4>CSS</h4>
 
 <ul>
-<li>Flexbox</li>
-<li>@media &amp; @supports</li>
-<li>linear &amp; radial-gradient</li>
-<li>Woff fonts</li>
-<li>Responsive Units (rem, vw, etc)</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables">Variables</a> for development</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Flexible_boxes">Flexbox</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Media_queries">@media</a> &amp; <a href="https://developer.mozilla.org/en-US/docs/Web/API/CSS.supports">@supports</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/linear-gradient">linear &amp; radial-gradient</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/font">Woff fonts</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/length">Responsive Units</a> (rem, vw, etc)</li>
 </ul>
