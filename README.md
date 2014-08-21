@@ -28,13 +28,13 @@ the power and control that developers want.
 
 ## Creating your Repo
 **_Update addresses to SSH as needed and available_**
-```
+
 	git init
 	git remote add origin {Your Repo Address}
 	git remote add project_manager git://github.com/shgysk8zer0/chriszuber.git
 	git pull project_manager master
 	git push --set-upstream origin master
-```
+
 ## Contact
 * [Email Developer](mailto:shgysk8zer0@gmail.com> "Email Developer")
 * [Issues Page](<https://github.com/shgysk8zer0/chriszuber/issues> "Report Bugs, request enhancements, etc")
@@ -67,17 +67,13 @@ while still allowing the original to be used as CSS where supported
 
 *Installation and configurations for Ubuntu*
 
-```
 	sudo apt-get install nodejs npm
 	sudo ln -s /usr/bin/nodejs /usr/bin/node
 	sudo npm install -g myth
-```
 
 Then to generate...
-```
 	myth stylesheets/style.css stylesheets/style.out.css
 	myth -c stylesheets/combined.css stylesheets/combined.out.css
-```
 
 ### Required Browser Features:
 
