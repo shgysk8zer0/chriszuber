@@ -4,7 +4,8 @@
 		<?php include(BASE . "/images/{$link->icon}")?>
 	</a>
 	<?php endforeach?>
+	<span title="contact Info" class="logo" data-show-modal="#contactDialog"><?php include(BASE . '/images/icons/people.svg')?></span>
+	<span title="Show README" class="logo" data-show-modal="#README"><?php include(BASE . '/images/icons/info.svg')?></span>
+	<span title="Copyleft" class="logo" data-show-modal="#copyleftDialog"><?php include(BASE . '/images/logos/copyleft.svg')?></span>
 	<?php load('contact', 'copyleft')?>
-	<span title="Copyleft" class="copyleft logo" data-show-modal="#copyleftDialog"></span>
-	<img class="logo" src="images/icons/info.svgz" title="Show README" alt="Show README" data-show-modal="#README"/>
 </footer>
