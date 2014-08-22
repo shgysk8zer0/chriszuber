@@ -12,7 +12,7 @@ the power and control that developers want.
 * __Attribute-centric Programming__: allows you to focus on the markup and content rather than JavaScript or CSS. Content authors can do their work without being required to to worry about things that are a developer's or designer's job. Knowledge of HTML and a few attributes may be helpful, but are not required.
 * Full AJAX navigation, with [history](<http://diveintohtml5.info/history.html>). Navigation is almost instant and no reloading required. The page can be updated in an infinite number of ways, but only the updates are sent in responses. Back/forward buttons navigate as usual.
 * Responsive Design - Default CSS uses [flexbox](<http://css-tricks.com/snippets/css/a-guide-to-flexbox/>) and viewport units. The page will resize and adjust according to the size it is given to be displayed in.
-* Feature Detection - Detect for support in CSS using [@supports](<https://developer.mozilla.org/en-US/docs/Web/API/CSS.supports>) as well as in JavaScript + classes.
+* Feature Detection - Detect for support in CSS using [@supports](<https://developer.mozilla.org/en-US/docs/Web/CSS/@supports>) as well as in JavaScript + classes.
 * [json_response class](<https://github.com/shgysk8zer0/chriszuber/blob/master/classes/json_response.php>) dedicated to making responses to AJAX request both powerful and easy to write.
 * Security on both client and server end using [Content-Security-Policy](<https://developer.mozilla.org/en-US/docs/Web/Security/CSP>) and [PDO prepared statements](<http://php.net/manual/en/pdo.prepared-statements.php>) (no SQL injection) among many other security features
 * [WYSIWYG editor](<http://chriszuber.com/posts/html5+wysiwyg+editor+using+contenteditable>) - little or not HTML/CSS knowledge required for authors. Drag-'n-Drop images (currently as data-uri).
@@ -98,7 +98,7 @@ Then to generate...
 #### CSS
 * [Variables](<https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables>) for development
 * [Flexbox](<https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Flexible_boxes>)
-* [@media](<https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Media_queries>) & [@supports](<https://developer.mozilla.org/en-US/docs/Web/API/CSS.supports>)
+* [@media](<https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Media_queries>) & [@supports](<https://developer.mozilla.org/en-US/docs/Web/CSS/@supports>)
 * [linear & radial-gradient](<https://developer.mozilla.org/en-US/docs/Web/CSS/linear-gradient>)
 * [Woff fonts](<https://developer.mozilla.org/en-US/docs/Web/CSS/font>)
 * [Responsive Units](<https://developer.mozilla.org/en-US/docs/Web/CSS/length>) (rem, vw, etc)

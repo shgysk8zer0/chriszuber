@@ -17,7 +17,7 @@ the power and control that developers want.</p>
 <li><strong>Attribute-centric Programming</strong>: allows you to focus on the markup and content rather than JavaScript or CSS. Content authors can do their work without being required to to worry about things that are a developer's or designer's job. Knowledge of HTML and a few attributes may be helpful, but are not required.</li>
 <li>Full AJAX navigation, with <a href="http://diveintohtml5.info/history.html">history</a>. Navigation is almost instant and no reloading required. The page can be updated in an infinite number of ways, but only the updates are sent in responses. Back/forward buttons navigate as usual.</li>
 <li>Responsive Design - Default CSS uses <a href="http://css-tricks.com/snippets/css/a-guide-to-flexbox/">flexbox</a> and viewport units. The page will resize and adjust according to the size it is given to be displayed in.</li>
-<li>Feature Detection - Detect for support in CSS using <a href="https://developer.mozilla.org/en-US/docs/Web/API/CSS.supports">@supports</a> as well as in JavaScript + classes.</li>
+<li>Feature Detection - Detect for support in CSS using <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@supports">@supports</a> as well as in JavaScript + classes.</li>
 <li><a href="https://github.com/shgysk8zer0/chriszuber/blob/master/classes/json_response.php">json_response class</a> dedicated to making responses to AJAX request both powerful and easy to write.</li>
 <li>Security on both client and server end using <a href="https://developer.mozilla.org/en-US/docs/Web/Security/CSP">Content-Security-Policy</a> and <a href="http://php.net/manual/en/pdo.prepared-statements.php">PDO prepared statements</a> (no SQL injection) among many other security features</li>
 <li><a href="http://chriszuber.com/posts/html5+wysiwyg+editor+using+contenteditable">WYSIWYG editor</a> - little or not HTML/CSS knowledge required for authors. Drag-'n-Drop images (currently as data-uri).</li>
@@ -129,7 +129,7 @@ Then to generate...
 <ul>
 <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables">Variables</a> for development</li>
 <li><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Flexible_boxes">Flexbox</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Media_queries">@media</a> &amp; <a href="https://developer.mozilla.org/en-US/docs/Web/API/CSS.supports">@supports</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Media_queries">@media</a> &amp; <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@supports">@supports</a></li>
 <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/linear-gradient">linear &amp; radial-gradient</a></li>
 <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/font">Woff fonts</a></li>
 <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/length">Responsive Units</a> (rem, vw, etc)</li>
