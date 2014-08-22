@@ -12,7 +12,7 @@
   }
 }
 
-@media screen and (max-width:499px) {
+@media screen and (max-width: 499px) {
   :root {
     font-size: 3vw;
   }
@@ -21,13 +21,12 @@
 :root {
   background-color: rgb(19, 0, 0);
   background-image: url(../images/backgrounds/red-curls.svgz);
-  -webkit-background-size: cover;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
   color: rgba(252, 252, 252, 1);
-  text-shadow: rgba(20,20,20,0.9);
+  text-shadow: rgba(20, 20, 20, 0.9);
   cursor: url(../images/cursors/Arch-black.svgz), auto;
 }
 
@@ -45,21 +44,46 @@
   cursor: progress;
 }
 
-body> header {
+body {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+body > header,
+body > footer {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 1 100%;
+  -ms-flex: 0 1 100%;
+  flex: 0 1 100%;
+}
+
+body > header {
   background: rgb(60, 60, 60) none;
   background: rgba(60, 60, 60, 0.7) none;
-  background: transparent-webkit-gradient(linear, left top, left bottom, from(rgba(40,40,40,0.8)), to(rgba(80,80,80,0.7)));
-  background: transparent -webkit-linear-gradient(rgba(40,40,40,0.8), rgba(80,80,80,0.7));
-  background: transparent linear-gradient(rgba(40,40,40,0.8), rgba(80,80,80,0.7));
+  background: transparent -webkit-linear-gradient(rgba(40, 40, 40, 0.8), rgba(80, 80, 80, 0.7));
+  background: transparent linear-gradient(rgba(40, 40, 40, 0.8), rgba(80, 80, 80, 0.7));
   border-bottom: 0.2rem solid rgba(45, 45, 45, 1);
-  -webkit-box-shadow: 0 0 3rem rgba(20,20,20,0.9) inset;
-  box-shadow: 0 0 3rem rgba(20,20,20,0.9) inset;
+  box-shadow: 0 0 3rem rgba(20, 20, 20, 0.9) inset;
 }
 
 body > header h1 {
   font-family: 'PressStart';
   text-align: center;
-  text-shadow: 0.1rem 0.1rem rgba(20,20,20,0.9), 0.2rem .02rem 0.3rem gray, 0 0 3rem rgba(129, 23, 23, 1);
+  text-shadow: 0.1rem 0.1rem rgba(20, 20, 20, 0.9), 0.2rem .02rem 0.3rem gray, 0 0 3rem rgba(129, 23, 23, 1);
   margin-bottom: 1rem;
 }
 
@@ -102,10 +126,8 @@ body > header nav a {
   overflow: elipsis;
   padding: 0.7rem 0;
   background-image: url('../images/gradients/header_links.png');
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(237, 24, 24, 1)), color-stop(rgba(129, 23, 23, 1)), to(rgba(237, 24, 24, 1)));
   background-image: -webkit-linear-gradient(rgba(237, 24, 24, 1), rgba(129, 23, 23, 1), rgba(237, 24, 24, 1));
   background-image: linear-gradient(rgba(237, 24, 24, 1), rgba(129, 23, 23, 1), rgba(237, 24, 24, 1));
-  -webkit-background-size: 1px 100%;
   background-size: 1px 100%;
   background-repeat: repeat-x;
   border: 0.2rem outset rgba(45, 45, 45, 1);
@@ -118,8 +140,7 @@ body > header nav a:hover {
   -webkit-transform: translateY(-0.3rem);
   -ms-transform: translateY(-0.3rem);
   transform: translateY(-0.3rem);
-  -webkit-box-shadow: 0 0 1rem rgba(20,20,20,0.9);
-  box-shadow: 0 0 1rem rgba(20,20,20,0.9);
+  box-shadow: 0 0 1rem rgba(20, 20, 20, 0.9);
 }
 
 body > header nav a:first-of-type {
@@ -161,7 +182,7 @@ main a::after {
 }
 
 a[rel=tag]::after {
-  content: '  ,';
+  content: '  , ';
 }
 
 a[rel=next]::after {
@@ -191,7 +212,6 @@ main a[target="_blank"]::after {
 button {
   min-width: 2rem;
   padding: 0.2rem;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(237, 24, 24, 1)), to(rgba(129, 23, 23, 1)));
   background-image: -webkit-linear-gradient(rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
   background-image: linear-gradient(rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
   font-family: inherit;
@@ -201,12 +221,10 @@ button {
 
 button:disabled,
 button:active {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(129, 23, 23, 1)), to(rgba(237, 24, 24, 1)));
   background-image: -webkit-linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1));
   background-image: linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1));
   border: 0.2rem inset rgba(237, 24, 24, 1);
-  -webkit-box-shadow: 0 0 0.3rem rgba(20,20,20,0.9) inset;
-  box-shadow: 0 0 0.3rem rgba(20,20,20,0.9) inset;
+  box-shadow: 0 0 0.3rem rgba(20, 20, 20, 0.9) inset;
   cursor: not-allowed;
 }
 
@@ -343,7 +361,6 @@ progress:not([value])::-webkit-progress-value {
 }
 
 progress[value]::-webkit-progress-value {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(129, 23, 23, 1)), color-stop(rgba(237, 24, 24, 1)), to(rgba(129, 23, 23, 1)));
   background-image: -webkit-linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
   background-image: linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
 }
@@ -371,7 +388,6 @@ pre > code {
 dialog {
   border: 0.4rem outset rgba(237, 24, 24, 1);
   border-radius: 1rem;
-  -webkit-box-shadow: 1rem 1rem 1rem black;
   box-shadow: 1rem 1rem 1rem black;
   z-index: 9;
 }
@@ -385,8 +401,8 @@ dialog.modal {
 }
 
 dialog.modal + .backdrop {
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.7);
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.7);
   position: fixed;
   top: 0;
   left: 0;
@@ -396,7 +412,7 @@ dialog.modal + .backdrop {
 }
 
 dialog[open]::backdrop {
-  background-color: rgba(0,0,0,0.7);
+  background-color: rgba(0, 0, 0, 0.7);
   position: fixed;
   top: 0;
   left: 0;
@@ -412,24 +428,21 @@ body > header h1::before {
   width: 1.2em;
   height: 1.2em;
   background-image: url('/favicon.svgz');
-  -webkit-background-size: cover;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: bottom;
 }
 
 main {
-  width: 90vw;
-  -webkit-transform: translateX(5vw);
-  -ms-transform: translateX(5vw);
-  transform: translateX(5vw);
   margin: 2rem 0;
   padding: 2rem;
+  width: 90%;
+  position: relative;
+  left: 5%;
   background: rgb(110, 110, 110) none;
   background: rgba(110, 110, 110, 0.8) none;
-  background: transparent-webkit-gradient(linear, right bottom, left top, from(rgba(80,80,80,0.7)), color-stop(rgba(140,140,140,0.9)), to(rgba(40, 40, 40, 0.7)));
-  background: transparent -webkit-linear-gradient(bottom right, rgba(80,80,80,0.7), rgba(140,140,140,0.9), rgba(40, 40, 40, 0.7));
-  background: transparent linear-gradient(to top left,rgba(80,80,80,0.7), rgba(140,140,140,0.9),rgba(40, 40, 40, 0.7));
+  background: transparent -webkit-linear-gradient(bottom right, rgba(80, 80, 80, 0.7), rgba(140, 140, 140, 0.9), rgba(40, 40, 40, 0.7));
+  background: transparent linear-gradient(to top left, rgba(80, 80, 80, 0.7), rgba(140, 140, 140, 0.9), rgba(40, 40, 40, 0.7));
   border-radius: 2rem;
   display: -webkit-box;
   display: -webkit-flex;
@@ -451,8 +464,17 @@ main {
   -ms-transform-origin: top;
   transform-origin: top;
   -webkit-transform-style: preserve-3d;
-  -ms-transform-style: preserve-3d;
   transform-style: preserve-3d;
+}
+
+@supports ((display: -webkit-box) or (display: -webkit-flex) or (display: -ms-flexbox) or (display: flex)) or (display: -ms-flexbox) {
+  main {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 1 90%;
+    -ms-flex: 0 1 90%;
+    flex: 0 1 90%;
+    position: static;
+  }
 }
 
 main > article,
@@ -480,14 +502,13 @@ aside h3 {
   font-size: 1.3rem;
   text-shadow: 0.1rem 0.1rem 0 dimgray, 0.15rem 0.15rem 0 black;
   padding: 0.4rem;
-  background: rgb(60,60,60) none;
-  background: rgba(60,60,60,0.9) none;
-  background: transparent-webkit-gradient(linear, left top, left bottom, from(rgba(40,40,40, 1)), to(rgba(80,80,80,0.97)));
-  background: transparent -webkit-linear-gradient(rgba(40,40,40, 1), rgba(80,80,80,0.97));
-  background: transparent linear-gradient(rgba(40,40,40, 1), rgba(80,80,80,0.97));
-  -webkit-box-shadow: 0 0 1rem rgba(20,20,20,0.9);
-  box-shadow: 0 0 1rem rgba(20,20,20,0.9);
+  background: rgb(60, 60, 60) none;
+  background: rgba(60, 60, 60, 0.9) none;
+  background: transparent -webkit-linear-gradient(rgba(40, 40, 40, 1), rgba(80, 80, 80, 0.97));
+  background: transparent linear-gradient(rgba(40, 40, 40, 1), rgba(80, 80, 80, 0.97));
+  box-shadow: 0 0 1rem rgba(20, 20, 20, 0.9);
   color: rgba(252, 252, 252, 1);
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
   left: 0;
@@ -515,8 +536,7 @@ article header + :first-of-type {
 
 article > :not(footer) img {
   border: 0.2rem outset rgba(237, 24, 24, 1);
-  -webkit-box-shadow: 0.3rem 0.3rem 0.5rem rgba(20,20,20,0.9);
-  box-shadow: 0.3rem 0.3rem 0.5rem rgba(20,20,20,0.9);
+  box-shadow: 0.3rem 0.3rem 0.5rem rgba(20, 20, 20, 0.9);
   margin: 1.5rem;
   -webkit-transition: all 500ms;
   transition: all 500ms;
@@ -559,28 +579,27 @@ aside li a:hover {
 
 aside > :not(h3) {
   color: #333;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(whitesmoke), to(#ddd));
   background-image: -webkit-linear-gradient(whitesmoke, #ddd);
-  background-image: linear-gradient(whitesmoke ,#ddd);
+  background-image: linear-gradient(whitesmoke , #ddd);
   border: 0.2rem outset rgba(45, 45, 45, 1);
   border-radius: 1rem 1rem 0 0;
   margin: 2rem 0.2rem;
-  -webkit-box-shadow: -1rem 1rem 1rem rgba(20,20,20,0.9),0 0 1rem 0 rgba(20,20,20,0.9) inset;
-  box-shadow: -1rem 1rem 1rem rgba(20,20,20,0.9),0 0 1rem 0 rgba(20,20,20,0.9) inset;
+  box-shadow: -1rem 1rem 1rem rgba(20, 20, 20, 0.9), 0 0 1rem 0 rgba(20, 20, 20, 0.9) inset;
 }
 
 body > footer {
   border-top: 0.3rem solid rgba(237, 24, 24, 1);
   padding: 1rem;
   background: whitesmoke none;
-  background: transparent-webkit-gradient(linear, left top, left bottom, from(whitesmoke), to(gainsboro));
   background: transparent -webkit-linear-gradient(whitesmoke, gainsboro);
   background: transparent linear-gradient(whitesmoke, gainsboro);
-  -webkit-box-shadow: 0 -1rem 2rem rgba(20,20,20,0.9) inset;
-  box-shadow: 0 -1rem 2rem rgba(20,20,20,0.9) inset;
+  box-shadow: 0 -1rem 2rem rgba(20, 20, 20, 0.9) inset;
+  -webkit-align-self: flex-end;
+  -ms-flex-item-align: end;
+  align-self: flex-end;
 }
 
-@media screen and (max-width:999px) {
+@media screen and (max-width: 999px) {
   main {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
@@ -588,10 +607,10 @@ body > footer {
     -ms-flex-direction: column;
     flex-direction: column;
     padding: 1rem;
-    width: 95vw;
-    -webkit-transform: translateX(2.5vw);
-    -ms-transform: translateX(2.5vw);
-    transform: translateX(2.5vw);
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 1 95%;
+    -ms-flex: 0 1 95%;
+    flex: 0 1 95%;
   }
 
   main article,
@@ -709,7 +728,6 @@ img[src$="CreativeCommons.svgz"] {
 .logo svg:hover,
 .logo img:hover {
   -webkit-transform: scale(2)rotateZ(360deg);
-  -ms-transform: scale(2)rotateZ(360deg);
   transform: scale(2)rotateZ(360deg);
 }
 
@@ -741,7 +759,6 @@ body > progress {
   *display: inline;
   *zoom: 1;
   -webkit-transform: rotateY(180deg);
-  -ms-transform: rotateY(180deg);
   transform: rotateY(180deg);
 }
 

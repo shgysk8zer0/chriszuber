@@ -1,17 +1,17 @@
 @charset 'UTF-8';
-@media screen and (min-width:1000px){
-	:root{
-		font-size:1.3vw;
+@media screen and (min-width:1000px) {
+	:root {
+		font-size: 1.3vw;
 	}
 }
-@media screen and (max-width:999px) and (min-width:500px){
-	:root{
-		font-size:2vw;
+@media screen and (max-width:999px) and (min-width:500px) {
+	:root {
+		font-size: 2vw;
 	}
 }
-@media screen and (max-width:499px){
-	:root{
-		font-size:3vw;
+@media screen and (max-width: 499px) {
+	:root {
+		font-size: 3vw;
 	}
 }
 :root {
@@ -21,36 +21,45 @@
 	--highlight-color: rgba(129, 23, 23, 1);
 	--link-color: hsl(209, 62%, 45%);
 	--border-color: rgba(45, 45, 45, 1);
-	--glass-grad:linear-gradient(to top left,rgba(80,80,80,0.7), rgba(140,140,140,0.9),rgba(40, 40, 40, 0.7));
-	--shadow: rgba(20,20,20,0.9);
-	--tint-glass: linear-gradient(rgba(40,40,40,0.8), rgba(80,80,80,0.7));
-	--header-bg: linear-gradient(rgba(40,40,40, 1), rgba(80,80,80,0.97));
+	--glass-grad: linear-gradient(to top left, rgba(80, 80, 80, 0.7), rgba(140, 140, 140, 0.9), rgba(40, 40, 40, 0.7));
+	--shadow: rgba(20, 20, 20, 0.9);
+	--tint-glass: linear-gradient(rgba(40, 40, 40, 0.8), rgba(80, 80, 80, 0.7));
+	--header-bg: linear-gradient(rgba(40, 40, 40, 1), rgba(80, 80, 80, 0.97));
 	--progress-grad: linear-gradient(var(--highlight-color), var(--primary-color), var(--highlight-color));
 	--icon-font: 'Web Symbols';
 	--default-cursor: url(../images/cursors/Arch-black.svgz), auto;
 	--pointer: url('../images/cursors/3D_hand_cursor.svgz'), pointer;
 	background-color: rgb(19, 0, 0);
-	background-image:url(../images/backgrounds/red-curls.svgz);
-	background-size:cover;
-	background-position:center;
-	background-repeat:no-repeat;
-	background-attachment:fixed;
+	background-image: url(../images/backgrounds/red-curls.svgz);
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
 	color: var(--default-color);
-	text-shadow:var(--shadow);
+	text-shadow: var(--shadow);
 	cursor: var(--default-cursor);
 }
-::-moz-selection{
+::-moz-selection {
 	background-color: var(--primary-color);
-	text-shadow:none;
+	text-shadow: none;
 }
-::selection{
+::selection {
 	background-color: var(--primary-color);
-	text-shadow:none;
+	text-shadow: none;
 }
 :root.loading {
 	cursor: progress;
 }
-body> header {
+body {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+body > header, body > footer {
+	flex: 0 1 100%;
+}
+body > header {
 	background: rgb(60, 60, 60) none;
 	background: rgba(60, 60, 60, 0.7) none;
 	background: transparent var(--tint-glass);
@@ -126,7 +135,7 @@ main a::after {
 	content: '  K';
 }
 a[rel=tag]::after {
-	content: '  ,';
+	content: '  , ';
 }
 a[rel=next]::after {
 	font-size: 3rem;
@@ -142,10 +151,10 @@ a[rel=bookmark]::after {
 	content: '';
 }
 main a[target="_blank"]::after {
-	content:'  D';
+	content: '  D';
 }
 [download]::after {
-	content:'  A';
+	content: '  A';
 }
 button {
 	min-width: 2rem;
@@ -224,7 +233,7 @@ img {
 	max-width: 100%;
 	height: auto;
 }
-a, button:not(:disabled), input[type=submit], input[type=reset], input[type=image], details > summary , [data-show], [data-show-modal], [data-close]{
+a, button:not(:disabled), input[type=submit], input[type=reset], input[type=image], details > summary , [data-show], [data-show-modal], [data-close] {
 	cursor: var(--pointer);
 }
 .no-details details[open] > summary::before {
@@ -291,8 +300,8 @@ dialog.modal {
 	overflow: auto;
 }
 dialog.modal + .backdrop {
-	background-color: rgb(0,0,0);
-	background-color: rgba(0,0,0,0.7);
+	background-color: rgb(0, 0, 0);
+	background-color: rgba(0, 0, 0, 0.7);
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -301,7 +310,7 @@ dialog.modal + .backdrop {
 	z-index: 8;
 }
 dialog[open]::backdrop {
-	background-color: rgba(0,0,0,0.7);
+	background-color: rgba(0, 0, 0, 0.7);
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -321,22 +330,29 @@ body > header h1::before {
 	background-position: bottom;
 }
 main {
-	width: 90vw;
-	transform: translateX(5vw);
 	margin: 2rem 0;
 	padding: 2rem;
+	width: 90%;
+	position: relative;
+	left: 5%;
 	background: rgb(110, 110, 110) none;
 	background: rgba(110, 110, 110, 0.8) none;
 	background: transparent var(--glass-grad);
-	border-radius:2rem;
-	display:flex;
+	border-radius: 2rem;
+	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-content: flex-start;
 	transform-origin: top;
 	transform-style: preserve-3d;
 }
-main > article, main > form, main > .tags{
+@supports((display: flex) or (display: -webkit-box) or (display: -ms-flexbox)) {
+	main {
+		flex: 0 1 90%;
+		position: static;
+	}
+}
+main > article, main > form, main > .tags {
 	color: var(--alt-color);
 	background-color: whitesmoke;
 	border-radius: inherit;
@@ -344,15 +360,15 @@ main > article, main > form, main > .tags{
 	border: 0.3rem outset var(--border-color);
 	word-wrap: break-word;
 	flex: 0 1 67%;
-	order:2;
+	order: 2;
 }
 article header, aside h3 {
 	font-family: 'Acme';
 	font-size: 1.3rem;
 	text-shadow: 0.1rem 0.1rem 0 dimgray, 0.15rem 0.15rem 0 black;
 	padding: 0.4rem;
-	background: rgb(60,60,60) none;
-	background: rgba(60,60,60,0.9) none;
+	background: rgb(60, 60, 60) none;
+	background: rgba(60, 60, 60, 0.9) none;
 	background: transparent var(--header-bg);
 	box-shadow: 0 0 1rem var(--shadow);
 	color: var(--default-color);
@@ -382,14 +398,14 @@ article > :not(footer) img {
 	margin: 1.5rem;
 	transition: all 500ms;
 }
-main aside{
+main aside {
 	flex: 0 1 30%;
-	order:1;
+	order: 1;
 }
 aside h3 {
 	padding: 0.2rem;
 	border-bottom: 0.2rem solid var(--primary-color);
-	border-radius:1rem 1rem 0 0;
+	border-radius: 1rem 1rem 0 0;
 }
 aside li {
 	margin-bottom: 0.5rem;
@@ -407,11 +423,11 @@ aside li a:hover {
 }
 aside > :not(h3) {
 	color: #333;
-	background-image: linear-gradient(whitesmoke ,#ddd);
+	background-image: linear-gradient(whitesmoke , #ddd);
 	border: 0.2rem outset var(--border-color);
 	border-radius: 1rem 1rem 0 0;
 	margin: 2rem 0.2rem;
-	box-shadow:-1rem 1rem 1rem var(--shadow),0 0 1rem 0 var(--shadow) inset;
+	box-shadow: -1rem 1rem 1rem var(--shadow), 0 0 1rem 0 var(--shadow) inset;
 }
 body > footer {
 	border-top: 0.3rem solid var(--primary-color);
@@ -419,13 +435,13 @@ body > footer {
 	background: whitesmoke none;
 	background: transparent linear-gradient(whitesmoke, gainsboro);
 	box-shadow: 0 -1rem 2rem var(--shadow) inset;
+	align-self: flex-end;
 }
-@media screen and (max-width:999px) {
+@media screen and (max-width: 999px) {
 	main {
 		flex-direction: column;
 		padding: 1rem;
-		width: 95vw;
-		transform: translateX(2.5vw);
+		flex: 0 1 95%;
 	}
 	main article, main .tags {
 		flex: 0 1 auto;
@@ -466,7 +482,7 @@ address svg {
 address svg * {
 	fill: inherit;
 }
-address a svg{
+address a svg {
 	transition: all 600ms;
 }
 address a:hover > svg {
@@ -479,8 +495,8 @@ form[name="new_post"] textarea {
 	width: 35rem;
 	height: 8rem;
 }
-:root.hidden *{
-	animation-play-state:paused;
+:root.hidden * {
+	animation-play-state: paused;
 }
 :root.offline {
 	pointer-events: none;
@@ -490,16 +506,16 @@ img[src$="CreativeCommons.svgz"] {
 	height: 2.6rem;
 }
 .logo {
-	display:inline-block;
+	display: inline-block;
 	*display: inline;
 	*zoom: 1;
-	width:3rem;
-	overflow:visible;
+	width: 3rem;
+	overflow: visible;
 }
 .logo svg, .logo img {
 	overflow: visible;
 	transform-origin: center;
-	transition:all 1s;
+	transition: all 1s;
 }
 .logo svg:hover, .logo img:hover {
 	transform: scale(2)rotateZ(360deg);
