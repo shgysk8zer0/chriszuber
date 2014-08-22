@@ -78,6 +78,9 @@
 		<script type="application/javascript" src="scripts/combined.js" async></script>
 	<?php endif?>
 <?php endif?>
+<!--[if IE]>
+<script type="text/javascript" src="scripts/polyfills.js"></script>
+<![endif]-->
 <?php if(!localhost() and isset($head->google_analytics_code)):?>
 	<script type="application/javascript" nonce="<?=$session->nonce?>">
 		<?=preg_replace('/' . preg_quote('%GOOGLE_ANALYTICS_CODE%', '/') .'/', $head->google_analytics_code, file_get_contents(BASE . '/scripts/analytics.js'))?>
