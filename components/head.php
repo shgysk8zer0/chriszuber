@@ -1,9 +1,27 @@
 <?php
 	$storage = storage::load();
-	$head = $DB->name_value('head');
+
+	if($DB->connected) {
+		$head = $DB->name_value('head');
+	}
+
+	else {
+		$head = new stdClass();
+		$head->title = 'Lorem Ipsum';
+		$head->charset = 'utf-8';
+		$head->description = 'Default description for the blog';
+		$head->keywords = 'super, special, keywords';
+		$head->author = 'Clark Kent';
+		$head->robots = 'nofollow, noindex';
+		$head->viewport = 'width=device-width, height=device-height';
+	}
+
 	define('TITLE', $head->title);
 	$storage->site_info = $head;
-	$pages = pages::load();
+
+	if($DB->connected) {
+		$pages = pages::load();
+	}
 ?>
 <head>
 <meta charset="<?=$head->charset?>"/>
@@ -13,7 +31,7 @@
 <meta name="keywords" content="<?=isset($pages->keywords) ? $pages->keywords : $head->keywords?>"/>
 <meta name="robots" content="<?=$head->robots?>"/>
 <meta name="author" content="<?=$head->author?>"/>
-<meta itemprop="name" content="<?=($pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?>"/>
+<meta itemprop="name" content="<?=(is_null($pages->title) or $pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?>"/>
 <meta itemprop="url" content="<?=URL . $_SERVER['REQUEST_URI']?>"/>
 <meta itemprop="description" content="<?=isset($pages->description) ? $pages->description : $head->description?>"/>
 <meta itemprop="keywords" content="<?=isset($pagse->keywords) ? $pages->keywords : $head->keywords?>"/>
