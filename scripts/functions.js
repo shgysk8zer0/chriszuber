@@ -525,7 +525,7 @@ function ajax(data) {
 		});
 	}
 	return new Promise(function (success, fail) {
-		var canonical = $('[rel=canonical]');
+		var canonical = $('[rel=canonical]'), resp;
 		/*https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise*/
 		if(data.cache && cache.has(data.cache)) {
 			if(typeof data.history === 'string') {
@@ -557,13 +557,28 @@ function ajax(data) {
 					progress.value = event.loaded / event.total;
 				}
 			});
-			req.addEventListener('load', function () {
+			req.addEventListener('load', function (event) {
+				switch(req.getResponseHeader('Content-Type')) {
+					case 'application/json': {
+						resp = JSON.parse(req.response.trim());
+					} break;
+					case 'text/xml': {
+						resp = new DOMParser().parseFromString(req.response.trim(), "text/xml");
+					} break;
+					case 'text/html': {
+						resp = document.createDocumentFragment();
+						resp.innerHTML = req.response.trim();
+					}
+					default: {
+						fail(Error('Unsupported Content-Type in response'));
+					}
+				}
 				progress.parentElement.removeChild(progress);
 				if(req.status == 200) {
 					if(data.cache) {
 						cache.set(data.cache, req.response.trim());
 					}
-					success(req.response.trim());
+					success(resp);
 					if(typeof data.history === 'string') {
 						history.pushState(null, '', data.history);
 						if(canonical.found) {

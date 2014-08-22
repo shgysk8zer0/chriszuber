@@ -30,9 +30,6 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 								request: 'load_menu=' + menu.replace(/\_menu$/ ,''),
 								cache: this.target.data('cache')
 							}).then(
-								JSON.parse,
-								console.error
-							).then(
 								handleJSON,
 								console.error
 							);
@@ -55,9 +52,6 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 								request: (this.data('prompt')) ? this.data('request') + '&prompt_value=' + encodeURIComponent(prompt(this.data('prompt'))) : this.data('request'),
 								cache: el.data('cache')
 							}).then(
-								JSON.parse,
-								console.error
-							).then(
 								handleJSON,
 								console.error
 							);
@@ -107,9 +101,6 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 		ajax({
 			request: 'request=nonce'
 		}).then(
-			JSON.parse,
-			console.error
-		).then(
 			handleJSON,
 			console.error
 		);
@@ -137,9 +128,6 @@ NodeList.prototype.bootstrap = function() {
 							request: 'load_menu=' + menu.replace(/\_menu$/ ,''),
 							cache: el.data('cache')
 						}).then(
-							JSON.parse,
-							console.error
-						).then(
 							handleJSON,
 							console.error
 						);
@@ -154,9 +142,6 @@ NodeList.prototype.bootstrap = function() {
 						request: 'datalist=' + list.getAttribute('list'),
 						type: 'POST'
 					}).then(
-						JSON.parse,
-						console.error
-					).then(
 						handleJSON,
 						console.error
 					);
@@ -194,9 +179,6 @@ NodeList.prototype.bootstrap = function() {
 					history: this.href,
 					cache: this.data('cache')
 				}).then(
-					JSON.parse,
-					console.error
-				).then(
 					handleJSON,
 					console.error
 				);
@@ -212,9 +194,6 @@ NodeList.prototype.bootstrap = function() {
 						contentType: this.enctype,
 						form: this
 					}).then(
-						JSON.parse,
-						console.error
-					).then(
 						handleJSON,
 						console.error
 					);
@@ -226,9 +205,6 @@ NodeList.prototype.bootstrap = function() {
 						url: document.baseURI,
 						request: 'action=keep-alive'
 					}).then(
-						JSON.parse,
-						console.error
-					).then(
 						handleJSON,
 						console.error
 					);
@@ -263,7 +239,7 @@ NodeList.prototype.bootstrap = function() {
 		node.query('[data-must-match]').forEach(function(match) {
 			match.pattern = new RegExp(document.querySelector('[name="' + match.data('must-match') + '"]').value).escape();
 			document.querySelector('[name="' + match.data('must-match') + '"]').addEventListener('change', function() {
-				document.querySelector('[data-must-match="' +this.name + '"]').pattern = new RegExp(this.value).escape();
+				document.querySelector('[data-must-match="' + this.name + '"]').pattern = new RegExp(this.value).escape();
 			});
 		});
 		node.query('[data-dropzone]') .forEach(function (el) {
@@ -303,9 +279,6 @@ NodeList.prototype.bootstrap = function() {
 					history: this.data('link'),
 					cache: this.data('cache')
 				}).then(
-					JSON.parse,
-					console.error
-				).then(
 					handleJSON,
 					console.error
 				);
@@ -321,9 +294,6 @@ NodeList.prototype.bootstrap = function() {
 						history: this.data('history') || null,
 						cache: el.data('cache')
 					}).then(
-						JSON.parse,
-						console.error
-					).then(
 						handleJSON,
 						console.error
 					);
@@ -343,9 +313,6 @@ NodeList.prototype.bootstrap = function() {
 				type: el.data('type') || 'GET',
 				cache: el.data('cache')
 			}).then(
-				JSON.parse,
-				console.error
-			).then(
 				handleJSON,
 				console.error
 			);
@@ -428,9 +395,6 @@ NodeList.prototype.bootstrap = function() {
 						url: document.baseURI,
 						request: 'action=keep-alive'
 					}).then(
-						JSON.parse,
-						console.error
-					).then(
 						handleJSON,
 						console.error
 					);
