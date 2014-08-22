@@ -1,6 +1,9 @@
 <?php
 	class ftp {
 		/**
+		 * An FTP class designed to make FTP in PHP more similar to
+		 * standard BASH commands.
+		 *
 		 * @author Chris Zuber <shgysk8zer0@gmail.com>
 		 * @copyright 2014, Chris Zuber
 		 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
@@ -12,30 +15,64 @@
 		protected $ftp;
 		public $tmp;
 
-		public function __construct($u, $p, $s){
-			$this->user = $u;
-			$this->pass = $p;
-			$this->server = $s;
+		public function __construct($user, $pass, $server) {
+			/**
+			 * @param string $user
+			 * @param string $pass
+			 * @param string $server
+			 */
+
+			$this->user = $user;
+			$this->pass = $pass;
+			$this->server = $server;
 			$this->tmp = '/tmp/ftpdata';
 			$this->login();
 		}
 
-		private function login(){
+		private function login() {
+			/**
+			 * Login to FTP server using $user, $pass, & $server
+			 * @param void
+			 * @return boolean (status of ftp_login())
+			 */
+
 			$this->ftp = ftp_connect($this->server);
-			return ftp_login($this->ftp, $this->user, $this->pass) or die('<h1>Unable to Connect. Check Login Info</h1>');
+			return ftp_login($this->ftp, $this->user, $this->pass);
 		}
 
-		public function cd($dir){
+		public function cd($dir) {
+			/**
+			 * Change Directory
+			 * @param string $dir
+			 * @return ftp
+			 *
+			 */
 			($dir === '..') ? ftp_cdup($this->ftp) : ftp_chdir($this->ftp, $dir);
 			$this->path = $this->pwd();
+			return $this;
 		}
 
-		public function get($file, $mode = FTP_BINARY){
+		public function get($file, $mode = FTP_BINARY) {
+			/**
+			 * Downloads a file to $tmp and returns its contents
+			 *
+			 * @param string $file
+			 * @param int $mode (binary or text)
+			 * @return string (file contents)
+			 */
+
 			ftp_get($this->ftp, $this->tmp, $file, $mode);
 			return file_get_contents($this->tmp);
 		}
 
-		public function get_all($list){
+		public function get_all(array $list) {
+			/**
+			 * get(), but with an array of files.
+			 *
+			 * @param array $list (all files to get())
+			 * @return array (return values of get() as an array)
+			 */
+
 			$all = array();
 			foreach($list as $file){
 				array_push($all, $this->get($file));
@@ -43,51 +80,135 @@
 			return $all;
 		}
 
-		public function count($exp = '.'){
+		public function count($exp = '.') {
+			/**
+			 * Get count of files matching $exp
+			 *
+			 * @param string $exp
+			 * @return int
+			 */
+
 			return count($this->ls($exp));
 		}
 
-		public function close(){
+		public function close() {
+			/**
+			 * Closes FTP connection
+			 *
+			 * @param void
+			 * @return void
+			 */
 			ftp_close($this->ftp);
 		}
 
-		protected function exec($cmd){
+		protected function exec($cmd) {
+			/**
+			 * Execute an arbitrary command on the FTP server
+			 *
+			 * @param string command
+			 * @return mixed
+			 */
+
 			return ftp_exec($this->ftp, $cmd);
 		}
 
-		public function mkdir($name){
+		public function mkdir($name) {
+			/**
+			 * Make Directory
+			 *
+			 * @param string $name
+			 * @return boolean
+			 */
+
 			return ftp_mkdir($this->ftp, $name);
 		}
 
-		public function rmdir($dir){
+		public function rmdir($dir) {
+			/**
+			 * Remove Directory
+			 * @param string $dir
+			 * @return boolean
+			 */
+
 			return ftp_rmdir($this->ftp, $dir);
 		}
 
-		public function ls($dir = '.'){
+		public function ls($dir = '.') {
+			/**
+			 * List current or given directory
+			 *
+			 * @param string $dir
+			 * @return string
+			 */
+
 			return ftp_nlist($this->ftp, $dir);
 		}
 
-		public function pwd(){
+		public function pwd() {
+			/**
+			 * Print Working Directory
+			 *
+			 * @param void
+			 * @return string
+			 */
+
 			return ftp_pwd($this->ftp);
 		}
 
-		public function rm($f){
+		public function rm($f) {
+			/**
+			 * Remove (alias for delete)
+			 *
+			 * @param string $f
+			 * @return boolean
+			 */
+
 			return $this->delete($f);
 		}
 
-		public function delete($f){
+		public function delete($f) {
+			/**
+			 * Delete a file
+			 *
+			 * @param string $f
+			 * @return boolean
+			 */
+
 			return ftp_delete($this->ftp, $f);
 		}
 
-		public function mv($from, $to){
+		public function mv($from, $to) {
+			/**
+			 * Move
+			 *
+			 * @param string $from
+			 * @param string $to
+			 * @return boolean
+			 */
+
 			return ftp_rename($this->ftp, $from, $to);
 		}
 
-		public function chmod($mode, $file){
+		public function chmod($mode, $file) {
+			/**
+			 * Change mode (permissions)
+			 *
+			 * @param string $mode (string of ints?)
+			 * @param string $file
+			 * @return boolean
+			 */
+
 			return ftp_chmod($this->ftp, $mode, $file);
 		}
 
-		public function exists($file){
+		public function exists($file) {
+			/**
+			 * Check if a file exists
+			 *
+			 * @param string $file
+			 * @return boolean
+			 */
+
 			return (ftp_size($this->ftp, $file) !== -1);
 		}
 	}

@@ -1,4 +1,17 @@
 <?php
+	/**
+	 * Uses _pdo, but does not extend it.
+	 * Optimized for searching databases
+	 *
+	 * @author Chris Zuber <shgysk8zer0@gmail.com>
+	 * @copyright 2014, Chris Zuber
+	 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
+	 * @package core_shared
+	 * @version 2014-08-21
+	 * @uses _pdo
+	 * @depreciated (should modify _pdo to simplify this anyways)
+	 */
+
 	class search {
 		private $select = '*',
 				$from = '',

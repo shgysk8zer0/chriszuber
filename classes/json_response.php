@@ -8,6 +8,8 @@
 	 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
 	 * @package core_shared
 	 * @version 2014-04-19
+	 * @var array $response
+	 * @var array $instances
 	 *
 	 * @example $resp = new json_response();
 	 * $resp->notify(...)->html(...)->append(...)->prepend(...)->before(...)->after(...)->attributes(...)->remove(...)->send();

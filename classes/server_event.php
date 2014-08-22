@@ -1,13 +1,15 @@
 <?php
 	/**
 	 * Class to allow continuous updates from server using Server Sent Events
-	 * 
+	 *
 	 * @author Chris Zuber <shgysk8zer0@gmail.com>
 	 * @copyright 2014, Chris Zuber
 	 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
 	 * @package core_shared
 	 * @version 2014-08-18
 	 * @link https://developer.mozilla.org/en-US/docs/Server-sent_events/Using_server-sent_events
+	 * @var server_event $instance
+	 * @uses json_response
 	 * @example
 	 * $event = new server_event(); $n = 42;
 	 * while($n--) {
@@ -24,7 +26,7 @@
 
 	class server_event extends json_response {
 		private static $instance = null;
-		
+
 		public static function load(array $data = null) {
 		/**
 		 * Static method to load class

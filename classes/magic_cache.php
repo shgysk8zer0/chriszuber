@@ -1,10 +1,25 @@
 <?php
 	/**
+	 * PHP based caching
+	 *
+	 * Mostyl useful if you lack the ability to set headers via Apache,
+	 * though it may be useful even if you do (.appcache seems problematic)
+	 *
+	 * Only sets headers. Not HTML or other output is created
+	 *
 	 * @author Chris Zuber <shgysk8zer0@gmail.com>
 	 * @copyright 2014, Chris Zuber
 	 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
 	 * @package core_shared
 	 * @version 2014-04-19
+	 * @var string $file
+	 * @var string $ext (extension)
+	 * @var string $type
+	 * @var ins $size
+	 * @var string $etag
+	 * @var int? $mod_time
+	 * @var boolean $gz
+	 * @var int $status
 	 */
 
 	class magic_cache {

@@ -9,16 +9,15 @@
 	* @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
 	* @package core_shared
 	* @version 2014-04-19
+	* @var string $name
+	* @var int? $expires
+	* @var string $path
+	* @var string $domain
+	* @var boolean $secure
+	* @var boolean $httponly
+	* @var session $instance
 	*/
 	class session {
-		/**
-		 * @author Chris Zuber <shgysk8zer0@gmail.com>
-		 * @copyright 2014, Chris Zuber
-		 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
-		 * @package core_shared
-		 * @version 2014-04-19
-		 */
-
 		private $name, $expires, $path, $domain, $secure, $httponly;
 		private static $instance = null;
 

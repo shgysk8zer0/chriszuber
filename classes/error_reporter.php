@@ -1,16 +1,17 @@
 <?php
+	/**
+	 * Custom error handling.
+	 * Catch errors using custom function using set_error_handler($callback_function, ERROR_LEVEL)
+	 *
+	 * @link http://us3.php.net/set_error_handler
+	 * @author Chris Zuber <shgysk8zer0@gmail.com>
+	 * @copyright 2014, Chris Zuber
+	 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
+	 * @package core_shared
+	 * @version 2014-06-05
+	 */
+
 	class error_reporter extends _pdo {
-		/**
-		 * Custom error handling.
-		 * Catch errors using custom function using set_error_handler($callback_function, ERROR_LEVEL)
-		 *
-		 * @link http://us3.php.net/set_error_handler
-		 * @author Chris Zuber <shgysk8zer0@gmail.com>
-		 * @copyright 2014, Chris Zuber
-		 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
-		 * @package core_shared
-		 * @version 2014-06-05
-		 */
 
 		protected static $instance = null;
 
@@ -19,6 +20,12 @@
 		public $method, $log = 'errors.log';
 
 		public static function load($method) {
+			/**
+			 * Static load method should always be used,
+			 * especially when in development and multiple
+			 * errors may be reported.
+			 */
+
 			if(is_null(self::$instance)) {
 				self::$instance = new self($method);
 			}

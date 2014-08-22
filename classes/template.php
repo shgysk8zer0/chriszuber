@@ -1,11 +1,24 @@
 <?php
 	class template {
 		/**
+		 * Opens a template file, ready to be easily modified.
+		 * File contents are loaded and optionaly inified
+		 * Placeholders are dynamically replaced.
+		 * When retrieving output, all data is reset and ready
+		 * to be used again.
+		 *
 		 * @author Chris Zuber <shgysk8zer0@gmail.com>
 		 * @copyright 2014, Chris Zuber
 		 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
 		 * @package core_shared
 		 * @version 2014-06-01
+		 * @var template $instance
+		 * @var string $path
+		 * @var string $source
+		 * @var array $replacements
+		 * @var string $seperator
+		 * @var boolean $minify_results
+		 * @todo minify less (not with each time something is set)
 		 * @example
 		 * 	$template = new template('path/to/tempalte', '^', true);
 		 * 	$template->old = 'New';
@@ -95,11 +108,11 @@
 			 * @return self
 			 * @example $this->replace('old', 'new')
 			 */
-			
+
 			if($this->minify_results) {
 				$this->minify($with);
 			}
-			
+
 			$this->replacements[$this->seperator . strtoupper((string)$replace) . $this->seperator] = (string)$with;
 
 			return $this;

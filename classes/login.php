@@ -2,6 +2,7 @@
 	class login extends _pdo {
 		/**
 		 * Class to handle login or create new users from form submissions or $_SESSION
+		 * Can check login role as well (new, user, admin, etc)
 		 *
 		 * @author Chris Zuber <shgysk8zer0@gmail.com>
 		 * @copyright 2014, Chris Zuber
@@ -9,6 +10,8 @@
 		 * @package core_shared
 		 * @version 2014-04-19
 		 * @uses /classes/_pdo.php
+		 * @var array $useer_data
+		 * @var login $instance
 		 */
 
 		public $user_data = array();
