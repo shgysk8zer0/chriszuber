@@ -1,5 +1,5 @@
 # Super User
-![Super User](<http://chriszuber.com/super-user.svgz> "Super User")
+![Super User](<//chriszuber.com/super-user.svgz> "Super User")
 **_The world of blogging in the HTML5 world._**
 
 >The aim of this project is to provide the best in HTML5, CSS3, JavaScript, and SVG with minimal effort,

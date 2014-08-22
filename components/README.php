@@ -1,6 +1,6 @@
 <h1>Super User</h1>
 
-<p><img src="http://chriszuber.com/super-user.svgz" alt="Super User" title="Super User" />
+<p><img src="//chriszuber.com/super-user.svgz" alt="Super User" title="Super User" />
 <strong><em>The world of blogging in the HTML5 world.</em></strong></p>
 
 <blockquote>
