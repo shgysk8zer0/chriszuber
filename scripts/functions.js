@@ -39,6 +39,13 @@ if(!('showModal' in Element.prototype)) {
 	};
 	InvalidCharacterError.prototype = new Error;
 	InvalidCharacterError.prototype.name = 'InvalidCharacterError';
+	if(!CSS.supports) {
+		CSS.supports = function (prop, value) {
+			var el = document.createElement('div');
+			el.style = prop + ":" + value;
+			return (getComputedStyle(el)[prop] === value);
+		}
+	}
 	if (!CSS.escape) {
 		CSS.escape = function(value) {
 			var string = String(value), length = string.length, index = -1, codeUnit, result = '', firstCodeUnit = string.charCodeAt(0);
@@ -74,6 +81,11 @@ if(!('showModal' in Element.prototype)) {
 			}
 			return result;
 		};
+	}
+	CSS.supports = function (prop, value) {
+		var el = document.createElement('div');
+		el.style = prop + ":" + value;
+		return (getComputedStyle(el)[prop] === value);
 	}
 }(typeof global != 'undefined' ? global : this));
 DOMTokenList.prototype.pick = function(cname1, cname2, condition) {
