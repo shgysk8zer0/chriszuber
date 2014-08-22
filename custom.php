@@ -49,78 +49,92 @@
 
 	function update_rss($lim = 10) {
 		$pdo = _pdo::load('connect');
-		$url = preg_replace('/^https/', 'http', URL);
-		$head = $pdo->name_value('head');
-		$template = template::load('rss');
-		$rss = fopen(BASE . '/feed.rss', 'w');
-		$pages = $pdo->fetch_array("
-			SELECT `title`, `url`, `description`, `created`
-			FROM `posts`
-			WHERE `url` != ''
-			ORDER BY `created` DESC
-		");
+		if($pdo->connected) {
+			$url = preg_replace('/^https/', 'http', URL);
+			$head = $pdo->name_value('head');
+			$template = template::load('rss');
+			$rss = fopen(BASE . '/feed.rss', 'w');
+			$pages = $pdo->fetch_array("
+				SELECT `title`, `url`, `description`, `created`
+				FROM `posts`
+				WHERE `url` != ''
+				ORDER BY `created` DESC
+			");
 
-		fputs($rss, '<?xml version="1.0" encoding="UTF-8" ?>' . PHP_EOL);
-		fputs($rss, '<rss version="2.0">' . PHP_EOL);
-		fputs($rss, '<channel>' . PHP_EOL);
-		fputs($rss, "<title>{$head->title}</title>" . PHP_EOL);
-		fputs($rss, "<link>{$url}</link>" . PHP_EOL);
-		fputs($rss, "<lastBuildDate>" . date('r') ."</lastBuildDate>" . PHP_EOL);
-		fputs($rss, "<language>en-US</language>" . PHP_EOL);
-		fputs($rss, "<description>{$head->description}</description>" . PHP_EOL);
+			fputs($rss, '<?xml version="1.0" encoding="UTF-8" ?>' . PHP_EOL);
+			fputs($rss, '<rss version="2.0">' . PHP_EOL);
+			fputs($rss, '<channel>' . PHP_EOL);
+			fputs($rss, "<title>{$head->title}</title>" . PHP_EOL);
+			fputs($rss, "<link>{$url}</link>" . PHP_EOL);
+			fputs($rss, "<lastBuildDate>" . date('r') ."</lastBuildDate>" . PHP_EOL);
+			fputs($rss, "<language>en-US</language>" . PHP_EOL);
+			fputs($rss, "<description>{$head->description}</description>" . PHP_EOL);
 
-		foreach($pages as $page) {
-			fputs($rss, $template->title($page->title)->url("{$url}/posts/{$page->url}")->description($page->description)->created(date('r', strtotime($page->created)))->out());
+			foreach($pages as $page) {
+				fputs($rss, $template->title($page->title)->url("{$url}/posts/{$page->url}")->description($page->description)->created(date('r', strtotime($page->created)))->out());
+			}
+
+			fputs($rss, '</channel>');
+			fputs($rss, '</rss>');
+			fclose($rss);
 		}
-
-		fputs($rss, '</channel>');
-		fputs($rss, '</rss>');
-		fclose($rss);
-
 	}
 
 	function get_all_tags(){
 		$pdo = _pdo::load();
-		$keywords = flatten($pdo->fetch_array("
-			SELECT `keywords` FROM `posts`
-		"));
-		$tags = [];
-		foreach($keywords as $keyword) {
-			foreach(explode(',', $keyword) as $tag) {
-				$tags[] = trim($tag);
-			}
-		};
-		return array_unique($tags);
+		if($pdo->connected) {
+			$keywords = flatten($pdo->fetch_array("
+				SELECT `keywords` FROM `posts`
+			"));
+			$tags = [];
+			foreach($keywords as $keyword) {
+				foreach(explode(',', $keyword) as $tag) {
+					$tags[] = trim($tag);
+				}
+			};
+			return array_unique($tags);
+		}
+		else {
+			return [];
+		}
 	}
 
 	function get_recent_posts($n = 5, $sel = ['title', 'url', 'description']) {
 		$pdo = _pdo::load();
-		if(is_string($sel) and $sel !== '*') {
-			$sel = explode(',', $sel);
-		}
-		if(is_array($sel)) {
-			foreach($sel as &$col) {
-				$col = "`{$pdo->escape($col)}`";
+
+		if($pdo->connected) {
+			if(is_string($sel) and $sel !== '*') {
+				$sel = explode(',', $sel);
 			}
-			$sel = join(', ', $sel);
+			if(is_array($sel)) {
+				foreach($sel as &$col) {
+					$col = "`{$pdo->escape($col)}`";
+				}
+				$sel = join(', ', $sel);
+			}
+			return $pdo->fetch_array("
+				SELECT `title`, `url`, `description`
+				FROM `posts`
+				WHERE `url` != ''
+				ORDER BY `created` DESC
+				LIMIT {$n}
+			");
 		}
-		return $pdo->fetch_array("
-			SELECT `title`, `url`, `description`
-			FROM `posts`
-			WHERE `url` != ''
-			ORDER BY `created` DESC
-			LIMIT {$n}
-		");
+		else {
+			return [];
+		}
 	}
 
 	function get_datalist($list) {
 		$pdo = _pdo::load();
 		switch(strtolower($list)) {
 			case 'tags': {
+				if(!$pdo->connected) return null;
 				$options = get_all_tags();
 			} break;
 
 			case 'php_errors_files': {
+				if(!$pdo->connected) return null;
 				$options = $pdo->fetch_array("
 					SELECT DISTINCT(`file`)
 					FROM `PHP_errors`

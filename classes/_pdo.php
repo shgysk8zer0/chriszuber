@@ -3,7 +3,7 @@
 	 * Wrapper for standard PDO class. Allows
 	 * standard MySQL to be used, while giving benefits
 	 * of chained prepare->bind->execute...
-	 * 
+	 *
 	 * @author Chris Zuber <shgysk8zer0@gmail.com>
 	 * @copyright 2014, Chris Zuber
 	 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
@@ -68,6 +68,9 @@
 				$this->connected = true;
 			}
 			catch(Exception $e) {
+				if(!isset($connect_string)) {
+					$connect_string = 'Connect String not set';
+				}
 				$this->log(__METHOD__, __LINE__, $connect_string . PHP_EOL . $e->getMessage());
 				//exit('Failed to connect to database.');
 				$this->connected = false;
@@ -183,6 +186,7 @@
 			 * @return self
 			*/
 
+			if(!$this->connected) return $this;
 			$this->prepared = $this->pdo->prepare($query);
 			return $this;
 		}
@@ -199,6 +203,7 @@
 			 * ])
 			 */
 
+			if(!$this->connected) return $this;
 			foreach($array as $paramater => $value) {
 				$this->prepared->bindValue(':' . $paramater, $value);
 			}
@@ -213,6 +218,7 @@
 			 * @return self
 			 */
 
+			if(!$this->connected) return $this;
 			if($this->prepared->execute()) {
 				return $this;
 			}
@@ -227,6 +233,7 @@
 			 * @return mixed
 			 */
 
+			if(!$this->connected) return [];
 			$arr = $this->prepared->fetchAll(PDO::FETCH_CLASS);
 			$results = array();
 			foreach($arr as $data) {							//Convert from an associative array to a stdClass object

@@ -1,4 +1,5 @@
 <?php
+	if(!$DB->connected) return null;
 	$contact = $DB->name_value('contact');
 ?>
 <dialog id="contactDialog">

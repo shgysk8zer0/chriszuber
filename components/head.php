@@ -22,10 +22,15 @@
 	if($DB->connected) {
 		$pages = pages::load();
 	}
+	else {
+		$pages = new stdClass();
+		$pages->title = null;
+		$pages->rss = null;
+	}
 ?>
 <head>
 <meta charset="<?=$head->charset?>"/>
-<title><?=(!(is_string($pages->title) and strlen($pages->title)) or $pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?></title>
+<title><?=(!(isset($pages) and is_string($pages->title) and strlen($pages->title)) or $pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?></title>
 <base href="<?=URL?>/"/>
 <meta name="description" content="<?=isset($pages->description) ? $pages->description : $head->description?>"/>
 <meta name="keywords" content="<?=isset($pages->keywords) ? $pages->keywords : $head->keywords?>"/>
@@ -54,7 +59,9 @@
 <?php else:?>
 	<link rel="stylesheet" type="text/css" href="stylesheets/combined.out.css" media="all"/>
 <?php endif?>
+<?php if(isset($head->rss)):?>
 <link href="<?=$head->rss?>" rel="alternate" type="application/rss+xml" title="<?=$head->title?> RSS Feed" />
+<?php endif?>
 <?php if(isset($head->publisher)):?><link rel="publisher" href="https://plus.google.com/<?=$head->publisher?>"><?php endif?>
 <?php if(localhost()):?>
 	<?php if(BROWSER === 'Firefox'):?>
