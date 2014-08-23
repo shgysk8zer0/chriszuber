@@ -68,10 +68,12 @@ replaces variables with their values, as well as combining CSS files using @impo
 while still allowing the original to be used as CSS where supported
 
 *Installation and configurations for Ubuntu*
+
 	sudo apt-get install nodejs npm
 	sudo ln -s /usr/bin/nodejs /usr/bin/node
 	sudo npm install -g myth
 Then to generate...
+
 	myth stylesheets/style.css stylesheets/style.out.css
 	myth -c stylesheets/combined.css stylesheets/combined.out.css
 

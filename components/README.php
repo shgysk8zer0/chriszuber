@@ -90,13 +90,18 @@ The <a href="http://nodejs.org/" title="Node.js Homepage">Node.js</a> plugin <a 
 replaces variables with their values, as well as combining CSS files using @import
 while still allowing the original to be used as CSS where supported</p>
 
-<p><em>Installation and configurations for Ubuntu</em>
-    sudo apt-get install nodejs npm
-    sudo ln -s /usr/bin/nodejs /usr/bin/node
-    sudo npm install -g myth
-Then to generate...
-    myth stylesheets/style.css stylesheets/style.out.css
-    myth -c stylesheets/combined.css stylesheets/combined.out.css</p>
+<p><em>Installation and configurations for Ubuntu</em></p>
+
+<pre><code>sudo apt-get install nodejs npm
+sudo ln -s /usr/bin/nodejs /usr/bin/node
+sudo npm install -g myth
+</code></pre>
+
+<p>Then to generate...</p>
+
+<pre><code>myth stylesheets/style.css stylesheets/style.out.css
+myth -c stylesheets/combined.css stylesheets/combined.out.css
+</code></pre>
 
 <h3>Required Browser Features:</h3>
 
