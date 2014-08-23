@@ -6,6 +6,7 @@
 *.save
 *~
 *.log
+*.orig
 chriszuber.sql
 connect.ini
 sitemap.xml
