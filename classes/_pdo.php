@@ -317,7 +317,7 @@
 			return $arr;
 		}
 
-		public function quote(&$val) {
+		public function quote($val) {
 			/**
 			 * Makes a string safer to use in a query
 			 * When possible, use prepared statements instead
@@ -341,7 +341,7 @@
 			return $val;
 		}
 
-		public function escape(&$val) {
+		public function escape($val) {
 			/**
 			 * For lack of a pdo escape, use quote, trimming off the quotations
 			 *
