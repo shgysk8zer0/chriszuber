@@ -580,7 +580,7 @@ function ajax(data) {
 					case 'text/html': {
 						resp = document.createDocumentFragment();
 						resp.innerHTML = req.response.trim();
-					}
+					} break;
 					default: {
 						fail(Error('Unsupported Content-Type in response'));
 					}
