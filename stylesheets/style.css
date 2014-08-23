@@ -156,7 +156,7 @@ main a[target="_blank"]::after {
 [download]::after {
 	content: '  A';
 }
-button {
+button, [role=button] {
 	min-width: 2rem;
 	padding: 0.2rem;
 	background-image: linear-gradient(var(--primary-color), var(--highlight-color));
@@ -286,10 +286,12 @@ code {
 pre > code {
 	display: block;
 }
-dialog {
+.no-dialog dialog {
 	border: 0.4rem outset var(--primary-color);
 	border-radius: 1rem;
 	box-shadow: 1rem 1rem 1rem black;
+}
+.no-dialog dialog {
 	z-index: 9;
 }
 dialog.modal {
@@ -334,23 +336,13 @@ main {
 	padding: 2rem;
 	width: 90%;
 	position: relative;
-	left: 5%;
+	left: 2.5%;
 	background: rgb(110, 110, 110) none;
 	background: rgba(110, 110, 110, 0.8) none;
 	background: transparent var(--glass-grad);
 	border-radius: 2rem;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-content: flex-start;
 	transform-origin: top;
 	transform-style: preserve-3d;
-}
-@supports((display: flex) or (display: -webkit-box) or (display: -ms-flexbox)) {
-	main {
-		flex: 0 1 90%;
-		position: static;
-	}
 }
 main > article, main > form, main > .tags {
 	color: var(--alt-color);
@@ -359,22 +351,33 @@ main > article, main > form, main > .tags {
 	padding: inherit;
 	border: 0.3rem outset var(--border-color);
 	word-wrap: break-word;
-	flex: 0 1 67%;
-	order: 2;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	width: 67%;
+	float: right;
+	clear: right;
+}
+main aside {
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	width: 33%;
+	float: left;
 }
 article header, aside h3 {
-	font-family: 'Acme';
-	font-size: 1.3rem;
-	text-shadow: 0.1rem 0.1rem 0 dimgray, 0.15rem 0.15rem 0 black;
+	position: sticky;
+	top: 0;
+	left: 0;
 	padding: 0.4rem;
 	background: rgb(60, 60, 60) none;
 	background: rgba(60, 60, 60, 0.9) none;
 	background: transparent var(--header-bg);
-	box-shadow: 0 0 1rem var(--shadow);
 	color: var(--default-color);
-	position: sticky;
-	top: 0;
-	left: 0;
+	font-family: 'Acme';
+	font-size: 1.3rem;
+	text-shadow: 0.1rem 0.1rem 0 dimgray, 0.15rem 0.15rem 0 black;
+	box-shadow: 0 0 1rem var(--shadow);
 }
 article nav a {
 	color: inherit;
@@ -398,9 +401,59 @@ article > :not(footer) img {
 	margin: 1.5rem;
 	transition: all 500ms;
 }
-main aside {
-	flex: 0 1 30%;
-	order: 1;
+@supports((display: flex) or (display: -webkit-flex) or (display: -ms-flex)) {
+	main {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-content: flex-start;
+		flex: 0 1 90%;
+		position: static;
+	}
+	main aside {
+		flex: 0 1 30%;
+		order: 1;
+	}
+	main > article, main > form, main > .tags {
+		flex: 0 1 67%;
+		order: 2;
+	}
+	@media screen and (max-width: 999px) {
+		main {
+			flex-direction: column;
+			padding: 1rem;
+			flex: 0 1 95%;
+		}
+		main article, main .tags {
+			flex: 0 1 auto;
+			min-width: 100%;
+			order: 1;
+		}
+		main aside {
+			flex: 0 1 auto;
+			min-width: 100%;
+			order: 2;
+		}
+	}
+}
+@media screen and (max-width: 999px) {
+	@supports((display: flexy)) {
+		main {
+			flex-direction: column;
+			padding: 1rem;
+			flex: 0 1 95%;
+		}
+		main article, main .tags {
+			flex: 0 1 auto;
+			min-width: 100%;
+			order: 1;
+		}
+		main aside {
+			flex: 0 1 auto;
+			min-width: 100%;
+			order: 2;
+		}
+	}
 }
 aside h3 {
 	padding: 0.2rem;
@@ -423,6 +476,7 @@ aside li a:hover {
 }
 aside > :not(h3) {
 	color: #333;
+	background-color: rgb(233, 233, 233);
 	background-image: linear-gradient(whitesmoke , #ddd);
 	border: 0.2rem outset var(--border-color);
 	border-radius: 1rem 1rem 0 0;
@@ -436,23 +490,6 @@ body > footer {
 	background: transparent linear-gradient(whitesmoke, gainsboro);
 	box-shadow: 0 -1rem 2rem var(--shadow) inset;
 	align-self: flex-end;
-}
-@media screen and (max-width: 999px) {
-	main {
-		flex-direction: column;
-		padding: 1rem;
-		flex: 0 1 95%;
-	}
-	main article, main .tags {
-		flex: 0 1 auto;
-		min-width: 100%;
-		order: 1;
-	}
-	main aside {
-		flex: 0 1 auto;
-		min-width: 100%;
-		order: 2;
-	}
 }
 address {
 	font-size: 0.8rem;
