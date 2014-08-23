@@ -312,6 +312,17 @@ img {
   height: auto;
 }
 
+figure {
+  border: 0.1em solid dimgray;
+  text-align: center;
+}
+
+figure figcaption {
+  color: dimgray;
+  text-decoration: underline;
+  font-style: italic;
+}
+
 a,
 button:not(:disabled),
 input[type=submit],
@@ -429,6 +440,22 @@ dialog[open]::backdrop {
   left: 0;
   bottom: 0;
   right: 0;
+}
+
+ol > ol {
+  list-style-type: upper-alpha;
+}
+
+ol > ol > ol {
+  list-style-type: upper-roman;
+}
+
+ol > ol > ol > ol {
+  list-style-type: lower-alpha;
+}
+
+ol > ol > ol > ol > ol {
+  list-style-type: lower-roman;
 }
 
 body > header h1::before {
