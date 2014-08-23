@@ -27,10 +27,20 @@ the power and control that developers want.</p>
 <li><em>Most</em> class methods are chainable - faster and easier coding</li>
 <li>Updating design made easy thanks to <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables">CSS variables</a>. Use <a href="http://myth.io">Myth</a> (<strong>not included</strong>) when unsupported or in production</li>
 <li>Developer friendly - Things like backing up and restoring a database are as easy as clicking a button in the developer menu, which is available to admin users everywhere via contextmenu (no navigation required, Firefox only at this point). Also provides easy access to debugging info, and the ability to print out debugging info to the browser's console makes tracking down bugs relatively easy. Lastly, PHP errors are saved to a database with file, line, and error message included, and can be searched, filtered, and even fixed from the browser!</li>
-<li><p>Free/Libre/Open/Creative Commons/Public Domain… whatever applies to what you're refering to. All artwork, icons, and code are free to use for personal use. Special thanks to <a href="https://openclipart.org/">OpenClipart</a> and <a href="http://openfontlibrary.org/">Open Font Library</a>. All posts are automatically licensed under a <a href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons 4.0 license</a>.</p>
+<li>Free/Libre/Open/Creative Commons/Public Domain… whatever applies to what you're refering to. All artwork, icons, and code are free to use for personal use. Special thanks to <a href="https://openclipart.org/">OpenClipart</a> and <a href="http://openfontlibrary.org/">Open Font Library</a>. All posts are automatically licensed under a <a href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons 4.0 license</a>.</li>
+</ul>
 
-<h2>Forks</h2></li>
-<li><p><a href="https://github.com/shgysk8zer0/chriszuber" title="Main Repo">Main Repo</a></p></li>
+<h2>Contact</h2>
+
+<ul>
+<li><a href="mailto:shgysk8zer0@gmail.com" title="Email Developer">Email Developer</a></li>
+<li><a href="https://github.com/shgysk8zer0/chriszuber/issues" title="Report Bugs, request enhancements, etc">Issues Page</a></li>
+</ul>
+
+<h2>Forks</h2>
+
+<ul>
+<li><a href="https://github.com/shgysk8zer0/chriszuber" title="Main Repo">Main Repo</a></li>
 </ul>
 
 <h2>Creating your Repo</h2>
@@ -44,23 +54,16 @@ git pull project_manager master
 git push --set-upstream origin master
 </code></pre>
 
-<h2>Contact</h2>
-
-<ul>
-<li><a href="mailto:shgysk8zer0@gmail.com" title="Email Developer">Email Developer</a></li>
-<li><a href="https://github.com/shgysk8zer0/chriszuber/issues" title="Report Bugs, request enhancements, etc">Issues Page</a></li>
-</ul>
-
 <h2>Other Info</h2>
 
 <h3>Tested Using:</h3>
 
 <ul>
-<li>Apache/2.4.7</li>
-<li>PHP 5.5.9</li>
-<li>MySQL 5.5.37</li>
-<li>Ubuntu 13.10 &amp; 14.04 64bit</li>
-<li>Firefox 30+ &amp; Chrome 35+ (problematic)</li>
+<li><a href="http://httpd.apache.org/download.cgi" title="Download Apache">Apache</a> 2.4.7</li>
+<li><a href="http://php.net/" title="Download PHP">PHP</a> 5.5.9</li>
+<li><a href="http://dev.mysql.com/downloads/" title="Download MySQL">MySQL</a> 5.5.37</li>
+<li><a href="http://www.ubuntu.com/download" title="Download Ubuntu">Ubuntu</a> 13.10 &amp; 14.04 64bit</li>
+<li><a href="https://www.mozilla.org/en-US/firefox/new/" title="Download Mozilla Firefox">Firefox</a> 30+ &amp; <a href="https://www.google.com/chrome/browser/" title="Download Google Chrome">Chrome</a> 35+ (problematic)</li>
 </ul>
 
 <h3>Required PHP Modules:</h3>
