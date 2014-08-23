@@ -1,17 +1,110 @@
+<?php
+	$els = [
+		"Strong" => "strong",
+		"Emphasis" => "em",
+		"Deleted Text" => "del",
+		"Inserted Text" => "ins",
+		"Sample Text" => "samp",
+		"Keyboard" => "kbd",
+		"Variable" => "var",
+		"Quote" => "q",
+		"Citation" => "cite",
+		"Highlighted Text" => "mark"
+	];
+	$fonts = [
+		"Alice",
+		"Web Symbols",
+		"Acme",
+		"GNUTypewriter",
+		"PressStart",
+		"GNUTypewriter"
+	];
+
+	$special_characters = [
+		'Punctuation' => [
+			'ldquo',
+			'rdquo',
+			'lsquo',
+			'rsquo',
+			'laquo',
+			'raquo',
+			'sbquo',
+			'iquest',
+			'ndash',
+			'mdash',
+			'#133',
+			'dagger',
+			'Dagger'
+		],
+		'Legal' => [
+			'copy',
+			'trade',
+			'reg'
+		],
+		'Currency' => [
+			'curren',
+			'cent',
+			'pound',
+			'yen',
+			'euro'
+		],
+		'Fractions' => [
+			'frac12',
+			'frac13',
+			'frac14',
+			'frac18',
+			'frac38',
+			'frac58',
+			'frac34',
+			'frac78'
+		],
+		'Operators' => [
+			'plusmn',
+			'times',
+			'#8729',
+			'divide',
+			'#8730',
+			'#8800',
+			'#8776',
+			'#8804',
+			'#8805',
+			'#8747',
+			'#8721',
+			'#8706',
+			'#8710',
+			'#131',
+			'deg'
+		],
+		'Other' => [
+			'spades',
+			'clubs',
+			'diams',
+			'hearts',
+			'#9792',
+			'#9794',
+			'larr',
+			'rarr',
+			'uarr',
+			'darr',
+			'#9833',
+			'#9834',
+			'#9836',
+			'#9837',
+			'#9839'
+		]
+	];
+?>
 <menu type="context" id="wysiwyg_menu">
 	<!--https://developer.mozilla.org/en-US/docs/Midas-->
 	<menu label="Create">
 		<menu label="Headings">
-			<menuitem label="H1" data-editor-command="heading" data-editor-value="H1"></menuitem>
-			<menuitem label="H2" data-editor-command="heading" data-editor-value="H2"></menuitem>
-			<menuitem label="H3" data-editor-command="heading" data-editor-value="H3"></menuitem>
-			<menuitem label="H4" data-editor-command="heading" data-editor-value="H4"></menuitem>
-			<menuitem label="H5" data-editor-command="heading" data-editor-value="H5"></menuitem>
-			<menuitem label="H6" data-editor-command="heading" data-editor-value="H6"></menuitem>
+			<?php foreach(range(1, 6) as $h):?>
+			<menuitem label="H<?=$h?>" data-editor-command="heading" data-editor-value="H<?=$h?>"></menuitem>
+			<?php endforeach?>
 		</menu>
 		<menu label="List">
-			<menuitem label="Ordered" data-editor-command="insertorderedlist"></menuitem>
 			<menuitem label="Unordered" data-editor-command="insertunorderedlist"></menuitem>
+			<menuitem label="Ordered" data-editor-command="insertorderedlist"></menuitem>
 		</menu>
 		<menuitem label="Link" data-editor-command="createlink" data-prompt="Enter link location"></menuitem>
 		<menuitem label="Image" data-editor-command="insertimage" data-prompt="Enter image location"></menuitem>
@@ -28,15 +121,13 @@
 				<menuitem label="-" data-editor-command="decreasefontsize"></menuitem>
 			</menu>
 			<menu label="Font Family">
-				<menuitem label="Alice" data-editor-command="fontname" data-editor-value="Alice"></menuitem>
-				<menuitem label="Web Symbols" data-editor-command="fontname" data-editor-value="Web Symbols"></menuitem>
-				<menuitem label="Acme" data-editor-command="fontname" data-editor-value="Acme"></menuitem>
-				<menuitem label="GNUTypewriter" data-editor-command="fontname" data-editor-value="GNUTypewriter"></menuitem>
-				<menuitem label="PressStart" data-editor-command="fontname" data-editor-value="PressStart"></menuitem>
-				<menuitem label="GNUTypewriter" data-editor-command="fontname" data-editor-value="GNUTypewriter"></menuitem>
+				<?php foreach($fonts as $font):?>
+				<menuitem label="<?=$font?>" data-editor-command="fontname" data-editor-value="<?=$font?>"></menuitem>
+				<?php endforeach?>
 				<menuitem label="Other?" data-editor-command="fontname" data-prompt="What font would you like to use?"></menuitem>
 			</menu>
 		</menu>
+		<menuitem label="Paragraph" data-editor-command="insertparagraph"></menuitem>
 		<menuitem label="Blockquote" data-editor-command="formatblock" data-editor-value="BLOCKQUOTE"></menuitem>
 		<menuitem label="Bold" data-editor-command="bold"></menuitem>
 		<menuitem label="Italics" data-editor-command="italic"></menuitem>
@@ -47,16 +138,9 @@
 		<menuitem label="Superscript" data-editor-command="superscript"></menuitem>
 		<menuitem label="Subscript" data-editor-command="subscript"></menuitem>
 		<menu label="Other">
-			<menuitem label="Strong" data-editor-command="inserthtml" data-selection-to="strong"></menuitem>
-			<menuitem label="Emphasis" data-editor-command="inserthtml" data-selection-to="em"></menuitem>
-			<menuitem label="Deleted Text" data-editor-command="inserthtml" data-selection-to="del"></menuitem>
-			<menuitem label="Inserted Text" data-editor-command="inserthtml" data-selection-to="ins"></menuitem>
-			<menuitem label="Sample Text" data-editor-command="inserthtml" data-selection-to="samp"></menuitem>
-			<menuitem label="Keyboard" data-editor-command="inserthtml" data-selection-to="kbd"></menuitem>
-			<menuitem label="Variable" data-editor-command="inserthtml" data-selection-to="var"></menuitem>
-			<menuitem label="Quote" data-editor-command="inserthtml" data-selection-to="q"></menuitem>
-			<menuitem label="Citation" data-editor-command="inserthtml" data-selection-to="cite"></menuitem>
-			<menuitem label="Highlighted Text" data-editor-command="inserthtml" data-selection-to="mark"></menuitem>
+			<?php foreach($els as $label => $tag):?>
+			<menuitem label="<?=$label?>" data-editor-command="inserthtml" data-selection-to="<?=$tag?>"></menuitem>
+			<?php endforeach?>
 		</menu>
 	</menu>
 	<menu label="Indentation">
@@ -70,44 +154,13 @@
 		<menuitem label="Full" data-editor-command="justifyfull"></menuitem>
 	</menu>
 	<menu label="Special Characters">
-		<menu label="Punctuation">
-			<?php foreach(['ldquo', 'lsquo', 'rsquo', 'rdquo', 'sbquo', 'laquo', 'raquo', 'iquest', 'ndash', 'mdash', '#133', 'dagger', 'Dagger'] as $character):?>
-			<menuitem label="&<?=$character?>;" data-editor-command="inserthtml" data-editor-value="&<?=$character?>;"></menuitem>
-			<?php endforeach?>
-		</menu>
-		<menu label="Legal">
-			<?php foreach(['copy', 'trade', 'reg'] as $character):?>
-			<menuitem label="&<?=$character?>;" data-editor-command="inserthtml" data-editor-value="&<?=$character?>;"></menuitem>
-			<?php endforeach?>
-		</menu>
-		<menu label="Currency">
-			<?php foreach(['curren', 'cent', 'pound', 'yen', 'euro'] as $character):?>
-			<menuitem label="&<?=$character?>;" data-editor-command="inserthtml" data-editor-value="&<?=$character?>;"></menuitem>
-			<?php endforeach?>
-		</menu>
-		<menu label="Mathematics">
-			<menuitem label="&#8734;" data-editor-command="inserthtml" data-editor-value="&#8734;"></menuitem>
-			<menu label="Fractions">
-				<?php foreach(['frac12', 'frac13', 'frac14', 'frac18', 'frac38', 'frac58', 'frac34', 'frac78'] as $character):?>
+		<?php foreach($special_characters as $type => $characters):?>
+			<menu label="<?=ucwords($type)?>">
+			<?php foreach($characters as $character):?>
 				<menuitem label="&<?=$character?>;" data-editor-command="inserthtml" data-editor-value="&<?=$character?>;"></menuitem>
-				<?php endforeach?>
-			</menu>
-			<menu label="Operators">
-				<?php foreach(['plusmn', 'times', '#8729', 'divide', '#8730', '#8800', '#8776', '#8804', '#8805', '#8747', '#8721', '#8706', '#8710', '#131', 'deg'] as $character):?>
-				<menuitem label="&<?=$character?>;" data-editor-command="inserthtml" data-editor-value="&<?=$character?>;"></menuitem>
-				<?php endforeach?>
-			</menu>
-			<menu label="Exponents">
-				<?php foreach(range(1, 3) as $character):?>
-				<menuitem label="&sup<?=$character?>;" data-editor-command="inserthtml" data-editor-value="&<?=$character?>;"></menuitem>
-				<?php endforeach?>
-			</menu>
-		</menu>
-		<menu label="Other">
-			<?php foreach(['spades', 'clubs', 'diams', 'hearts', '#9792', '#9794', 'larr', 'rarr', 'uarr', 'darr', '#9833','#9834', '#9836', '#9837', '#9839'] as $character):?>
-			<menuitem label="&<?=$character?>;" data-editor-command="inserthtml" data-editor-value="&<?=$character?>;"></menuitem>
 			<?php endforeach?>
-		</menu>
+			</menu>
+		<?php endforeach?>
 	</menu>
 	<menuitem label="Line Break" data-editor-command="inserthtml" data-editor-value="<br />"></menuitem>
 	<menuitem label="Horizontal Rule" data-editor-command="inserthorizontalrule"></menuitem>
