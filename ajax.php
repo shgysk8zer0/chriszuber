@@ -170,9 +170,11 @@
 						'user' => $login->user
 					])->execute()->get_results(0);
 
-					$title = urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['title'])));
+					//$title = urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['title'])));
+					$title = urldecode(trim(strip_tags($_POST['title'])));
 					$description = trim($_POST['description']);
-					$keywords = urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['keywords'])));
+					//$keywords = urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['keywords'])));
+					$keywords = urldecode(trim(strip_tags($_POST['keywords'])));
 					$author = $user->name;
 					$content = trim($_POST['content']);
 					$url = urlencode(strtolower(preg_replace('/\W+/', ' ', $title)));
@@ -249,7 +251,6 @@
 						)->after(
 							'#main_menu > menu[label="Posts"] > menuitem[label="Home"]',
 							"<menuitem label=\"{$title}\" icon=\"images/icons/coffee.svgz\" data-link=\"{$url}\"></menuitem>"
-
 						);
 						update_sitemap();
 						update_rss();
@@ -716,6 +717,10 @@
 						$_POST
 					);
 				}
+			} break;
+
+			case 'install': {
+				$resp->log($_REQUEST);
 			} break;
 		}
 
