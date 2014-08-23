@@ -159,12 +159,15 @@ main a[target="_blank"]::after {
 button, [role=button] {
 	min-width: 2rem;
 	padding: 0.2rem;
+	background-color: var(--primary-color);
+	background-image: url('../images/gradients/header_links.png');
 	background-image: linear-gradient(var(--primary-color), var(--highlight-color));
 	font-family: inherit;
 	color: var(--default-color);
 	border: 0.2rem outset var(--primary-color);
 }
 button:disabled, button:active {
+	background-color: var(--highlight-color);
 	background-image: linear-gradient(var(--highlight-color), var(--primary-color));
 	border: 0.2rem inset var(--primary-color);
 	box-shadow: 0 0 0.3rem var(--shadow) inset;

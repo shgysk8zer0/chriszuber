@@ -571,6 +571,8 @@
   [role=button] {
     min-width: 2rem;
     padding: 0.2rem;
+    background-color: rgba(237, 24, 24, 1);
+    background-image: url('../images/gradients/header_links.png');
     background-image: -webkit-linear-gradient(rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
     background-image: linear-gradient(rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
     font-family: inherit;
@@ -580,6 +582,7 @@
 
   button:disabled,
   button:active {
+    background-color: rgba(129, 23, 23, 1);
     background-image: -webkit-linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1));
     background-image: linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1));
     border: 0.2rem inset rgba(237, 24, 24, 1);
