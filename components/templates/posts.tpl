@@ -6,6 +6,7 @@
 						<summary title="Tags" data-icon=","></summary>
 						<div itemprop="keywords">%TAGS%</div>
 					</details>
+					<!--<a href="%URL%/#comments_section" title="Scroll to Comments">Comments</a>-->
 				</nav>
 			</header>
 			<section itemprop="text">%CONTENT%</section>
