@@ -138,7 +138,7 @@
 
 			$name = strtolower($name);
 			$act = substr($name, 0, 3);
-			$key = preg_replace('/_/', '-', substr($name, 3));
+			$key = str_replace('_', '-', substr($name, 3));
 			switch($act) {
 				case 'get': {
 					return $this->$key;

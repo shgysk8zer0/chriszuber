@@ -91,7 +91,7 @@
 			 * @example "$pdo->key = $value"
 			 */
 
-			$key = preg_replace('/_/', '-', preg_quote($key, '/'));
+			$key = str_replace(' ', '-', preg_quote($key, '/'));
 			$this->data[$key] = $value;
 		}
 
@@ -104,7 +104,7 @@
 			 * @example "$pdo->key" Returns $value
 			 */
 
-			$key = preg_replace('/_/', '-', preg_quote($key, '/'));
+			$key = str_replace(' ', '-', preg_quote($key, '/'));
 			if(array_key_exists($key, $this->data)) {
 				return $this->data[$key];
 			}
@@ -118,7 +118,7 @@
 			 * @example "isset({$pdo->key})"
 			 */
 
-			return array_key_exists(preg_replace('/_/', '-', $key), $this->data);
+			return array_key_exists(str_replace(' ', '-', $key), $this->data);
 		}
 
 		public function __unset($key) {
@@ -130,7 +130,7 @@
 			 * @example "unset($pdo->key)"
 			 */
 
-			unset($this->data[preg_replace('/_/', '-', $key)]);
+			unset($this->data[str_replace(' ', '-', $key)]);
 		}
 
 		public function __call($name, $arguments) {
@@ -142,7 +142,7 @@
 
 			$name = strtolower($name);
 			$act = substr($name, 0, 3);
-			$key = preg_replace('/_/', '-', substr($name, 3));
+			$key = str_replace(' ', '-', substr($name, 3));
 			switch($act) {
 				case 'get': {
 					if(array_key_exists($key, $this->data)) {
@@ -186,7 +186,6 @@
 			 * @return self
 			*/
 
-			if(!$this->connected) return $this;
 			$this->prepared = $this->pdo->prepare($query);
 			return $this;
 		}
@@ -203,7 +202,6 @@
 			 * ])
 			 */
 
-			if(!$this->connected) return $this;
 			foreach($array as $paramater => $value) {
 				$this->prepared->bindValue(':' . $paramater, $value);
 			}
@@ -218,7 +216,6 @@
 			 * @return self
 			 */
 
-			if(!$this->connected) return $this;
 			if($this->prepared->execute()) {
 				return $this;
 			}
@@ -233,7 +230,6 @@
 			 * @return mixed
 			 */
 
-			if(!$this->connected) return [];
 			$arr = $this->prepared->fetchAll(PDO::FETCH_CLASS);
 			$results = array();
 			foreach($arr as $data) {							//Convert from an associative array to a stdClass object

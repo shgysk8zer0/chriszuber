@@ -74,7 +74,7 @@
 			 * @example "$session->key" Returns $value
 			 */
 
-			$key = strtolower(preg_replace('/_/', '-', $key));
+			$key = strtolower(str_replace('_', '-', $key));
 			if(array_key_exists($key, $_SESSION)) {
 				return $_SESSION[$key];
 			}
@@ -89,7 +89,7 @@
 			 * @return void
 			 * @example "$session->key = $value"
 			 */
-			$key = strtolower(preg_replace('/_/', '-', $key));
+			$key = strtolower(str_replace('_', '-', $key));
 			$_SESSION[$key] = trim($value);
 		}
 
@@ -102,7 +102,7 @@
 
 			$name = strtolower($name);
 			$act = substr($name, 0, 3);
-			$key = preg_replace('/_/', '-', substr($name, 3));
+			$key = str_replace('_', '-', substr($name, 3));
 			switch($act) {
 				case 'get':
 					if(array_key_exists($key, $_SESSION)) {
@@ -128,7 +128,7 @@
 			 * @example "isset({$session->key})"
 			 */
 
-			$key = strtolower(preg_replace('/_/', '-', $key));
+			$key = strtolower(str_replace('_', '-', $key));
 			return array_key_exists($key, $_SESSION);
 		}
 
@@ -141,7 +141,7 @@
 			 * @example "unset($session->key)"
 			 */
 
-			$key = strtolower(preg_replace('/_/', '-', $key));
+			$key = strtolower(str_replace('_', '-', $key));
 			unset($_SESSION[$key]);
 		}
 

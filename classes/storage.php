@@ -56,7 +56,7 @@
 			 * @example "$storage->key = $value"
 			 */
 
-			$key = preg_replace('/_/', '-', preg_quote($key, '/'));
+			$key = str_replace('_', '-', preg_quote($key, '/'));
 			$this->data[$key] = $value;
 		}
 
@@ -69,7 +69,7 @@
 			 * @example "$storage->key" Returns $value
 			 */
 
-			$key = preg_replace('/_/', '-', preg_quote($key, '/'));
+			$key = str_replace('_', '-', preg_quote($key, '/'));
 			if(array_key_exists($key, $this->data)) {
 				return $this->data[$key];
 			}
@@ -83,7 +83,7 @@
 			 * @example "isset({$storage->key})"
 			 */
 
-			return array_key_exists(preg_replace('/_/', '-', $key), $this->data);
+			return array_key_exists(str_replace('_', '-', $key), $this->data);
 		}
 
 		public function __unset($index) {
@@ -95,7 +95,7 @@
 			 * @example "unset($storage->key)"
 			 */
 
-			unset($this->data[preg_replace('/_/', '-', $index)]);
+			unset($this->data[str_replace('_', '-', $index)]);
 		}
 
 		public function __call($name, $arguments) {
@@ -107,7 +107,7 @@
 
 			$name = strtolower($name);
 			$act = substr($name, 0, 3);
-			$key = preg_replace('/_/', '-', substr($name, 3));
+			$key = str_replace('_', '-', substr($name, 3));
 			switch($act) {
 				case 'get':
 					if(array_key_exists($key, $this->data)) {

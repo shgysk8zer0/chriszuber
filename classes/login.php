@@ -124,7 +124,7 @@
 			 * @example "$login->key = $value"
 			 */
 
-			$key = preg_replace('/_/', '-', strtolower($key));
+			$key = str_replace('_', '-', strtolower($key));
 			$this->user_data[$key] = $value;
 			return $this;
 		}
@@ -138,7 +138,7 @@
 			 * @example "$login->key" Returns $value
 			 */
 
-			$key = preg_replace('/_/', '-', strtolower($key));
+			$key = str_replace('_', '-', strtolower($key));
 			if(array_key_exists($key, $this->user_data)) {
 				return $this->user_data[$key];
 			}
@@ -152,7 +152,7 @@
 			 * @example "isset({$login->key})"
 			 */
 
-			$key = preg_replace('/_/', '-', strtolower($key));
+			$key = str_replace('_', '-', strtolower($key));
 			return array_key_exists($key, $this->user_data);
 		}
 
@@ -165,7 +165,7 @@
 			 * @example "unset($login->key)"
 			 */
 
-			$key = preg_replace('/_/', '-', strtolower($key));
+			$key = str_replace('_', '-', strtolower($key));
 			unset($this->user_data[$key]);
 		}
 
@@ -178,7 +178,7 @@
 
 			$name = strtolower($name);
 			$act = substr($name, 0, 3);
-			$key = preg_replace('/_/', '-', substr($name, 3));
+			$key = str_replace('_', '-', substr($name, 3));
 			switch($act) {
 				case 'get':
 					if(array_key_exists($key, $this->user_data)) {
