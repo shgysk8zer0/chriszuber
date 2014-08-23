@@ -344,6 +344,11 @@ main {
 	transform-origin: top;
 	transform-style: preserve-3d;
 }
+main:after {
+	content: '';
+	display: block;
+	clear: both;
+}
 main > article, main > form, main > .tags {
 	color: var(--alt-color);
 	background-color: whitesmoke;

@@ -455,6 +455,12 @@ main {
   transform-style: preserve-3d;
 }
 
+main:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
 main > article,
 main > form,
 main > .tags {
