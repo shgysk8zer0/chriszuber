@@ -43,15 +43,38 @@ the power and control that developers want.</p>
 <li><a href="https://github.com/shgysk8zer0/chriszuber" title="Main Repo">Main Repo</a></li>
 </ul>
 
+<h2>Install</h2>
+
+<pre><code>git clone git://github.com/shgysk8zer0/chriszuber.git
+</code></pre>
+
+<h2>Update</h2>
+
+<pre><code>git pull
+</code></pre>
+
+<h2>In case of update conflicts</h2>
+
+<pre><code>git mergetool
+</code></pre>
+
 <h2>Creating your Repo</h2>
 
 <p><strong><em>Update addresses to SSH as needed and available</em></strong></p>
 
-<pre><code>git init
-git remote add origin {Your Repo Address}
+<p>First, fork from the <a href="https://github.com/shgysk8zer0.chriszuber/" title="Main Repo">Main Repository</a></p>
+
+<p>Copy your "clone URL"</p>
+
+<p><em>Install</em></p>
+
+<pre><code>git clone {clone URL}
 git remote add project_manager git://github.com/shgysk8zer0/chriszuber.git
-git pull project_manager master
-git push --set-upstream origin master
+</code></pre>
+
+<p><em>Update</em></p>
+
+<pre><code>git pull project_manager master
 </code></pre>
 
 <h2>Other Info</h2>

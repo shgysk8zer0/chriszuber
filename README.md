@@ -31,14 +31,33 @@ the power and control that developers want.
 ## Forks
 * [Main Repo](<https://github.com/shgysk8zer0/chriszuber> "Main Repo")
 
+## Install
+
+	git clone git://github.com/shgysk8zer0/chriszuber.git
+
+## Update
+
+	git pull
+
+## In case of update conflicts
+
+	git mergetool
+
 ## Creating your Repo
 **_Update addresses to SSH as needed and available_**
 
-	git init
-	git remote add origin {Your Repo Address}
+First, fork from the [Main Repository](<https://github.com/shgysk8zer0.chriszuber/> "Main Repo")
+
+Copy your "clone URL"
+
+*Install*
+
+	git clone {clone URL}
 	git remote add project_manager git://github.com/shgysk8zer0/chriszuber.git
+
+*Update*
+
 	git pull project_manager master
-	git push --set-upstream origin master
 
 
 ## Other Info
