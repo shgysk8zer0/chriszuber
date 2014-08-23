@@ -304,6 +304,9 @@ Element.prototype.ajax = function(args) {
 	);
 	return this;
 }
+Element.prototype.wordCount = function() {
+	return this.textContent.split(' ').length;
+}
 function notify(options) {
 	/*Creates a notification, with alert fallback*/
 	var notification;
