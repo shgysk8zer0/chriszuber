@@ -15,27 +15,18 @@
 		</menu>
 		<menuitem label="Link" data-editor-command="createlink" data-prompt="Enter link location"></menuitem>
 		<menuitem label="Image" data-editor-command="insertimage" data-prompt="Enter image location"></menuitem>
-		<menuitem label="Citation" data-editor-command="inserthtml" data-selection-to="cite"></menuitem>
-		<menuitem label="Quote" data-editor-command="inserthtml" data-selection-to="q"></menuitem>
 		<menuitem label="Figure" data-editor-command="inserthtml" data-selection-to="figure"></menuitem>
 		<menuitem label="Figure Caption" data-editor-command="inserthtml" data-selection-to="figcaption"></menuitem>
-		<menuitem label="Highlighted Text" data-editor-command="inserthtml" data-selection-to="mark"></menuitem>
 		<menuitem label="Code" data-editor-command="inserthtml" data-selection-to="code"></menuitem>
 		<menuitem label="Pre-formatted Text" data-editor-command="inserthtml" data-selection-to="pre"></menuitem>
 		<menuitem label="Custom HTML" data-editor-command="inserthtml" data-prompt="Enter the HTML to insert."></menuitem>
 	</menu>
 	<menu label="Text Style">
-		<menuitem label="Bold" data-editor-command="bold"></menuitem>
-		<menuitem label="Italics" data-editor-command="italic"></menuitem>
-		<menuitem label="Underline" data-editor-command="underline"></menuitem>
-		<menuitem label="Strike Through" data-editor-command="strikethrough"></menuitem>
-		<menuitem label="Big" data-editor-command="big"></menuitem>
-		<menuitem label="Small" data-editor-command="small"></menuitem>
-		<menuitem label="Superscript" data-editor-command="superscript"></menuitem>
-		<menuitem label="Subscript" data-editor-command="subscript"></menuitem>
 		<menu label="Font">
-			<menuitem label="Larger" data-editor-command="increasefontsize"></menuitem>
-			<menuitem label="Smaller" data-editor-command="decreasefontsize"></menuitem>
+			<menu label="Size">
+				<menuitem label="+" data-editor-command="increasefontsize"></menuitem>
+				<menuitem label="-" data-editor-command="decreasefontsize"></menuitem>
+			</menu>
 			<menu label="Font Family">
 				<menuitem label="Alice" data-editor-command="fontname" data-editor-value="Alice"></menuitem>
 				<menuitem label="Web Symbols" data-editor-command="fontname" data-editor-value="Web Symbols"></menuitem>
@@ -45,6 +36,27 @@
 				<menuitem label="GNUTypewriter" data-editor-command="fontname" data-editor-value="GNUTypewriter"></menuitem>
 				<menuitem label="Other?" data-editor-command="fontname" data-prompt="What font would you like to use?"></menuitem>
 			</menu>
+		</menu>
+		<menuitem label="Blockquote" data-editor-command="formatblock" data-editor-value="BLOCKQUOTE"></menuitem>
+		<menuitem label="Bold" data-editor-command="bold"></menuitem>
+		<menuitem label="Italics" data-editor-command="italic"></menuitem>
+		<menuitem label="Underline" data-editor-command="underline"></menuitem>
+		<menuitem label="Strike Through" data-editor-command="strikethrough"></menuitem>
+		<menuitem label="Big" data-editor-command="big"></menuitem>
+		<menuitem label="Small" data-editor-command="small"></menuitem>
+		<menuitem label="Superscript" data-editor-command="superscript"></menuitem>
+		<menuitem label="Subscript" data-editor-command="subscript"></menuitem>
+		<menu label="Other">
+			<menuitem label="Strong" data-editor-command="inserthtml" data-selection-to="strong"></menuitem>
+			<menuitem label="Emphasis" data-editor-command="inserthtml" data-selection-to="em"></menuitem>
+			<menuitem label="Deleted Text" data-editor-command="inserthtml" data-selection-to="del"></menuitem>
+			<menuitem label="Inserted Text" data-editor-command="inserthtml" data-selection-to="ins"></menuitem>
+			<menuitem label="Sample Text" data-editor-command="inserthtml" data-selection-to="samp"></menuitem>
+			<menuitem label="Keyboard" data-editor-command="inserthtml" data-selection-to="kbd"></menuitem>
+			<menuitem label="Variable" data-editor-command="inserthtml" data-selection-to="var"></menuitem>
+			<menuitem label="Quote" data-editor-command="inserthtml" data-selection-to="q"></menuitem>
+			<menuitem label="Citation" data-editor-command="inserthtml" data-selection-to="cite"></menuitem>
+			<menuitem label="Highlighted Text" data-editor-command="inserthtml" data-selection-to="mark"></menuitem>
 		</menu>
 	</menu>
 	<menu label="Indentation">
