@@ -390,9 +390,14 @@ pre > code {
 }
 
 .no-dialog dialog {
+  display: none;
   border: 0.4rem outset rgba(237, 24, 24, 1);
   border-radius: 1rem;
   box-shadow: 1rem 1rem 1rem black;
+}
+
+.no-dialog dialog[open] {
+  display: block;
 }
 
 .no-dialog dialog {
