@@ -289,14 +289,13 @@ code {
 pre > code {
 	display: block;
 }
-.no-dialog dialog {
+.no-js dialog {
 	display: none;
+}
+.no-dialog dialog {
 	border: 0.4rem outset var(--primary-color);
 	border-radius: 1rem;
 	box-shadow: 1rem 1rem 1rem black;
-}
-.no-dialog dialog[open] {
-	display: block;
 }
 .no-dialog dialog {
 	z-index: 9;
