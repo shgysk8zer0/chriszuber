@@ -3,52 +3,40 @@
 ?>
 <dialog id="<?=$formname?>_dialog" open>
 	<form name="<?=$formname?>" action="<?=URL?>/" method="post">
-		<?php if(!file_exists(BASE . '/config/connect.ini')):?>
-		<details open>
-			<summary>User Settings</summary>
-			<fieldset form="<?=$formname?>">
-				<legend>Setup Database Connection</legend>
-				<label for="<?=$formname?>_user" data-icon="U"></label>
-				<input type="text" name="<?=$formname?>[connect][user]" id="<?=$formname?>[user]" pattern="[\w-]+" placeholder="Username" required autofocus/>
-				<label for="<?=$formname?>_password" data-icon="x"></label>
-				<input type="password" name="<?=$formname?>[connect][password]" id="<?=$formname?>_password" placeholder="password" required/>
-				<label for="<?=$formname?>_password_repeat" data-icon="*x"></label>
-				<input type="password" name="<?=$formname?>[connect][password_repeat]" id="<?=$formname?>_password_repeat" placeholder="Repeat your password" data-must-match="<?=$formname?>_password" required/>
-			</fieldset>
-		</details>
+	<?php if(!file_exists(BASE . '/config/connect.ini')):?>
+		<?php if(!is_readable(BASE . '/config/')):?>
+		<strong><code>config/</code> directory cannot be written to.</strong>
+		<p>
+			Please change permissions using
+			<pre><code>
+chmod -R g+w config
+chgrp -R www-data config
+			</code></pre>
+		or manually create <code>config/connect.ini</code> using
+		<pre><code>
+user = "{username}"
+password = "{password}"
+		</code></pre>
+		</p>
+		<?php else:?>
+		<fieldset form="<?=$formname?>">
+			<legend>Database Connection Settings</legend>
+			<label for="<?=$formname?>_connect_user" data-icon="U"></label>
+			<input type="text" name="<?=$formname?>[connect][user]" id="<?=$formname?>_connect_user" placeholder="Username" required/><br />
+			<label for="<?=$formname?>_connect_password" data-icon="x"></label>
+			<input type="password" name="<?=$formname?>[connect][password]" id="<?=$formname?>_connect_password" placeholder="Password"/><br />
+			<label for="<?=$formname?>_connect_repeat" data-icon="*"></label>
+			<input type="password" name="<?=$formname?>[connect][repeat]" id="<?=$formname?>_connect_repeat" data-must-match="<?=$formname?>[connect][password]" placeholder="Repeat Password" required/>
+		</fieldset>
 		<?php endif?>
-		<details open>
-			<summary>Root MySQL Login</summary>
-			<fieldset>
-				<legend>Default Admin MySQL credentials <small>For setting up database</small></legend>
-				<label for="<?=$formname?>_root_user" data-icon="U"></label>
-				<input type="text" name="<?=$formname?>[mysql][user]" id="<?=$formname?>_root_user" pattern="[\w-]+" placeholder="Root MySQL User" required/>
-				<label for="<?=$formname?>_root_password" data-icon="x"></label>
-				<input type="password" name="<?=$formname?>[mysql][password]" id="<?=$formname?>_root_password" placeholder="MySQL Root Password" required/>
-			</fieldset>
-		</details>
-		<details open>
-			<summary>Website Info</summary>
-			<fieldset form="<?=$formname?>">
-				<legend>Basic Website Info</legend>
-				<label for="<?=$formname?>_title">Title</label>
-				<input type="text" name="<?=$formname?>[head][title]" id="<?=$formname?>_title" pattern="[\w-]+" placeholder="Title of website" maxlength="50" required/><br />
-				<label for="<?=$formname?>_description">Description</label>
-				<textarea type="text" name="<?=$formname?>[head][description]" id="<?=$formname?>_description" placeholder="Descriptions usually appear in searches" required></textarea><br />
-				<label for="<?=$formname?>_keywords">Keywords</label>
-				<input type="text" name="<?=$formname?>[head][keywords]" id="<?=$formname?>_keywords" placeholder="Keywords are main topics of the site" required/><br />
-				<input type="checkbox" name="<?=$formname?>[head][follow]" id="<?=$formname?>_follow" checked/>
-				<label for="<?=$formname?>_follow">Should search engines follow this website?</label><br />
-				<input type="checkbox" name="<?=$formname?>[head][index]" id="<?=$formname?>_index" checked/>
-				<label for="<?=$formname?>_index">Should search engines index this site?</label><br />
-				<label for="<?=$formname?>_author">Author</label>
-				<input type="text" name="<?=$formname?>[head][author]" id="<?=$formname?>_author" placeholder="Name of website author"/><br />
-				<label for="<?=$formname?>_ga">Google Analytics Code</label>
-				<input type="text" name="<?=$formname?>[head][ga]" id="<?=$formname?>_ga" placeholder="Google Analytics Code"/>
-				<a href="http://www.google.com/analytics/" target="_blank" title="Get one here">Get Google Analytics Code</a>
-				<br />
-			</fieldset>
-		</details>
+	<?php endif?>
+		<fieldset form="<?=$formname?>">
+			<legend>Root MySQL User</legend>
+			<label for="<?=$formname?>_root_useer" data-icon="U"></label>
+			<input type="text" name="<?=$formname?>[root][user]" id="<?=$formname?>_root_user" placeholder="Root MySQL User" required/><br >
+			<label for="<?=$formname?>_root_password" data-icon="x"></label>
+			<input type="password" name="<?=$formname?>[root][password]" id="<?=$formname?>_root_password" placeholder="Root MySQL Password" required/>
+		</fieldset>
 		<button type="submit" data-icon="."></button>
 	</form>
 </dialog>
