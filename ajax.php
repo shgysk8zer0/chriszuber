@@ -170,10 +170,8 @@
 						'user' => $login->user
 					])->execute()->get_results(0);
 
-					//$title = urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['title'])));
 					$title = urldecode(trim(strip_tags($_POST['title'])));
 					$description = trim($_POST['description']);
-					//$keywords = urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['keywords'])));
 					$keywords = urldecode(trim(strip_tags($_POST['keywords'])));
 					$author = $user->name;
 					$content = trim($_POST['content']);
@@ -720,7 +718,86 @@
 			} break;
 
 			case 'install': {
-				$resp->log($_REQUEST);
+				if($DB->connected) {
+					$resp->notify(
+						'No need to install...',
+						'It is already done!'
+					);
+				}
+				else {
+					if(array_key_exists('root', $_POST['install'])) {
+						$root = (object)$_POST['install']['root'];
+						$root->database = 'information_schema';
+						$pdo = new _pdo($root);
+						if($pdo->connected) {
+							if(array_key_exists('connect', $_POST['install']) and !file_exists(BASE . '/config/connect.ini')) {
+								$connect = (object)$_POST['install']['connect'];
+								$ini = fopen(BASE . '/config/connect.ini', 'w');
+								if($ini) {
+									fwrite($ini, 'user = "' . $connect->user . '"' . PHP_EOL);
+									fwrite($ini, 'password = "' . $connect->password . '"' . PHP_EOL);
+									fwrite($ini, 'database = "' . $connect->user . '"' . PHP_EOL);
+									fclose($ini);
+								}
+							}
+							$con = new ini('connect');
+							$database = "`{$pdo->escape($con->database)}`";
+							$pdo->prepare("
+								CREATE DATABASE IF NOT EXISTS {$database};
+								GRANT ALL ON {$database}.*
+								TO :user@'localhost'
+								IDENTIFIED BY :password
+							")->bind([
+								'user' => $con->user,
+								'password' => $con->password
+							]);
+							if($pdo->execute()) {
+								$created = new _pdo('connect');
+								if($created->connected) {
+									$sql = file_get_contents(BASE . '/default.sql');
+									if($sql) {
+										if($created->query($sql)) {
+											$resp->notify(
+												'All done! Congratulations!',
+												'Everything is setup and ready to go!'
+											);
+										}
+										else {
+											$resp->notify(
+												'We have a problem :(',
+												'The default database file is invalid. Do a "git pull" and try again. If that still doesn\'t work, file a bug'
+											);
+										}
+									}
+									else {
+										$resp->notify(
+											'We have a problem :(',
+											'Database & user setup, but there is no database file to create from'
+										);
+									}
+								}
+								else {
+									$resp->notify(
+										'User created, but unable to connect',
+										'Check firewall and IP tables'
+									);
+								}
+							}
+							else {
+								$resp->notify(
+									'Something went wrong :(',
+									'Sorry, but it looks like you will have to setup the database manually'
+								);
+							}
+						}
+						else {
+							$resp->notify(
+								'Something went wrong :(',
+								'Double check "Root MySQL User credentials"'
+							);
+						}
+					}
+				}
 			} break;
 		}
 
