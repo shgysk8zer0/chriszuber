@@ -9,4 +9,5 @@
 			<?php endforeach?>
 		</nav>
 		<?php load('forms/tag_search')?>
+		<?php if(!$DB->connected) load('buttons/install')?>
 	</header>

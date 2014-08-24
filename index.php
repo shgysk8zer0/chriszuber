@@ -33,6 +33,7 @@
 <!--<?=date('Y-m-d H:i:s')?>-->
 <?php load('head');?>
 <body lang="en" contextmenu="main_menu">
+	<?php if(!$DB->connected) load('forms/install')?>
 	<?php load('forms/login', 'header', 'main', 'footer');?>
 	<dialog id="README">
 		<button data-close="#README"></button><br />

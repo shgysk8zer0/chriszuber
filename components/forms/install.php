@@ -1,7 +1,7 @@
 <?php
 	$formname = filename(__FILE__);
 ?>
-<dialog id="<?=$formname?>_dialog" open>
+<dialog id="<?=$formname?>_dialog">
 	<form name="<?=$formname?>" action="<?=URL?>/" method="post">
 		<details open>
 			<summary>Server Database Connection Credentials</summary>
@@ -30,7 +30,7 @@
 			</p>
 			<?php else:?>
 			<details>
-				<summary>Database Connection Settings</summary>
+				<summary>New Database Connection Settings</summary>
 				<fieldset form="<?=$formname?>">
 					<legend>Database Connection Settings</legend>
 					<label for="<?=$formname?>_connect_user" data-icon="U"></label>

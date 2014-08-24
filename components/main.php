@@ -9,5 +9,5 @@
 ?>
 <main role="main" itemprop="mainContentofPage" itemscope itemtype="http://schema.org/Blog" <?=($login->logged_in) ? ' contextmenu="admin_menu"' : ''?>>
 	<?php load('sidebar')?>
-	<?=($DB->connected) ? $pages->content : load_results('forms/install')?>
+	<?=($DB->connected) ? $pages->content : null?>
 </main>
