@@ -738,12 +738,20 @@
 							and isset($head->title) and preg_match('/^[\w- ]{5,}$/', $head->title)
 							and isset($head->keywords) and preg_match('/^[\w, -]+$/',$head->keywords)
 							and isset($head->description) and preg_match('/^[\w-,\.\?\! ]{1,160}$/', $head->description)
-							and isset($head->robots)// and $head->robots === ('nofolow, noindex'| 'follow, index')
+							and isset($head->robots) and preg_match('/^(no)?follow, (no)?index$/', $head->robots)
 							and(is_null($head->rss) or empty($head->rss) or is_url($head->rss))
 							and(is_null($head->author_g_plus) or empty($head->author_g_plus) or is_url($head->author_g_plus))
 							and(is_null($head->publisher) or empty($head->publisher) or is_url($head->publisher))
 							and(is_null($head->google_analytics_code) or empty($head->google_analytics_code) or preg_match('/^[A-z]{2}-[A-z\d]{8}-\d$/', $head->google_analytics_code))
 							and(is_null($head->author) or empty($head->author) or preg_match('/^[\w- ]{5,}$/', $head->author))
+							and (
+								!array_key_exists('connect', $_POST['install']) or (
+								is_array($_POST['install']['connect'])
+								and array_keys_exist('user', 'password', 'repeat', $_POST['install']['connect'])
+								and preg_match('/' . pattern('password') . '/', $_POST['install']['connect']['password'])
+								and $_POST['install']['connect']['password'] === $_POST['install']['connect']['repeat']
+								and !file_exists(BASE . '/config/connect.ini'))
+							)
 						) {
 							$resp->notify(
 								'Success!',
@@ -761,14 +769,7 @@
 
 						$pdo = new _pdo($root);
 						if($pdo->connected) {
-							if(
-								array_key_exists('connect', $_POST['install'])
-								and is_array($_POST['install']['connect'])
-								and array_keys_exist('user', 'password', 'repeat', $_POST['install'['connect']])
-								and preg_match('/' . pattern('password') . '/', $_POST['install']['connect']['password'])
-								and $_POST['install']['connect']['password'] === $_POST['install']['connect']['repeat']
-								and !file_exists(BASE . '/config/connect.ini')
-							) {
+							if(array_key_exists('connect', $_POST['install'])) {
 								$connect = (object)$_POST['install']['connect'];
 								$ini = fopen(BASE . '/config/connect.ini', 'w');
 								if($ini) {
