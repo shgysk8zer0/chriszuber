@@ -718,6 +718,8 @@
 			} break;
 
 			case 'install': {
+				$resp->log($_POST)->send();
+				exit();
 				if($DB->connected) {
 					$resp->notify(
 						'No need to install...',
