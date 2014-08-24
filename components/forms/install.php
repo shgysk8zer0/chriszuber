@@ -8,9 +8,9 @@
 			<fieldset form="<?=$formname?>">
 				<legend>Root MySQL User</legend>
 				<label for="<?=$formname?>_root_useer" data-icon="U"></label>
-				<input type="text" name="<?=$formname?>[root][user]" id="<?=$formname?>_root_user" placeholder="Root MySQL User" required/><br >
+				<input type="text" name="<?=$formname?>[root][user]" id="<?=$formname?>_root_user" placeholder="Root MySQL User" pattern="\w+" required/><br >
 				<label for="<?=$formname?>_root_password" data-icon="x"></label>
-				<input type="password" name="<?=$formname?>[root][password]" id="<?=$formname?>_root_password" placeholder="Root MySQL Password" required/>
+				<input type="password" name="<?=$formname?>[root][password]" id="<?=$formname?>_root_password" placeholder="Root MySQL Password"/>
 			</fieldset>
 			</details>
 		<?php if(!file_exists(BASE . '/config/connect.ini')):?>
@@ -34,9 +34,9 @@
 				<fieldset form="<?=$formname?>">
 					<legend>Database Connection Settings</legend>
 					<label for="<?=$formname?>_connect_user" data-icon="U"></label>
-					<input type="text" name="<?=$formname?>[connect][user]" id="<?=$formname?>_connect_user" placeholder="Username" required/><br />
+					<input type="text" name="<?=$formname?>[connect][user]" id="<?=$formname?>_connect_user" placeholder="Username" pattern="\w{5,}" required/><br />
 					<label for="<?=$formname?>_connect_password" data-icon="x"></label>
-					<input type="password" name="<?=$formname?>[connect][password]" id="<?=$formname?>_connect_password" placeholder="Password" required/><br />
+					<input type="password" name="<?=$formname?>[connect][password]" id="<?=$formname?>_connect_password" placeholder="Password" pattern="<?=pattern('password')?>" required/><br />
 					<label for="<?=$formname?>_connect_repeat" data-icon="*"></label>
 					<input type="password" name="<?=$formname?>[connect][repeat]" id="<?=$formname?>_connect_repeat" data-must-match="<?=$formname?>[connect][password]" placeholder="Repeat Password" required/>
 				</fieldset>
@@ -59,11 +59,11 @@
 			<summary>Basic Site Info</summary>
 			<fieldset form="<?=$formname?>">
 				<label for="<?=$formname?>_head_title">Title</label>
-				<input type="text" name="<?=$formname?>[head][title]" id="<?=$formname?>_head_title" value="<?=ucwords(str_replace(['-', '_'], ' ', end(explode('/', trim(URL, '/')))))?>" placeholder="Site Title" required/><br />
+				<input type="text" name="<?=$formname?>[head][title]" id="<?=$formname?>_head_title" value="<?=ucwords(str_replace(['-', '_'], ' ', end(explode('/', trim(URL, '/')))))?>" placeholder="Site Title" pattern="[\w- ]{5,}" required/><br />
 				<label for="<?=$formname?>_head_description">Description</label><br />
 				<textarea name="<?=$formname?>[head][description]" id="<?=$formname?>_head_description" placeholder="Description will appear in searches. 160 character limit" maxlength="160" required></textarea><br />
 				<label for="<?=$formname?>_head_keywords">Keywords</label>
-				<input type="text" name="<?=$formname?>[head][keywords]" id="<?=$formname?>_head_keywords" placeholder="Comma separated keywords" required/><br />
+				<input type="text" name="<?=$formname?>[head][keywords]" id="<?=$formname?>_head_keywords" placeholder="Comma separated keywords" pattern="[\w, -]+" required/><br />
 				<b>Allow search engines to scan and index this site?</b>
 				<input type="radio" name="<?=$formname?>[head][robots]" id="<?=$formname?>_head_robots" value="follow, index" checked/>
 				<label for="<?=$formname?>_head_robots">Yes</label>
@@ -72,7 +72,7 @@
 				<label for="<?=$formname?>_head_ga">Google Analytics Code</label>
 				<input type="text" name="<?=$formname?>[head][google_analytics_code]" id="<?=$formname?>_head_ga" maxlength="13" size="13" pattern="[A-z]{2}-[A-z\d]{8}-\d" placeholder="XX-XXXXXXXX-XX"/><br />
 				<label for="<?=$formname?>_head_author">Author Name</label>
-				<input type="text" name="<?=$formname?>[head][author]" id="<?=$formname?>_head_author" pattern="[\w- ]+" placeholder="Clark Kent"/><br />
+				<input type="text" name="<?=$formname?>[head][author]" id="<?=$formname?>_head_author" pattern="[\w- ]{5,}" placeholder="Clark Kent"/><br />
 				<label for="<?=$formname?>_head_author_g_pluss">Author Google Plus</label>
 				<input type="url" name="<?=$formname?>[head][author_g_plus]" id="<?=$formname?>_head_author_g_plus" size="37" placeholder="https://plus.google.com/+{profile id}"/><br />
 				<label for="<?=$formname?>_head_publisher">Google Plus Page</label>
