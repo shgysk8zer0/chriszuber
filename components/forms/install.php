@@ -59,7 +59,7 @@
 			<summary>Basic Site Info</summary>
 			<fieldset form="<?=$formname?>">
 				<label for="<?=$formname?>_head_title">Title</label>
-				<input type="text" name="<?=$formname?>[head][title]" id="<?=$formname?>_head_title" value="<?=ucwords(str_replace(['-', '_'], ' ', end(explode('/', trim(URL, '/')))))?>" placeholder="Site Title" pattern="[\w- ]{5,}" required/><br />
+				<input type="text" name="<?=$formname?>[head][title]" id="<?=$formname?>_head_title" value="<?=parse_url(URL)['host']?>" placeholder="Site Title" pattern="[\w- ]{5,}" required/><br />
 				<label for="<?=$formname?>_head_description">Description</label><br />
 				<textarea name="<?=$formname?>[head][description]" id="<?=$formname?>_head_description" placeholder="Description will appear in searches. 160 character limit" maxlength="160" required></textarea><br />
 				<label for="<?=$formname?>_head_keywords">Keywords</label>
