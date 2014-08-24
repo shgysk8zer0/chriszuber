@@ -580,6 +580,7 @@
 				}
 				else {
 					if(array_key_exists('install', $_POST) and is_array($_POST['install']) and array_keys_exist('root', 'head', 'site', $_POST['install'])) {
+						$created_con = false;
 						$root = (object)$_POST['install']['root'];
 						$root->database = 'information_schema';
 						$head = (object)$_POST['install']['head'];
@@ -630,6 +631,7 @@
 										fwrite($ini, 'database = "' . $con->user . '"' . PHP_EOL);
 										fclose($ini);
 										unset($con);
+										$created_con = true;
 									}
 									else {
 										$resp->notify(
@@ -700,7 +702,7 @@
 											$resp->notify(
 												'All done! Congratulations!',
 												'Everything is setup and ready to go!'
-											)->reload();
+											)->reload()->send();
 										}
 										else {
 											/**
@@ -747,6 +749,25 @@
 						}
 					}
 				}
+				/**
+				 * Rollback changes if not successful.
+				 * Will $resp->send() on success, so
+				 * will only reach this point if not successful.
+				 */
+
+				if($created_con) {
+					unlink(BASE . '/config/connect.ini');
+				}
+				/*
+				//This is potentially EXTREMELY DANGEROUS
+				if(isset($pdo) and $pdo->connected) {
+					$pdo->prepare("
+						DROP USER :user
+					")->bind([
+						'user' => $con_ini->user
+					])->execute();
+					$pdo->query("DROP DATABASE {$database}");
+				}*/
 			} break;
 		}
 
