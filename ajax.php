@@ -761,7 +761,14 @@
 
 						$pdo = new _pdo($root);
 						if($pdo->connected) {
-							if(array_key_exists('connect', $_POST['install']) and !file_exists(BASE . '/config/connect.ini')) {
+							if(
+								array_key_exists('connect', $_POST['install'])
+								and is_array($_POST['install']['connect'])
+								and array_keys_exist('user', 'password', 'repeat', $_POST['install'['connect']])
+								and preg_match('/' . pattern('password') . '/', $_POST['install']['connect']['password'])
+								and $_POST['install']['connect']['password'] === $_POST['install']['connect']['repeat']
+								and !file_exists(BASE . '/config/connect.ini')
+							) {
 								$connect = (object)$_POST['install']['connect'];
 								$ini = fopen(BASE . '/config/connect.ini', 'w');
 								if($ini) {
