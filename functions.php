@@ -606,6 +606,30 @@
 		return !is_a_number($n);
 	}
 
+	function is_email($str) {
+		/**
+		 * Checks if $str validates as an email
+		 *
+		 * @param string $str
+		 * @return bolean
+		 * @link http://php.net/manual/en/filter.filters.validate.php
+		 */
+
+		return filter_var($str, FILTER_VALIDATE_EMAIL);
+	}
+
+	function is_url($str) {
+		/**
+		 * Checks if $str validates as a URL
+		 *
+		 * @param string $str
+		 * @return bolean
+		 * @link http://php.net/manual/en/filter.filters.validate.php
+		 */
+
+		return filter_var($str, FILTER_VALIDATE_URL);
+	}
+
 	function ls($path = null, $ext = null, $strip_ext = null) {
 		/**
 		 * List files in given path. Optional extension and strip extension from results
