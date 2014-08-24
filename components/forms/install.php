@@ -67,7 +67,7 @@
 				<b>Allow search engines to scan and index this site?</b>
 				<input type="radio" name="<?=$formname?>[head][robots]" id="<?=$formname?>_head_robots" value="follow, index" checked/>
 				<label for="<?=$formname?>_head_robots">Yes</label>
-				<input type="radio" name="<?=$formname?>[head][robots]" id="<?=$formname?>_head_robots" value="nofollow, noindex" checked/>
+				<input type="radio" name="<?=$formname?>[head][robots]" id="<?=$formname?>_head_robots" value="nofollow, noindex"/>
 				<label for="<?=$formname?>_head_robots">No</label><br />
 				<label for="<?=$formname?>_head_ga">Google Analytics Code</label>
 				<input type="text" name="<?=$formname?>[head][google_analytics_code]" id="<?=$formname?>_head_ga" maxlength="13" size="13" pattern="[A-z]{2}-[A-z\d]{8}-\d" placeholder="XX-XXXXXXXX-XX"/><br />
