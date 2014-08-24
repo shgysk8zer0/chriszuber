@@ -69,12 +69,12 @@
 				<label for="<?=$formname?>_head_robots">Yes</label>
 				<input type="radio" name="<?=$formname?>[head][robots]" id="<?=$formname?>_head_robots" value="nofollow, noindex"/>
 				<label for="<?=$formname?>_head_robots">No</label><br />
+				<label for="<?=$formname?>_head_author">Author Name</label>
+				<input type="text" name="<?=$formname?>[head][author]" id="<?=$formname?>_head_author" pattern="[\w- ]{5,}" placeholder="Clark Kent" required/><br />
+				<label for="<?=$formname?>_head_author_g_plus">Author Google Plus</label>
+				<input type="url" name="<?=$formname?>[head][author_g_plus]" id="<?=$formname?>_head_author_g_plus" size="37" placeholder="https://plus.google.com/+{profile id}" required/><br />
 				<label for="<?=$formname?>_head_ga">Google Analytics Code</label>
 				<input type="text" name="<?=$formname?>[head][google_analytics_code]" id="<?=$formname?>_head_ga" maxlength="13" size="13" pattern="[A-z]{2}-[A-z\d]{8}-\d" placeholder="XX-XXXXXXXX-XX"/><br />
-				<label for="<?=$formname?>_head_author">Author Name</label>
-				<input type="text" name="<?=$formname?>[head][author]" id="<?=$formname?>_head_author" pattern="[\w- ]{5,}" placeholder="Clark Kent"/><br />
-				<label for="<?=$formname?>_head_author_g_pluss">Author Google Plus</label>
-				<input type="url" name="<?=$formname?>[head][author_g_plus]" id="<?=$formname?>_head_author_g_plus" size="37" placeholder="https://plus.google.com/+{profile id}"/><br />
 				<label for="<?=$formname?>_head_publisher">Google Plus Page</label>
 				<input type="url" name="<?=$formname?>[head][publisher]" id="<?=$formname?>_publisher" size="37" placeholder="https://plus.google.com/+{profile id}"/><br />
 				<label for="<?=$formname?>_head_rss">RSS URL</label>

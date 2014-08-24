@@ -176,34 +176,11 @@
 					$author = $user->name;
 					$content = trim($_POST['content']);
 					$url = urlencode(strtolower(preg_replace('/\W+/', ' ', $title)));
-
-					$template = template::load('posts');
 					$time = new simple_date();
 
 					foreach(explode(',', $keywords) as $tag) {
 						$template->tags .= '<a href="tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
 					}
-
-					$template->title(
-						$title
-					)->content(
-						$content
-					)->author(
-						$user->author
-					)->author_url(
-						$user->g_plus
-					)->date(
-						$time->out('m/d/Y')
-					)->datetime(
-						$time->out()
-					);
-
-					$resp->remove(
-						'main > :not(aside)'
-					)->prepend(
-						'main',
-						$template->out()
-					);
 
 					$DB->prepare("
 						INSERT INTO `posts`(
@@ -237,6 +214,20 @@
 					]);
 
 					if($DB->execute()) {
+						$template = template::load('posts');
+						$template->title(
+							$title
+						)->content(
+							$content
+						)->author(
+							$user->author
+						)->author_url(
+							$user->g_plus
+						)->date(
+							$time->out('m/d/Y')
+						)->datetime(
+							$time->out()
+						);
 						$url = URL . '/posts/' . $url;
 						$resp->notify(
 							'Post submitted',
@@ -246,18 +237,24 @@
 						)->prepend(
 							'body > header nav',
 							"<a href=\"{$url}\">{$title}</a>"
+						)->prepend(
+							'main',
+							$template->out()
 						)->after(
 							'#main_menu > menu[label="Posts"] > menuitem[label="Home"]',
 							"<menuitem label=\"{$title}\" icon=\"images/icons/coffee.svgz\" data-link=\"{$url}\"></menuitem>"
 						);
-						update_sitemap();
-						update_rss();
-					}
+						$resp->remove(
+							'main > :not(aside)'
+						);
+							update_sitemap();
+							update_rss();
+						}
 					else {
 						$resp->notify(
 							'Post failed',
-							'Look into what went wrong'
-						);
+							'Look into what went wrong. See Developer console'
+						)->log($_POST);
 					}
 				}
 				else {
@@ -500,149 +497,6 @@
 				}
 			} break;
 
-			case 'setup_database': {
-				/**
-				 * Needs documentation!
-				 */
-
-				if($DB->connected) {
-					$resp->notify(
-						'Cannot setup the database and user',
-						"{$connect->database} is already fully setup"
-					);
-				}
-
-				elseif(!file_exists(BASE . "/{$connect->database}.sql")) {
-					$resp->notify(
-						'We have a problem :(',
-						"{$connect->database} cannot be reached and no backup exists"
-					);
-				}
-
-				else {
-					$invalid = find_invalid_inputs([
-						'username' => '.+',
-						'server' => '.+'
-					]);
-
-					if(is_null($invalid)) {
-						$setup = new ini('connect');
-						$setup->user = $_POST['username'];
-						$setup->password = $_POST['password'];
-						$setup->server = $_POST['server'];
-						$setup->database = 'information_schema'; //Make sure database is connected and has priveleages
-
-						$install = new _pdo($setup);
-
-						if($install->connected) {
-							$install->query("
-								CREATE DATABASE IF NOT EXISTS `{$connect->database}`;
-								GRANT ALL ON `{$connect->database}`.* TO '{$connect->user}'@'{$connect->server}' IDENTIFIED BY '{$connect->password}';
-							")->execute();
-							$test = new _pdo('connect');
-							if($test->connected) {
-								if($test->restore($connect->database)) {
-									$head = $test->name_value('head');
-									$resp->notify(
-										'Successfuly created user and database',
-										'Updating page'
-									)->html(
-										'#buttons',
-										load_results('buttons/login', 'buttons/registration')
-									)->remove(
-										'form[name="setup_database"]'
-									)->text(
-										'head > title',
-										$head->title
-									)->attributes(
-										'meta[name="description"], meta[itemprop="description"]',
-										'content',
-										$head->description
-									)->attributes(
-										'meta[name="keywords"], meta[itemprop="keywords"]',
-										'content',
-										$head->keywords
-									)->attributes(
-										'meta[name="robots"]',
-										'content',
-										$head->robots
-									)->attributes(
-										'meta[charset]',
-										'charset',
-										$head->charset
-									)->attributes(
-										'meta[name="author"], meta[itemprop="author"]',
-										'content',
-										$head->author
-									)->attributes(
-										'meta[name="viewport"]',
-										'content',
-										$head->viewport
-									);
-								}
-
-								else {
-									$resp->notify(
-										'Something went wrong :(',
-										'User and database created successfully, but was unable to create database'
-									);
-								}
-							}
-							else {
-								$resp->notify(
-									'Unable to create user or database',
-									'It will have to be done manually'
-								);
-							}
-						}
-					}
-
-					else {
-						$resp->error(print_r($_POST, true), print_r(new ini('connect'), true));
-					}
-				}
-			} break;
-
-			case 'setup_connect': {
-				$invalid = find_invalid_inputs([
-					'user' => '\w+',
-					'password' => pattern('password'),
-					'server' => '(\d{1,3}\.\d{1,3}\.\d{1,3})|(localhost)'
-				]);
-
-				if(is_null($invalid)) {
-					$connect_file = @fopen(BASE .'/config/test.ini', 'w');
-					if($connect_file) {
-						fputs($connect_file, ';Database Connection Information' . PHP_EOL);
-						fputs($connect_file, "user = {$_POST['user']}" . PHP_EOL);
-						fputs($connect_file, "password = {$_POST['password']}" . PHP_EOL);
-						fputs($connect_file, "server = {$_POST['server']}" . PHP_EOL);
-						fclose($connect_file);
-
-						$test = new _pdo('test');
-						if($test->connected) {
-							$resp->notify(
-								'Good to go!',
-								'Database Configuration File Created and working'
-							);
-						}
-						else {
-							$resp->append(
-								'body > header',
-								load_results('forms/setup_database')
-							);
-						}
-						$resp->remove('form[name="setup_connect"]');
-					}
-				}
-				else {
-					$resp->notify(
-						'Check your inputs',
-						$invalid
-					);
-				}
-			} break;
-
 			case 'comments': {
 				$invalid = find_invalid_inputs([
 					'comment_author' => '[\w\- ]+',
@@ -752,8 +606,9 @@
 							and isset($head->keywords) and preg_match('/^[\w, -]+$/', $head->keywords)
 							and isset($head->description) and preg_match('/^[\w-,\.\?\! ]{1,160}$/', $head->description)
 							and isset($head->robots) and preg_match('/^(no)?follow, (no)?index$/i', $head->robots)
+							and(isset($head->author_g_plus) and is_url($head->author_g_plus))
+							and(isset($head->author)) and preg_match('/^[\w- ]{5,}$/', $head->author)
 							and(is_null($head->rss) or empty($head->rss) or is_url($head->rss))
-							and(is_null($head->author_g_plus) or empty($head->author_g_plus) or is_url($head->author_g_plus))
 							and(is_null($head->publisher) or empty($head->publisher) or is_url($head->publisher))
 							and(is_null($head->google_analytics_code) or empty($head->google_analytics_code) or preg_match('/^[A-z]{2}-[A-z\d]{8}-\d$/', $head->google_analytics_code))
 							and(is_null($head->author) or empty($head->author) or preg_match('/^[\w- ]{5,}$/', $head->author))
@@ -831,16 +686,21 @@
 											]);
 											$DB->prepare("
 												UPDATE `users`
-												SET `role` = 'admin'
+												SET
+													`role` = 'admin',
+													`g_plus` = :g_plus,
+													`name` = :name
 												WHERE `user` = :user
 											")->bind([
-												'user' => $site->user
+												'user' => $site->user,
+												'g_plus' => $head->author_g_plus,
+												'name' => $head->author
 											])->execute();
 
 											$resp->notify(
 												'All done! Congratulations!',
 												'Everything is setup and ready to go!'
-											)->log(print_r($DB, true));
+											)->reload();
 										}
 										else {
 											/**
