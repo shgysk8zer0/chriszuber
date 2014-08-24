@@ -718,8 +718,6 @@
 			} break;
 
 			case 'install': {
-				$resp->log($_POST)->send();
-				exit();
 				if($DB->connected) {
 					$resp->notify(
 						'No need to install...',
@@ -727,9 +725,40 @@
 					);
 				}
 				else {
-					if(array_key_exists('root', $_POST['install'])) {
+					if(array_key_exists('install', $_POST) and is_array($_POST['install']) and array_keys_exist('root', 'head', 'site', $_POST['install'])) {
 						$root = (object)$_POST['install']['root'];
 						$root->database = 'information_schema';
+						$head = (object)$_POST['install']['head'];
+						$site = (object)$_POST['install']['site'];
+						if(
+							isset($site->user) and is_email($site->user)
+							and isset($root->user) and preg_match('/^\w+$/', $root->user)
+							and isset($site->password) and preg_match('/' . pattern('password') . '/', $site->password)
+							and isset($site->repeat) and $site->repeat === $site->password
+							and isset($head->title) and preg_match('/^[\w- ]{5,}$/', $head->title)
+							and isset($head->keywords) and preg_match('/^[\w, -]+$/',$head->keywords)
+							and isset($head->description) and preg_match('/^[\w-,\.\?\! ]{1,160}$/', $head->description)
+							and isset($head->robots)// and $head->robots === ('nofolow, noindex'| 'follow, index')
+							and(is_null($head->rss) or empty($head->rss) or is_url($head->rss))
+							and(is_null($head->author_g_plus) or empty($head->author_g_plus) or is_url($head->author_g_plus))
+							and(is_null($head->publisher) or empty($head->publisher) or is_url($head->publisher))
+							and(is_null($head->google_analytics_code) or empty($head->google_analytics_code) or preg_match('/^[A-z]{2}-[A-z\d]{8}-\d$/', $head->google_analytics_code))
+							and(is_null($head->author) or empty($head->author) or preg_match('/^[\w- ]{5,}$/', $head->author))
+						) {
+							$resp->notify(
+								'Success!',
+								'Form validates!'
+							);
+						}
+						else {
+							$resp->notify(
+								'Failed!',
+								'Form does not validate'
+							);
+						}
+						$resp->send();
+						exit();
+
 						$pdo = new _pdo($root);
 						if($pdo->connected) {
 							if(array_key_exists('connect', $_POST['install']) and !file_exists(BASE . '/config/connect.ini')) {
@@ -754,11 +783,10 @@
 								'password' => $con->password
 							]);
 							if($pdo->execute()) {
-								$created = new _pdo('connect');
-								if($created->connected) {
-									$sql = file_get_contents(BASE . '/default.sql');
-									if($sql) {
-										if($created->query($sql)) {
+								$DB = new _pdo('connect');
+								if($DB->connected) {
+									if(file_exists(BASE . '/default.sql')) {
+										if($DB->restore('default')) {
 											$resp->notify(
 												'All done! Congratulations!',
 												'Everything is setup and ready to go!'
