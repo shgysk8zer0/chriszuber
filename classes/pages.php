@@ -1,7 +1,7 @@
 <?php
 	class pages {
 		private static $instance = null;
-		private $data, $path, $url, $status;
+		private $data, $path, $url, $status, $parsed;
 		public $content, $type;
 
 		public static function load($url = null) {
@@ -18,9 +18,10 @@
 				$this->url = $url;
 			}
 			else {
-				$this->url = (array_keys_exist('REDIRECT_URL', 'REDIRECT_STATUS', $_SERVER)) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'];
+				$this->url = URL . (array_keys_exist('REDIRECT_URL', 'REDIRECT_STATUS', $_SERVER)) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'];
 			}
-			$this->path = explode('/', urldecode(preg_replace('/^(' . preg_quote(URL, '/')  .')?(\/)?/', null, strtolower($this->url))));
+			$this->parsed = (object)parse_url(strtolower(urldecode($this->url)));
+			$this->path = explode('/', trim($this->parsed->path, '/'));
 
 			switch($this->path[0]) {
 				case 'tags': {
