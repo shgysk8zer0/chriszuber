@@ -949,6 +949,8 @@
 			} break;
 
 			case 'test': {
+				require_login('admin');
+
 				$resp->notify(
 					'Edit Me',
 					'I am on line ' . __LINE__ . ' in ' . __FILE__
