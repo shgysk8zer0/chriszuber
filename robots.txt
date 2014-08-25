@@ -1,4 +1,3 @@
 User-agent: *
-Disallow: /tags/
 
 Sitemap: http://chriszuber.com/sitemap.xml
