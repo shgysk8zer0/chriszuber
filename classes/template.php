@@ -109,9 +109,9 @@
 			 * @example $this->replace('old', 'new')
 			 */
 
-			if($this->minify_results) {
+			/*if($this->minify_results) {
 				$this->minify($with);
-			}
+			}*/
 
 			$this->replacements[$this->seperator . strtoupper((string)$replace) . $this->seperator] = (string)$with;
 
