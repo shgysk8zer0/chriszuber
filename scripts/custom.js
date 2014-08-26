@@ -1,12 +1,12 @@
 'use strict';
-window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to work, so use this instead*/
+window.addEventListener('load', function() { /*Cannot rely on $(window).load() to work, so use this instead*/
 	let html = $('html'),
 		body = $('body'),
 		head = $('head');
 		cache = new cache();
 		document.documentElement.classList.swap('no-js', 'js');
 	['svg', 'audio', 'video', 'picture', 'canvas', 'menuitem', 'details', 'dialog', 'dataset', 'classList', 'connectivity', 'visibility', 'notifications', 'ApplicationCache', 'indexedDB', 'localStorage', 'sessionStorage', 'CSSgradients', 'transitions', 'animations',  'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll', 'workers', 'promises', 'ajax', 'FormData'].forEach(function(feat){
-		document.documentElement.classList.pick(feat, 'no-' + feat, supports(feat))
+		document.documentElement.classList.pick(feat, 'no-' + feat, supports(feat));
 	});
 	document.documentElement.classList.pick('offline', 'online', (supports('connectivity') && !navigator.onLine));
 	setTimeout(
@@ -22,7 +22,9 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 			switch(this.attributeName) {
 				case 'contextmenu': {
 					let menu = this.target.attr('contextmenu');
-					(this.oldValue !== '') && $('menu#' + this.oldValue).delete();
+					if(this.oldValue !== '') {
+						$('menu#' + this.oldValue).delete();
+					}
 					if(menu && menu !== '') {
 						if(!$('menu#'+ menu).found){
 							ajax({
@@ -37,7 +39,9 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 					}
 				} break;
 				case 'contextmenu': {
-					(this.oldValue !== '') && $('menu#' + this.oldValue).delete();
+					if(this.oldValue !== '') {
+						$('menu#' + this.oldValue).delete();
+					}
 				}break;
 				case 'open': {
 					if(this.target.hasAttribute('open') && (this.target.offsetTop + this.target.offsetHeight < window.scrollY)) {
@@ -45,18 +49,20 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 					}
 				} break;
 				case 'data-request': {
-					(this.oldValue !== '') && this.target.addEventListener('click', function() {
-						if(!this.data('confirm') || confirm(this.data('confirm'))){
-							ajax({
-								url: this.data('url')|| document.baseURI,
-								request: (this.data('prompt')) ? this.data('request') + '&prompt_value=' + encodeURIComponent(prompt(this.data('prompt'))) : this.data('request'),
-								cache: el.data('cache')
-							}).then(
-								handleJSON,
-								console.error
-							);
-						}
+					if(this.oldValue !== '') {
+						this.target.addEventListener('click', function() {
+							if(!this.data('confirm') || confirm(this.data('confirm'))){
+								ajax({
+									url: this.data('url')|| document.baseURI,
+									request: (this.data('prompt')) ? this.data('request') + '&prompt_value=' + encodeURIComponent(prompt(this.data('prompt'))) : this.data('request'),
+									cache: el.data('cache')
+								}).then(
+									handleJSON,
+									console.error
+								);
+							}
 					});
+					}
 				}break;
 				case 'data-dropzone': {
 					document.querySelector(this.target.data('dropzone')).DnD(this.target);
@@ -76,7 +82,7 @@ window.addEventListener('load', function(){ /*Cannot rely on $(window).load() to
 		'data-request',
 		'data-dropzone'
 	]);
-	$(window).networkChange(function(){
+	$(window).networkChange(function() {
 		$('html').toggleClass('online', navigator.onLine).toggleClass('offline', !navigator.onLine);
 	}).online(function(){
 		$('fieldset').each(function(fieldset){
@@ -114,7 +120,12 @@ NodeList.prototype.bootstrap = function() {
 		if(!supports('details')) {
 			node.query('details > summary').forEach(function(details) {
 				details.addEventListener('click', function() {
-					(this.parentElement.hasAttribute('open')) ? this.parentElement.removeAttribute('open') : this.parentElement.setAttribute('open', '');
+					if(this.parentElement.hasAttribute('open')) {
+						this.parentElement.removeAttribute('open');
+					}
+					else {
+						this.parentElement.setAttribute('open', '');
+					}
 				});
 			});
 		}
@@ -237,7 +248,12 @@ NodeList.prototype.bootstrap = function() {
 		node.query('fieldset button[type=button].toggle').forEach(function(toggle) {
 			toggle.addEventListener('click', function() {
 				this.ancestor('fieldset').querySelectorAll('input[type=checkbox]').forEach(function(checkbox) {
-					(checkbox.checked) ? checkbox.checked = false : checkbox.checked = true;
+					if(checkbox.checked) {
+						checkbox.checked = false;
+					}
+					else {
+						checkbox.checked = true;
+					}
 				});
 			});
 		});
@@ -274,7 +290,7 @@ NodeList.prototype.bootstrap = function() {
 					arg = createdEl.outerHTML;
 				}
 				document.execCommand(this.data('editor-command'), null, arg);
-			})
+			});
 		});
 		node.query('[data-link]').forEach(function(link) {
 			link.addEventListener('click', function(){
@@ -323,7 +339,7 @@ NodeList.prototype.bootstrap = function() {
 			);
 		});
 		node.query('[data-dropzone]') .forEach(function (finput) {
-			document.querySelector(finput.data('dropzone')).DnD(finput)
+			document.querySelector(finput.data('dropzone')).DnD(finput);
 		});
 		node.query('[data-fullscreen]').forEach(function(el) {
 			el.addEventListener(el.data('fullscreen'), function() {
@@ -418,7 +434,7 @@ NodeList.prototype.bootstrap = function() {
 		});
 	});
 	return this;
-}
+};
 Element.prototype.worker_clock=function(){
 	let clockWorker = new Worker(document.baseURI + 'scripts/workers/clock.js'),
 		time = this;
@@ -427,7 +443,7 @@ Element.prototype.worker_clock=function(){
 		time.setAttribute('datetime', e.data.datetime);
 	});
 	clockWorker.postMessage('');
-}
+};
 function notifyLocation() {
 	getLocation({
 		enableHighAccuracy: true,
@@ -497,10 +513,10 @@ Element.prototype.DnD = function (sets) {
 				reader.onerror = function (event) {
 					progress.parentElement.removeChild(progress);
 					console.error(event);
-				}
+				};
 			console.log(file);
 			}
-		};
+		}
 		return false;
-	}
-}
+	};
+};
