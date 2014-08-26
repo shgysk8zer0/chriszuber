@@ -20,8 +20,6 @@
 						</div>
 				</details>
 				<br />
-				<!--<details>
-					<summary><button type="button" title="Comment" data-icon="c"></button></summary>-->
 				<button type="button" title="Comment on %TITLE%" data-show-modal="#new_comment" data-icon="c"><b>Post Comment</b></button>
 				<br /><br />
 				<dialog id="new_comment">
@@ -30,7 +28,7 @@
 						<fieldset id="comments">
 							<legend>Comment on <q>%TITLE%</q></legend>
 							<label for="comment_author" data-icon="U"></label>
-							<input type="text" name="comment_author" id="comment_author" pattern="[\w\- ]+" placeholder="Anonymous" required/><br />
+							<input type="text" name="comment_author" id="comment_author" pattern="[\w\,.- ]+" placeholder="Anonymous" required/><br />
 							<label for="comment_email" data-icon="@"></label>
 							<input type="email" name="comment_email" id="comment_email" placeholder="user@example.com" required/><br />
 							<label for="comment_url" data-icon="K"></label>
@@ -43,7 +41,6 @@
 						</fieldset>
 					</form>
 				</dialog>
-				<!--</details>-->
 <!--
 	Navigation Section: How will I get previous and next?
 	Try something like :
