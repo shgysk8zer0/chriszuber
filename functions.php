@@ -235,14 +235,14 @@
 		 * @return void
 		 */
 
-		if($comment) {
+		if(isset($comment)) {
 			echo '<!--';
-			print_r((string)$data, is_ajax());
+			print_r($data, is_ajax());
 			echo '-->';
 		}
 		else {
 			echo '<pre><code>';
-			print_r((string)$data, is_ajax());
+			print_r($data, is_ajax());
 			echo '</code></pre>';
 		}
 	}
@@ -984,5 +984,30 @@
 		curl_setopt($connection, CURLOPT_HTTP_VERSION, 1);		// HTTP version must be 1.0
 		$response = curl_exec($connection);
 		return $response;
+	}
+
+	function module_test() {
+		$settings = ini::load('settings');
+		if(
+			!isset($settings->php_modules)
+			or !isset($settings->apache_modules)
+		) {
+			return null;
+		}
+
+		$missing = new stdClass();
+		$php_required = explode(',', str_replace(' ', null, $settings->php_modules));
+		$apache_required = explode(',', str_replace(' ', null, $settings->apache_modules));
+		$php_modules = get_loaded_extensions();
+		$apache_modules = apache_get_modules();
+		$missing->php = array_diff($php_required, $php_modules);
+		$missing->apache = array_diff($apache_required, $apache_modules);
+
+		if(count($missing->php) or count($missing->apache)) {
+			return $missing;
+		}
+		else {
+			return null;
+		}
 	}
 ?>
