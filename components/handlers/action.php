@@ -48,7 +48,7 @@
 				'Success',
 				"The database has been restored from {$connect->database}.sql",
 				'images/icons/db.png'
-			) : $resp->notify(
+			)->reload() : $resp->notify(
 				'Failed',
 				"There was a problem restoring from {$connect->database}.sql",
 				'images/icons/db.png'
