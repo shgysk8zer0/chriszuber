@@ -16,6 +16,7 @@
 	$DB = _pdo::load('connect');
 	$login = login::load('connect');
 	$session = session::load();
+	$settings = ini::load('settings');
 
 	if(isset($session->logged_in) and $session->logged_in) { //Check login if session
 		$login->setUser($session->user)->setPassword($session->password)->setRole($session->role)->setLogged_In($session->logged_in);
@@ -30,7 +31,7 @@
 <!--[if lt IE 7]>      <html lang="en" class="lt-ie9 lt-ie8 lt-ie7 no-js"> <![endif]-->
 <!--[if IE 7]>         <html lang="en" class="lt-ie9 lt-ie8 no-js"> <![endif]-->
 <!--[if IE 8]>         <html lang="en" class="lt-ie9 no-js"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en" itemscope itemtype="http://schema.org/WebPage" class="no-js" <?php if(!localhost() and false):?> manifest="files.php?file=manifest.appcache"<?php endif?>> <!--<![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" itemscope itemtype="http://schema.org/WebPage" class="no-js" <?php if(!localhost() and isset($settings->appcache)):?> manifest="<?=$settings->appchache?>"<?php endif?>> <!--<![endif]-->
 <!--<?=date('Y-m-d H:i:s')?>-->
 <?php load('head');?>
 <body contextmenu="main_menu">
