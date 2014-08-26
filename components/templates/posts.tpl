@@ -28,7 +28,7 @@
 						<fieldset id="comments">
 							<legend>Comment on <q>%TITLE%</q></legend>
 							<label for="comment_author" data-icon="U"></label>
-							<input type="text" name="comment_author" id="comment_author" pattern="[\w\,.- ]+" placeholder="Anonymous" required/><br />
+							<input type="text" name="comment_author" id="comment_author" pattern="[\w\.\-, ]+" placeholder="Anonymous" required/><br />
 							<label for="comment_email" data-icon="@"></label>
 							<input type="email" name="comment_email" id="comment_email" placeholder="user@example.com" required/><br />
 							<label for="comment_url" data-icon="K"></label>

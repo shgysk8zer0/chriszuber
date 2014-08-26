@@ -458,7 +458,7 @@
 
 		case 'comments': {
 			$invalid = check_inputs([
-				'comment_author' => '[\w\,.- ]+',
+				'comment_author' => '[\w\.\-, ]+',
 				'comment_email' => is_email($_POST['comment_email'])
 			]);
 
@@ -480,7 +480,7 @@
 				$post = $_POST['for_post'];
 				$template = template::load('comments');
 				$author = $_POST['comment_author'];
-				$author_url = (array_key_exists('comment_url', $_POST)) ? $_POST['comment_url'] : '';
+				$author_url = (array_key_exists('comment_url', $_POST) and is_url($_POST['comment_url'])) ? $_POST['comment_url'] : '';
 				$author_email = $_POST['comment_email'];
 				$time = date('Y-m-d H:i:s');
 
