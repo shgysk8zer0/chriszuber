@@ -180,6 +180,21 @@ select, input:not([type=checkbox]):not([type=submit]):not([type=reset]):not([typ
 	border-width: 0 0 1px 0;
 	border-style: solid;
 }
+input:focus {
+	box-shadow: 0 0 0.5rem cyan;
+}
+input:focus:valid {
+	background-image: url(../images/icons/check.svgz);
+	background-position: right top;
+	background-repeat: no-repeat;
+	box-shadow: 0 0 0.5rem green;
+}
+input:focus:invalid {
+	background-image: url(../images/icons/x.svgz);
+	background-position: right top;
+	background-repeat: no-repeat;
+	box-shadow: 0 0 0.5rem red;
+}
 label[data-icon]:empty {
 	display: inline-block;
 	*display: inline;
@@ -245,7 +260,7 @@ figure figcaption {
 	text-decoration: underline;
 	font-style: italic;
 }
-a, button:not(:disabled), input[type=submit], input[type=reset], input[type=image], details > summary , [data-show], [data-show-modal], [data-close] {
+a, button:not(:disabled), [role=button], input[type=submit], input[type=reset], input[type=image], details > summary , [data-show], [data-show-modal], [data-close] {
 	cursor: var(--pointer);
 }
 .no-details details[open] > summary::before {

@@ -229,6 +229,11 @@ NodeList.prototype.bootstrap = function() {
 				document.querySelector(this.data('close')).close();
 			});
 		});
+		node.query('[data-scroll-to]').forEach(function(el ) {
+			el.addEventListener('click', function() {
+				this.scrollIntoView();
+			});
+		});
 		node.query('fieldset button[type=button].toggle').forEach(function(toggle) {
 			toggle.addEventListener('click', function() {
 				this.ancestor('fieldset').querySelectorAll('input[type=checkbox]').forEach(function(checkbox) {
