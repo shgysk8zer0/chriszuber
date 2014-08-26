@@ -27,13 +27,13 @@
 	CSP();		//Do this here to avoid CSP being set on ajax requests.
 ?>
 <!DOCTYPE HTML>
-<!--[if lt IE 7]>      <html class="lt-ie9 lt-ie8 lt-ie7 no-js"> <![endif]-->
-<!--[if IE 7]>         <html class="lt-ie9 lt-ie8 no-js"> <![endif]-->
-<!--[if IE 8]>         <html class="lt-ie9 no-js"> <![endif]-->
-<!--[if gt IE 8]><!--> <html itemscope itemtype="http://schema.org/WebPage" class="no-js" <?php if(!localhost() and false):?> manifest="files.php?file=manifest.appcache"<?php endif?>> <!--<![endif]-->
+<!--[if lt IE 7]>      <html lang="en" class="lt-ie9 lt-ie8 lt-ie7 no-js"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" class="lt-ie9 lt-ie8 no-js"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" class="lt-ie9 no-js"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" itemscope itemtype="http://schema.org/WebPage" class="no-js" <?php if(!localhost() and false):?> manifest="files.php?file=manifest.appcache"<?php endif?>> <!--<![endif]-->
 <!--<?=date('Y-m-d H:i:s')?>-->
 <?php load('head');?>
-<body lang="en" contextmenu="main_menu">
+<body contextmenu="main_menu">
 	<?php if(!$DB->connected) load('forms/install')?>
 	<?php load('forms/login', 'header', 'main', 'footer');?>
 	<dialog id="README">
