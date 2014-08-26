@@ -72,7 +72,7 @@
 					$this->status = 404;
 					$this->description = 'No results for ' . $this->url;
 					$this->keywords = '';
-					$this->title = 'Woops! Not found';
+					$this->title = 'Woops! Not found (404)';
 					$template = template::load('error_page');
 					$template->status = 404;
 					$template->home = URL;

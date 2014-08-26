@@ -1,5 +1,5 @@
 <div data-error="%STATUS%">
-	<h2>Either you made a left instead of a right, or I divided by zero.</h2>
+	<h2>Either you made a left instead of a right, or I divided by zero.</h2><br />
 	<h3>%MESSAGE%</h3><br />
 	<b>What should I do?</b>
 	<ul>
