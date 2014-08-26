@@ -3,7 +3,12 @@
 	check_nonce();
 	switch(trim($_POST['form'])) {
 		case 'login': {
-			if(array_keys_exist('user', 'password', $_POST)) {
+			$invalid = check_inputs([
+				'user' => is_email($_POST['user']),
+				'password' => pattern('password')
+			]);
+
+			if(is_null($invalid)) {
 				$login->login_with($_POST);
 
 				if($login->logged_in) {
@@ -19,6 +24,9 @@
 						'body > main',
 						'contextmenu',
 						'admin_menu'
+					)->notify(
+						'Welcome back,',
+						$login->user
 					);
 				}
 				else {
@@ -39,7 +47,11 @@
 		}break;
 
 		case 'tag_search': {
-			if(array_key_exists('tags', $_POST)) {
+			$invalid = check_inputs([
+				'tags' => '[\w- ]+'
+			], $_REQUEST);
+
+			if(is_null($invalid)) {
 				$posts = $DB->prepare("
 					SELECT `title`, `description`, `author`, `author_url`, `url`, `created`
 					FROM `posts`
@@ -91,7 +103,14 @@
 		case 'new_post': {
 			require_login('admin');
 
-			if(array_keys_exist('title', 'description', 'keywords', 'content', $_POST)) {
+			$invalid = check_inputs([
+				'title' => true,
+				'description' => '.{10,160}',
+				'keywords' => '[\w-, ]+',
+				'content' => true
+			], $_POST);
+
+			if(is_null($invalid)) {
 
 				$user = $DB->prepare('
 					SELECT `g_plus`, `name`
@@ -200,7 +219,15 @@
 		case 'edit_post': {
 			require_login('admin');
 
-			if(array_keys_exist('title', 'keywords', 'content', 'old_title', 'description', $_POST)) {
+			$invalid = check_inputs([
+				'title' => true,
+				'old_title' => true,
+				'description' => '.{10,160}',
+				'keywords' => '[\w-, ]+',
+				'content' => true
+			], $_POST);
+
+			if(is_null($invalid)) {
 				$DB->prepare("
 					UPDATE `posts`
 					SET `title` = :title,
@@ -430,9 +457,9 @@
 		} break;
 
 		case 'comments': {
-			$invalid = find_invalid_inputs([
-				'comment_author' => '[\w\- ]+',
-				'comment_email' => '.+'
+			$invalid = check_inputs([
+				'comment_author' => '[\w\,.- ]+',
+				'comment_email' => is_email($_POST['comment_email'])
 			]);
 
 			if(is_null($invalid)) {
@@ -504,6 +531,12 @@
 		} break;
 
 		case 'install': {
+			/**
+			 * Sets up the database, creates user, etc
+			 *
+			 * @todo use check_inputs everywhere!
+			 */
+
 			if($DB->connected) {
 				$resp->notify(
 					'No need to install...',
