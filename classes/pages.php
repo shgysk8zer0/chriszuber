@@ -75,8 +75,8 @@
 					$this->title = 'Not found';
 					$template = template::load('error_page');
 					$template->status = 404;
-					$template->url = URL;
-					$template->message = "Nothing found for <var>{$this->url}</var>";
+					$template->home = URL;
+					$template->message = "Nothing found for <wbr /><var>{$this->url}</var>";
 					$template->link = $this->url;
 					$template->dump = print_r($this->parsed, true);
 					$this->content = $template->out();
