@@ -30,7 +30,7 @@
 		private static $instance = [];
 		private $path, $source = '', $replacements = [], $seperator, $minify_results;
 
-		public static function load($tpl, $seperator = '%', $minify = true) {
+		public static function load($tpl = null, $seperator = '%', $minify = true) {
 			/**
 			 * Static load function avoids creating multiple instances
 			 * It checks if an instance has been created and returns that or a new instance
@@ -52,7 +52,7 @@
 			return self::$instance[$tpl];
 		}
 
-		public function __construct($tpl, $seperator = '%', $minify = false) {
+		public function __construct($tpl = null, $seperator = '%', $minify = false) {
 			/**
 			 * Reads the template specified by $tpl
 			 * Reads the file from BASE . "/components/templates/{$tpl}.tpl"
@@ -66,8 +66,8 @@
 			 * @usage $template = new template($template_file)
 			 */
 
-			$this->path = BASE . "/components/templates/{$tpl}.tpl";
-			$this->seperator = $seperator;
+			$this->path = BASE . '/components/templates/' . (string)$tpl . '.tpl';
+			$this->seperator = (string)$seperator;
 			$this->minify_results = $minify;
 			if(file_exists($this->path)) {
 				$this->source = file_get_contents($this->path);
@@ -80,7 +80,7 @@
 			}
 		}
 
-		private function minify(&$string) {
+		private function minify(&$string = null) {
 			/**
 			 * Private method to remove all tabs and newlines from source
 			 * Also strips out HTML comments but leaves conditional statements
@@ -91,12 +91,12 @@
 			 * @example $this->minify()
 			 */
 
-			$string = str_replace(["\r", "\n", "\t"], [], $string);
+			$string = str_replace(["\r", "\n", "\t"], [], (string)$string);
 			$string = preg_replace('/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/', null, $string);
 			return $this;
 		}
 
-		private function replace($replace, $with) {
+		private function replace($replace = null, $with = null) {
 			/*
 			 * Private method to prepare replacements
 			 *
@@ -109,9 +109,9 @@
 			 * @example $this->replace('old', 'new')
 			 */
 
-			if($this->minify_results) {
+			/*if($this->minify_results) {
 				$this->minify($with);
-			}
+			}*/
 
 			$this->replacements[$this->seperator . strtoupper((string)$replace) . $this->seperator] = (string)$with;
 
@@ -144,7 +144,7 @@
 			return $this;
 		}
 
-		public function __set($replace, $with) {
+		public function __set($replace = null, $with = null) {
 			/**
 			 * Unlike most magic setters, this does not work with variables
 			 * Instead, it sets up a Regular Expression string replacement.
@@ -182,7 +182,7 @@
 			}
 		}
 
-		public function __call($replace, $arguments) {
+		public function __call($replace, array $arguments) {
 			/**
 			 * The magic method __call for the class.
 			 * Used in cases where no such method exists in

@@ -14,57 +14,74 @@
 		public function __construct($url = null) {
 			$this->status = (array_key_exists('REDIRECT_STATUS', $_SERVER)) ? $_SERVER['REDIRECT_STATUS'] : http_response_code();
 			$pdo = _pdo::load();
-			if(isset($url)) {
-				$this->url = $url;
+			if(is_null($url)) {
+				$this->url = URL;
+				$this->url .= (array_key_exists('REDIRECT_URL', $_SERVER)) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'];
 			}
 			else {
-				$this->url = URL . (array_key_exists('REDIRECT_URL', $_SERVER)) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'];
+				$this->url = $url;
 			}
+
 			$this->parsed = (object)parse_url(strtolower(urldecode($this->url)));
 			$this->path = explode('/', trim($this->parsed->path, '/'));
+			if($pdo->connected) {
+				switch($this->path[0]) {
+					case 'tags': {
+						if(isset($this->path[1])) {
+							$this->type = 'tags';
+							$this->data = $pdo->prepare("
+								SELECT `title`, `description`, `author`, `author_url`, `url`, `created`
+								FROM `posts`
+								WHERE `keywords` LIKE :tag
+								LIMIT 20
+							")->bind([
+								'tag' => preg_replace('/\s*/', '%', " {$this->path[1]} ")
+							])->execute()->get_results();
+						}
+					} break;
 
-			switch($this->path[0]) {
-				case 'tags': {
-					$this->type = 'tags';
-					$this->data = $pdo->prepare("
-						SELECT `title`, `description`, `author`, `author_url`, `url`, `created`
-						FROM `posts`
-						WHERE `keywords` LIKE :tag
-						LIMIT 20
-					")->bind([
-						'tag' => preg_replace('/\s*/', '%', " {$this->path[1]} ")
-					])->execute()->get_results();
-				} break;
+					case 'posts':
+					case '/':
+					case '': {
+						$this->type = 'posts';
+						if(count($this->path) === 1 and $this->path[0] === '') {
+							$this->data = $pdo->fetch_array('
+								SELECT *
+								FROM `posts`
+								WHERE `url` = ""
+								LIMIT 1
+							', 0);
+						}
+						elseif(count($this->path) >= 2) {
+							$this->data = $pdo->prepare('
+								SELECT *
+								FROM `posts`
+								WHERE `url` = :url
+								ORDER BY `created`
+								LIMIT 1
+							')->bind([
+								'url' => urlencode($this->path[1])
+							])->execute()->get_results(0);
+						}
+					} break;
+				}
+				if(isset($this->data) and !empty($this->data)) $this->get_content();
 
-				case 'forms': {
-					$this->type = 'forms';
-					$this->get_content();
-				} break;
-
-				case 'posts': default: {
-					$this->type = 'posts';
-					if(count($this->path) === 1){
-						$this->data = $pdo->fetch_array('
-							SELECT *
-							FROM `posts`
-							WHERE `url` = ""
-							LIMIT 1
-						', 0);
-					}
-					else {
-						$this->data = $pdo->prepare('
-							SELECT *
-							FROM `posts`
-							WHERE `url` = :url
-							ORDER BY `created`
-							LIMIT 1
-						')->bind([
-							'url' => urlencode($this->path[1])
-						])->execute()->get_results(0);
-					}
+				else{
+					http_response_code(404);
+					$this->status = 404;
+					$this->description = 'No results for ' . $this->url;
+					$this->keywords = '';
+					$this->title = 'Not found';
+					$template = template::load('error_page');
+					$template->status = 404;
+					$template->url = URL;
+					$template->message = "Nothing found for <var>{$this->url}</var>";
+					$template->link = $this->url;
+					$template->dump = print_r($this->parsed, true);
+					$this->content = $template->out();
 				}
 			}
-			if($this->data) $this->get_content();
 		}
 
 		public function __get($key) {

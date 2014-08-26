@@ -501,7 +501,8 @@ main:after {
 
 main > article,
 main > form,
-main > .tags {
+main > .tags,
+main > [data-error] {
   color: rgba(41, 41, 41, 1);
   background-color: whitesmoke;
   border-radius: inherit;
@@ -608,7 +609,8 @@ article > :not(footer) img {
 
   main > article,
   main > form,
-  main > .tags {
+  main > .tags,
+  main > [data-error] {
     -webkit-box-flex: 0;
     -webkit-flex: 0 1 67%;
     -ms-flex: 0 1 67%;

@@ -88,7 +88,7 @@
 			 * @example $csv->$field = $value
 			 */
 
-			$this->set($field, $value);
+			$this->set($field, (string)$value);
 		}
 
 		public function __get($field) {
@@ -110,7 +110,7 @@
 			}
 		}
 
-		public function __call($field, $arguments) {
+		public function __call($field, array $arguments) {
 			/**
 			 * Chaninable magic method, in this case only to set values
 			 *
@@ -174,6 +174,7 @@
 			 * @return boolean (whether or not save was successful)
 			 */
 
+			$fname = (string)$fname;
 			$this->build_CSV($newline);
 			return file_put_contents(BASE . "/{$fname}.csv", $this->csv);
 		}

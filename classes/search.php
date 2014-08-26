@@ -35,17 +35,17 @@
 			return $this;
 		}
 
-		public function from($table) {
+		public function from($table = null) {
 			$this->from = "`{$this->pdo->escape($table)}`";
 			return $this;
 		}
 
-		public function where($arr) {
+		public function where(array $arr) {
 			$this->where = $arr;
 			return $this;
 		}
 
-		public function limit($int) {
+		public function limit($int = 0) {
 			$this->limit = (int) $int;
 			return $this;
 		}

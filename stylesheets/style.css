@@ -380,7 +380,7 @@ main:after {
 	display: block;
 	clear: both;
 }
-main > article, main > form, main > .tags {
+main > article, main > form, main > .tags, main > [data-error] {
 	color: var(--alt-color);
 	background-color: whitesmoke;
 	border-radius: inherit;
@@ -450,7 +450,7 @@ article > :not(footer) img {
 		flex: 0 1 30%;
 		order: 1;
 	}
-	main > article, main > form, main > .tags {
+	main > article, main > form, main > .tags, main > [data-error] {
 		flex: 0 1 67%;
 		order: 2;
 	}

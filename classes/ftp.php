@@ -22,9 +22,9 @@
 			 * @param string $server
 			 */
 
-			$this->user = $user;
-			$this->pass = $pass;
-			$this->server = $server;
+			$this->user = (string)$user;
+			$this->pass = (string)$pass;
+			$this->server = (string)$server;
 			$this->tmp = '/tmp/ftpdata';
 			$this->login();
 		}
@@ -47,6 +47,8 @@
 			 * @return ftp
 			 *
 			 */
+
+			$dir = (string)$dir;
 			($dir === '..') ? ftp_cdup($this->ftp) : ftp_chdir($this->ftp, $dir);
 			$this->path = $this->pwd();
 			return $this;
@@ -61,7 +63,7 @@
 			 * @return string (file contents)
 			 */
 
-			ftp_get($this->ftp, $this->tmp, $file, $mode);
+			ftp_get($this->ftp, $this->tmp, (string)$file, $mode);
 			return file_get_contents($this->tmp);
 		}
 
@@ -75,7 +77,7 @@
 
 			$all = array();
 			foreach($list as $file){
-				array_push($all, $this->get($file));
+				array_push($all, $this->get((string)$file));
 			}
 			return $all;
 		}
@@ -88,7 +90,7 @@
 			 * @return int
 			 */
 
-			return count($this->ls($exp));
+			return count($this->ls((string)$exp));
 		}
 
 		public function close() {
@@ -101,7 +103,7 @@
 			ftp_close($this->ftp);
 		}
 
-		protected function exec($cmd) {
+		protected function exec($cmd = null) {
 			/**
 			 * Execute an arbitrary command on the FTP server
 			 *
@@ -109,10 +111,10 @@
 			 * @return mixed
 			 */
 
-			return ftp_exec($this->ftp, $cmd);
+			return ftp_exec($this->ftp, (string)$cmd);
 		}
 
-		public function mkdir($name) {
+		public function mkdir($name = null) {
 			/**
 			 * Make Directory
 			 *
@@ -120,17 +122,17 @@
 			 * @return boolean
 			 */
 
-			return ftp_mkdir($this->ftp, $name);
+			return ftp_mkdir($this->ftp, (string)$name);
 		}
 
-		public function rmdir($dir) {
+		public function rmdir($dir = null) {
 			/**
 			 * Remove Directory
 			 * @param string $dir
 			 * @return boolean
 			 */
 
-			return ftp_rmdir($this->ftp, $dir);
+			return ftp_rmdir($this->ftp, (string)$dir);
 		}
 
 		public function ls($dir = '.') {
@@ -141,7 +143,7 @@
 			 * @return string
 			 */
 
-			return ftp_nlist($this->ftp, $dir);
+			return ftp_nlist($this->ftp, (string)$dir);
 		}
 
 		public function pwd() {
@@ -155,7 +157,7 @@
 			return ftp_pwd($this->ftp);
 		}
 
-		public function rm($f) {
+		public function rm($f = null) {
 			/**
 			 * Remove (alias for delete)
 			 *
@@ -166,7 +168,7 @@
 			return $this->delete($f);
 		}
 
-		public function delete($f) {
+		public function delete($f = null) {
 			/**
 			 * Delete a file
 			 *
@@ -174,10 +176,10 @@
 			 * @return boolean
 			 */
 
-			return ftp_delete($this->ftp, $f);
+			return ftp_delete($this->ftp, (string)$f);
 		}
 
-		public function mv($from, $to) {
+		public function mv($from = null, $to = null) {
 			/**
 			 * Move
 			 *
@@ -186,10 +188,10 @@
 			 * @return boolean
 			 */
 
-			return ftp_rename($this->ftp, $from, $to);
+			return ftp_rename($this->ftp, (string)$from, (string)$to);
 		}
 
-		public function chmod($mode, $file) {
+		public function chmod($mode = null, $file = null) {
 			/**
 			 * Change mode (permissions)
 			 *
@@ -198,10 +200,10 @@
 			 * @return boolean
 			 */
 
-			return ftp_chmod($this->ftp, $mode, $file);
+			return ftp_chmod($this->ftp, (string)$mode, (string)$file);
 		}
 
-		public function exists($file) {
+		public function exists($file = null) {
 			/**
 			 * Check if a file exists
 			 *
@@ -209,7 +211,7 @@
 			 * @return boolean
 			 */
 
-			return (ftp_size($this->ftp, $file) !== -1);
+			return (ftp_size($this->ftp, (string)$file) !== -1);
 		}
 	}
 ?>

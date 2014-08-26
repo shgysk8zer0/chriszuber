@@ -129,7 +129,7 @@
 			unset($this->data[str_replace('_', '-', $index)]);
 		}
 
-		public function __call($name, $arguments) {
+		public function __call($name, array $arguments) {
 			/**
 			 * Chained magic getter and setter
 			 * @param string $name, array $arguments

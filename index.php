@@ -23,6 +23,7 @@
 	if(is_ajax()) { // If this is an ajax request, let ajax.php handle it.
 		require_once('./ajax.php');
 	}
+	$pages = pages::load();
 	CSP();		//Do this here to avoid CSP being set on ajax requests.
 ?>
 <!DOCTYPE HTML>
