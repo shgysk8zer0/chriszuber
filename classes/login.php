@@ -74,7 +74,7 @@
 					)
 				")->bind([
 					'user' => trim($source['user']),
-					'password' => password_hash(trim($source['password']), PASSWORD_BCRYPT, [
+					'password' => password_hash(trim((string)$source['password']), PASSWORD_BCRYPT, [
 						'cost' => 11,
 						'salt' => mcrypt_create_iv(50, MCRYPT_DEV_URANDOM)
 					])
@@ -119,7 +119,8 @@
 			/**
 			 * Setter method for the class.
 			 *
-			 * @param string $key, mixed $value
+			 * @param string $key
+			 * @param mixed $value
 			 * @return void
 			 * @example "$login->key = $value"
 			 */
@@ -169,7 +170,7 @@
 			unset($this->user_data[$key]);
 		}
 
-		public function __call($name, $arguments) {
+		public function __call($name, array $arguments) {
 			/**
 			 * Chained magic getter and setter
 			 * @param string $name, array $arguments

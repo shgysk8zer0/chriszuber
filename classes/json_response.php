@@ -36,7 +36,8 @@
 			/**
 			 * Setter method for the class.
 			 *
-			 * @param string $key, mixed $value
+			 * @param string $key
+			 * @param mixed $value
 			 * @return void
 			 * @example "$resp->key = $value"
 			 */
@@ -81,7 +82,7 @@
 			unset($this->response[$key]);
 		}
 
-		public function __call($name, $arguments) {
+		public function __call($name, array $arguments) {
 			/**
 			 * Chained magic getter and setter
 			 * @param string $name, array $arguments
@@ -92,22 +93,22 @@
 			$act = substr($name, 0, 3);
 			$key = substr($name, 3);
 			switch($act) {
-				case 'get':
+				case 'get': {
 					if(array_key_exists($key, $this->response)) {
 						return $this->response[$key];
 					}
 					else{
 						return false;
 					}
-					break;
-				case 'set':
+				} break;
+				case 'set': {
 					$this->response[$key] = $arguments[0];
 					return $this;
-					break;
+				} break;
 			}
 		}
 
-		public function text($selector, $content) {
+		public function text($selector = null, $content = null) {
 			/**
 			 * Sets textContent of elements matching $selector to $content
 			 *
@@ -116,7 +117,7 @@
 			 *
 			 */
 
-			$this->response['text'][$selector] = $content;
+			$this->response['text'][(string)$selector] = (string)$content;
 			return $this;
 		}
 
@@ -131,24 +132,24 @@
 			 */
 
 			$this->response['notify'] = [];
-			if(isset($title)) $this->response['notify']['title'] = $title;
-			if(isset($body)) $this->response['notify']['body'] = $body;
-			if(isset($icon)) $this->response['notify']['icon'] = $icon;
+			if(isset($title)) $this->response['notify']['title'] = (string)$title;
+			if(isset($body)) $this->response['notify']['body'] = (string)$body;
+			if(is_string($icon)) $this->response['notify']['icon'] = $icon;
 			return $this;
 		}
 
-		public function html($selector, $content) {
+		public function html($selector = null, $content = null) {
 			/**
 			 * @param string $selector
 			 * @param string $content
 			 * @usage $resp->html('.cssSelector', '<p>Some HTML content</p>');
 			 */
 			if(!array_key_exists('html', $this->response)) $this->response['html'] = [];
-			$this->response['html'][$selector] = $content;
+			$this->response['html'][(string)$selector] = (string)$content;
 			return $this;
 		}
 
-		public function append($selector, $content) {
+		public function append($selector = null, $content = null) {
 			/**
 			 * @param string $selector
 			 * @param string $content
@@ -156,11 +157,11 @@
 			 */
 
 			if(!array_key_exists('append', $this->response)) $this->response['append'] = [];
-			$this->response['append'][$selector] = $content;
+			$this->response['append'][(string)$selector] = (string)$content;
 			return $this;
 		}
 
-		public function prepend($selector, $content) {
+		public function prepend($selector = null, $content = null) {
 			/**
 			 * @param string $selector
 			 * @param string $content
@@ -168,11 +169,11 @@
 			 */
 
 			if(!array_key_exists('prepend', $this->response)) $this->response['prepend'] = [];
-			$this->response['prepend'][$selector] = $content;
+			$this->response['prepend'][(string)$selector] = (string)$content;
 			return $this;
 		}
 
-		public function before($selector, $content) {
+		public function before($selector = null, $content = null) {
 			/**
 			 * @param string $selector
 			 * @param string $content
@@ -180,54 +181,54 @@
 			 */
 
 			if(!array_key_exists('before', $this->response)) $this->response['before'] = [];
-			$this->response['before'][$selector] = $content;
+			$this->response['before'][(string)$selector] = (string)$content;
 			return $this;
 		}
 
-		public function after($selector, $content) {
+		public function after($selector = null, $content = null) {
 			/**
 			 * @param string $selector
 			 * @param string $content
 			 * @usage $resp->after('.cssSelector', '<p>Some HTML content</p>');
 			 */
 
-			$this->response['after'][$selector] = $content;
+			$this->response['after'][(string)$selector] = (string)$content;
 			return $this;
 		}
 
-		public function addClass($selector, $classes) {
+		public function addClass($selector = null, $classes = null) {
 			/**
 			 * @param string $selector
 			 * @param string $classes
 			 * @usage $resp->addClass('.cssSelector', 'newClass, otherClass');
 			 */
 
-			$this->response['addClass'][$selector] = $classes;
+			$this->response['addClass'][(string)$selector] = (string)$classes;
 			return $this;
 		}
 
-		public function removeClass($selector, $classes) {
+		public function removeClass($selector = null, $classes = null) {
 			/**
 			 * @param string $selector
 			 * @param string $classes
 			 * @usage $resp->removeClass('.cssSelector', 'someClass, someOtherClass');
 			 */
 
-			$this->response['removeClass'][$selector] = $classes;
+			$this->response['removeClass'][(string)$selector] = (string)$classes;
 			return $this;
 		}
 
-		public function remove($selector) {
+		public function remove($selector = null) {
 			/**
 			 * @param string $selector
 			 * @usage $resp->remove('html .class > #id');
 			 */
 
-			(array_key_exists('remove', $this->response)) ? $this->response['remove'] .= ',' . $selector : $this->response['remove'] = $selector;
+			(array_key_exists('remove', $this->response)) ? $this->response['remove'] .= ',' . (string)$selector : $this->response['remove'] = (string)$selector;
 			return $this;
 		}
 
-		public function attributes($selector, $attribute, $value = true) {
+		public function attributes($selector = null, $attribute = null, $value = true) {
 			/**
 			 * @param string $selector
 			 * @param string $attribute
@@ -239,11 +240,11 @@
 			 * );
 			 */
 
-			$this->response['attributes'][$selector][$attribute] = $value;
+			$this->response['attributes'][(string)$selector][(string)$attribute] = $value;
 			return $this;
 		}
 
-		public function script($js) {
+		public function script($js = null) {
 			/**
 			 * handleJSON in functions.js will eval() $js
 			 * Requires 'unsafe-eval' be set on script-src in csp.ini
@@ -255,11 +256,11 @@
 			 * @usage $resp->script("alert('Hello world')");
 			 */
 
-			(array_key_exists('script', $this->response)) ? $this->response['script'] .= ';' . $js : $this->response['script'] = $js;
+			(array_key_exists('script', $this->response)) ? $this->response['script'] .= ';' . (string)$js : $this->response['script'] = (string)$js;
 			return $this;
 		}
 
-		public function sessionStorage($key, $value) {
+		public function sessionStorage($key = null, $value = null) {
 			/**
 			 * handleJSON in functions.js will do sessionStorage[$key] = $value
 			 * Useful for storing data temporarily (session) on the client side
@@ -269,11 +270,11 @@
 			 * @usage $resp->sessionStorage('nonce', $session->nonce)
 			 */
 
-			$this->response['sessionStorage'][$key] = $value;
+			$this->response['sessionStorage'][(string)$key] = $value;
 			return $this;
 		}
 
-		public function localStorage($key, $value) {
+		public function localStorage($key = null, $value = null) {
 			/**
 			 * handleJSON in functions.js will do localStorage[$key] = $value
 			 * Useful for storing data more permenantly on the client side
@@ -283,7 +284,7 @@
 			 * @usage $resp->localStorage('greeting', 'Hello World!')
 			 */
 
-			$this->response['localStorage'][$key] = $value;
+			$this->response['localStorage'][(string)$key] = $value;
 			return $this;
 		}
 
@@ -295,7 +296,8 @@
 			 * @usage $resp->log($session->nonce, $_SERVER['SERVER_NAME']);
 			 */
 
-			$this->response['log'] = func_get_args();
+			$args = func_get_args();
+			$this->response['log'] = (count($args) == 1) ? $args[0] : $args;
 			return $this;
 		}
 
@@ -307,7 +309,8 @@
 			 * @usage $resp->info($session->nonce, $_SERVER['SERVER_NAME']);
 			 */
 
-			$this->response['info'] = func_get_args();
+			$args = func_get_args();
+			$this->response['info'] = (count($args) == 1) ? $args[0] : $args;
 			return $this;
 		}
 
@@ -319,7 +322,8 @@
 			 * @usage $resp->warn($session->nonce, $_SERVER['SERVER_NAME']);
 			 */
 
-			$this->response['warn'] = func_get_args();
+			$args = func_get_args();
+			$this->response['warn'] = (count($args) == 1) ? $args[0] : $args;
 			return $this;
 		}
 
@@ -331,7 +335,8 @@
 			 * @usage $resp->error($error);
 			 */
 
-			$this->response['error'] = func_get_args();
+			$args = func_get_args();
+			$this->response['error'] = (count($args) == 1) ? $args[0] : $args;
 			return $this;
 		}
 
@@ -347,8 +352,8 @@
 			 */
 
 			$this->response['scrollTo'] = [
-				'sel' => $sel,
-				'nth' => $nth
+				'sel' => (string)$sel,
+				'nth' => (int)$nth
 			];
 			return $this;
 		}
@@ -361,7 +366,7 @@
 			 * @example $resp->focus('input[name="password"]')
 			 */
 
-			$this->response['focus'] = $sel;
+			$this->response['focus'] = (string)$sel;
 			return $this;
 		}
 
@@ -373,7 +378,7 @@
 			 * @example $resp->select('input[name="password"]')
 			 */
 
-			$this->response['focus'] = $sel;
+			$this->response['focus'] = (string)$sel;
 			return $this;
 		}
 
@@ -388,18 +393,18 @@
 			$this->response['reload'] = null;
 		}
 
-		public function clear($form) {
+		public function clear($form = null) {
 			/**
 			 * Triggers document.forms[$form].reset() in handleJSON
 			 *
 			 * @param string $form (name of the form)
 			 * @example $resp->clear('login')
 			 */
-			$this->response['clear'] = $form;
+			$this->response['clear'] = (string)$form;
 			return $this;
 		}
 
-		public function triggerEvent($selector, $event) {
+		public function triggerEvent($selector = null, $event = null) {
 			/**
 			 * Will trigger an event ($event) on targets ($selector) in handleJSON
 			 *
@@ -407,13 +412,13 @@
 			 *
 			 * @link https://developer.mozilla.org/en-US/docs/Web/Events
 			 * @param string $selector (CSS selector for target(s))
-			 * @param $event (Event to be triggered)
+			 * @param string $event (Event to be triggered)
 			 * @example $resp->triggerEvent('button[type=submit]', 'click')
 			 */
 			if(!array_key_exists('triggerEvent', $this->response)) {
 				$this->response['triggerEvent'] = [];
 			}
-			$this->response['triggerEvent'][$selector] = $event;
+			$this->response['triggerEvent'][(string)$selector] = (string)$event;
 			return $this;
 		}
 
@@ -449,7 +454,7 @@
 
 			if(is_array($paramaters)) {
 				foreach($paramaters as $key => $value) {
-					$specs[$key] = $value;
+					$specs[$key] = (string)$value;
 				}
 			}
 
@@ -463,7 +468,7 @@
 			return $this;
 		}
 
-		public function show($sel) {
+		public function show($sel = null) {
 			/**
 			 * Causes handleJSON to run show() on all $sel.
 			 *
@@ -475,11 +480,11 @@
 			 * @example $resp->show('dialog')
 			 */
 
-			$this->response['show'] = $sel;
+			$this->response['show'] = (string)$sel;
 			return $this;
 		}
 
-		public function showModal($sel) {
+		public function showModal($sel = null) {
 			/**
 			 * Causes handleJSON to run show() on all $sel.
 			 *
@@ -491,11 +496,11 @@
 			 * @example $resp->show('dialog')
 			 */
 
-			$this->response['showModal'] = $sel;
+			$this->response['showModal'] = (string)$sel;
 			return $this;
 		}
 
-		public function close($sel) {
+		public function close($sel = null) {
 			/**
 			 * Inverse of show() method. This removes
 			 * the 'open' attribute or runs the native close() method
@@ -505,11 +510,11 @@
 			 * @example $resp->close('dialog,details')
 			 */
 
-			$this->response['close'] = $sel;
+			$this->response['close'] = (string)$sel;
 			return $this;
 		}
 
-		public function enable($sel) {
+		public function enable($sel = null) {
 			/**
 			 * Removes the 'disabled' attribute on all nodes matching $sel
 			 *
@@ -525,7 +530,7 @@
 			return $this;
 		}
 
-		public function disable($sel) {
+		public function disable($sel = null) {
 			/**
 			 * Sets the 'disabled' attribute on all nodes
 			 * matching $sel.
@@ -541,7 +546,7 @@
 			);
 		}
 
-		public function hidden($sel, $hide = true) {
+		public function hidden($sel = null, $hide = true) {
 			/**
 			 * Sets/removes the hidden attribute on all nodes matching $sel
 			 *
@@ -557,7 +562,7 @@
 			);
 		}
 
-		public function dataset($sel, $name, $value) {
+		public function dataset($sel = null, $name = null, $value = null) {
 			/**
 			 * Sets data-* using $this->attributes.
 			 *
@@ -565,34 +570,34 @@
 			 *
 			 * @param string $sel (CSS selector)
 			 * @param string $name (data-$name)
-			 * @param mixed $value (string or boolean)
+			 * @param string $value (string or boolean)
 			 * @return json_response Class/Object
 			 * @example $resp->dataset('menuitem[label="Click Me"]', 'request', 'action=test')
 			 * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement.dataset
 			 */
 
 			if(!is_array($this->response['dataset'])) $this->response['dataset'] = [];
-			$this->response['dataset'][$sel][$name] = $value;
+			$this->response['dataset'][(string)$sel][(string)$name] = (string)$value;
 
 			return $this;
 		}
 
-		public function style($sel, $property, $value) {
+		public function style($sel = null, $property = null, $value = null) {
 			if(!is_array($this->response['style'])) $this->response['style'] = [];
-			$this->response['style'][$sel][$property] = $value;
+			$this->response['style'][(string)$sel][(string)$property] = (string)$value;
 			return $this;
 		}
 
-		public function id($sel, $id = false) {
+		public function id($sel = null, $id = false) {
 			if(is_string($id)) $id = preg_replace(['/\s/', '/[\W]/'], ['_', null], trim($id));
 			return $this->attributes(
-				$sel,
+				(string)$sel,
 				'id',
 				$id
 			);
 		}
 
-		public function serverEvent($uri) {
+		public function serverEvent($uri = null) {
 			/**
 			 * Creates a new server event using handleJSON.
 			 *
@@ -604,7 +609,7 @@
 			 * @example $resp->serverEvent('event_source.php')
 			 */
 
-			$this->response['serverEvent'] = $uri;
+			$this->response['serverEvent'] = (string)$uri;
 			return $this;
 		}
 
@@ -639,10 +644,10 @@
 
 			if(count($this->response) and !headers_sent()) {
 				header('Content-Type: application/json');
-				(isset($key)) ? exit(json_encode([$key => $this->response[$key]])) : exit(json_encode($this->response));
+				(is_string($key)) ? exit(json_encode([$key => $this->response[$key]])) : exit(json_encode($this->response));
 			}
 			else {
-				http_status_code(403);
+				http_response_code(403);
 				exit();
 			}
 		}
