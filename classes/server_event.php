@@ -53,7 +53,7 @@
 			$this->set_headers();
 			parent::__construct();
 
-			if(is_array($data)) {
+			if(isset($data)) {
 				$this->response = $data;
 			}
 		}
@@ -72,7 +72,7 @@
 			echo 'event: ping' . PHP_EOL;
 
 			if(count($this->response)) {
-				if(isset($key)) {
+				if(is_string($key)) {
 					echo 'data: ' . json_encode([$key => $this->response[$key]]) . PHP_EOL . PHP_EOL;
 				}
 				else {
@@ -127,7 +127,7 @@
 			echo 'event: close' . PHP_EOL;
 
 			if(!empty($this->response)) {
-				if(isset($key)) {
+				if(is_string($key)) {
 					echo 'data: ' . json_encode([$key => $this->response[$key]]) . PHP_EOL . PHP_EOL;
 				}
 				else {

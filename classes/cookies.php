@@ -50,7 +50,7 @@
 			 * @example $cookies->test = 'Works'
 			 */
 
-			setcookie(str_replace('_', '-', $name), $value, $this->expires, $this->path, $this->domain, $this->secure, $this->httponly);
+			setcookie(str_replace('_', '-', $name), (string)$value, $this->expires, $this->path, $this->domain, $this->secure, $this->httponly);
 		}
 
 		public function __get($name) {
@@ -70,7 +70,7 @@
 			return (array_key_exists($name, $_COOKIE)) ? $_COOKIE[$name] : false;
 		}
 
-		public function __call($name, $arguments) {
+		public function __call($name, array $arguments) {
 			/**
 			 * Chained magic getter and setter
 			 * @param string $name, array $arguments
@@ -127,7 +127,7 @@
 			 * @example unset($cookies->test) (true)
 			 */
 
-			$name = str_replace('_', '-', $name);
+			$name = str_replace('_', '-', (string)$name);
 			if(array_key_exists($name, $_COOKIE)) {
 				unset($_COOKIE[$name]);
 				setcookie($name, null, -1, $this->path, $this->domain, $this->secure, $this->httponly);

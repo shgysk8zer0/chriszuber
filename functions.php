@@ -22,7 +22,7 @@
 
 	init();
 
-	function init($site = null) {
+	function init() {
 		/**
 		 * Initial configuration. Setup include_path, gather database
 		 * connection information, set undefined properties to
@@ -60,7 +60,7 @@
 		*/
 
 
-		$settings = ini::load($settings_file);
+		$settings = ini::load((string)$settings_file);
 		if(isset($settings->path)) {
 			set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
 		}
@@ -121,7 +121,7 @@
 		}
 	}
 
-	function error_reporter_class($error_level, $error_message, $file, $line, $scope) {
+	function error_reporter_class($error_level = null, $error_message = null, $file = null, $line = null, $scope = null) {
 		/**
 		 * Default custom error handler function.
 		 * Should never be used directly. Ran automatically when an error is caught.
@@ -146,7 +146,7 @@
 			}
 		}
 
-		return $reporter->report($error_level, $error_message, $file, $line, $scope);
+		return $reporter->report((string)$error_level, (string)$error_message, (string)$file, (string)$line, $scope);
 	}
 
 	function load() {									// Load resource from components directory
@@ -158,7 +158,7 @@
 		 * Similar to include(), except that it shares limited resources
 		 * and does not load into the current scope for security reasons.
 		 *
-		 * @params mixed args
+		 * @param mixed args
 		 * @return boolean
 		 * @usage load(string | array[string | array[, ...]]*)
 		 */
@@ -177,7 +177,7 @@
 		}
 
 		foreach(flatten(func_get_args()) as $fname) {	// Unknown how many arguments passed. Loop through function arguments array
-			$load($fname, $found);
+			$load((string)$fname, $found);
 		}
 		return $found;
 	}
@@ -196,7 +196,7 @@
 		return ob_get_clean();
 	}
 
-	function load_class($class) {
+	function load_class($class = null) {
 		/**
 		 * Loads a class script from wherever found in include_path
 		 * Does not specify a default path to allow classes to be contained in
@@ -204,16 +204,16 @@
 		 *
 		 * Automatically adds the '.php' file extention, so don't use it when calling
 		 *
-		 * @params string $class
+		 * @param string $class
 		 * @return void
 		 * @example load_class('my_class')
 		 * @example new my_class() //Using autoload
 		 */
 
-		require_once "{$class}.php";
+		require_once((string)$class . '.php');
 	}
 
-	function strip_enclosing_tag($html) {
+	function strip_enclosing_tag($html = null) {
 		/**
 		 * strips leading trailing and closing tags, including leading
 		 * new lines, tabs, and any attributes in the tag itself.
@@ -223,10 +223,10 @@
 		 * @usage strip_enclosing_tags('<div id="some_div" ...><p>Some Content</p></div>')
 		 */
 
-		return preg_replace('/^\n*\t*\<.+\>|\<\/.+\>$/', '', $html);
+		return preg_replace('/^\n*\t*\<.+\>|\<\/.+\>$/', '', (string)$html);
 	}
 
-	function debug($data, $comment = false) {
+	function debug($data = null, $comment = false) {
 		/**
 		 * Prints out information about $data
 		 * Wrapped in html comments or <pre><code>
@@ -237,12 +237,12 @@
 
 		if($comment) {
 			echo '<!--';
-			print_r($data);
+			print_r((string)$data, is_ajax());
 			echo '-->';
 		}
 		else {
 			echo '<pre><code>';
-			print_r($data);
+			print_r((string)$data, is_ajax());
 			echo '</code></pre>';
 		}
 	}
@@ -251,7 +251,7 @@
 		$login = login::load();
 
 		if(!$login->logged_in) {
-			switch($exit) {
+			switch((string)$exit) {
 				case 'notify': {
 					$resp = new json_response();
 					$resp->notify(
@@ -263,7 +263,7 @@
 				}
 
 				case 403: case '403': case 'exit': {
-					http_status_code(403);
+					http_response_code(403);
 					exit();
 				}
 
@@ -272,14 +272,14 @@
 				}
 
 				default: {
-					http_status_code(403);
+					http_response_code(403);
 					exit();
 				}
 			}
 		}
 
-		elseif(isset($role) and strlen($role)) {
-			$role = strtolower($role);
+		elseif(isset($role)) {
+			$role = strtolower((string)$role);
 			$resp = new json_response();
 			$roles = ['new', 'user', 'admin'];
 
@@ -397,7 +397,7 @@
 		/**
 		 * Returns whether or not this is a secure (HTTPS) connection
 		 *
-		 * @params void
+		 * @param void
 		 * @return boolean
 		 */
 
@@ -409,7 +409,7 @@
 		 * Checks and returns whether or not Do-Not-Track header
 		 * requests that we not track the client
 		 *
-		 * @params void
+		 * @param void
 		 * @return boolean
 		 */
 
@@ -427,14 +427,14 @@
 		return (isset($_SERVER['HTTP_REQUEST_TYPE']) and $_SERVER['HTTP_REQUEST_TYPE'] === 'AJAX');
 	}
 
-	function header_type($type) {							// Set content-type header.
+	function header_type($type = null) {							// Set content-type header.
 		/**
 		 * Sets HTTP Content-Type header
-		 * @params string $type
+		 * @param string $type
 		 * @return void
 		 */
 
-		header("Content-Type: {$type}\n");
+		header('Content-Type: ' . (string)$type . PHP_EOL);
 	}
 
 	function define_UA() {								// Define Browser and OS according to user-agent string
@@ -442,7 +442,7 @@
 		 * Defines a variety of things using the HTTP_USER_AGENT header,
 		 * such as operating system and browser
 		 *
-		 * @params void
+		 * @param void
 		 * @return void
 		 */
 
@@ -474,10 +474,11 @@
 		 * Generates a random string to be used for form validation
 		 *
 		 * @link http://www.html5rocks.com/en/tutorials/security/content-security-policy/
-		 * @params integer $length
+		 * @param integer $length
 		 * @return string
 		 */
 
+		$length = (int)$length;
 		if(array_key_exists('nonce', $_SESSION)) {	// Use existing nonce instead of a new one
 			return $_SESSION['nonce'];
 		}
@@ -495,7 +496,7 @@
 		 * Checks whether or not the current request was sent
 		 * from the same domain
 		 *
-		 * @params void
+		 * @param void
 		 * @return boolean
 		 */
 
@@ -505,22 +506,23 @@
 		elseif(isset($_SERVER['HTTP_REFERER'])) {
 			$origin = $_SERVER['HTTP_REFERER'];
 		}
+
 		$name = '/^http(s)?' .preg_quote('://' . $_SERVER['SERVER_NAME'], '/') . '/';
 		return (isset($origin) and preg_match($name, $origin));
 	}
 
 	function sub_root() {
 		/**
-		 * @params void
+		 * @param void
 		 * @return string (Directory one level below DOCUMENT_ROOT)
 		 */
 
-		$root = preg_replace('/\/$/', '', $_SERVER['DOCUMENT_ROOT']);	// Strip off the '/' at the end of DOCUMENT_ROOT
+		$root = trim($_SERVER['DOCUMENT_ROOT'], '/');
 		$sub = preg_replace('/' . preg_quote(end(explode('/', $root))) . '/', '', $root);
 		return $sub;
 	}
 
-	function array_remove($key, &$array) {
+	function array_remove($key = null, array &$array) {
 		/**
 		 * Remove from array by key and return it's value
 		 *
@@ -528,6 +530,7 @@
 		 * @return array | null
 		 */
 
+		$key = (string)$key;
 		if(array_key_exists($key, $array)) {
 			$val = $array[$key];					// Need to store to variable before unsetting, then return the variable
 			unset($array[$key]);
@@ -554,7 +557,7 @@
 		* Finally, compare the $keys by lopping through and checking if
 		* each $key is in $arr using in_array($key, $arr)
 		*
-		 * @params string[, string, .... string] array
+		 * @param string[, string, .... string] array
 		 * @return boolean
 		 * @example array_keys_exist('red', 'green', 'blue', ['red' => '#f00', 'green' => '#0f0', 'blue' => '#00f']) // true
 		 */
@@ -567,7 +570,7 @@
 			if(!in_array($key, $arr, true)) return false;
 		}
 		return true;
-}
+	}
 
 	function flatten() {
 		/**
@@ -584,208 +587,6 @@
 			new RecursiveArrayIterator(func_get_args())),FALSE);
 	}
 
-	function is_a_number($n) {
-		/**
-		 * Because I was tired of writing this... the ultimate point of programming, after all
-		 *
-		 * @params mixed $n
-		 * @return boolean
-		 */
-
-		return preg_match('/^\d+$/', $n);
-	}
-
-	function is_not_a_number($n) {
-		/**
-		 * Opposite of previous.
-		 *
-		 * @params mixed $n
-		 * @return boolean
-		 */
-
-		return !is_a_number($n);
-	}
-
-	function is_email($str) {
-		/**
-		 * Checks if $str validates as an email
-		 *
-		 * @param string $str
-		 * @return bolean
-		 * @link http://php.net/manual/en/filter.filters.validate.php
-		 */
-
-		return filter_var($str, FILTER_VALIDATE_EMAIL);
-	}
-
-	function is_url($str) {
-		/**
-		 * Checks if $str validates as a URL
-		 *
-		 * @param string $str
-		 * @return bolean
-		 * @link http://php.net/manual/en/filter.filters.validate.php
-		 */
-
-		return filter_var($str, FILTER_VALIDATE_URL);
-	}
-
-	function ls($path = null, $ext = null, $strip_ext = null) {
-		/**
-		 * List files in given path. Optional extension and strip extension from results
-		 *
-		 * @param [string $path[, string $ext[, boolean $strip_ext]]]
-		 * @return array
-		 */
-
-		if(is_null($path)) $path = BASE;
-		$files = array_diff(scandir($path), array('.', '..'));				// Get array of files. Remove current and previous directory (. & ..)
-		$results = array();
-		if(isset($ext)) {													//$ext has been passed, so let's work with it
-			//Convert $ext into regexp
-			$ext = '/' . preg_quote('.' . $ext, '/') .'/';					// Convert for use in regular expression
-			if(isset($strip_ext)) {
-				foreach($files as $file) {
-					(preg_match($ext, $file)) ? array_push($results, preg_replace($ext, '', $file)) : null;
-				}
-			}
-			else{
-				foreach($files as $file) {
-					(preg_match($ext, $file)) ? array_push($results, $file) : null;
-				}
-			}
-			return $results;
-		}
-		else return $files;
-	}
-
-	function encode($file) {
-		/**
-		 * Base 64 encode $file. Does not set data: URI
-		 * @params string $file
-		 * @return string (base_64 encoded)
-		 */
-
-		if(file_exists($file)) return base64_encode(file_get_contents($file));
-	}
-
-	function mime_type($file) {
-		/**
-		 * Determine the mime-type of a file
-		 * using file info or file extension
-		 *
-		 * @param string $file
-		 * @return string (mime-type)
-		 * @example mime_type(path/to/file.txt) //Returns text/plain
-		 */
-
-		//Make an absolute path if given a relative path in $file
-		if(substr($file, 0, 1) !== '/') $file = BASE . "/$file";
-
-		$unsupported_types = [
-			'css' => 'text/css',
-			'js' => 'application/javascript',
-			'svg' => 'image/svg+xml',
-			'woff' => 'application/font-woff',
-			'appcache' => 'text/cache-manifest',
-			'm4a' => 'audio/mp4',
-			'ogg' => 'audio/ogg',
-			'oga' => 'audio/ogg',
-			'ogv' => 'vidoe/ogg'
-		];
-
-		if(array_key_exists(extension($file), $unsupported_types)) {
-			$mime = $unsupported_types[extension($file)];
-		}
-		else {
-			$finfo = finfo_open(FILEINFO_MIME_TYPE);
-			$mime = finfo_file($finfo, $file);
-			finfo_close($finfo);
-		}
-		return $mime;
-	}
-
-	function data_uri($file) {
-		/**
-		 * Reads the contents of a file ($file) and returns
-		 * the base64 encoded data-uri
-		 *
-		 * Useful for decreasing load times and storing resources client-side
-		 *
-		 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/data_URIs
-		 * @param strin $file
-		 * @return string (base64 encoded data-uri)
-		 */
-
-		return 'data:' . mime_type($file) . ';base64,' . encode($file);
-	}
-
-	function extension($file) {
-		/**
-		 * Returns the extension for the specified file
-		 *
-		 * Does not depend on whether or not the file exists.
-		 * This function operates with the string, not the
-		 * filesystem
-		 *
-		 * @param string $file
-		 * @return string
-		 * @example extension('path/to/file.ext') //returns '.ext'
-		 */
-
-		return '.' . pathinfo($file, PATHINFO_EXTENSION);
-	}
-
-	function filename($file) {
-		/**
-		 * Returns the filename without path or extension
-		 * Does not depend on whether or not the file exists.
-		 * This function operates with the string, not the
-		 * filesystem
-		 *
-		 * @param string $file
-		 * @return string
-		 * @example filename('/path/to/file.ext') //returns 'file'
-		 */
-		return pathinfo($file, PATHINFO_FILENAME);
-	}
-
-	function unquote($str) {
-		/**
-		 * Remove Leading and trailing single quotes
-		 *
-		 * @params string $str
-		 * @return string
-		 */
-
-		return preg_replace("/^\'|\'$/", '', $str);
-	}
-
-	function caps($str) {
-		/**
-		 * Receives a string, returns same string with all words capitalized
-		 *
-		 * @params string $str
-		 * @return string
-		 */
-
-		return ucwords(strtolower($str));
-	}
-
-	function average() {
-		/**
-		 * Finds the numeric average average of its arguments
-		 *
-		 * @param mixed args (All values should be numbers, int or float)
-		 * @return float (average)
-		 * @example average(1, 2) //Returns 1.5
-		 * @example average([1.5, 1.6]) //Returns 1.55
-		 */
-
-		$args = flatten(func_get_args());
-		return array_sum($args) / count($args);
-	}
-
 	function list_array(array $array) {
 		/**
 		 * Prints out an unordered list from an array
@@ -799,68 +600,85 @@
 				list_array($value);
 			}
 			else {
+				$entry = (string)$entry;
 				echo "<li>{$key}: {$entry}</li>";
 			}
 		}
 		echo "</ul>";
 	}
 
-	function curl($request, $method = 'get') {
+	function is_a_number($n = null) {
 		/**
-		 * Returns http content from request.
+		 * Because I was tired of writing this... the ultimate point of programming, after all
 		 *
-		 * @link http://www.php.net/manual/en/book.curl.php
-		 * @params string $request[, string $method]
-		 * @return string
+		 * @param mixed $n
+		 * @return boolean
 		 */
 
-		//[TODO] Handle both GET and POST methods
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $request);
-		curl_setopt($ch, CURLOPT_FRESH_CONNECT, TRUE);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($ch, CURLOPT_TIMEOUT,30);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true );
-		$result = curl_exec($ch);
-		curl_close($ch);
-		return $result;
+		return preg_match('/^\d+$/', $n);
 	}
 
-	function curl_post($url, $request) {			//cURL for post instead of get
+	function is_not_a_number($n = null) {
 		/**
-		 * See previous curl()
+		 * Opposite of previous.
 		 *
-		 * @params string $url, string $request
-		 * @return string
+		 * @param mixed $n
+		 * @return boolean
 		 */
 
-		$requestBody = http_build_query($request);
-		$connection = curl_init();
-		curl_setopt($connection, CURLOPT_URL, $url);
-		curl_setopt($connection, CURLOPT_TIMEOUT, 30 );
-		curl_setopt($connection, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_setopt($connection, CURLOPT_SSL_VERIFYHOST, 0);
-		curl_setopt($connection, CURLOPT_POST, count($request));
-		curl_setopt($connection, CURLOPT_POSTFIELDS, $requestBody);
-		curl_setopt($connection, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($connection, CURLOPT_FAILONERROR, 0);
-		curl_setopt($connection, CURLOPT_FOLLOWLOCATION, 1);
-		curl_setopt($connection, CURLOPT_HTTP_VERSION, 1);		// HTTP version must be 1.0
-		$response = curl_exec($connection);
-		return $response;
+		return !is_a_number($n);
 	}
 
-	function minify($src) {
+	function is_email($str = null) {
 		/**
-		 * Trims extra spaces and removes tabs and new lines.
+		 * Checks if $str validates as an email
 		 *
-		 * @params string $src
-		 * @return string
+		 * @param string $str
+		 * @return bolean
+		 * @link http://php.net/manual/en/filter.filters.validate.php
 		 */
 
-		return preg_replace(array('/\t/', '/\n/', '/\r\n/'), array(), trim($src));
+		return filter_var($str, FILTER_VALIDATE_EMAIL);
+	}
+
+	function is_url($str = null) {
+		/**
+		 * Checks if $str validates as a URL
+		 *
+		 * @param string $str
+		 * @return bolean
+		 * @link http://php.net/manual/en/filter.filters.validate.php
+		 */
+
+		return filter_var($str, FILTER_VALIDATE_URL);
+	}
+
+	function check_inputs(array $inputs, array $source = null) {
+		/**
+		 * Checks that each $inputs is set and matches a pattern
+		 *
+		 * Loops through an array of inputs, checking that
+		 * it exists in $_REQUEST, and checks that $_REQUEST[$key]
+		 * matches the specified pattern.
+		 *
+		 * @param array $inputs ([$key => $test])
+		 * @param array $souce ($_POST, $_GET, $_REQUEST, [])
+		 * @return mixed (null if all inputs valid, selector '[name="$key"]' of first invalid input if not)
+		 * @usage find_invalid_inputs(['num' => '\d', 'user' => is_email($source['user])], $source)
+		 */
+
+		if(is_null($source)) $source = $_REQUEST;
+
+		foreach($inputs as $key => $test) {
+			if(
+				!array_key_exists($key, $source)
+				or (is_bool($test) and !$test)
+				or (is_string($test) and !preg_match('/^' . $test . '$/', $source[$key]))
+			) {
+				return "[name=\"{$key}\"]";
+			}
+		}
+		return null;
 	}
 
 	function pattern($type = null) {
@@ -868,9 +686,11 @@
 		 * Useful for pattern attributes as well as server-side input validation
 		 * Must add regexp breakpoints for server-side use ['/^$pattern$/']
 		*
-		 * @params string $type
+		 * @param string $type
 		 * @return string (regexp)
 		 */
+
+		if(isset($type)) $type = (string)$type;
 		switch($type) {
 			case "text": {
 				$pattern = "(\w+(\ )?)+";
@@ -927,15 +747,242 @@
 		return $pattern;
 	}
 
-	function utf($string) {
+	function utf($string = null) {
 		/**
-		 * Concerts characters to UTF-8. Replaces special chars.
+		 * Converts characters to UTF-8. Replaces special chars.
 		 *
 		 * @param string $string
 		 * @return (string UTF-8 converted)
 		 * @example utf('This & that') //Returns 'This &amp; that'
 		 */
 
-		return htmlentities($string, ENT_QUOTES | ENT_HTML5,"UTF-8");
+		return htmlentities((string)$string, ENT_QUOTES | ENT_HTML5,"UTF-8");
+	}
+
+	function ls($path = null, $ext = null, $strip_ext = null) {
+		/**
+		 * List files in given path. Optional extension and strip extension from results
+		 *
+		 * @param [string $path[, string $ext[, boolean $strip_ext]]]
+		 * @return array
+		 */
+
+		if(is_null($path)) $path = BASE;
+		else $path = (string)$path;
+		$files = array_diff(scandir($path), array('.', '..'));				// Get array of files. Remove current and previous directory (. & ..)
+		$results = [];
+		if(isset($ext)) {													//$ext has been passed, so let's work with it
+			//$ext = (string)$ext;
+			//Convert $ext into regexp
+			$ext = '/' . preg_quote('.' . (string)$ext, '/') .'$/';					// Convert for use in regular expression
+			if(isset($strip_ext)) {
+				foreach($files as $file) {
+					(preg_match($ext, $file)) ? array_push($results, preg_replace($ext, '', $file)) : null;
+				}
+			}
+			else{
+				foreach($files as $file) {
+					(preg_match($ext, $file)) ? array_push($results, $file) : null;
+				}
+			}
+			return $results;
+		}
+		else return $files;
+	}
+
+	function encode($file = null) {
+		/**
+		 * Base 64 encode $file. Does not set data: URI
+		 * @param string $file
+		 * @return string (base_64 encoded)
+		 */
+
+		$file = (string)$file;
+		if(file_exists($file)) return base64_encode(file_get_contents($file));
+	}
+
+	function mime_type($file = null) {
+		/**
+		 * Determine the mime-type of a file
+		 * using file info or file extension
+		 *
+		 * @param string $file
+		 * @return string (mime-type)
+		 * @example mime_type(path/to/file.txt) //Returns text/plain
+		 */
+
+		//Make an absolute path if given a relative path in $file
+
+		$file = (string)$file;
+		if(substr($file, 0, 1) !== '/') $file = BASE . "/$file";
+
+		$unsupported_types = [
+			'css' => 'text/css',
+			'js' => 'application/javascript',
+			'svg' => 'image/svg+xml',
+			'woff' => 'application/font-woff',
+			'appcache' => 'text/cache-manifest',
+			'm4a' => 'audio/mp4',
+			'ogg' => 'audio/ogg',
+			'oga' => 'audio/ogg',
+			'ogv' => 'vidoe/ogg'
+		];
+
+		if(array_key_exists(extension($file), $unsupported_types)) {
+			$mime = $unsupported_types[extension($file)];
+		}
+		else {
+			$finfo = finfo_open(FILEINFO_MIME_TYPE);
+			$mime = finfo_file($finfo, $file);
+			finfo_close($finfo);
+		}
+		return $mime;
+	}
+
+	function data_uri($file = null) {
+		/**
+		 * Reads the contents of a file ($file) and returns
+		 * the base64 encoded data-uri
+		 *
+		 * Useful for decreasing load times and storing resources client-side
+		 *
+		 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/data_URIs
+		 * @param strin $file
+		 * @return string (base64 encoded data-uri)
+		 */
+
+		$file = (string)$file;
+		return 'data:' . mime_type($file) . ';base64,' . encode($file);
+	}
+
+	function extension($file = null) {
+		/**
+		 * Returns the extension for the specified file
+		 *
+		 * Does not depend on whether or not the file exists.
+		 * This function operates with the string, not the
+		 * filesystem
+		 *
+		 * @param string $file
+		 * @return string
+		 * @example extension('path/to/file.ext') //returns '.ext'
+		 */
+
+		return '.' . pathinfo((string)$file, PATHINFO_EXTENSION);
+	}
+
+	function filename($file = null) {
+		/**
+		 * Returns the filename without path or extension
+		 * Does not depend on whether or not the file exists.
+		 * This function operates with the string, not the
+		 * filesystem
+		 *
+		 * @param string $file
+		 * @return string
+		 * @example filename('/path/to/file.ext') //returns 'file'
+		 */
+
+		return pathinfo((string)$file, PATHINFO_FILENAME);
+	}
+
+	function unquote($str = null) {
+		/**
+		 * Remove Leading and trailing single quotes
+		 *
+		 * @param string $str
+		 * @return string
+		 */
+
+		return preg_replace("/^\'|\'$/", '', (string)$str);
+	}
+
+	function caps($str = null) {
+		/**
+		 * Receives a string, returns same string with all words capitalized
+		 *
+		 * @param string $str
+		 * @return string
+		 */
+
+		return ucwords(strtolower((string)$str));
+	}
+
+	function average() {
+		/**
+		 * Finds the numeric average average of its arguments
+		 *
+		 * @param mixed args (All values should be numbers, int or float)
+		 * @return float (average)
+		 * @example average(1, 2) //Returns 1.5
+		 * @example average([1.5, 1.6]) //Returns 1.55
+		 */
+
+		$args = flatten(func_get_args());
+		return array_sum($args) / count($args);
+	}
+
+	function minify(&$string = null) {
+		/**
+		 * Function to remove all tabs and newlines from source
+		 * Also strips out HTML comments but leaves conditional statements
+		 * such as <!--[if IE 6]>Conditional content<![endif]-->
+		 *
+		 * @param string $string (Pointer to string to minify)
+		 * @return string
+		 * @example minify("<!--Test-->\n<!--[if IE]>...<[endif]-->\n<p>...</p>") /Leaves only "<p>...</p>"
+		 */
+
+		$string = str_replace(["\r", "\n", "\t"], [], trim((string)$string));
+		$string = preg_replace('/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/', null, $string);
+		return $string;
+	}
+
+	function curl($request = null, $method = 'get') {
+		/**
+		 * Returns http content from request.
+		 *
+		 * @link http://www.php.net/manual/en/book.curl.php
+		 * @param string $request[, string $method]
+		 * @return string
+		 */
+
+		//[TODO] Handle both GET and POST methods
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, (string)$request);
+		curl_setopt($ch, CURLOPT_FRESH_CONNECT, TRUE);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_TIMEOUT,30);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true );
+		$result = curl_exec($ch);
+		curl_close($ch);
+		return $result;
+	}
+
+	function curl_post($url = null, $request = null) {			//cURL for post instead of get
+		/**
+		 * See previous curl()
+		 *
+		 * @param string $url,
+		 * @param mixed $request
+		 * @return string
+		 */
+
+		$requestBody = http_build_query($request);
+		$connection = curl_init();
+		curl_setopt($connection, CURLOPT_URL, (string)$url);
+		curl_setopt($connection, CURLOPT_TIMEOUT, 30 );
+		curl_setopt($connection, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($connection, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($connection, CURLOPT_POST, count($request));
+		curl_setopt($connection, CURLOPT_POSTFIELDS, $requestBody);
+		curl_setopt($connection, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($connection, CURLOPT_FAILONERROR, 0);
+		curl_setopt($connection, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($connection, CURLOPT_HTTP_VERSION, 1);		// HTTP version must be 1.0
+		$response = curl_exec($connection);
+		return $response;
 	}
 ?>

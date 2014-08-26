@@ -19,7 +19,7 @@
 
 		public $method, $log = 'errors.log';
 
-		public static function load($method) {
+		public static function load($method = 'default') {
 			/**
 			 * Static load method should always be used,
 			 * especially when in development and multiple
@@ -27,7 +27,7 @@
 			 */
 
 			if(is_null(self::$instance)) {
-				self::$instance = new self($method);
+				self::$instance = new self((string)$method);
 			}
 			return self::$instance;
 		}
@@ -48,7 +48,7 @@
 			 * @ return mixed (return false to make PHP handle the error in the default way)
 			 */
 
-			$this->method = strtolower($method);
+			$this->method = strtolower((string)$method);
 
 			/**
 			 * Get defined constants using get_defined_constants(true)
@@ -115,7 +115,7 @@
 			}
 		}
 
-		public function report($error_level, $error_message, $file, $line, $scope) {
+		public function report($error_level = null, $error_message = null, $file = null, $line = null, $scope = null) {
 			/**
 			 * Public method to report errors. Just calls the private private
 			 * method according to a switch on $this->method
@@ -132,11 +132,11 @@
 
 			switch($this->method) {
 				case 'database': {
-					return $this->database($error_level, $error_message, $file, $line, $scope);
+					return $this->database((int)$error_level, (string)$error_message, (string)$file, (int)$line, $scope);
 				} break;
 
 				case 'log': {
-					return $this->logger($error_level, $error_message, $file, $line, $scope);
+					return $this->logger((int)$error_level, (string)$error_message, (string)$file, (int)$line, $scope);
 				} break;
 
 				default: {

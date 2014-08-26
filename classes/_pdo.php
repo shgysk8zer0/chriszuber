@@ -77,7 +77,7 @@
 			}
 		}
 
-		public function log($method, $line, $message = '') {
+		public function log($method = null, $line = null, $message = '') {
 			file_put_contents(BASE . '/' . __CLASS__ . '.log', "Error in $method in line $line: $message" . PHP_EOL, FILE_APPEND | LOCK_EX);
 		}
 
@@ -86,12 +86,13 @@
 			 * @method __set
 			 * Setter method for the class.
 			 *
-			 * @param string $key, mixed $value
+			 * @param string $key
+			 * @param mixed $value
 			 * @return void
 			 * @example "$pdo->key = $value"
 			 */
 
-			$key = str_replace(' ', '-', preg_quote($key, '/'));
+			$key = str_replace(' ', '-', (string)$key);
 			$this->data[$key] = $value;
 		}
 
@@ -104,7 +105,7 @@
 			 * @example "$pdo->key" Returns $value
 			 */
 
-			$key = str_replace(' ', '-', preg_quote($key, '/'));
+			$key = str_replace(' ', '-', (string)$key);
 			if(array_key_exists($key, $this->data)) {
 				return $this->data[$key];
 			}
@@ -133,14 +134,14 @@
 			unset($this->data[str_replace(' ', '-', $key)]);
 		}
 
-		public function __call($name, $arguments) {
+		public function __call($name, array $arguments) {
 			/**
 			 * Chained magic getter and setter
 			 * @param string $name, array $arguments
 			 * @example "$pdo->[getName|setName]($value)"
 			 */
 
-			$name = strtolower($name);
+			$name = strtolower((string)$name);
 			$act = substr($name, 0, 3);
 			$key = str_replace(' ', '-', substr($name, 3));
 			switch($act) {
@@ -241,8 +242,8 @@
 			}
 			//If $n is set, return $results[$n] (row $n of results) Else return all
 			if(!count($results)) return false;
-			if(is_null($n)) return $results;
-			else return $results[$n];
+			if(is_int($n)) return $results[$n];
+			else return $results;
 		}
 
 		public function close() {
@@ -317,7 +318,7 @@
 			return $arr;
 		}
 
-		public function quote($val) {
+		public function quote(&$val) {
 			/**
 			 * Makes a string safer to use in a query
 			 * When possible, use prepared statements instead
@@ -335,13 +336,13 @@
 			 */
 
 			if(is_array($val)) {
-				foreach($val as &$v) $this->quote($v);
+				foreach($val as &$v) $this->quote(trim((string)$v));
 			}
 			else $val = $this->pdo->quote(trim((string) $val));
 			return $val;
 		}
 
-		public function escape($val) {
+		public function escape(&$val) {
 			/**
 			 * For lack of a pdo escape, use quote, trimming off the quotations
 			 *
@@ -407,7 +408,7 @@
 			 * @return
 			 */
 
-			return $this->pdo->query($query);
+			return $this->pdo->query((string)$query);
 		}
 
 		public function restore($fname = null) {
@@ -450,7 +451,7 @@
 			exec($command);
 		}
 
-		public function fetch_array($query, $n = null) {
+		public function fetch_array($query = null, $n = null) {
 			/**
 			 * Return the results of a query as an associative array
 			 *
@@ -460,7 +461,7 @@
 
 			$data = $this->query($query)->fetchAll(PDO::FETCH_CLASS);
 			if(is_array($data)){
-				return (is_null($n)) ? $data : $data[$n];
+				return (is_int($n)) ? $data[$n] : $data;
 			}
 			return [];
 		}
@@ -475,7 +476,7 @@
 			return $this->fetch_array("SELECT {$these} FROM {$this->escape($table)}");
 		}
 
-		public function array_insert($table, array $content) {
+		public function array_insert($table = null, array $content) {
 			/**
 			 *
 			 * @param string $table, array $content
@@ -490,7 +491,7 @@
 			")->bind($content)->execute();
 		}
 
-		public function sql_table($query, $caption = null) {
+		public function sql_table($query = null, $caption = null) {
 			/**
 			 * Converts a MySQL query into an HTML <table>
 			 * complete with thead and tfoot and optional caption
@@ -544,7 +545,7 @@
 			return null;
 		}
 
-		public function update($table, $name, $value, $where) {
+		public function update($table = null, $name = null, $value = null, $where = null) {
 			/**
 			 * Updates a table according to these arguments
 			 *
@@ -583,7 +584,7 @@
 			return $databases;
 		}
 
-		public function table_headers($table) {
+		public function table_headers($table = null) {
 			/**
 			 * Returns a 0 indexed array of column headers for $table
 			 *
@@ -597,7 +598,7 @@
 			return $headers;
 		}
 
-		public function describe($table) {
+		public function describe($table = null) {
 			/**
 			 * Describe $table, including:
 			 * Field {name}
@@ -609,10 +610,11 @@
 			 * @param string $table
 			 * @return array
 			 */
-			return $this->pdo->query("DESCRIBE `{$this->escape($table)}`")->fetchAll(PDO::FETCH_CLASS);
+
+			return $this->pdo->query("DESCRIBE `{$this->escape($table)}")->fetchAll(PDO::FETCH_CLASS);
 		}
 
-		public function value_properties($query) {
+		public function value_properties($query = null) {
 			/**
 			 * Returns the results of a SQL query as a stdClass object
 			 *
@@ -652,7 +654,7 @@
 			return $values;
 		}
 
-		public function reset_table($table) {
+		public function reset_table($table = null) {
 			/**
 			 * Removes all entries in a table and resets AUTO_INCREMENT to 1
 			 *
