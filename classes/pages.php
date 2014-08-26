@@ -14,12 +14,12 @@
 		public function __construct($url = null) {
 			$this->status = (array_key_exists('REDIRECT_STATUS', $_SERVER)) ? $_SERVER['REDIRECT_STATUS'] : http_response_code();
 			$pdo = _pdo::load();
-			if(is_null($url)) {
-				$this->url = URL;
-				$this->url .= (array_key_exists('REDIRECT_URL', $_SERVER)) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'];
+			if(is_string($url)) {
+				$this->url = $url;
 			}
 			else {
-				$this->url = $url;
+				$this->url = URL;
+				$this->url .= (array_key_exists('REDIRECT_URL', $_SERVER)) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'];
 			}
 
 			$this->parsed = (object)parse_url(strtolower(urldecode($this->url)));
@@ -72,7 +72,7 @@
 					$this->status = 404;
 					$this->description = 'No results for ' . $this->url;
 					$this->keywords = '';
-					$this->title = 'Not found';
+					$this->title = 'Woops! Not found';
 					$template = template::load('error_page');
 					$template->status = 404;
 					$template->home = URL;
