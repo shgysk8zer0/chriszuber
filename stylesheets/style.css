@@ -475,7 +475,7 @@ article > :not(footer) img {
 			padding: 1rem;
 			flex: 0 1 95%;
 		}
-		main article, main .tags {
+		main article, main .tags, main > [data-error] {
 			flex: 0 1 auto;
 			min-width: 100%;
 			order: 1;

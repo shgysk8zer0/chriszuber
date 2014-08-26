@@ -655,7 +655,8 @@ article > :not(footer) img {
     }
 
     main article,
-    main .tags {
+    main .tags,
+    main > [data-error] {
       -webkit-box-flex: 0;
       -webkit-flex: 0 1 auto;
       -ms-flex: 0 1 auto;
