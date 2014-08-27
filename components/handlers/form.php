@@ -700,6 +700,8 @@
 							$resp->notify(
 								'Something went wrong :(',
 								'Double check "Root MySQL User credentials"'
+							)->focus(
+								'form[name="install"] input[name="[root][user]"]'
 							);
 						}
 					}
