@@ -98,7 +98,7 @@
 		}
 
 		protected function http_status(){
-			http_status_code($this->status);
+			http_response_code($this->status);
 			if(!preg_match('/^2[\d]{2}$/', $this->status)) {
 				exit();
 			}
