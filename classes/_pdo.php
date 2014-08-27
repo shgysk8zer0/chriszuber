@@ -11,11 +11,10 @@
 	 * @version 2014-04-19
 	*/
 
-	class _pdo {
+	class _pdo extends pdo_resources {
 		protected $pdo, $prepared, $connect, $data = [];
 		private $query;
 		protected static $instances = [];
-		public $connected;
 
 		public static function load($ini = 'connect') {
 			/**
@@ -51,34 +50,8 @@
 			 * @return void
 			 * @example $pdo = new _pdo()
 			 */
-			if(is_string($ini)) {
-				$this->connect = ini::load($ini);
-			}
-			elseif(is_object($ini)) {
-				$this->connect = $ini;
-			}
 
-			try{
-				if(!(isset($this->connect->user) and isset($this->connect->password))) throw new Exception('Missing credentials to connect to database');
-				$connect_string = (isset($this->connect->type)) ? "{$this->connect->type}:" : 'mysql:';
-				$connect_string .= (isset($this->connect->database)) ?  "dbname={$this->connect->database}" : "dbname={$this->connect->user}";
-				if(isset($this->connect->server)) $connect_string .= ";host={$this->connect->server}";
-				if(isset($this->connect->port) and $this->connect->server !== 'localhost') $connect_string .= ";port={$this->connect->port}";
-				$this->pdo = new PDO($connect_string, $this->connect->user, $this->connect->password);
-				$this->connected = true;
-			}
-			catch(Exception $e) {
-				if(!isset($connect_string)) {
-					$connect_string = 'Connect String not set';
-				}
-				$this->log(__METHOD__, __LINE__, $connect_string . PHP_EOL . $e->getMessage());
-				//exit('Failed to connect to database.');
-				$this->connected = false;
-			}
-		}
-
-		public function log($method = null, $line = null, $message = '') {
-			file_put_contents(BASE . '/' . __CLASS__ . '.log', "Error in $method in line $line: $message" . PHP_EOL, FILE_APPEND | LOCK_EX);
+			parent::__construct($ini);
 		}
 
 		public function __set($key, $value) {
@@ -231,14 +204,9 @@
 			 * @return mixed
 			 */
 
-			$arr = $this->prepared->fetchAll(PDO::FETCH_CLASS);
 			$results = array();
-			foreach($arr as $data) {							//Convert from an associative array to a stdClass object
-				$row = new stdClass();
-				foreach($data as $key => $value) {
-					$row->$key = trim($value);
-				}
-				array_push($results, $row);
+			foreach($this->prepared->fetchAll(PDO::FETCH_CLASS) as $data) {		//Convert from an associative array to a stdClass object
+				$results[] = (object)$data;
 			}
 			//If $n is set, return $results[$n] (row $n of results) Else return all
 			if(!count($results)) return false;
@@ -318,48 +286,6 @@
 			return $arr;
 		}
 
-		public function quote(&$val) {
-			/**
-			 * Makes a string safer to use in a query
-			 * When possible, use prepared statements instead
-			 * It returns the value, but it is also uses
-			 * a pointer, so $str = $pdo->quoute($str)
-			 * has the same effect as $pdo->quote($str)
-			 *
-			 * @param mixed $val
-			 * @return mixed
-			 * @usage
-			 * $str = 'Some string'
-			 * $arr = ['String1', $str];
-			 * $pdo->quote($str)
-			 * $pdo->quote($arr)
-			 */
-
-			if(is_array($val)) {
-				foreach($val as &$v) $this->quote(trim((string)$v));
-			}
-			else $val = $this->pdo->quote(trim((string) $val));
-			return $val;
-		}
-
-		public function escape(&$val) {
-			/**
-			 * For lack of a pdo escape, use quote, trimming off the quotations
-			 *
-			 * @param mixed $str
-			 * @return mixed
-			 */
-
-			if(is_array($val)) {
-				foreach($val as &$v) $this->escape($v);
-			}
-			else {
-				$this->quote($val);
-				$val = preg_replace('/^\'|\'$/', '',(string) $val);
-			}
-			return $val;
-		}
-
 		public function binders(array $arr, $prefix = null, $suffix = null) {
 			/**
 			 * Make setting up prepared statements much easier by
@@ -409,46 +335,6 @@
 			 */
 
 			return $this->pdo->query((string)$query);
-		}
-
-		public function restore($fname = null) {
-			/**
-			 * Restores a MySQL database from file $fname
-			 *
-			 * @param string $fname
-			 * @return self
-			 */
-
-			if(is_null($fname)) {
-				//$connect = ini::load('connect');
-				$fname = $this->connect->database;
-			}
-
-			$sql = file_get_contents(BASE ."/{$fname}.sql");
-			if($sql) {
-				return $this->pdo->query($sql);
-			}
-			else {
-				return false;
-			}
-		}
-
-		public function dump($filename = null) {
-			//$connect = ini::load('connect');
-
-			if(is_null($filename)) {
-				$filename = $this->connect->database;
-			}
-
-			$command = "mysqldump -u {$this->connect->user} -p" . escapeshellcmd($this->connect->password);
-
-			if(isset($this->connect->server) and $this->connect->server !== 'localhost') {
-				$command .= " -h {$this->connect->server}";
-			}
-
-			$command .= " {$this->connect->database} > {$filename}.sql";
-
-			exec($command);
 		}
 
 		public function fetch_array($query = null, $n = null) {
