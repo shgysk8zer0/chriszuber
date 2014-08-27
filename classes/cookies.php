@@ -19,6 +19,14 @@
 
 	class cookies {
 		public $expires, $path, $domain, $secure, $httponly;
+		private static $instance = null;
+
+		public static function load($expires = 0, $path = null, $domain = null, $secure = null, $httponly = null) {
+			if(is_null(self::$instance)) {
+				self::$instance = new self($expires = 0, $path = null, $domain = null, $secure = null, $httponly = null);
+			}
+			return self::$instance;
+		}
 
 		public function __construct($expires = 0, $path = null, $domain = null, $secure = null, $httponly = null){
 			/**
