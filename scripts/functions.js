@@ -585,7 +585,7 @@ function ajax(data) {
 						resp.innerHTML = req.response.trim();
 					} break;
 					default: {
-						fail(Error('Unsupported Content-Type in response'));
+						resp = req.response.trim();
 					}
 				}
 				progress.parentElement.removeChild(progress);
