@@ -10,12 +10,12 @@
 	if (!defined('PHP_VERSION_ID')) {
 		$version = explode('.', PHP_VERSION);
 		define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
-	}
 
-	if (PHP_VERSION_ID < 50207) {
-		define('PHP_MAJOR_VERSION',   $version[0]);
-		define('PHP_MINOR_VERSION',   $version[1]);
-		define('PHP_RELEASE_VERSION', $version[2]);
+		if (PHP_VERSION_ID < 50207) {
+			define('PHP_MAJOR_VERSION',   $version[0]);
+			define('PHP_MINOR_VERSION',   $version[1]);
+			define('PHP_RELEASE_VERSION', $version[2]);
+		}
 	}
 
 	spl_autoload_register('load_class');				 //Load class by naming it
@@ -163,7 +163,7 @@
 		 * @usage load(string | array[string | array[, ...]]*)
 		 */
 
-		static $DB, $load, $settings, $session, $login;
+		static $DB, $load, $settings, $session, $login, $cookie;
 		$found = true;
 
 		if(is_null($load)) {
@@ -171,7 +171,8 @@
 			$settings = ini::load('settings');
 			$session = session::load();
 			$login = login::load();
-			$load = function($fname, &$found) use ($DB, $settings, &$session, $login) {
+			$cookie = cookies::load();
+			$load = function($fname, &$found) use ($DB, $settings, $session, $cookie, $login) {
 				(include(BASE . "/components/{$fname}.php")) or $found = false;
 			};
 		}
@@ -987,7 +988,26 @@
 	}
 
 	function module_test() {
+		/**
+		 * Get required Apache & PHP modules from settings.ini,
+		 * compare against loaded modules, and return the difference
+		 *
+		 * @param void
+		 * @return mixed (null if all loaded, otherwise object of two arrays)
+		 * @example
+		 * $missing = module_test()
+		 * if(is_null($missing))...
+		 * else ...
+		 */
+
 		$settings = ini::load('settings');
+
+
+		/**
+		 * First, check if the directives are set in settings.ini
+		 * If not, return null
+		 */
+
 		if(
 			!isset($settings->php_modules)
 			or !isset($settings->apache_modules)
@@ -996,17 +1016,25 @@
 		}
 
 		$missing = new stdClass();
-		$php_required = explode(',', str_replace(' ', null, $settings->php_modules));
-		$apache_required = explode(',', str_replace(' ', null, $settings->apache_modules));
-		$php_modules = get_loaded_extensions();
-		$apache_modules = apache_get_modules();
-		$missing->php = array_diff($php_required, $php_modules);
-		$missing->apache = array_diff($apache_required, $apache_modules);
 
-		if(count($missing->php) or count($missing->apache)) {
+		/**
+		 * Missing PHP modules are the difference between an
+		 * arrray of required modules and the array of loaded modules
+		 */
+
+		$missing->php = array_diff(
+			explode(',', str_replace(' ', null, $settings->php_modules)),		//Convert the list in settings.ini to an array
+			get_loaded_extensions()												//Get array of loaded PHP modules
+		);
+		$missing->apache = array_diff(
+			explode(',', str_replace(' ', null, $settings->apache_modules)),	//Convert the list in settings.ini to an array
+			apache_get_modules()												//Get array of loaded Apache modules
+		);
+
+		if(count($missing->php) or count($missing->apache)) {					//If either is not empty, return $missing
 			return $missing;
 		}
-		else {
+		else {																	//Otherwise return null
 			return null;
 		}
 	}
