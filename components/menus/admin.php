@@ -33,12 +33,12 @@
 	</menu>
 	<?php if($login->role === 'admin'):?>
 	<menu label="PHP Defaults">
-			<menuitem type="command" label="_SERVER" icon="images/icons/coffee.svgz" data-request="debug=_SERVER&nonce=<?=$session->nonce?>" data-cache="debug_server"></menuitem>
+			<menuitem type="command" label="_SERVER" icon="images/icons/coffee.svgz" data-request="debug=_SERVER&nonce=<?=$session->nonce?>"></menuitem>
 			<menuitem type="command" label="_SESSION" icon="images/icons/coffee.svgz" data-request="debug=_SESSION&nonce=<?=$session->nonce?>"></menuitem>
 			<menuitem type="command" label="_COOKIE" icon="images/icons/coffee.svgz" data-request="debug=_COOKIE&nonce=<?=$session->nonce?>"></menuitem>
-			<menuitem type="command" label="Headers" icon="images/icons/coffee.svgz" data-request="debug=headers&nonce=<?=$session->nonce?>" data-cache="debug_headers"></menuitem>
-			<menuitem type="command" label="PHP Extensions" icon="images/icons/coffee.svgz" data-request="debug=extensions&nonce=<?=$session->nonce?>" data-cache="debug_extensions"></menuitem>
-			<menuitem type="command" label="Apache Modules" icon="images/icons/coffee.svgz" data-request="debug=modules&nonce=<?=$session->nonce?>" data-cache="debug_modules"></menuitem>
+			<menuitem type="command" label="Headers" icon="images/icons/coffee.svgz" data-request="debug=headers&nonce=<?=$session->nonce?>"></menuitem>
+			<menuitem type="command" label="PHP Extensions" icon="images/icons/coffee.svgz" data-request="debug=extensions&nonce=<?=$session->nonce?>"></menuitem>
+			<menuitem type="command" label="Apache Modules" icon="images/icons/coffee.svgz" data-request="debug=modules&nonce=<?=$session->nonce?>"></menuitem>
 		</menu>
 	<menu label="Manage Database">
 		<menuitem type="command" label="Restore Database" icon="images/icons/db.svgz" data-request="action=restore database&nonce=<?=$session->nonce?>" data-confirm="Are you sure you want to restore the database from <?=$connect->database?>.sql? All changes made since the last mysqldump will be reverted."></menuitem>
