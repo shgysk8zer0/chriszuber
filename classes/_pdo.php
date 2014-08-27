@@ -662,7 +662,8 @@
 			 * @return void
 			 */
 
-			$table = $this->escape($table);
+			$this->escape($table);
+
 			$this->query("DELETE FROM `{$table}`");
 			$this->query("ALTER TABLE `{$table}` AUTO_INCREMENT = 1");
 			return $this;
