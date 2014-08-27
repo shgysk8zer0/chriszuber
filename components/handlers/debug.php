@@ -9,25 +9,37 @@
 			$resp->info([
 				'HTTP Headers' => headers_list()
 			]);
-		}break;
+		} break;
 
 		case 'extensions': {
 			$resp->info([
 				'PHP extensions' => get_loaded_extensions()
 			]);
-		}break;
+		} break;
 
 		case 'modules': {
 			$resp->info([
 				'Apache Modules' => apache_get_modules()
 			]);
-		}break;
+		} break;
 
-		default: {
+		case '_SERVER': {
 			$resp->info([
-				$_POST['debug'] => $$_POST['debug']
+				'$_SERVER' => $_SERVER
 			]);
-		}
+		} break;
+
+		case '_SESSION': {
+			$resp->info([
+				'$_SESSION' => $_SESSION
+			]);
+		} break;
+
+		case '_COOKIES': {
+			$resp->info([
+				'$_COOKIES' => $_COOKIE
+			]);
+		} break;
 	}
 	$resp->notify(
 		'Debug info sent to console.info',
