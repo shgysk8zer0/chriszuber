@@ -66,7 +66,7 @@
 			 * @usage $template = new template($template_file)
 			 */
 
-			$this->path = BASE . '/components/templates/' . (string)$tpl . '.tpl';
+			$this->path = (defined('THEME')) ? BASE . '/components/' . THEME .'/templates/' . (string)$tpl . '.tpl' : BASE . '/components/templates/' . (string)$tpl . '.tpl';
 			$this->seperator = (string)$seperator;
 			$this->minify_results = $minify;
 			if(file_exists($this->path)) {

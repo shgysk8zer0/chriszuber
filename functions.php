@@ -172,7 +172,9 @@
 			$session = session::load();
 			$login = login::load();
 			$cookie = cookies::load();
-			$load = function($fname, &$found) use ($DB, $settings, $session, $cookie, $login) {
+			$load = (defined('THEME')) ? function($fname, &$found) use ($DB, $settings, $session, $cookie, $login) {
+				(include(BASE . "/components/" . THEME . DIRECTORY_SEPARATOR . $fname .".php")) or $found = false;
+			} : function($fname, &$found) use ($DB, $settings, $session, $cookie, $login) {
 				(include(BASE . "/components/{$fname}.php")) or $found = false;
 			};
 		}
