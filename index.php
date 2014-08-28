@@ -18,6 +18,10 @@
 	$session = session::load();
 	$settings = ini::load('settings');
 
+	if(!defined('THEME')) {
+		define('THEME', 'default');
+	}
+
 	if(isset($session->logged_in) and $session->logged_in) { //Check login if session
 		$login->setUser($session->user)->setPassword($session->password)->setRole($session->role)->setLogged_In($session->logged_in);
 	}
