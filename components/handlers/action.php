@@ -59,10 +59,13 @@
 			require_login('admin');
 
 			$connect = ini::load('connect');
-			$DB->dump();
-			$resp->notify(
+			($DB->dump()) ? $resp->notify(
 				'Success',
 				"The database has been backed up to {$connect->database}.sql",
+				'images/icons/db.png'
+			) : $resp->notify(
+				"Unable to backup to {$connect->database}.sql",
+				'Check file permissions',
 				'images/icons/db.png'
 			);
 		} break;
