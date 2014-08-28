@@ -18,7 +18,8 @@
 		}
 	}
 
-	spl_autoload_register('load_class');				 //Load class by naming it
+	spl_autoload_extensions('.php');
+	spl_autoload_register();				 //Load class by naming it
 
 	init();
 
@@ -63,17 +64,21 @@
 			set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
 		}
 
-		if(isset($settings->time_zone)) {
-			date_default_timezone_set($settings->time_zone);
-		}
-
-		$error_handler = (isset($settings->error_handler)) ? $settings->error_handler : 'error_reporter_class';
-
 		if(isset($settings->requires)) {
 			foreach(explode(',', $settings->requires) as $file) {
 				require_once(__DIR__ . '/' . trim($file));
 			}
 		}
+
+		if(isset($settings->time_zone)) {
+			date_default_timezone_set($settings->time_zone);
+		}
+
+		if(isset($settings->autoloader)) {
+			spl_autoload_register($settings->autoloader);
+		}
+
+		$error_handler = (isset($settings->error_handler)) ? $settings->error_handler : 'error_reporter_class';
 
 		//Error Reporting Levels: http://us3.php.net/manual/en/errorfunc.constants.php
 		if(isset($settings->debug)) {
@@ -199,23 +204,6 @@
 		ob_start();
 		load(func_get_args());
 		return ob_get_clean();
-	}
-
-	function load_class($class = null) {
-		/**
-		 * Loads a class script from wherever found in include_path
-		 * Does not specify a default path to allow classes to be contained in
-		 * more than a single directory
-		 *
-		 * Automatically adds the '.php' file extention, so don't use it when calling
-		 *
-		 * @param string $class
-		 * @return void
-		 * @example load_class('my_class')
-		 * @example new my_class() //Using autoload
-		 */
-
-		require_once((string)$class . '.php');
 	}
 
 	function strip_enclosing_tag($html = null) {
