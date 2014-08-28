@@ -33,9 +33,7 @@
 		 */
 
 		//Include current directory, config/, and classes/ directories in include path
-		set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . PATH_SEPARATOR . __DIR__  . DIRECTORY_SEPARATOR . 'config' . PATH_SEPARATOR . __DIR__  . DIRECTORY_SEPARATOR . 'classes');
-
-		date_default_timezone_set('America/Los_Angeles');
+		set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . PATH_SEPARATOR . __DIR__  . DIRECTORY_SEPARATOR . 'config' . PATH_SEPARATOR . __DIR__ . DIRECTORY_SEPARATOR . 'classes');
 
 		if(file_exists('./config/define.ini')) {
 			foreach(parse_ini_file('./config/define.ini') as $key => $value) {
@@ -63,6 +61,10 @@
 		$settings = ini::load((string)$settings_file);
 		if(isset($settings->path)) {
 			set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
+		}
+
+		if(isset($settings->time_zone)) {
+			date_default_timezone_set($settings->time_zone);
 		}
 
 		$error_handler = (isset($settings->error_handler)) ? $settings->error_handler : 'error_reporter_class';
