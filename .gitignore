@@ -25,6 +25,9 @@
 !/stylesheets/
 !/components/
 !/scripts/
+!/images/
+!/config/
+!/fonts/
 !/scripts/functions.js
 !/scripts/custom.js
 !/scripts/polyfills.js
@@ -49,6 +52,7 @@
 
 # Always Ignore
 **connect.ini
+/images/contact/
 **.bak
 **.save
 **~
