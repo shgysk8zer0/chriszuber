@@ -449,7 +449,6 @@ article header + :first-of-type {
 article > :not(footer) img {
 	border: 0.2rem outset var(--primary-color);
 	box-shadow: 0.3rem 0.3rem 0.5rem var(--shadow);
-	margin: 1.5rem;
 	transition: all 500ms;
 }
 @supports((display: flex) or (display: -webkit-flex) or (display: -ms-flex)) {
