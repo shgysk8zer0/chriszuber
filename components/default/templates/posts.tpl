@@ -1,3 +1,15 @@
+<!--
+	Template for posts/articles
+
+	@param string %TITLE%
+	@param string %TAGS%
+	@param string %CONTENT%
+	@param string %AUTHOR%
+	@param string %AUTHOR_URL%
+	@param string %DATE%
+	@param string %DATETIME%
+	@param string %HOME%
+-->
 		<article>
 			<header>
 				<h1 itemprop="headline">%TITLE%</h1>
