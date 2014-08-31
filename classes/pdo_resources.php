@@ -52,6 +52,24 @@
 			return $str;
 		}
 
+		public function prepare_keys(array $arr) {
+			/**
+			 * Converts array_keys to something safe for
+			 * queries
+			 *
+			 * @param array $arr
+			 * @return array
+			 */
+
+			$keys = array_keys($arr);
+			$key_walker = function(&$key) {
+				$this->escape($key);
+				$key = "`{$key}`";
+			};
+			array_walk($keys, $key_walker);
+			return array_combine($keys, array_values($arr));
+		}
+
 		public function restore($fname = null) {
 			return $this->pdo->restore($fname);
 		}

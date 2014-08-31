@@ -227,25 +227,6 @@
 			unset($this);
 		}
 
-		public function prepare_keys(array $arr) {
-			/**
-			 * Converts array_keys to something safe for
-			 * queries
-			 *
-			 * @param array $arr
-			 * @return array
-			 */
-
-			$keys = array_keys($arr);
-			$key_walker = function(&$key) {
-				$this->escape($key);
-				$key = "`{$key}`";
-			};
-			array_walk($keys, $key_walker);
-			$arr = array_combine($keys, array_values($arr));
-			return $arr;
-		}
-
 		public function prepare_key_value(array &$arr) {
 			/**
 			 * While this works with multi-dimensional
@@ -257,6 +238,7 @@
 			 * so $arr = $pdo->prepare_key_value($arr) is the same as
 			 * $$pdo->prepare_key_value($arr)
 			 *
+			 * @depreciated
 			 * @param array $arr
 			 * @return array
 			 * @usage $arr = [
@@ -303,6 +285,7 @@
 			 * $binds->values is array_values($arr) {original values
 			 * without the keys}
 			 *
+			 * @depreciated
 			 * @param array $arr
 			 * @param string $prefix
 			 * @param string $suffix
