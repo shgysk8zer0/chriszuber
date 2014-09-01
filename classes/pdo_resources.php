@@ -77,5 +77,29 @@
 		public function dump($filename = null) {
 			return $this->pdo->dump($filename);
 		}
+
+		public function columns_from(array $array) {
+			/**
+			 * Converts array keys into MySQL columns
+			 * [
+			 * 	'user' => 'me',
+			 * 	'password' => 'password'
+			 * ]
+			 * becomes '`user`, `password`'
+			 *
+			 * @param array $array
+			 * @return string
+			 */
+
+			$keys = array_keys($array);
+			$key_walker = function(&$key) {
+				$this->escape($key);
+				$key = "`{$key}`";
+			};
+			array_walk($keys, $key_walker);
+
+			return join(', ', $keys);
+		}
 	}
+
 ?>
