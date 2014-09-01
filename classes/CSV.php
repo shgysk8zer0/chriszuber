@@ -40,7 +40,7 @@
 	 * )->next_row();
 	 */
 
-	class CSV {
+	class CSV implements magic_methods {
 		private $data, $fields, $row, $empty_row, $csv;
 		public $delimiter, $enclosure, $print_headers;
 
@@ -108,6 +108,14 @@
 			else {
 				return '';
 			}
+		}
+
+		public function __isset($field) {
+			return array_key_exists($field, $this->data[$this->row]);
+		}
+
+		public function __unset($field) {
+			unset($this->data[$this->row][$field]);
 		}
 
 		public function __call($field, array $arguments) {

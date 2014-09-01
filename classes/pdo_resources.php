@@ -13,26 +13,121 @@
 	 * @version 2014-08-27
 	*/
 
-	class pdo_resources {
+	abstract class pdo_resources implements magic_methods {
 		public $connected;
+		protected $pdo, $data = [];
+		abstract public static function load($con);
 
-		protected function __construct($ini = 'connect') {
+		protected function __construct($con = 'connect') {
 			/**
 			 * @method __construct
 			 * @desc
 			 * Gets database connection info from /connect.ini (using ini::load)
 			 * The default ini file to use is connect, but can be passed another
-			 * in the $ini argument.
+			 * in the $con argument.
 			 *
 			 * Uses that data to create a new PHP Data Object
 			 *
-			 * @param string $ini (.ini file to use for database credentials)
+			 * @param string $con (.ini file to use for database credentials)
 			 * @return void
-			 * @example parent::__construct($ini)
+			 * @example parent::__construct($con)
 			 */
 
-			$this->pdo = (is_string($ini)) ? pdo_connect::load($ini) : new pdo_connect($ini);
+			$this->pdo = (is_string($con)) ? pdo_connect::load($con) : new pdo_connect($con);
 			$this->connected = $this->pdo->connected;
+		}
+
+		public function __set($key, $value) {
+			/**
+			 * @method __set
+			 * Setter method for the class.
+			 *
+			 * @param string $key
+			 * @param mixed $value
+			 * @return void
+			 * @example "$pdo->key = $value"
+			 */
+
+			$key = str_replace(' ', '-', (string)$key);
+			$this->data[$key] = $value;
+		}
+
+		public function __get($key) {
+			/**
+			 * The getter method for the class.
+			 *
+			 * @param string $key
+			 * @return mixed
+			 * @example "$pdo->key" Returns $value
+			 */
+
+			$key = str_replace(' ', '-', (string)$key);
+			if(array_key_exists($key, $this->data)) {
+				return $this->data[$key];
+			}
+			return false;
+		}
+
+		public function __isset($key) {
+			/**
+			 * @param string $key
+			 * @return boolean
+			 * @example "isset({$pdo->key})"
+			 */
+
+			return array_key_exists(str_replace(' ', '-', $key), $this->data);
+		}
+
+		public function __unset($key) {
+			/**
+			 * Removes an index from the array.
+			 *
+			 * @param string $key
+			 * @return void
+			 * @example "unset($pdo->key)"
+			 */
+
+			unset($this->data[str_replace(' ', '-', $key)]);
+		}
+
+		public function __call($name, array $arguments) {
+			/**
+			 * Chained magic getter and setter
+			 * @param string $name, array $arguments
+			 * @example "$pdo->[getName|setName]($value)"
+			 */
+
+			$name = strtolower((string)$name);
+			$act = substr($name, 0, 3);
+			$key = str_replace(' ', '-', substr($name, 3));
+			switch($act) {
+				case 'get': {
+					if(array_key_exists($key, $this->data)) {
+						return $this->data[$key];
+					}
+					else{
+						return false;
+					}
+				} break;
+				case 'set': {
+					$this->data[$key] = $arguments[0];
+					return $this;
+				} break;
+				default: {
+					throw new Exception("Unknown method: {$name} in " . __CLASS__ .'->' . __METHOD__);
+				}
+			}
+		}
+
+		public function keys() {
+			/**
+			 * Show all keys for entries in $this->data array
+			 *
+			 * @param void
+			 * @return array
+			 */
+
+			return array_keys($this->data);
 		}
 
 		public function escape(&$val) {
