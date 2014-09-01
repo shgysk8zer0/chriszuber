@@ -108,6 +108,8 @@
 						$this->data->title
 					)->home(
 						URL
+					)->comments(
+						null
 					);
 
 
