@@ -206,6 +206,21 @@
 		return ob_get_clean();
 	}
 
+	function json_decode_file($filename = null, $assoc = false, $depth = 512, $options = 0) {
+		/**
+		 * Reads a file and returns a josn_decoded object
+		 *
+		 * @link http://php.net/manual/en/function.json-decode.php
+		 * @param string $filename
+		 * @param bool $assoc
+		 * @param int $depth
+		 * @param int $options
+		 * @return stdClass Object
+		 */
+
+		return json_decode(file_get_contents( BASE . "/{$filename}.json"), $assoc, $depth, $options);
+	}
+
 	function strip_enclosing_tag($html = null) {
 		/**
 		 * strips leading trailing and closing tags, including leading
