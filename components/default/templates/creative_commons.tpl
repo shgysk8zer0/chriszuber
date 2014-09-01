@@ -1,3 +1,14 @@
+<!--
+	Creative Commons License Template
+
+	@link http://creativecommons.org/choose/
+	@param string %TITLE%
+	@param string %AUTHOR_URL%
+	@param string %AUTHOR%
+	@param string %DATETIME%
+	@param string %DATE%
+-->
+
 <details>
 	<summary>
 		<img alt="Creative Commons License" src="images/logos/CreativeCommons.svgz" />

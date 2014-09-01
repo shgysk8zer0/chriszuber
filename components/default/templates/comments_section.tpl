@@ -1,4 +1,6 @@
 <!--
+	Template for container for comments
+
 	@param string %TITLE%
 	@param string %HOME%
 	@param string %COMMENTS%
