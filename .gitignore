@@ -52,6 +52,7 @@
 
 # Always Ignore
 **connect.ini
+**connect.json
 /images/contact/
 **.bak
 **.save
