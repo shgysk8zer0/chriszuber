@@ -98,11 +98,10 @@
 
 			switch($this->type) {
 				case 'posts': {
-					$template = template::load('posts');
+					$post = template::load('posts');
 					$comments = template::load('comments');
 					$comments_section = template::load('comments_section');
 					$license = template::load('creative_commons');
-					$time = new simple_date($this->data->created);
 
 					$comments_section->title(
 						$this->data->title
@@ -135,10 +134,12 @@
 					}
 
 					foreach(explode(',', $this->data->keywords) as $tag) {
-						$template->tags .= '<a href="' . URL . '/tags/' . urlencode(trim($tag)) . '" rel="tag">' . trim($tag) . "</a>";
+						$post->tags .= '<a href="' . URL . '/tags/' . urlencode(trim($tag)) . '" rel="tag">' . trim($tag) . "</a>";
 					}
 
-					$template->title(
+					$time = new simple_date($this->data->created);
+
+					$this->content = $post->title(
 						$this->data->title
 					)->content(
 						$this->data->content
@@ -160,9 +161,7 @@
 						)->datetime(
 							$time->out()
 						)->out()
-					);
-
-					$this->content = $template->out();
+					)->out();;
 
 				} break;
 
