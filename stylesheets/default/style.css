@@ -413,7 +413,7 @@ main aside {
 	display: inline-block;
 	*display: inline;
 	*zoom: 1;
-	width: 33%;
+	width: 30%;
 	float: left;
 }
 article header, aside h3 {
@@ -486,25 +486,6 @@ article > :not(footer) img {
 		}
 	}
 }
-@media screen and (max-width: 999px) {
-	@supports((display: flexy)) {
-		main {
-			flex-direction: column;
-			padding: 1rem;
-			flex: 0 1 95%;
-		}
-		main article, main .tags {
-			flex: 0 1 auto;
-			min-width: 100%;
-			order: 1;
-		}
-		main aside {
-			flex: 0 1 auto;
-			min-width: 100%;
-			order: 2;
-		}
-	}
-}
 aside h3 {
 	padding: 0.2rem;
 	border-bottom: 0.2rem solid var(--primary-color);
@@ -530,7 +511,6 @@ aside > :not(h3) {
 	background-image: linear-gradient(whitesmoke , #ddd);
 	border: 0.2rem outset var(--border-color);
 	border-radius: 1rem 1rem 0 0;
-	margin: 2rem 0.2rem;
 	box-shadow: -1rem 1rem 1rem var(--shadow), 0 0 1rem 0 var(--shadow) inset;
 }
 body > footer {
