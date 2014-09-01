@@ -8,7 +8,7 @@
 <form name="%NAME%" action="%ACTION%" method="%METHOD%">
 	<fieldset form="%NAME%">
 		%INPUTS%
+		<button type="submit" title="Submit" data-icon="."></button>
+		<button type="reset" title="Clear From" data-icon="*"></button>
 	</fieldset>
-	<button type="submit" title="Submit" data-icon="."></button>
-	<button type="reset" title="Clear From" data-icon="*"></button>
 </form>

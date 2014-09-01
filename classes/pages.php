@@ -100,30 +100,18 @@
 				case 'posts': {
 					$template = template::load('posts');
 					$comments = template::load('comments');
+					$comments_section = template::load('comments_section');
+					$license = template::load('creative_commons');
 					$time = new simple_date($this->data->created);
 
-					foreach(explode(',', $this->data->keywords) as $tag) {
-						$template->tags .= '<a href="' . URL . '/tags/' . urlencode(trim($tag)) . '" rel="tag">' . trim($tag) . "</a>";
-					}
-					$template->title(
+					$comments_section->title(
 						$this->data->title
-					)->content(
-						$this->data->content
-					)->author(
-						$this->data->author
-					)->author_url(
-						$this->data->author_url
-					)->date(
-						$time->out('m/d/Y')
-					)->datetime(
-						$time->out()
 					)->home(
 						URL
 					)->comments(
-						''
-					)->url(
-						$this->data->url
+						null
 					);
+
 
 					foreach($DB->prepare("
 						SELECT
@@ -137,7 +125,7 @@
 						'post' => $this->data->url
 					])->execute()->get_results() as $comment) {
 						$time = new simple_date($comment->time);
-						$template->comments .= $comments->comment(
+						$comments_section->comments .= $comments->comment(
 							$comment->comment
 						)->author(
 							(strlen($comment->author_url)) ? "<a href=\"{$comment->author_url}\" target=\"_blank\">{$comment->author}</a>" : $comment->author
@@ -145,6 +133,34 @@
 							$time->out('l, F jS Y h:i A')
 						)->out();
 					}
+
+					foreach(explode(',', $this->data->keywords) as $tag) {
+						$template->tags .= '<a href="' . URL . '/tags/' . urlencode(trim($tag)) . '" rel="tag">' . trim($tag) . "</a>";
+					}
+
+					$template->title(
+						$this->data->title
+					)->content(
+						$this->data->content
+					)->home(
+						URL
+					)->comments(
+						$comments_section->out()
+					)->url(
+						$this->data->url
+					)->license(
+						$license->title(
+							$this->data->title
+						)->author(
+							$this->data->author
+						)->author_url(
+							$this->data->author_url
+						)->date(
+							$time->out('m/d/Y')
+						)->datetime(
+							$time->out()
+						)->out()
+					);
 
 					$this->content = $template->out();
 
