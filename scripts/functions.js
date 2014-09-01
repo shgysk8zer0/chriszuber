@@ -10,7 +10,7 @@ if (!window.Element) {
 if(!('showModal' in Element.prototype)) {
 	Element.prototype.show = function() {
 		this.setAttribute('open', '');
-	}
+	};
 	Element.prototype.showModal = function() {
 		var backdrop = document.createElement('div');
 		backdrop.classList.add('backdrop');
@@ -20,14 +20,14 @@ if(!('showModal' in Element.prototype)) {
 		this.after(backdrop);
 		this.classList.add('modal');
 		this.show();
-	}
+	};
 	Element.prototype.close = function() {
 		this.removeAttribute('open');
 		this.classList.remove('modal');
 		if(this.nextElementSibling.classList.contains('backdrop')) {
-			this.nextElementSibling.parentElement.removeChild(this.nextElementSibling)
+			this.nextElementSibling.parentElement.removeChild(this.nextElementSibling);
 		}
-	}
+	};
 }
 (function(root) {
 	if (!root.CSS) {
@@ -44,7 +44,7 @@ if(!('showModal' in Element.prototype)) {
 			var el = document.createElement('div');
 			el.style = prop + ":" + value;
 			return (getComputedStyle(el)[prop] === value);
-		}
+		};
 	}
 	if (!CSS.escape) {
 		CSS.escape = function(value) {
@@ -86,11 +86,11 @@ if(!('showModal' in Element.prototype)) {
 		var el = document.createElement('div');
 		el.style = prop + ":" + value;
 		return (getComputedStyle(el)[prop] === value);
-	}
+	};
 }(typeof global != 'undefined' ? global : this));
 DOMTokenList.prototype.pick = function(cname1, cname2, condition) {
 	(condition) ? this.add(cname1) : this.add(cname2);
-}
+};
 DOMTokenList.prototype.swap = function(cname1, cname2) {
 	if(this.contains(cname1)) {
 		this.remove(cname1);
@@ -100,7 +100,7 @@ DOMTokenList.prototype.swap = function(cname1, cname2) {
 		this.remove(cname2);
 		this.add(cname1);
 	}
-}
+};
 if (!Element.prototype.matches) {
 	/*Check if Element matches a given CSS selector*/
 	Element.prototype.matches = function (sel) {
@@ -124,7 +124,7 @@ if (!Element.prototype.matches) {
 		catch(e) {
 			return ($(sel) .indexOf(this) !== -1);
 		}
-	}
+	};
 }
 Array.prototype.unique = function() {
 	return this.filter(
@@ -132,10 +132,10 @@ Array.prototype.unique = function() {
 			return (i <= arr.indexOf(val));
 		}
 	);
-}
+};
 Array.prototype.end = function() {
 	return this[this.length - 1];
-}
+};
 HTMLCollection.prototype.indexOf = Array.prototype.indexOf;
 function selection() {
 	var selected = getSelection();
@@ -151,10 +151,10 @@ function selection() {
 selection.prototype.constructor = selection;
 selection.prototype.replace = function(rep) {
 	this.parent.innerHTML = this.before + rep + this.after;
-}
+};
 RegExp.prototype.escape = function(){
 	return this.source.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-}
+};
 /*===========================De-Prefix several JavaScript methods==========================================================================*/
 
 if (!('Notification' in window)) {
@@ -172,7 +172,7 @@ if (!('indexedDB' in window)) {
 if (!('hidden' in document)) {
 	document.hidden = function () {
 		return document.webkitHidden || document.msHidden || document.mozHidden || false;
-	}
+	};
 }
 if (!('visibilityState' in document)) {
 	document.visibilityState = document.webkitVisibilityState || document.msVisibilityState || document.mozVisibilityState || false;
@@ -191,20 +191,20 @@ if (!('cancelFullScreen' in document)) {
 if (!('requestFullScreen' in document)) {
 	Element.prototype.requestFullScreen = function () {
 		return this.mozRequestFullScreen() || this.webkitRequestFullScreen() || false;
-	}
+	};
 }
 /*===============================================================================================================================================*/
 Object.prototype.isaN = function () {
 	return parseFloat(this) == this;
-}
+};
 Object.prototype.camelCase = function () {
 	return this.toLowerCase() .replace(/\ /g, '-') .replace(/-(.)/g, function (match, group1) {
 		return group1.toUpperCase();
 	});
-}
+};
 Element.prototype.delete = function() {
 	this.parentElement.removeChild(this);
-}
+};
 Element.prototype.after = function () {
 	for(var i = 0; i < arguments.length; i++) {
 		(typeof arguments[i] === 'string') ? this.insertAdjacentHTML('afterend', arguments[i]) : this.parentElement.insertBefore(arguments[i], this.nextSibling);
@@ -216,32 +216,32 @@ Element.prototype.before = function() {
 		(typeof arguments[i] === 'string') ? this.insertAdjacentHTML('beforebegin', arguments[i]) : this.parentElement.insertBefore(arguments[i], this);
 	}
 	return this;
-}
+};
 Element.prototype.prepend = function() {
 	for(var i = 0; i < arguments.length; i++) {
 		(typeof arguments[i] === 'string') ? this.insertAdjacentHTML('afterbegin', arguments[i]) : this.insertBefore(arguments[i], this.firstChild);
 	}
 	return this;
-}
+};
 Element.prototype.append = function() {
 	for(var i = 0; i < arguments.length; i++) {
 		(typeof arguments[i] === 'string') ? this.insertAdjacentHTML('beforeend', arguments[i]) : this.appendChild(arguments[i]);
 	}
 	return this;
-}
+};
 Element.prototype.clone = function() {
 	return this.cloneNode(true);
-}
+};
 Element.prototype.next = function (){
 	return this.nextSibling;
-}
+};
 Element.prototype.prev = function (){
 	return this.previousSibling;
-}
+};
 Element.prototype.html = function(html) {
 	this.innerHTML = html;
 	return this;
-}
+};
 Element.prototype.ancestor = function (sel) {
 	if(this.parentElement.matches(sel)) {
 		return this.parentElement;
@@ -252,7 +252,7 @@ Element.prototype.ancestor = function (sel) {
 	else {
 		return this.parentElement.ancestor(sel);
 	}
-}
+};
 Element.prototype.data = function(set, value) {
 	var val = null;
 	if(supports('dataset')){
@@ -262,21 +262,21 @@ Element.prototype.data = function(set, value) {
 		(typeof value !== 'undefined') ? this.setAttribute('data-' + set, value): val = this.getAttribute('data-' + set);
 	}
 	return val;
-}
+};
 Element.prototype.attr = function(attr, val) {
 	switch(typeof val) {
-		case 'string':
+		case 'string': {
 			this.setAttribute(attr, val);
 			return this;
-			break;
-		case 'boolean':
+		} break;
+		case 'boolean': {
 			(val) ? this.setAttribute(attr, '') : this.removeAttribute(attr);
 			return this;
-			break;
+			} break;
 		default:
 			return this.getAttribute(attr);
 	}
-}
+};
 Element.prototype.uniqueSelector = function () {
 	if (this.nodeType !== 1) {
 		return null;
@@ -296,17 +296,17 @@ Element.prototype.uniqueSelector = function () {
 		current = current.parentElement;
 	}
 	return path.reverse() .join(' > ');
-}
+};
 Element.prototype.ajax = function(args) {
 	ajax(args).then(
 		this.html.bind(this),
 		console.error
 	);
 	return this;
-}
+};
 Element.prototype.wordCount = function() {
 	return this.textContent.split(' ').length;
-}
+};
 function notify(options) {
 	/*Creates a notification, with alert fallback*/
 	var notification;
@@ -340,11 +340,11 @@ function notify(options) {
 		(!!options.onshow) ? notification.onshow = options.onshow : null;
 		(!!options.onclose) ? notification.onclose = options.onclose : null;
 		(!!options.onerror) ? notification.onerror = options.onerror : notification.onerror = function (error) {
-			console.error(error)
+			console.error(error);
 		};
 		return notification;
 	}
-};
+}
 /*AppCache updater*/
 /*$(window) .load(function (e) { *//*Check for appCache updates if there is a manifest set*/
 window.addEventListener('load', function () {
@@ -370,7 +370,7 @@ function getLocation(options) {
 		options = {};
 	}
 	return new Promise(function(success, fail){
-		if (!'geolocation' in navigator) {
+		if (!('geolocation' in navigator)) {
 			fail('Your browser does not support GeoLocation');
 		}
 		navigator.geolocation.getCurrentPosition(success, fail, options);
@@ -400,37 +400,37 @@ function supports(type) {
 	style = document.documentElement.style;
 	supportsTest:
 	switch (type) {
-		case 'queryselectorall':
+		case 'queryselectorall': {
 			supports = ('querySelectorAll' in document);
-			break;
-		case 'svg':
+		} break;
+		case 'svg': {
 			supports = (document.implementation.hasFeature('http://www.w3.org/TR/SVG11/feature#Shape', '1.1'));
-			break;
-		case 'dataset':
+		} break;
+		case 'dataset': {
 			supports = ('DOMStringMap' in window);
-			break;
-		case 'geolocation':
+		} break;
+		case 'geolocation': {
 			supports = ('geolocation' in navigator);
-			break;
-		case 'connectivity':
+		} break;
+		case 'connectivity': {
 			supports = ('onLine' in navigator);
-			break;
-		case 'visibility':
+		} break;
+		case 'visibility': {
 			supports = ('visibilityState' in document) || ('webkitVisibilityState' in document);
-			break;
-		case 'validity':
+		} break;
+		case 'validity': {
 			supports = (!!document.createElement('input') .validity);
-			break;
-		case 'fonts':
+		} break;
+		case 'fonts': {
 			supports = ('CSSFontFaceRule' in window);
-			break;
-		case 'csssupports':
+		} break;
+		case 'csssupports': {
 			supports = ('supports' in CSS);
-			break;
-		case 'listeners':
+		} break;
+		case 'listeners': {
 			supports = ('addEventListener' in window);
-			break;
-		case 'animations':
+		} break;
+		case 'animations': {
 			supports = ((('supports' in CSS) && CSS.supports('animation', 'name') ||
 				CSS.supports('-webkit-animation', 'name')) ||
 				style.animation !== undefined ||
@@ -439,8 +439,8 @@ function supports(type) {
 				style.OAnimation !== undefined ||
 				style.MsAnimationn !== undefined
 			);
-			break;
-		case 'transitions':
+		} break;
+		case 'transitions': {
 			supports = ((('supports' in CSS) && CSS.supports('transition', 'none') ||
 				CSS.supports('-webkit-transition', 'none')) ||
 				style.transition !== undefined ||
@@ -449,33 +449,33 @@ function supports(type) {
 				style.OTransition !== undefined ||
 				style.MsTransition !== undefined
 			);
-			break;
-		case 'cssgradients':
+		} break;
+		case 'cssgradients': {
 			supports = (('supports' in CSS) && CSS.supports('background-image', 'linear-gradient(red,red)')) || (function(){
 				var el = document.createElement('a');
 				el.style.backgroundImage = 'linear-gradient(red, red)';
 				return (!!el.style.backgroundImage);
 			})();
-			break;
-		case 'notifications':
+		} break;
+		case 'notifications':{
 			supports = ('notifications' in window || 'Notification' in window);
-			break;
-		case 'applicationcache':
+		} break;
+		case 'applicationcache': {
 			supports = ('applicationCache' in window);
-			break;
-		case 'indexeddb':
+		} break;
+		case 'indexeddb': {
 			supports = ('indexedDB' in window);
-			break;
+		} break;
 		case 'fullscreen':
 			supports = (!!document.cancelFullScreen);
 			break;
-		case 'workers':
+		case 'workers': {
 			supports = ('Worker' in window);
-			break;
-		case 'promises':
+		} break;
+		case 'promises': {
 			supports = ('Promise' in window);
-			break;
-		case 'cssmatches':
+		} break;
+		case 'cssmatches': {
 			var matches = [':matches', ':any', ':-moz-any', ':-webkit-any'], i;
 			for(i = 0; i < matches.length; i++) {
 				try {
@@ -486,27 +486,28 @@ function supports(type) {
 					null;
 				}
 			}
-			break;
-		case 'ajax':
+		} break;
+		case 'ajax': {
 			supports = ('XMLHttpRequest' in window);
-			break;
-		case 'cssvars':
+		} break;
+		case 'cssvars': {
 			supports = (!!CSS.supports('--x','x'));
-			break;
-		case 'formdata':
+		} break;
+		case 'formdata': {
 			supports = ('FormData' in window);
-			break;
-		case 'classlist' :
+		} break;
+		case 'classlist' : {
 			supports = ('DOMTokenList' in window);
-			break;
-		case 'localstorage':
+		} break;
+		case 'localstorage': {
 			supports = ('localStorage' in window);
-			break;
-		case 'sessionstorage':
+		} break;
+		case 'sessionstorage': {
 			supports = ('sessionStorage' in window);
-			break;
-		default:
+		} break;
+		default: {
 			supports = (document.createElement(type.toLowerCase()) .toString() !== document.createElement('DNE') .toString());
+		}
 	}
 	sessionStorage.setItem('Supports_' + type, supports);
 	return supports;
@@ -517,13 +518,13 @@ Element.prototype.query = function(query) {
 		els.push(this);
 	}
 	this.querySelectorAll(query).forEach(function(el) {
-		els.push(el)
+		els.push(el);
 	});
 	return els;
-}
+};
 Object.prototype.keys = function() {
 	return Object.keys(this) || [];
-}
+};
 function ajax(data) {
 	if ((typeof data.type !== 'undefined' && data.type.toLowerCase() === 'get') && (typeof data.request === 'string')) {
 		data.url += '?' + data.request;
@@ -725,7 +726,7 @@ function handleJSON(json){
 	}
 	if('localStorage' in json) {
 		Object.keys(json.localStorage).forEach(function(key) {
-			(json.localStorage[key] === '') ? sessionStorage.removeItem(key) : localStorag.setItem(key, json.localStorage[key]);
+			(json.localStorage[key] === '') ? sessionStorage.removeItem(key) : localStorage.setItem(key, json.localStorage[key]);
 		});
 	}
 	if ('notify' in json) {
@@ -815,32 +816,32 @@ function cache() {
 cache.prototype.constructor = cache;
 cache.prototype.has = function(key) {
 	return localStorage.keys().indexOf(('cache ' + key).camelCase()) !== -1;
-}
+};
 cache.prototype.get = function(key) {
 	return localStorage.getItem(('cache ' + key).camelCase()) || false;
-}
+};
 cache.prototype.set = function(key, value) {
 	localStorage.setItem(('cache ' + key).camelCase(), value);
 	return this;
-}
+};
 cache.prototype.unset = function(key) {
 	localStorage.removeItem(('cache ' + key).camelCase());
 	return this;
-}
+};
 cache.prototype.keys = function() {
 	return localStorage.keys().filter(function(key){
 		return /^cache/.test(key);
 	});
-}
+};
 cache.prototype.each = function(callback) {
 	return this.keys().forEach(callback.bind(this));
-}
+};
 cache.prototype.clear = function() {
 	this.each(function(key){
 		localStorage.removeItem(key);
 	});
 	return this;
-}
+};
 Object.prototype.isArray = false;
 Object.prototype.isString = false;
 Object.prototype.isNumber = false;
@@ -871,11 +872,12 @@ function zQ(q) {
 	this.query = q;
 	try {
 		switch(typeof this.query) {
-			case 'string':
+			case 'string': {
 				 this.results = document.querySelectorAll(this.query);
-				break;
-			default:
+			} break;
+			default: {
 				this.results = [this.query];
+			}
 		}
 	}
 	catch (error) {
@@ -889,13 +891,13 @@ function zQ(q) {
 }
 zQ.prototype.get = function(n) {
 	return this.results.item(n);
-}
+};
 zQ.prototype.each = function(callback) {
 	if(this.found) {
 		this.results.forEach(callback);
 	}
 	return this;
-}
+};
 zQ.prototype.toArray = function() {
 	if(!this.results.isArray) {
 		var temp = [];
@@ -905,42 +907,42 @@ zQ.prototype.toArray = function() {
 		this.results = temp;
 	}
 	return this;
-}
+};
 zQ.prototype.indexOf = function(i) {
 	return this.results.indexOf(i);
-}
+};
 zQ.prototype.some = function(callback) {
 	return this.results.some(callback);
-}
+};
 zQ.prototype.every = function(callback) {
 	return this.results.every(callback);
-}
+};
 zQ.prototype.filter = function(callback) {
 	this.filters.push(callback.toString());
 	this.results = this.results.filter(callback);
 	this.length = this.results.length;
 	return this;
-}
+};
 zQ.prototype.map = function(callback) {
 	return this.results.map(callback);
-}
+};
 zQ.prototype.addClass = function(cname) {
 	this.each(function(el) {
 		el.classList.add(cname);
 	});
 	return this;
-}
+};
 zQ.prototype.removeClass = function(cname) {
 	this.each(function(el){
 		el.classList.remove(cname);
 	});
 	return this;
-}
+};
 zQ.prototype.hasClass = function(cname) {
 	return this.some(function(el){
 		return el.classList.contains(cname);
 	});
-}
+};
 zQ.prototype.toggleClass = function(cname, condition) {
 	if(typeof condition ==='undefined') {
 		this.each(function(el){
@@ -953,27 +955,27 @@ zQ.prototype.toggleClass = function(cname, condition) {
 		});
 	}
 	return this;
-}
+};
 zQ.prototype.swapClass = function(cname1, cname2) {
 	this.each(function(el) {
 		el.classList.swap(cname1, cname2);
 	});
 	return this;
-}
+};
 zQ.prototype.pickClass = function(cname1, cname2, condition) {
 	(condition) ? this.addClass(cname1) : this.addClass(cname2);
 	return this;
-}
+};
 zQ.prototype.delete = function() {
 	this.each(function(el){
 		el.parentElement.removeChild(el);
 	});
-}
+};
 zQ.prototype.hasAttribute = function(attr) {
 	return this.some(function(el) {
 		return el.hasAttribute(attr);
 	});
-}
+};
 zQ.prototype.attr = function(attr, val) {
 	if(typeof val == 'undefined' || val === true) {
 		val = '';
@@ -990,13 +992,13 @@ zQ.prototype.attr = function(attr, val) {
 	}
 	return this;
 
-}
+};
 zQ.prototype.pause = function() {
 	this.each(function(media){
 		media.pause();
 	});
 	return this;
-}
+};
 /*======================================================Listener Functions=========================================================*/
 
 zQ.prototype.on = function (event, callback) {
@@ -1009,11 +1011,11 @@ zQ.prototype.on = function (event, callback) {
 ['click','dblclick','contextmenu','keypress','keyup','keydown','mouseenter','mouseleave','mouseover','mouseout','mousemove','mousedown','mouseup','input','change','submit','reset' ,'invalid','select','focus','blur','resize','updateready','DOMContentLoaded','load','unload','beforeunload','abort','error','scroll','drag','offline', 'online','visibilitychange','popstate', 'pagehide'].forEach(function(ev){
 	zQ.prototype[ev] = function(callback){
 		return this.on(ev, callback);
-	}
+	};
 });
 zQ.prototype.ready = function(callback) {
 	return this.on('DOMContentLoaded', callback);
-}
+};
 zQ.prototype.networkChange = function (callback) {
 	return this.online(callback) .offline(callback);
 };
@@ -1053,7 +1055,7 @@ zQ.prototype.watch = function(watching, options, attributeFilter) {
 			watching[mutation.type].call(mutation);
 		});
 	}),
-	watches = new Object();
+	watches = {};
 	Object.keys(watching).concat(options).forEach(function(event){
 		watches[event] = true;
 	});
@@ -1064,7 +1066,7 @@ zQ.prototype.watch = function(watching, options, attributeFilter) {
 		watcher.observe(el, watches);
 	});
 	return this;
-}
+};
 /*====================================================================================================================*/
 zQ.prototype.$ = function (q) {
 	return $(this.query.split(',').map(function(str){
@@ -1072,7 +1074,7 @@ zQ.prototype.$ = function (q) {
 			return str.trim() + ' ' + q.trim();
 		});
 	}).join(', '));
-}
+};
 $(window) .popstate(function () {
 		ajax({
 			url: location.pathname,
@@ -1087,7 +1089,7 @@ Object.prototype.$ = function(q) {
 		return $(q);
 	}
 	return $(this).$(q);
-}
+};
 zQ.prototype.css = function (args) { /*Set style using CSS syntax*/
 	/*var n,
 		i,
