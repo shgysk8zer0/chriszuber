@@ -19,6 +19,16 @@
 		public $connected;
 
 		public function load($con = 'connect') {
+			/**
+			 * Static class load method
+			 *
+			 * Creates a new instance and returns it if one does not exist,
+			 * otherwise returns the existing instance
+			 *
+			 * @param mixed $convert_cyr_string
+			 * @return pdo_connect
+			 */
+
 			if(!array_key_exists($con, self::$instances)) {
 				self::$instances[$con] = new self($con);
 			}
@@ -35,7 +45,7 @@
 			 *
 			 * Uses that data to create a new PHP Data Object
 			 *
-			 * @param string $con (.ini file to use for database credentials)
+			 * @param mixed $con (.ini file to use for database credentials)
 			 * @return void
 			 * @example parent::__construct($con)
 			 */
@@ -48,6 +58,9 @@
 			}
 			elseif(is_object($con)) {
 				$this->connect = $con;
+			}
+			elseif(is_array($con)) {
+				$this->connect = (object)$con;
 			}
 
 			try{
@@ -68,6 +81,15 @@
 		}
 
 		private function log($method = null, $line = null, $message = '') {
+			/**
+			 * Writes errors to a log file
+			 *
+			 * @param string $method
+			 * @param int $line
+			 * @param string $message
+			 * @return void
+			 */
+
 			file_put_contents(BASE . '/' . __CLASS__ . '.log', "Error in $method in line $line: $message" . PHP_EOL, FILE_APPEND | LOCK_EX);
 		}
 
@@ -99,7 +121,7 @@
 			 * Return value is based on whether or not permissions
 			 * allow file to be written, not whether or not it was.
 			 *
-			 * Defualt filename is the name of the database
+			 * Default filename is the name of the database
 			 * from connection
 			 *
 			 * @param string $filename
