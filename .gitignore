@@ -22,6 +22,9 @@
 !/super-user.*
 !/manifest.appcache
 !/classes/**
+!/classes/*
+!/classes/magic_methods.php
+!/classes/
 !/stylesheets/
 !/components/
 !/scripts/
