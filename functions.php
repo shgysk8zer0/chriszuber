@@ -23,13 +23,13 @@
 
 	init();
 
-	function init() {
+	function init($session = true) {
 		/**
 		 * Initial configuration. Setup include_path, gather database
 		 * connection information, set undefined properties to
 		 * default values, start a new session, and set nonce
 		 *
-		 * @param string $site
+		 * @param bool $session
 		 * @return array $info
 		 */
 
@@ -44,8 +44,10 @@
 
 		if(!defined('BASE')) define('BASE', __DIR__);
 		if(!defined('URL')) ($_SERVER['DOCUMENT_ROOT'] === __DIR__ . DIRECTORY_SEPARATOR or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/" . end(explode('/', BASE)));
-		session::load();
-		nonce(50);									// Set a nonce of n random characters
+		if($session) {
+			session::load();
+			nonce(50);									// Set a nonce of n random characters
+		}
 	}
 
 	function config($settings_file = 'settings') {
@@ -232,6 +234,38 @@
 		 */
 
 		return preg_replace('/^\n*\t*\<.+\>|\<\/.+\>$/', '', (string)$html);
+	}
+
+	function html_join($tag, array $content = null, array $attributes = null) {
+		/**
+		 * Converts an array into a string of HTML tags containing
+		 * the values of the array... useful for tables and lists.
+		 *
+		 * @param string $tag (Surrounding HTML tag)
+		 * @param array $content
+		 * @param array $attributes
+		 * @return string
+		 */
+
+		$tag = preg_replace('/[^a-z]/', null, strtolower((string)$tag));
+		$attributes = array_to_attributes($attributes);
+		return "<{$tag} {$attributes}>" . join("</{$tag}><{$tag}>", $content) . "</{$tag}>";
+	}
+
+	function array_to_attributes(array $attributes = null) {
+		/**
+		 * Converts an array of attributes into a string
+		 *
+		 * @param array $attributes
+		 * @return string
+		 * @example
+		 * array_to_attributes(['class' => 'myClass]) //returns 'class="myClass"'
+		 */
+
+		if(is_null($attributes)) return null;
+		$str = '';
+		foreach($attributes as $name => $value) $str .= " {$name}=\"{$value}\"";
+		return trim($str);
 	}
 
 	function debug($data = null, $comment = false) {
@@ -601,17 +635,42 @@
 		 * @return void
 		 */
 
-		echo "<ul>";
+		$list = "<ul>";
 		foreach($array as $key => $entry) {
 			if(is_array($entry)) {
-				list_array($value);
+				$list .= list_array($value);
 			}
 			else {
 				$entry = (string)$entry;
-				echo "<li>{$key}: {$entry}</li>";
+				$list .= "<li>{$key}: {$entry}</li>";
 			}
 		}
-		echo "</ul>";
+		$list .= "</ul>";
+
+		return $list;
+	}
+
+	function is_assoc(array $array) {
+		/**
+		 * Checks if an array is associative array
+		 * (A single index is a string)
+		 *
+		 * @param array $array
+		 * @return bool
+		 */
+
+		return (bool)count(array_filter(array_keys($array), 'is_string'));
+	}
+
+	function is_indexed(array $array) {
+		/**
+		 * Checks if an array is indexed(numerical)
+		 *
+		 * @param array $array
+		 * @return bool
+		 */
+
+		return (bool)count(array_filter(array_keys($array), 'is_int'));
 	}
 
 	function is_a_number($n = null) {

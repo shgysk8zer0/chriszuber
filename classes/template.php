@@ -96,7 +96,7 @@
 			return $this;
 		}
 
-		private function replace($replace = null, $with = null) {
+		private function replace($replace = null, $with = null, $join = null) {
 			/*
 			 * Private method to prepare replacements
 			 *
@@ -104,7 +104,8 @@
 			 * and a value of $with
 			 *
 			 * @param string $replace (placeholder text in the template)
-			 * @param sting $with (What it is being replace with)
+			 * @param mixed $with (What it is being replace with)
+			 * @param string $join (If $with is an array, join() with $join)
 			 * @return self
 			 * @example $this->replace('old', 'new')
 			 */
@@ -113,7 +114,7 @@
 				$this->minify($with);
 			}*/
 
-			$this->replacements[$this->seperator . strtoupper((string)$replace) . $this->seperator] = (string)$with;
+			$this->replacements[$this->seperator . strtoupper((string)$replace) . $this->seperator] = (is_array($with)) ? join($join, $with) : $with;
 
 			return $this;
 		}
@@ -154,9 +155,10 @@
 			 * All placeholders should be enclosed in '%' and should be all upper case.
 			 *
 			 * @param string $replace
-			 * @param string $with
+			 * @param mixed $with
 			 * @return void
-			 * @usage $template->url = $url
+			 * @example $template->url = $url
+			 * @example $template->data = [...]
 			 */
 
 			$this->replace($replace, $with);
@@ -181,10 +183,20 @@
 				return '';
 			}
 		}
+
 		public function __isset($key) {
 			return array_key_exists($key, $this->replace);
 		}
+
 		public function __unset($key) {
+			/**
+			 * Removes $key from $this->replace
+			 *
+			 * @param string $key
+			 * @return void
+			 * @example unset($template->$key)
+			 */
+
 			unset($this->replace[$key]);
 		}
 
@@ -211,7 +223,7 @@
 			 * @example $template->testing('Works')->another_test('Still Works')
 			 */
 
-			return $this->replace($replace, $arguments[0]);
+			return $this->replace($replace, join(null, $arguments));
 		}
 
 		public function set(array $arr) {
