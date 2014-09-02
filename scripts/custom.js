@@ -183,6 +183,9 @@ NodeList.prototype.bootstrap = function() {
 		});
 		node.query('a[href^="' + document.location.origin + '"]:not([target="_blank"]):not([download])').forEach(function(a) {
 			a.addEventListener('click', function(event) {
+				if(typeof ga === 'function') {
+					ga('send', 'pageview', this.href);
+				}
 				event.preventDefault();
 				ajax({
 					url: this.href,
