@@ -26,7 +26,7 @@
 	)->attributes(
 		'link[rel=canonical]',
 		'href',
-		$_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . $_SERVER['REDIRECT_URL']
+		$_SERVER['REQUEST_SCHEME'] . '://' . preg_replace('/^www\./', null, $_SERVER['SERVER_NAME']) . $_SERVER['REDIRECT_URL']
 	)->text(
 		'head > title',
 		"{$page->title} | {$head->value}"
