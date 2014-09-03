@@ -23,6 +23,10 @@
 		'meta[name=keywords], meta[itemprop=keywords]',
 		'content',
 		$page->keywords
+	)->attributes(
+		'link[rel=canonical]',
+		'href',
+		$_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . $_SERVER['REDIRECT_URL']
 	)->text(
 		'head > title',
 		"{$page->title} | {$head->value}"

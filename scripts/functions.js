@@ -570,14 +570,11 @@ function ajax(data) {
 		});
 	}
 	return new Promise(function (success, fail) {
-		var canonical = $('[rel=canonical]'), resp;
+		var resp;
 		/*https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise*/
-		if(data.cache && cache.has(data.cache)) {
+		if(('cache' in data) && cache.has(data.cache)) {
 			if(typeof data.history === 'string') {
 				history.pushState(null, '', data.history);
-				if(canonical.found) {
-					canonical.get(0).href = data.history;
-				}
 			}
 			success(cache.get(data.cache));
 		}
@@ -630,9 +627,6 @@ function ajax(data) {
 					success(resp);
 					if(typeof data.history === 'string') {
 						history.pushState(null, '', data.history);
-						if(canonical.found) {
-							canonical.get(0).href = data.history;
-						}
 					}
 				}
 				else {
