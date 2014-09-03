@@ -18,12 +18,18 @@
 				$this->url = $url;
 			}
 			else {
-				$this->url = URL;
-				$this->url .= (array_key_exists('REDIRECT_URL', $_SERVER)) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'];
+				$this->url = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . (array_key_exists('REDIRECT_URL', $_SERVER)) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'];
 			}
 
 			$this->parsed = (object)parse_url(strtolower(urldecode($this->url)));
 			$this->path = explode('/', trim($this->parsed->path, '/'));
+			if(BASE . '/' !== $_SERVER['DOCUMENT_ROOT']) {
+				unset($this->path[0]);
+				$this->path = array_values($this->path);
+				if(empty($this->path)) {
+					$this->path = [''];
+				}
+			}
 			if($pdo->connected) {
 				switch($this->path[0]) {
 					case 'tags': {
@@ -76,7 +82,7 @@
 					$template = template::load('error_page');
 					$template->status = 404;
 					$template->home = URL;
-					$template->message = "Nothing found for <wbr /><var>{$this->url}</var>";
+					$template->message = print_r($this->path, true);//"Nothing found for <wbr /><var>{$this->url}</var>";
 					$template->link = $this->url;
 					$template->dump = print_r($this->parsed, true);
 					$this->content = $template->out();
