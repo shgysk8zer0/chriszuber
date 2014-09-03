@@ -25,7 +25,7 @@
 			 * Creates a new instance and returns it if one does not exist,
 			 * otherwise returns the existing instance
 			 *
-			 * @param mixed $convert_cyr_string
+			 * @param mixed $con
 			 * @return pdo_connect
 			 */
 
