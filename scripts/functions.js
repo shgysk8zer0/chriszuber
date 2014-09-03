@@ -574,7 +574,7 @@ function ajax(data) {
 		/*https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise*/
 		if(('cache' in data) && cache.has(data.cache)) {
 			if(typeof data.history === 'string') {
-				history.pushState(null, '', data.history);
+				history.pushState({}, document.title, data.history);
 			}
 			success(cache.get(data.cache));
 		}
@@ -626,7 +626,7 @@ function ajax(data) {
 					}
 					success(resp);
 					if(typeof data.history === 'string') {
-						history.pushState(null, '', data.history);
+						history.pushState({}, document.title, data.history);
 					}
 				}
 				else {
@@ -1102,15 +1102,16 @@ zQ.prototype.$ = function (q) {
 		});
 	}).join(', '));
 };
-$(window) .popstate(function () {
-		ajax({
-			url: location.pathname,
-			type: 'GET'
-		}).then(
-			handleJSON,
-			console.error
-		);
-	});
+$(window).popstate(function (event) {
+	var state = event.originalEvent.state;
+	ajax({
+		url: location.pathname,
+		type: 'GET'
+	}).then(
+		handleJSON,
+		console.error
+	);
+});
 Object.prototype.$ = function(q) {
 	if(this === document || this === window){
 		return $(q);
