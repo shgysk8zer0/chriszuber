@@ -138,7 +138,12 @@
 			 * @return mixed
 			 */
 
-			$val = preg_replace('/^\'|\'$/', null, $this->pdo->quote($val));
+			if(is_string($val)) {
+				$val = preg_replace('/^\'|\'$/', null, $this->pdo->quote($val));
+			}
+			elseif(is_array($val)) {
+				array_walk($val, [$this, 'escape']);
+			}
 			return $val;
 		}
 
@@ -147,10 +152,10 @@
 			return $str;
 		}
 
-		public function prepare_keys(array $arr) {
+		public function columns(array $arr) {
 			/**
 			 * Converts array_keys to something safe for
-			 * queries
+			 * queries. Returns an array of the converted keys
 			 *
 			 * @param array $arr
 			 * @return array
@@ -158,11 +163,39 @@
 
 			$keys = array_keys($arr);
 			$key_walker = function(&$key) {
-				$this->escape($key);
 				$key = "`{$key}`";
 			};
+			$this->escape($keys);
 			array_walk($keys, $key_walker);
-			return array_combine($keys, array_values($arr));
+			return $keys;
+		}
+
+		public function prepare_keys(array $arr) {
+			/**
+			 * Converts array_keys to something safe for
+			 * queries. Returns the same array with converted keys
+			 *
+			 * @param array $arr
+			 * @return array
+			 */
+
+			$keys = array_keys($arr);
+			$key_walker = function(&$key) {
+				$key = ':' . preg_replace('/\s/', '_', $key);
+			};
+			$this->escape($keys);
+			array_walk($keys, $key_walker);
+			return $keys;
+		}
+
+		public function bind_keys(array $arr) {
+			$keys = array_keys($arr);
+			$key_walker = function(&$key) {
+				$key = preg_replace('/\s/', '_', $key);
+			};
+			$this->escape($keys);
+			array_walk($keys, $key_walker);
+			return $keys;
 		}
 
 		public function restore($fname = null) {
@@ -171,6 +204,50 @@
 
 		public function dump($filename = null) {
 			return $this->pdo->dump($filename);
+		}
+
+		public function show_tables() {
+			/**
+			 * Returns a 0 indexed array of tables in database
+			 *
+			 * @param void
+			 * @return array
+			 */
+
+			$query = "SHOW TABLES";
+			$results = $this->pdo->query($query);
+			$tables = $results->fetchAll(PDO::FETCH_COLUMN, 0);
+			return $tables;
+		}
+
+		public function show_databases() {
+			/**
+			 * Returns a 0 indexed array of tables in database
+			 *
+			 * @param void
+			 * @return array
+			 */
+
+			$query = 'SHOW DATABASES';
+			$results = $this->pdo->query($query);
+			$databases = $results->fetchAll(PDO::FETCH_COLUMN, 0);
+			return $databases;
+		}
+
+		public function describe($table = null) {
+			/**
+			 * Describe $table, including:
+			 * Field {name}
+			 * Type {varchar|int... & (length)}
+			 * Null (boolean)
+			 * Default {value}
+			 * Extra {auto_increment, etc}
+			 *
+			 * @param string $table
+			 * @return array
+			 */
+
+			return $this->pdo->query("DESCRIBE `{$this->escape($table)}")->fetchAll(PDO::FETCH_CLASS);
 		}
 
 		public function columns_from(array $array) {
