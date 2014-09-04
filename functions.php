@@ -1004,6 +1004,22 @@
 		return $string;
 	}
 
+	function convert_date($from = null, $format = 'U', $offset = 'Now') {
+		/**
+			 * Converts date/time from one format to another
+			 *
+			 * @link http://php.net/manual/en/function.strtotime.php
+			 * @param mixed $from (Original time)
+			 * @param string $format
+			 * @param string $offset
+			 * @return string
+			 * @example convert_date('Now', 'r', '+2 weeks')
+			 */
+
+		if(is_string($from)) $from = strtotime($from);
+		elseif(isset($from) and !is_int($from)) $from = time();
+		return date($format, strtotime($offset, $from));
+	}
 	function curl($request = null, $method = 'get') {
 		/**
 		 * Returns http content from request.
