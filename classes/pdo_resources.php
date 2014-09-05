@@ -132,7 +132,7 @@
 
 		public function escape(&$val) {
 			/**
-			 * For lack of a pdo escape, use quote, trimming off the quotations
+			 * For lack of a PDO escape, use quote, trimming off the quotations
 			 *
 			 * @param mixed $str
 			 * @return mixed
@@ -148,6 +148,12 @@
 		}
 
 		public function quote(&$str) {
+			/**
+			 * For lack of a good ol' escape method in PDO.
+			 *
+			 * @param string $str
+			 * @return string
+			*/
 			$str = $this->pdo->quote((string)$str);
 			return $str;
 		}
