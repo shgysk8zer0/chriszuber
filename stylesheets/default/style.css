@@ -126,7 +126,7 @@ a, [download] {
 	text-decoration: none;
 }
 a::after {
-	font-family: 'Web Symbols';
+	font-family: var(--icon-font);
 }
 article a:visited {
 	color: var(--primary-color);
@@ -228,7 +228,7 @@ label+input[type=checkbox] {
 	display: initial;
 }
 input[type=checkbox]+label::after {
-	font-family: 'Web Symbols';
+	font-family: var(--icon-font);
 	content: '  \\';
 	color: red;
 }
@@ -301,7 +301,7 @@ progress[value]::-moz-progress-bar {
 	background-image: var(--progress-grad);
 }
 [data-close]::after {
-	font-family: 'Web Symbols';
+	font-family: var(--icon-font);
 	content: '\'';
 }
 code {
@@ -596,7 +596,7 @@ body > progress {
 }
 [data-icon]::after  {
 	display: inline;
-	font-family: 'Web Symbols';
+	font-family: var(--icon-font);
 	font-size: inherit;
 	font-size-adjust: none;
 	font-stretch: none;
