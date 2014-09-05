@@ -9,7 +9,7 @@
 		 *
 		 * @param array $inputs ([$key => $pattern])
 		 * @return mixed (null if all inputs valid, selector '[name="key"]' of first invalid input if not)
-		 * @usage find_invalid_inputs(['num'] => '\d')
+		 * @example find_invalid_inputs(['num'] => '\d')
 		 */
 
 		$keys = array_keys($inputs);
