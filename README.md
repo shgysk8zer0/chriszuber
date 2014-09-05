@@ -88,6 +88,7 @@ while still allowing the original to be used as CSS where supported
 
 *Installation and configurations for Ubuntu*
 
+	sudo add-apt-repository ppa:richarvey/nodejs
 	sudo apt-get install nodejs npm
 	sudo ln -s /usr/bin/nodejs /usr/bin/node
 	sudo npm install -g myth
