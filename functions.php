@@ -60,7 +60,6 @@
 		* @return void
 		*/
 
-
 		$settings = ini::load((string)$settings_file);
 		if(isset($settings->path)) {
 			set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
@@ -719,6 +718,73 @@
 		return filter_var($str, FILTER_VALIDATE_URL);
 	}
 
+	function is_datetime($str) {
+		/**
+		 * Checks $str againts the pattern for its type
+		 *
+		 * @param string $str
+		 * @return boolean
+		*/
+
+		return pattern_check('datetime', $str);
+	}
+
+	function is_date($date) {
+		/**
+		* Checks $str againts the pattern for its type
+		*
+		* @param string $str
+		* @return boolean
+		*/
+
+		return pattern_check('date', $str);
+	}
+
+	function is_week($str) {
+		/**
+		 * Checks $str againts the pattern for its type
+		 *
+		 * @param string $str
+		 * @return boolean
+		*/
+
+		return pattern_check('week', $str);
+	}
+
+	function is_time($str) {
+		/**
+		* Checks $str againts the pattern for its type
+		*
+		* @param string $str
+		* @return boolean
+		*/
+
+		return pattern_check('time', $str);
+	}
+
+	function is_color($str) {
+		/**
+		* Checks $str againts the pattern for its type
+		*
+		* @param string $str
+		* @return boolean
+		*/
+
+		return pattern_check('color', $str);
+	}
+
+	function pattern_check($type, $str) {
+		/**
+		* Checks $str againts the pattern $type
+		*
+		* @param string $str
+		* @param string $type
+		* @return boolean
+		*/
+
+		return preg_match('/^' . pattern($type) . '$/', (string)$str);
+	}
+
 	function check_inputs(array $inputs, array $source = null) {
 		/**
 		 * Checks that each $inputs is set and matches a pattern
@@ -799,7 +865,11 @@
 			} break;
 
 			case 'datetime': {
-				$pattern = '(19|20)\d{2}-(0?[1-9]|1[12])-(0?[1-9]|[12]\d?|3[01]) T([01]\d|2[0-3])(:[0-5]\d)+';
+				$pattern = '(19|20)\d{2}-(0?[1-9]|1[12])-(0?[1-9]|[12]\d?|3[01])T([01]\d|2[0-3])(:[0-5]\d)+';
+			} break;
+
+			case 'week': {
+				$pattern = '\d{4}-W\d{2}';
 			} break;
 
 			case "credit": {
@@ -952,6 +1022,23 @@
 		return pathinfo((string)$file, PATHINFO_FILENAME);
 	}
 
+	function json_escape($data) {
+		/**
+		 * Returns an escaped JSON encoded string,
+		 * safe for use as an HTML attribute.
+		 *
+		 * Useful when writing attibutes into HTML,
+		 * but not when doing so in an AJAX response
+		 * since JavaScript handles that itself, and
+		 * escaping will only cause double-escaped attributes
+		 *
+		 * @param mixed $data
+		 * @return string
+		 */
+
+		return htmlspecialchars(json_encode($data));
+	}
+
 	function unquote($str = null) {
 		/**
 		 * Remove Leading and trailing single quotes
@@ -988,6 +1075,29 @@
 		return array_sum($args) / count($args);
 	}
 
+	function even($n) {
+		/**
+		 * Is $n even?
+		 *
+		 * @param int $n
+		 * @return boolean
+		*/
+
+		return ($n % 2) === 0;
+	}
+
+	function odd($n) {
+		/**
+		 * Is $n odd?
+		 * Inverse of even()
+		 *
+		 * @param int $n
+		 * @return boolean
+		*/
+
+		return !even($n);
+	}
+
 	function minify(&$string = null) {
 		/**
 		 * Function to remove all tabs and newlines from source
@@ -1018,8 +1128,30 @@
 
 		if(is_string($from)) $from = strtotime($from);
 		elseif(isset($from) and !is_int($from)) $from = time();
-		return date($format, strtotime($offset, $from));
+		if($format === 'U') {
+			return (int)date($format, strtotime($offset, $from));
+		}
+		else {
+			return date($format, strtotime($offset, $from));
+		}
 	}
+
+	function get_time_offset($time) {
+		/**
+		 * Computes the length in seconds of $length
+		 *
+		 * This can simply be computed by using strtotime
+		 * against the Unix Epoch (t = 0)
+		 *
+		 * @param string $time
+		 * @return int
+		 * @example get_time_offset('1 week'); //returns 604800
+		 * @example get_time_offset('1 week +1 second'); //returns 604801
+		*/
+
+		return strtotime('+' . $time, 0);
+	}
+
 	function curl($request = null, $method = 'get') {
 		/**
 		 * Returns http content from request.
