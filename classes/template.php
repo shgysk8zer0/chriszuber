@@ -52,7 +52,7 @@
 			return self::$instance[$tpl];
 		}
 
-		public function __construct($tpl = null, $seperator = '%', $minify = false) {
+		public function __construct($tpl = null, $seperator = '%', $minify = true) {
 			/**
 			 * Reads the template specified by $tpl
 			 * Reads the file from BASE . "/components/templates/{$tpl}.tpl"
