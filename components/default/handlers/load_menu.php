@@ -1,5 +1,5 @@
 <?php
-	$resp = json_response::load();
+	$resp = \core\json_response::load();
 	switch($_POST['load_menu']) {
 		default:
 			$resp->prepend(

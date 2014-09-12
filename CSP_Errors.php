@@ -1,7 +1,7 @@
 <?php
 	if($_SERVER['HTTP_HOST'] === $_SERVER['SERVER_NAME'] and ($_SERVER['CONTENT_TYPE'] === 'application/json' or $_SERVER['CONTENT_TYPE'] === 'application/csp-report')) {
 		require_once('./functions.php');
-		$DB = _pdo::load();
+		$DB =\core\_pdo::load('connect');
 		$report = json_decode(trim(file_get_contents('php://input')), true)['csp-report'];
 
 		if(!array_key_exists('source-file', $report)) $report['source-file'] = 'unknown';

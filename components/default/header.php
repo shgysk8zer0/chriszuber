@@ -1,5 +1,5 @@
 <?php
-	$storage = storage::load();
+	$storage = \core\storage::load();
 ?>
 	<header>
 		<h1><a href="<?=URL?>" rel="bookmark"><?=$storage->site_info->title?></a></h1>

@@ -20,7 +20,7 @@
 	* and Mutation Observers handle applying the listeners for ajax requests.
 	*/
 
-	$connect = ini::load('connect');
+	$connect = \core\ini::load('connect');
 
 	$tables = $DB->show_tables();
 ?>

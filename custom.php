@@ -8,13 +8,12 @@
 
 	function auto_load($cname) {
 		/*
-			Store $paths & $exts as static vars so we only have to get
+			Store $exts as static array so we only have to get
 			them once
 		 */
-		static $exts = null, $paths = null;
+		static $exts = null;
 		if(is_null($exts)) {
 			$exts = explode(',', str_replace(' ', null, spl_autoload_extensions()));
-			$paths = explode(PATH_SEPARATOR, str_replace(' ', null, get_include_path()));
 		}
 
 		/*
@@ -23,20 +22,18 @@
 		$cname = str_replace('\\', DIRECTORY_SEPARATOR, trim($cname, '\\'));
 
 		/*
-			Loop through $paths & $exts until file is found.
+			Loop through $exts until file is found.
 			Include & return true when found.
 		 */
-		foreach($paths as $path) {
-			foreach($exts as $ext) {
-				if(@file_exists($path. DIRECTORY_SEPARATOR . $cname . $ext)) {
-					include($path . DIRECTORY_SEPARATOR . $cname . $ext);
-					return true;
-				}
+		foreach($exts as $ext) {
+			if(@file_exists($cname . $ext)) {
+				include($cname . $ext);
+				return true;
 			}
 		}
 
 		/*
-			If file still not found after searching all paths & exts,
+			If file still not found after searching all include_path & exts,
 			return false because it doesn't exist
 		 */
 		return false;
@@ -47,9 +44,9 @@
 	}
 
 	function update_sitemap() {
-		$pdo = _pdo::load('connect');
+		$pdo = \core\_pdo::load('connect');
 		$url = preg_replace('/^https/', 'http', URL);
-		$template = template::load('sitemap');
+		$template = \core\template::load('sitemap');
 		$sitemap = fopen(BASE . '/sitemap.xml', 'w');
 		$pages = $pdo->fetch_array("
 			SELECT `url`, `created`
@@ -60,7 +57,7 @@
 		fputs($sitemap, '<?xml version="1.0" encoding="UTF-8"?>');
 		fputs($sitemap, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
 		foreach($pages as $page) {
-			$time = new simple_date($page->created);
+			$time = new \core\simple_date($page->created);
 			fputs($sitemap, $template->url( "{$url}/posts/{$page->url}")->mod($time->out('Y-m-d'))->priority('0.8')->out());
 		}
 		fputs($sitemap, '</urlset>');
@@ -68,11 +65,11 @@
 	}
 
 	function update_rss($lim = 10) {
-		$pdo = _pdo::load('connect');
+		$pdo = \core\_pdo::load('connect');
 		if($pdo->connected) {
 			$url = preg_replace('/^https/', 'http', URL);
 			$head = $pdo->name_value('head');
-			$template = template::load('rss');
+			$template = \core\template::load('rss');
 			$rss = fopen(BASE . '/feed.rss', 'w');
 			$pages = $pdo->fetch_array("
 				SELECT `title`, `url`, `description`, `created`
@@ -101,7 +98,7 @@
 	}
 
 	function get_all_tags(){
-		$pdo = _pdo::load();
+		$pdo =\core\_pdo::load('connect');
 		if($pdo->connected) {
 			$keywords = flatten($pdo->fetch_array("
 				SELECT `keywords` FROM `posts`
@@ -120,7 +117,7 @@
 	}
 
 	function get_recent_posts($n = 5, $sel = ['title', 'url', 'description']) {
-		$pdo = _pdo::load();
+		$pdo =\core\_pdo::load('connect');
 
 		if($pdo->connected) {
 			if(is_string($sel) and $sel !== '*') {
@@ -146,7 +143,7 @@
 	}
 
 	function get_datalist($list) {
-		$pdo = _pdo::load();
+		$pdo =\core\_pdo::load('connect');
 		switch(strtolower($list)) {
 			case 'tags': {
 				if(!$pdo->connected) return null;

@@ -26,7 +26,7 @@
 	/**
 	 * Initial configuration. Setup include_path, gather database
 	 * connection information, set undefined properties to
-	 * default values, start a new session, and set nonce
+	 * default values, start a new \core\session, and set nonce
 	 *
 	 * @param bool $session
 	 * @return array $info
@@ -46,7 +46,7 @@
 		if(!defined('BASE')) define('BASE', __DIR__);
 		if(!defined('URL')) ($_SERVER['DOCUMENT_ROOT'] === __DIR__ . DIRECTORY_SEPARATOR or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/" . end(explode('/', BASE)));
 		if($session) {
-			session::load();
+			\core\session::load();
 			nonce(50);									// Set a nonce of n random characters
 		}
 	}
@@ -61,7 +61,7 @@
 	*/
 
 	function config($settings_file = 'settings') {
-		$settings = ini::load((string)$settings_file);
+		$settings = \core\ini::load((string)$settings_file);
 		if(isset($settings->path)) {
 			set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
 		}
@@ -79,10 +79,10 @@
 		if(isset($settings->autoloader)) {
 			spl_autoload_register($settings->autoloader);
 		}
-		$error_handler = (isset($settings->error_handler)) ? $settings->error_handler : 'error_reporter_class';
 
 		//Error Reporting Levels: http://us3.php.net/manual/en/errorfunc.constants.php
-		if(isset($settings->debug)) {
+		if(isset($settings->error_handler) and isset($settings->debug)) {
+			$error_handler = $settings->error_handler;
 			if(is_string($settings->debug)) $settings->debug = strtolower($settings->debug);
 			error_reporting(0);
 			switch($settings->debug) {
@@ -125,7 +125,7 @@
 		}
 
 		else {
-			error_reporting(E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
+			error_reporting(E_ALL);
 		}
 	}
 
@@ -147,8 +147,8 @@
 		static $reporter = null;
 
 		if(is_null($reporter)) {
-			$settings = ini::load('settings');
-			$reporter = error_reporter::load((isset($settings->error_method)) ? $settings->error_method : 'log');
+			$settings = \core\ini::load('settings');
+			$reporter = \core\error_reporter::load((isset($settings->error_method)) ? $settings->error_method : 'log');
 			if(is_null($settings->error_method or $settings->error_method === 'log')) {
 				$reporter->log = (isset($settings->error_log)) ? $settings->error_log : 'errors.log';
 			}
@@ -174,11 +174,11 @@
 		static $DB, $load, $settings, $session, $login, $cookie;
 
 		if(is_null($load)) {
-			$DB = _pdo::load();
-			$settings = ini::load('settings');
-			$session = session::load();
-			$login = login::load();
-			$cookie = cookies::load();
+			$DB =\core\_pdo::load('connect');
+			$settings = \core\ini::load('settings');
+			$session = \core\session::load();
+			$login = \core\login::load();
+			$cookie = \core\cookies::load();
 			if(defined('THEME')) {
 				$load = function($fname) use (
 					$DB,
@@ -230,7 +230,7 @@
 	 * @param bool $assoc
 	 * @param int $depth
 	 * @param int $options
-	 * @return stdClass Object
+	 * @return \stdClass Object
 	 */
 
 	function parse_json_file($filename = null, $assoc = false, $depth = 512, $options = 0) {
@@ -304,12 +304,12 @@
 	}
 
 	function require_login($role = null, $exit = 'notify') {
-		$login = login::load();
+		$login = \core\login::load();
 
 		if(!$login->logged_in) {
 			switch((string)$exit) {
 				case 'notify': {
-					$resp = new json_response();
+					$resp = new \core\json_response();
 					$resp->notify(
 						'We have a problem :(',
 						'You must be logged in for that'
@@ -336,7 +336,7 @@
 
 		elseif(isset($role)) {
 			$role = strtolower((string)$role);
-			$resp = new json_response();
+			$resp = new \core\json_response();
 			$roles = ['new', 'user', 'admin'];
 
 			$user_level = array_search($login->role, $roles);
@@ -383,7 +383,7 @@
 
 	function check_nonce() {
 		if(!(array_key_exists('nonce', $_POST) and array_key_exists('nonce', $_SESSION)) or $_POST['nonce'] !== $_SESSION['nonce']) {
-			$resp = new json_response();
+			$resp = new \core\json_response();
 			$resp->notify(
 				'Something went wrong :(',
 				'Your session has exired. Try refreshing the page',
@@ -1228,7 +1228,7 @@
 	 */
 
 	function module_test() {
-		$settings = ini::load('settings');
+		$settings = \core\ini::load('settings');
 
 		/**
 		 * First, check if the directives are set in settings.ini
@@ -1242,7 +1242,7 @@
 			return null;
 		}
 
-		$missing = new stdClass();
+		$missing = new \stdClass();
 
 		/**
 		 * Missing PHP modules are the difference between an

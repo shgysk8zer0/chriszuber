@@ -1,6 +1,6 @@
 <?php
-	$resp = json_response::load();
-	$page = pages::load();
+	$resp = \core\json_response::load();
+	$page = \core\pages::load();
 	$head = $DB->fetch_array("
 		SELECT `value` FROM `head`
 		WHERE `name` = 'title'

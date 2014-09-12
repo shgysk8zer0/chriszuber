@@ -1,5 +1,5 @@
 <?php
-	$settings = ini::load('settings');
+	$settings = \core\ini::load('settings');
 	if(
 		isset($settings->module_test)
 		and $settings->module_test
@@ -7,10 +7,10 @@
 		$missing = module_test();
 	}
 	if($DB->connected) {
-		$pages = pages::load();
+		$pages = \core\pages::load();
 	}
 	else {
-		$pages = new stdClass();
+		$pages = new \stdClass();
 		$pages->content = null;
 	}
 ?>
