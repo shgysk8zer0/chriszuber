@@ -25,10 +25,10 @@
 		 * otherwise returns the existing instance
 		 *
 		 * @param mixed $con
-		 * @return pdo_connect
+		 * @return
 		 */
 
-		public function load($con = 'connect') {
+		public static function load($con = 'connect') {
 			if(!array_key_exists($con, self::$instances)) {
 				self::$instances[$con] = new self($con);
 			}

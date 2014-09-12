@@ -43,7 +43,7 @@
 		 * @param string $seperator (Character to mark beginning and end of placeholders)
 		 * @param boolean $minify (whether or not to eliminate tabs and newlines)
 		 * @return template object/class
-		 * @example $template = template::load($template_file, '^', true)
+		 * @example $template = \core\template::load($template_file, '^', true)
 		 */
 
 		public static function load($tpl = null, $seperator = '%', $minify = true) {
@@ -62,7 +62,7 @@
 		 * @param string $seperator (Character to mark beginning and end of placeholders)
 		 * @param boolean $minify (whether or not to eliminate tabs and newlines)
 		 * @return template object/class
-		 * @example $template = template::load($template_file, '^', true)
+		 * @example $template = \core\template::load($template_file, '^', true)
 		 * @example $template = new template($template_file)
 		 */
 

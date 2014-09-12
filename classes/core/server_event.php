@@ -11,7 +11,7 @@
 	 * @var server_event $instance
 	 * @uses json_response
 	 * @example
-	 * $event = new server_event(); $n = 42;
+	 * $event = new \core\server_event(); $n = 42;
 	 * while($n--) {
 	 * 	$event->notify(
 	 * 	'This is an example of a server event',
@@ -48,7 +48,7 @@
 		 * Inherits its methods from json_response, so do parent::__construct()
 		 *
 		 * @param array $data (optional array of data to be initialized with)
-		 * @example $event = new server_event(['html' => ['main' => 'It Works!']]...)
+		 * @example $event = new \core\server_event(['html' => ['main' => 'It Works!']]...)
 		 */
 
 		public function __construct(array $data = null) {

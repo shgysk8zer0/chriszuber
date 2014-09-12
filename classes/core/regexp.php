@@ -10,7 +10,7 @@
 		 * @package core_shared
 		 * @version 2014-04-19
 		 * @example:
-		 * 		$reg = new regexp([$string]);
+		 * 		$reg = new \core\regexp([$string]);
 		 * 		$some_var = $reg->replace('foo')->with('bar')[->in($string)]->execute()
 		 */
 
@@ -23,7 +23,7 @@
 		 *
 		 * @param [string $str]
 		 * @return void
-		 * @example $reg = new regexp([$string])
+		 * @example $reg = new \core\regexp([$string])
 		 */
 
 		public function __construct($str = null) {

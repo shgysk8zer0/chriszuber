@@ -101,8 +101,8 @@
 
 		public function get_results($n = null) {
 			$results = [];
-			foreach($this->stm->fetchAll(PDO::FETCH_CLASS) as $data) {			//Convert from an associative array to a stdClass object
-				/*$row = new stdClass();
+			foreach($this->stm->fetchAll(\PDO::FETCH_CLASS) as $data) {			//Convert from an associative array to a \stdClass object
+				/*$row = new \stdClass();
 				foreach($data as $key => $value) {
 					$row->$key = trim($value);
 				}*/

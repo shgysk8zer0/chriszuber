@@ -22,7 +22,7 @@
 		/**
 		 * @method __construct
 		 * @desc
-		 * Gets database connection info from /connect.ini (using ini::load)
+		 * Gets database connection info from /connect.ini (using \core\ini::load)
 		 * The default ini file to use is connect, but can be passed another
 		 * in the $con argument.
 		 *
@@ -218,7 +218,7 @@
 		public function show_tables() {
 			$query = "SHOW TABLES";
 			$results = $this->pdo->query($query);
-			$tables = $results->fetchAll(PDO::FETCH_COLUMN, 0);
+			$tables = $results->fetchAll(\PDO::FETCH_COLUMN, 0);
 			return $tables;
 		}
 
@@ -232,7 +232,7 @@
 		public function show_databases() {
 			$query = 'SHOW DATABASES';
 			$results = $this->pdo->query($query);
-			$databases = $results->fetchAll(PDO::FETCH_COLUMN, 0);
+			$databases = $results->fetchAll(\PDO::FETCH_COLUMN, 0);
 			return $databases;
 		}
 
@@ -249,7 +249,7 @@
 		 */
 
 		public function describe($table = null) {
-			return $this->pdo->query("DESCRIBE `{$this->escape($table)}")->fetchAll(PDO::FETCH_CLASS);
+			return $this->pdo->query("DESCRIBE `{$this->escape($table)}")->fetchAll(\PDO::FETCH_CLASS);
 		}
 
 		/**

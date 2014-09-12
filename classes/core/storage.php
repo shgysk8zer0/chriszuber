@@ -26,7 +26,7 @@
 		 *
 		 * @params void
 		 * @return storage object/class
-		 * @example $storage = storage::load
+		 * @example $storage = \core\storage::load
 		 */
 
 		public static function load() {
@@ -41,7 +41,7 @@
 		 *
 		 * @params void
 		 * @return void
-		 * @example $storage = new storage
+		 * @example $storage = new \core\storage
 		 */
 
 		public function __construct() {

@@ -23,7 +23,7 @@
 
 		public function __construct() {
 			//parent::_construct();
-			$this->pdo = _pdo::load();
+			$this->pdo =\core\_pdo::load('connect');
 		}
 
 		public function select() {

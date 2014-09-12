@@ -12,7 +12,7 @@
 	 * @var boolean $secure
 	 * @var boolean $httponly
 	 * @example
-	 * $cookies = new cookies();
+	 * $cookies = new \core\cookies();
 	 * $cookies->cookie_name = 'Value';
 	 * $cookie->existing_cookie //Returns value of $_COOKIES['existing-cookie']
 	 */
@@ -36,7 +36,7 @@
 		 * @param string $domain (example.com/path would be example.com)
 		 * @param boolean secure (Whether or not to limit cookie to https connections)
 		 * @param boolean $httponly (Setting to true prevents access by JavaScript, etc)
-		 * @example $cookies = new cookies('Tomorrow', '/path', 'example.com', true, true);
+		 * @example $cookies = new \core\cookies('Tomorrow', '/path', 'example.com', true, true);
 		 */
 
 		public function __construct($expires = 0, $path = null, $domain = null, $secure = null, $httponly = null){

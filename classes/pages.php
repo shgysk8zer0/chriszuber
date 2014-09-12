@@ -13,7 +13,7 @@
 
 		public function __construct($url = null) {
 			$this->status = (array_key_exists('REDIRECT_STATUS', $_SERVER)) ? $_SERVER['REDIRECT_STATUS'] : http_response_code();
-			$pdo = _pdo::load();
+			$pdo = \core\_pdo::load('connect');
 			if(is_string($url)) {
 				$this->url = $url;
 			}
@@ -79,7 +79,7 @@
 					$this->description = 'No results for ' . $this->url;
 					$this->keywords = '';
 					$this->title = 'Woops! Not found (404)';
-					$template = template::load('error_page');
+					$template = \core\template::load('error_page');
 					$template->status = 404;
 					$template->home = URL;
 					$template->message = "Nothing found for <wbr /><var>{$this->url}</var>";
@@ -99,15 +99,15 @@
 		}
 
 		public function get_content() {
-			$login = login::load();
-			$DB = _pdo::load();
+			$login = \core\login::load();
+			$DB =\core\_pdo::load('connect');
 
 			switch($this->type) {
 				case 'posts': {
-					$post = template::load('posts');
-					$comments = template::load('comments');
-					$comments_section = template::load('comments_section');
-					$license = template::load('creative_commons');
+					$post = \core\template::load('posts');
+					$comments = \core\template::load('comments');
+					$comments_section = \core\template::load('comments_section');
+					$license = \core\template::load('creative_commons');
 
 					$comments_section->title(
 						$this->data->title
@@ -129,7 +129,7 @@
 					")->bind([
 						'post' => $this->data->url
 					])->execute()->get_results() as $comment) {
-						$time = new simple_date($comment->time);
+						$time = new \core\simple_date($comment->time);
 						$comments_section->comments .= $comments->comment(
 							$comment->comment
 						)->author(
@@ -143,7 +143,7 @@
 						$post->tags .= '<a href="' . URL . '/tags/' . urlencode(trim($tag)) . '" rel="tag">' . trim($tag) . "</a>";
 					}
 
-					$time = new simple_date($this->data->created);
+					$time = new \core\simple_date($this->data->created);
 
 					$this->content = $post->title(
 						$this->data->title
@@ -177,10 +177,10 @@
 					$this->keywords = "Keywords, tags, search, {$this->path[1]}";
 					$this->content = '<div class="tags">';
 
-					$template = template::load('tags');
+					$template = \core\template::load('tags');
 
 					foreach($this->data as $post) {
-						$datetime = new simple_date($post->created);
+						$datetime = new \core\simple_date($post->created);
 
 						$this->content .= $template->title(
 							$post->title

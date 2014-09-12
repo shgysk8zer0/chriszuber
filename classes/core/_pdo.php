@@ -26,7 +26,7 @@
 		 * @method load
 		 * @param  string $con [.ini file to use for database credentials]
 		 * @return _pdo
-		 * @example $pdo = _pdo::load or $pdo = _pdo::load('connect')
+		 * @example $pdo = \core\_pdo::load or $pdo = \core\_pdo::load('connect')
 		 */
 
 		public static function load($con = 'connect') {
@@ -37,7 +37,7 @@
 		}
 
 		/**
-		 * Gets database connection info from /connect.ini (using ini::load)
+		 * Gets database connection info from /connect.ini (using \core\ini::load)
 		 * The default ini file to use is connect, but can be passed another
 		 * in the $con argument.
 		 *
@@ -110,7 +110,7 @@
 
 		public function get_results($n = null) {
 			$results = array();
-			foreach($this->prepared->fetchAll(PDO::FETCH_CLASS) as $data) {		//Convert from an associative array to a stdClass object
+			foreach($this->prepared->fetchAll(\PDO::FETCH_CLASS) as $data) {		//Convert from an associative array to a \stdClass object
 				$results[] = (object)$data;
 			}
 			//If $n is set, return $results[$n] (row $n of results) Else return all
@@ -151,7 +151,7 @@
 		 */
 
 		public function fetch_array($query = null, $n = null) {
-			$data = $this->query($query)->fetchAll(PDO::FETCH_CLASS);
+			$data = $this->query($query)->fetchAll(\PDO::FETCH_CLASS);
 			if(is_array($data)){
 				return (is_int($n)) ? $data[$n] : $data;
 			}
@@ -235,12 +235,12 @@
 		public function table_headers($table = null) {
 			$query = "DESCRIBE {$this->escape($table)}";
 			$results = $this->pdo->query($query);
-			$headers = $results->fetchAll(PDO::FETCH_COLUMN, 0);
+			$headers = $results->fetchAll(\PDO::FETCH_COLUMN, 0);
 			return $headers;
 		}
 
 		/**
-		 * For simple Name/Value tables. Gets all name/value pairs. Returns stdClass object
+		 * For simple Name/Value tables. Gets all name/value pairs. Returns \stdClass object
 		 *
 		 * @param [string $table]
 		 * @return obj
@@ -248,7 +248,7 @@
 
 		public function name_value($table = null) {
 			$data = $this->fetch_array("SELECT `name`, `value` FROM `{$this->escape($table)}`");
-			$values = new stdClass();
+			$values = new \stdClass();
 			foreach($data as $row) {
 				$name = trim($row->name);
 				$value = trim($row->value);
