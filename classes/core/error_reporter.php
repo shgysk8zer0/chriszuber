@@ -11,6 +11,7 @@
 	 * @version 2014-06-05
 	 */
 
+	namespace core;
 	class error_reporter extends _pdo {
 
 		protected static $instance = null;
@@ -19,35 +20,38 @@
 
 		public $method, $log = 'errors.log';
 
-		public static function load($method = 'default') {
-			/**
-			 * Static load method should always be used,
-			 * especially when in development and multiple
-			 * errors may be reported.
-			 */
+		/**
+		 * Static load method should always be used,
+		 * especially when in development and multiple
+		 * errors may be reported.
+		 *
+		 * @param string $method
+		 * @return error_reporter
+		 */
 
+		public static function load($method = 'default') {
 			if(is_null(self::$instance)) {
 				self::$instance = new self((string)$method);
 			}
 			return self::$instance;
 		}
 
-		public function __construct($method = 'default') {
-			/**
-			 * Custom error handling.
-			 * Catch errors using custom function using set_error_handler($callback_function, ERROR_LEVEL)
-			 *
-			 * @link http://us3.php.net/set_error_handler
-			 * @link http://us3.php.net/manual/en/errorfunc.constants.php
-			 * @param int $error_level (Type of error, see E_*)
-			 * @param string $error_message (a short message for the error)
-			 * @param string $file (The absolute path to the file)
-			 * @param int $line (Which line the error occured on)
-			 * @param array $scope (An array of all variables in the scope, some of which
-			 * might themselves be array or object).
-			 * @ return mixed (return false to make PHP handle the error in the default way)
-			 */
+		/**
+		 * Custom error handling.
+		 * Catch errors using custom function using set_error_handler($callback_function, ERROR_LEVEL)
+		 *
+		 * @link http://us3.php.net/set_error_handler
+		 * @link http://us3.php.net/manual/en/errorfunc.constants.php
+		 * @param int $error_level (Type of error, see E_*)
+		 * @param string $error_message (a short message for the error)
+		 * @param string $file (The absolute path to the file)
+		 * @param int $line (Which line the error occured on)
+		 * @param array $scope (An array of all variables in the scope, some of which
+		 * might themselves be array or object).
+		 * @ return mixed (return false to make PHP handle the error in the default way)
+		 */
 
+		public function __construct($method = 'default') {
 			$this->method = strtolower((string)$method);
 
 			/**
@@ -115,21 +119,21 @@
 			}
 		}
 
-		public function report($error_level = null, $error_message = null, $file = null, $line = null, $scope = null) {
-			/**
-			 * Public method to report errors. Just calls the private private
-			 * method according to a switch on $this->method
-			 * The default is to return false, which will handle the error
-			 * with PHP's built in error reporting.
-			 *
-			 * @param int $error_level (Error level. Numeric value for E_*)
-			 * @param string $error_message (The message provided by PHP for the error)
-			 * @param string $file (absolute path for the file)
-			 * @param int $line (The line on which the error occured in the file)
-			 * @param mixed $scope (All variables set in the current scope when the error occured).
-			 * @return boolean (false will tell PHP to handle the error by its own means)
-			 */
+		/**
+		 * Public method to report errors. Just calls the private private
+		 * method according to a switch on $this->method
+		 * The default is to return false, which will handle the error
+		 * with PHP's built in error reporting.
+		 *
+		 * @param int $error_level (Error level. Numeric value for E_*)
+		 * @param string $error_message (The message provided by PHP for the error)
+		 * @param string $file (absolute path for the file)
+		 * @param int $line (The line on which the error occured in the file)
+		 * @param mixed $scope (All variables set in the current scope when the error occured).
+		 * @return boolean (false will tell PHP to handle the error by its own means)
+		 */
 
+		public function report($error_level = null, $error_message = null, $file = null, $line = null, $scope = null) {
 			switch($this->method) {
 				case 'database': {
 					return $this->database((int)$error_level, (string)$error_message, (string)$file, (int)$line, $scope);
@@ -145,24 +149,34 @@
 			}
 		}
 
-		private function logger($error_level, $error_message, $file, $line, $scope) {
-			/**
-			 * Writes errors to the already open log file.
-			 *
-			 * @return boolean (Whether or not the write was successful)
-			 */
+		/**
+		 * Writes errors to the already open log file.
+		 *
+		 * @param int $error_level (Error level. Numeric value for E_*)
+		 * @param string $error_message (The message provided by PHP for the error)
+		 * @param string $file (absolute path for the file)
+		 * @param int $line (The line on which the error occured in the file)
+		 * @param mixed $scope (All variables set in the current scope when the error occured).
+		 * @return boolean (Whether or not the write was successful)
+		 */
 
+		private function logger($error_level, $error_message, $file, $line, $scope) {
 			$error_level = array_search($error_level, $this->defined_levels);
 			return !!fwrite($this->log, "{$error_level}: {$error_message} in {$file} on line {$line} at " . date('Y-m-d\TH:i:s') . PHP_EOL);
 		}
 
-		private function database($error_level, $error_message, $file, $line, $scope) {
-			/**
-			 * Binds to and executes a prepared statement, created during construct.
-			 *
-			 * @return boolean (Whether or not it executed)
-			 */
+		/**
+		 * Binds to and executes a prepared statement, created during construct.
+		 *
+		 * @param int $error_level (Error level. Numeric value for E_*)
+		 * @param string $error_message (The message provided by PHP for the error)
+		 * @param string $file (absolute path for the file)
+		 * @param int $line (The line on which the error occured in the file)
+		 * @param mixed $scope (All variables set in the current scope when the error occured).
+		 * @return boolean (Whether or not it executed)
+		 */
 
+		private function database($error_level, $error_message, $file, $line, $scope) {
 			return $this->bind([
 				'datetime' => date('Y-m-d\TH:i:s'),
 				'file' => $file,

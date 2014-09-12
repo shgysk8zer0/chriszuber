@@ -13,9 +13,10 @@
 	 * @version 2014-08-27
 	*/
 
-	class pdo_connect extends PDO {
-		private $connect;
-		private static $instances = [];
+	namespace core;
+	class pdo_connect extends \PDO {
+		protected $connect;
+		protected static $instances = [];
 		public $connected;
 
 		/**
@@ -53,7 +54,16 @@
 			$this->connected = false;
 
 			if(is_string($con)) {
+				if($con === 'mysql:dbname=chriszuber') {
+					echo '<pre><code>';
+					print_r(debug_backtrace());
+					echo '</code></pre>';
+					exit();
+				}
 				$this->connect = (object)parse_ini_file("{$con}.ini");
+				/*if(is_null($this->connect)) {
+					$this->connect = (object)parse_ini_file("connect.ini");
+				}*/
 			}
 			elseif(is_object($con)) {
 				$this->connect = $con;
@@ -63,7 +73,7 @@
 			}
 
 			try{
-				if(!(isset($this->connect->user) and isset($this->connect->password))) throw new Exception('Missing credentials to connect to database');
+				if(!(isset($this->connect->user) and isset($this->connect->password))) throw new \Exception('Missing credentials to connect to database');
 				$connect_string = (isset($this->connect->type)) ? "{$this->connect->type}:" : 'mysql:';
 				$connect_string .= (isset($this->connect->database)) ?  "dbname={$this->connect->database}" : "dbname={$this->connect->user}";
 				if(isset($this->connect->server)) $connect_string .= ";host={$this->connect->server}";
@@ -71,7 +81,7 @@
 				parent::__construct($connect_string, $this->connect->user, $this->connect->password);
 				$this->connected = true;
 			}
-			catch(Exception $e) {
+			catch(\Exception $e) {
 				if(!isset($connect_string)) {
 					$connect_string = 'Connect String not set';
 				}

@@ -1,12 +1,12 @@
 <?php
-	$storage = storage::load();
+	$storage = \core\storage::load();
 
 	if($DB->connected) {
 		$head = $DB->name_value('head');
 	}
 
 	else {
-		$head = new stdClass();
+		$head = new \stdClass();
 		$head->title = 'Lorem Ipsum';
 		$head->charset = 'utf-8';
 		$head->description = 'Default description for the blog';
@@ -20,10 +20,10 @@
 	$storage->site_info = $head;
 
 	if($DB->connected) {
-		$pages = pages::load();
+		$pages = \core\pages::load();
 	}
 	else {
-		$pages = new stdClass();
+		$pages = new \stdClass();
 		$pages->title = null;
 		$pages->rss = null;
 	}

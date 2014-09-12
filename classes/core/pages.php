@@ -1,4 +1,5 @@
 <?php
+	namespace core;
 	class pages {
 		private static $instance = null;
 		private $data, $path, $url, $status, $parsed;
@@ -13,7 +14,7 @@
 
 		public function __construct($url = null) {
 			$this->status = (array_key_exists('REDIRECT_STATUS', $_SERVER)) ? $_SERVER['REDIRECT_STATUS'] : http_response_code();
-			$pdo = \core\_pdo::load('connect');
+			$pdo =\core\_pdo::load('connect');
 			if(is_string($url)) {
 				$this->url = $url;
 			}
@@ -116,7 +117,6 @@
 					)->comments(
 						null
 					);
-
 
 					foreach($DB->prepare("
 						SELECT

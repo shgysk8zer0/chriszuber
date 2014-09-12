@@ -1,5 +1,5 @@
 <?php
-	$connect = ini::load('connect');
+	$connect = \core\ini::load('connect');
 ?>
 <form name="setup_database" action="<?=URL?>/" method="post">
 	<fieldset form="setup_database">

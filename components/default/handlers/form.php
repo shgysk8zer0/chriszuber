@@ -1,5 +1,5 @@
 <?php
-	$resp = json_response::load();
+	$resp = \core\json_response::load();
 	check_nonce();
 	switch(trim($_POST['form'])) {
 		case 'login': {
@@ -64,10 +64,10 @@
 				if($posts) {
 					$content = '<div class="tags">';
 
-					$template = template::load('tags');
+					$template = \core\template::load('tags');
 
 					foreach($posts as $post) {
-						$datetime = new simple_date($post->created);
+						$datetime = new \core\simple_date($post->created);
 						$content .= $template->title(
 							$post->title
 						)->description(
@@ -127,7 +127,7 @@
 				$author = $user->name;
 				$content = trim($_POST['content']);
 				$url = urlencode(strtolower(preg_replace('/\W+/', ' ', $title)));
-				$time = new simple_date();
+				$time = new \core\simple_date();
 
 				foreach(explode(',', $keywords) as $tag) {
 					$template->tags .= '<a href="tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
@@ -165,7 +165,7 @@
 				]);
 
 				if($DB->execute()) {
-					$template = template::load('posts');
+					$template = \core\template::load('posts');
 					$template->title(
 						$title
 					)->content(
@@ -478,7 +478,7 @@
 					)
 				);
 				$post = $_POST['for_post'];
-				$template = template::load('comments');
+				$template = \core\template::load('comments');
 				$author = $_POST['comment_author'];
 				$author_url = (array_key_exists('comment_url', $_POST) and is_url($_POST['comment_url'])) ? $_POST['comment_url'] : '';
 				$author_email = $_POST['comment_email'];
@@ -606,7 +606,7 @@
 									exit();
 								}
 							}
-							$con_ini = new ini('connect');
+							$con_ini = new \core\ini('connect');
 							$database = "`{$pdo->escape($con_ini->database)}`";
 							$pdo->query("CREATE DATABASE IF NOT EXISTS {$database}");
 							$pdo->prepare("
@@ -646,7 +646,7 @@
 												])->execute();
 											}
 										}
-										$login = new login($con_ini);
+										$login = new \core\login($con_ini);
 										$login->create_from([
 											'user' => $site->user,
 											'password' => $site->password

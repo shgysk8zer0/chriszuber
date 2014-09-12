@@ -39,7 +39,7 @@
 		load('handlers/hangman');
 	}
 
-	$resp = json_response::load();
+	$resp = \core\json_response::load();
 	$resp->send();
 	exit();
 ?>

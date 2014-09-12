@@ -14,10 +14,10 @@
 		header("Location: {$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_ADDR']}{$_SERVER['REQUEST_URI']}");
 		exit();
 	}
-	$DB = _pdo::load('connect');
-	$login = login::load('connect');
-	$session = session::load();
-	$settings = ini::load('settings');
+	$DB = \core\_pdo::load('connect');
+	$login = \core\login::load('connect');
+	$session = \core\session::load();
+	$settings = \core\ini::load('settings');
 
 	if(!defined('THEME')) {
 		define('THEME', 'default');
@@ -29,7 +29,7 @@
 	if(is_ajax()) { // If this is an ajax request, let ajax.php handle it.
 		require_once('./ajax.php');
 	}
-	$pages = pages::load();
+	$pages = \core\pages::load();
 	CSP();		//Do this here to avoid CSP being set on ajax requests.
 ?>
 <!DOCTYPE HTML>

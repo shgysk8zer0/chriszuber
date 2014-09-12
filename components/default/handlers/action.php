@@ -1,10 +1,10 @@
 <?php
-	$resp = json_response::load();
+	$resp = \core\json_response::load();
 	switch($_POST['action']) {
 		case 'logout': {
 			$login->logout();
 			$session->destroy();
-			$session = new session();
+			$session = new \core\session();
 			nonce();
 
 			$resp->enable(
@@ -27,7 +27,7 @@
 
 		case 'Clear PHP_errors': {
 			require_login('admin');
-			$pdo = _pdo::load();
+			$pdo =\core\_pdo::load('connect');
 
 			$pdo->reset_table('PHP_errors');
 			file_put_contents(BASE . '/errors.log', null, LOCK_EX);
@@ -43,7 +43,7 @@
 		case 'restore database': {
 			require_login('admin');
 
-			$connect = ini::load('connect');
+			$connect = \core\ini::load('connect');
 			($DB->restore($connect->database)) ? $resp->notify(
 				'Success',
 				"The database has been restored from {$connect->database}.sql",
@@ -58,7 +58,7 @@
 		case 'backup database': {
 			require_login('admin');
 
-			$connect = ini::load('connect');
+			$connect = \core\ini::load('connect');
 			($DB->dump()) ? $resp->notify(
 				'Success',
 				"The database has been backed up to {$connect->database}.sql",

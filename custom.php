@@ -1,35 +1,52 @@
 <?php
-	function find_invalid_inputs(array $inputs) {
-		/**
-		 * Checks that each $inputs is set and matches a pattern
-		 *
-		 * Loops through an array of inputs, checking that
-		 * it exists in $_REQUEST, and checks that $_REQUEST[$key]
-		 * matches the specified pattern.
-		 *
-		 * @param array $inputs ([$key => $pattern])
-		 * @return mixed (null if all inputs valid, selector '[name="key"]' of first invalid input if not)
-		 * @usage find_invalid_inputs(['num'] => '\d')
+	/**
+	 * autoload function allowing for optional namespaces
+	 *
+	 * @param  string    $cname [Class Name]
+	 * @return boolean
+	 */
+
+	function auto_load($cname) {
+		/*
+			Store $exts as static array so we only have to get
+			them once
 		 */
+		static $exts = null;
+		if(is_null($exts)) {
+			$exts = explode(',', str_replace(' ', null, spl_autoload_extensions()));
+		}
 
-		$keys = array_keys($inputs);
-		$patterns  = array_values($inputs);
+		/*
+			Convert namespaces to paths
+		 */
+		$cname = str_replace('\\', DIRECTORY_SEPARATOR, trim($cname, '\\'));
 
-		for($i = 0; $i < count($inputs); $i++) {
-			if(!array_key_exists($keys[$i], $_REQUEST) or !preg_match('/^' . $patterns[$i] . '$/', $_REQUEST[$keys[$i]])) {
-				return "[name=\"{$keys[$i]}\"]";
+		/*
+			Loop through $exts until file is found.
+			Include & return true when found.
+		 */
+		foreach($exts as $ext) {
+			if(@file_exists($cname . $ext)) {
+				include($cname . $ext);
+				return true;
 			}
 		}
-		return null;
+
+		/*
+			If file still not found after searching all include_path & exts,
+			return false because it doesn't exist
+		 */
+		return false;
 	}
+
 	function get_template($template) {
 		return file_get_contents(BASE . "/components/templates/{$template}.tpl");
 	}
 
 	function update_sitemap() {
-		$pdo = _pdo::load('connect');
+		$pdo = \core\_pdo::load('connect');
 		$url = preg_replace('/^https/', 'http', URL);
-		$template = template::load('sitemap');
+		$template = \core\template::load('sitemap');
 		$sitemap = fopen(BASE . '/sitemap.xml', 'w');
 		$pages = $pdo->fetch_array("
 			SELECT `url`, `created`
@@ -40,7 +57,7 @@
 		fputs($sitemap, '<?xml version="1.0" encoding="UTF-8"?>');
 		fputs($sitemap, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
 		foreach($pages as $page) {
-			$time = new simple_date($page->created);
+			$time = new \core\simple_date($page->created);
 			fputs($sitemap, $template->url( "{$url}/posts/{$page->url}")->mod($time->out('Y-m-d'))->priority('0.8')->out());
 		}
 		fputs($sitemap, '</urlset>');
@@ -48,11 +65,11 @@
 	}
 
 	function update_rss($lim = 10) {
-		$pdo = _pdo::load('connect');
+		$pdo = \core\_pdo::load('connect');
 		if($pdo->connected) {
 			$url = preg_replace('/^https/', 'http', URL);
 			$head = $pdo->name_value('head');
-			$template = template::load('rss');
+			$template = \core\template::load('rss');
 			$rss = fopen(BASE . '/feed.rss', 'w');
 			$pages = $pdo->fetch_array("
 				SELECT `title`, `url`, `description`, `created`
@@ -81,7 +98,7 @@
 	}
 
 	function get_all_tags(){
-		$pdo = _pdo::load();
+		$pdo =\core\_pdo::load('connect');
 		if($pdo->connected) {
 			$keywords = flatten($pdo->fetch_array("
 				SELECT `keywords` FROM `posts`
@@ -100,7 +117,7 @@
 	}
 
 	function get_recent_posts($n = 5, $sel = ['title', 'url', 'description']) {
-		$pdo = _pdo::load();
+		$pdo =\core\_pdo::load('connect');
 
 		if($pdo->connected) {
 			if(is_string($sel) and $sel !== '*') {
@@ -126,7 +143,7 @@
 	}
 
 	function get_datalist($list) {
-		$pdo = _pdo::load();
+		$pdo =\core\_pdo::load('connect');
 		switch(strtolower($list)) {
 			case 'tags': {
 				if(!$pdo->connected) return null;

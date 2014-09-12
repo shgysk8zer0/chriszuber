@@ -1,5 +1,5 @@
 <?php
-	$template = template::load('recent_posts');
+	$template = \core\template::load('recent_posts');
 ?>
 <aside class="sidebar" rel="sidebar">
 	<div class="recent posts">

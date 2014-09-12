@@ -12,6 +12,7 @@
 	 * @depreciated (should modify _pdo to simplify this anyways)
 	 */
 
+	namespace core;
 	class search {
 		private $select = '*',
 				$from = '',
@@ -22,7 +23,7 @@
 
 		public function __construct() {
 			//parent::_construct();
-			$this->pdo = _pdo::load();
+			$this->pdo =\core\_pdo::load('connect');
 		}
 
 		public function select() {
