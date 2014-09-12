@@ -34,9 +34,10 @@
 
 	function init($session = true) {
 		//Include current directory, config/, and classes/ directories in include path
-		set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . PATH_SEPARATOR . __DIR__  . DIRECTORY_SEPARATOR . 'config' . PATH_SEPARATOR . __DIR__ . DIRECTORY_SEPARATOR . 'classes');
+		//set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . PATH_SEPARATOR . __DIR__  . DIRECTORY_SEPARATOR . 'config' . PATH_SEPARATOR . __DIR__ . DIRECTORY_SEPARATOR . 'classes');
+		set_include_path(__DIR__ . DIRECTORY_SEPARATOR . 'classes' . PATH_SEPARATOR . get_include_path() . PATH_SEPARATOR . __DIR__ . PATH_SEPARATOR . __DIR__  . DIRECTORY_SEPARATOR . 'config');
 
-		if(file_exists('./config/define.ini')) {
+		if(@file_exists('./config/define.ini')) {
 			foreach(parse_ini_file('./config/define.ini') as $key => $value) {
 				define(strtoupper(preg_replace('/\s|-/', '_', $key)), $value);
 			}
@@ -809,7 +810,7 @@
 	 * @param array $inputs ([$key => $test])
 	 * @param array $souce ($_POST, $_GET, $_REQUEST, [])
 	 * @return mixed (null if all inputs valid, selector '[name="$key"]' of first invalid input if not)
-	 * @example find_invalid_inputs(['num' => '\d', 'user' => is_email($source['user])], $source)
+	 * @example pattern_check(['num' => '\d', 'user' => is_email($source['user])], $source)
 	 */
 
 	function check_inputs(array $inputs, array $source = null) {
