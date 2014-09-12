@@ -1,27 +1,47 @@
 <?php
-	function find_invalid_inputs(array $inputs) {
-		/**
-		 * Checks that each $inputs is set and matches a pattern
-		 *
-		 * Loops through an array of inputs, checking that
-		 * it exists in $_REQUEST, and checks that $_REQUEST[$key]
-		 * matches the specified pattern.
-		 *
-		 * @param array $inputs ([$key => $pattern])
-		 * @return mixed (null if all inputs valid, selector '[name="key"]' of first invalid input if not)
-		 * @example find_invalid_inputs(['num'] => '\d')
+	/**
+	 * autoload function allowing for optional namespaces
+	 *
+	 * @param  string    $cname [Class Name]
+	 * @return boolean
+	 */
+
+	function auto_load($cname) {
+		/*
+			Store $paths & $exts as static vars so we only have to get
+			them once
 		 */
+		static $exts = null, $paths = null;
+		if(is_null($exts)) {
+			$exts = explode(',', str_replace(' ', null, spl_autoload_extensions()));
+			$paths = explode(PATH_SEPARATOR, str_replace(' ', null, get_include_path()));
+		}
 
-		$keys = array_keys($inputs);
-		$patterns  = array_values($inputs);
+		/*
+			Convert namespaces to paths
+		 */
+		$cname = str_replace('\\', DIRECTORY_SEPARATOR, trim($cname, '\\'));
 
-		for($i = 0; $i < count($inputs); $i++) {
-			if(!array_key_exists($keys[$i], $_REQUEST) or !preg_match('/^' . $patterns[$i] . '$/', $_REQUEST[$keys[$i]])) {
-				return "[name=\"{$keys[$i]}\"]";
+		/*
+			Loop through $paths & $exts until file is found.
+			Include & return true when found.
+		 */
+		foreach($paths as $path) {
+			foreach($exts as $ext) {
+				if(@file_exists($path. DIRECTORY_SEPARATOR . $cname . $ext)) {
+					include($path . DIRECTORY_SEPARATOR . $cname . $ext);
+					return true;
+				}
 			}
 		}
-		return null;
+
+		/*
+			If file still not found after searching all paths & exts,
+			return false because it doesn't exist
+		 */
+		return false;
 	}
+
 	function get_template($template) {
 		return file_get_contents(BASE . "/components/templates/{$template}.tpl");
 	}
