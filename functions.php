@@ -169,9 +169,8 @@
 	 * @example load(string | array[string | array[, ...]]*)
 	 */
 
-	function load() {									// Load resource from components directory
+	function load() {
 		static $DB, $load, $settings, $session, $login, $cookie;
-		$found = true;
 
 		if(is_null($load)) {
 			$DB = _pdo::load();
@@ -179,17 +178,33 @@
 			$session = session::load();
 			$login = login::load();
 			$cookie = cookies::load();
-			$load = (defined('THEME')) ? function($fname, &$found) use ($DB, $settings, $session, $cookie, $login) {
-				(include(BASE . "/components/" . THEME . DIRECTORY_SEPARATOR . $fname .".php")) or $found = false;
-			} : function($fname, &$found) use ($DB, $settings, $session, $cookie, $login) {
-				(include(BASE . "/components/{$fname}.php")) or $found = false;
-			};
+			if(defined('THEME')) {
+				$load = function($fname) use (
+					$DB,
+					$settings,
+					$session,
+					$cookie,
+					$login
+				) {
+					include BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . THEME . DIRECTORY_SEPARATOR . $fname . '.php';
+				};
+			}
+			else {
+				$load = function($fname) use (
+					$DB,
+					$settings,
+					$session,
+					$cookie,
+					$login
+				) {
+					include BASE . 'components' . DIRECTORY_SEPARATOR . $fname . '.php';
+				};
+			}
 		}
 
-		foreach(flatten(func_get_args()) as $fname) {	// Unknown how many arguments passed. Loop through function arguments array
-			$load((string)$fname, $found);
+		foreach(flatten(func_get_args()) as $fname) {
+			$load((string)$fname);
 		}
-		return $found;
 	}
 
 	/**
