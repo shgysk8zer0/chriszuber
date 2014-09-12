@@ -67,7 +67,7 @@
 
 		if(isset($settings->requires)) {
 			foreach(explode(',', $settings->requires) as $file) {
-				require_once(__DIR__ . '/' . trim($file));
+				require_once(__DIR__ . DIRECTORY_SEPARATOR . trim($file));
 			}
 		}
 
