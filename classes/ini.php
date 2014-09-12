@@ -16,67 +16,67 @@
 		private static $instance = [];
 		private $data = [];
 
-		public static function load($file = null, $multi = false) {
-			/**
-			 * Unlike most static load methods, there is an additional
-			 * advantage to using this method instead of __construct.
-			 * __construct() can only handle a single file, whereas
-			 * ::load() creates an array of instances with the key
-			 * set to the filename.
-			 *
-			 * If $multi is passed and true, it will create a multi-dimensional array
-			 * 	[to_level]
-			 * 		key = "val"
-			 * becomes $ini['top_level']['key'] = 'val'
-			 *
-			 * Otherwise,
-			 *	 key = 'val'
-			 * becomes $ini['key'] = 'val'
-			 *
-			 * @param string $file
-			 * @param boolean $multi
-			 * @usage $ini = ini::load('connect'[, false]);
-			 */
+		/**
+		 * Unlike most static load methods, there is an additional
+		 * advantage to using this method instead of __construct.
+		 * __construct() can only handle a single file, whereas
+		 * ::load() creates an array of instances with the key
+		 * set to the filename.
+		 *
+		 * If $multi is passed and true, it will create a multi-dimensional array
+		 * 	[to_level]
+		 * 		key = "val"
+		 * becomes $ini['top_level']['key'] = 'val'
+		 *
+		 * Otherwise,
+		 *	 key = 'val'
+		 * becomes $ini['key'] = 'val'
+		 *
+		 * @param string $file
+		 * @param boolean $multi
+		 * @example $ini = ini::load('connect'[, false]);
+		 */
 
+		public static function load($file = null, $multi = false) {
 			$file = (string)$file;
 			if(!array_key_exists($file, self::$instance)) self::$instance[$file] = new self($file, $multi);
 			return self::$instance[$file];
 		}
 
-		public function __construct($file, $multi = false) {
-			/**
-			 * See documentation on ::load()
-			 *
-			 * @param string $file
-			 * @param boolean $multi
-			 */
+		/**
+		 * See documentation on ::load()
+		 *
+		 * @param string $file
+		 * @param boolean $multi
+		 */
 
+		public function __construct($file, $multi = false) {
 			$file = (string)$file;
 			$this->data = parse_ini_file("{$file}.ini", $multi);
 		}
 
-		public function __set($key, $value) {
-			/**
-			 * Setter method for the class.
-			 *
-			 * @param string $key, mixed $value
-			 * @return void
-			 * @example "$ini->key = $value"
-			 */
+		/**
+		 * Setter method for the class.
+		 *
+		 * @param string $key, mixed $value
+		 * @return void
+		 * @example "$ini->key = $value"
+		 */
 
+		public function __set($key, $value) {
 			$key = str_replace('_', '-', $key);
 			$this->data[$key] = (string)$value;
 		}
 
-		public function __get($key) {
-			/**
-			 * The getter method for the class.
-			 *
-			 * @param string $key
-			 * @return mixed
-			 * @example "$ini->key" Returns $value
-			 */
+		/**
+		 * The getter method for the class.
+		 *
+		 * @param string $key
+		 * @return mixed
+		 * @example "$ini->key" Returns $value
+		 */
 
+		public function __get($key) {
 			$key = str_replace('_', '-', $key);
 			if(array_key_exists($key, $this->data)) {
 				return $this->data[$key];
@@ -84,36 +84,36 @@
 			return false;
 		}
 
-		public function __isset($key) {
-			/**
-			 * @param string $key
-			 * @return boolean
-			 * @example "isset({$ini->key})"
-			 */
+		/**
+		 * @param string $key
+		 * @return boolean
+		 * @example "isset({$ini->key})"
+		 */
 
+		public function __isset($key) {
 			return array_key_exists(str_replace('_', '-', $key), $this->data);
 		}
 
-		public function __unset($key) {
-			/**
-			 * Removes an index from the array.
-			 *
-			 * @param string $key
-			 * @return void
-			 * @example "unset($ini->key)"
-			 */
+		/**
+		 * Removes an index from the array.
+		 *
+		 * @param string $key
+		 * @return void
+		 * @example "unset($ini->key)"
+		 */
 
+		public function __unset($key) {
 			unset($this->data[str_replace('_', '-', $key)]);
 		}
 
-		public function __call($name, array $arguments) {
-			/**
-			 * Chained magic getter and setter
-			 * @param string $name
-			 * @param mixed $arguments
-			 * @example "$ini->[getName|setName]($value)"
-			 */
+		/**
+		 * Chained magic getter and setter
+		 * @param string $name
+		 * @param mixed $arguments
+		 * @example "$ini->[getName|setName]($value)"
+		 */
 
+		public function __call($name, array $arguments) {
 			$name = strtolower($name);
 			$act = substr($name, 0, 3);
 			$key = preg_replace('/_/', '-', substr($name, 3));
@@ -136,14 +136,14 @@
 			}
 		}
 
-		public function keys() {
-			/**
-			 * Returns an array of all array keys for $ini->data
-			 *
-			 * @param void
-			 * @return array
-			 */
+		/**
+		 * Returns an array of all array keys for $ini->data
+		 *
+		 * @param void
+		 * @return array
+		 */
 
+		public function keys() {
 			return array_keys($this->data);
 		}
 	}

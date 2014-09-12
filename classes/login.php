@@ -17,33 +17,34 @@
 		public $data = [];
 		protected static $instance = null;
 
-		public static function load($ini = 'connect') {
-			/**
-			 * Static load function avoids creating multiple instances/connections
-			 * It checks if an instance has been created and returns that or a new instance
-			 *
-			 * @param string $ini (ini file to use for database connection configuration)
-			 * @return login object/class
-			 * @example $login = _login::load
-			 */
+		/**
+		 * Static load function avoids creating multiple instances/connections
+		 * It checks if an instance has been created and returns that or a new instance
+		 *
+		 * @param string $ini (ini file to use for database connection configuration)
+		 * @return login object/class
+		 * @example $login = _login::load
+		 */
 
+		public static function load($ini = 'connect') {
 			if(is_null(self::$instance)) {
 				self::$instance = new self($ini);
 			}
 			return self::$instance;
 		}
 
+		/**
+		 * Gets database connection info from /connect.ini (stored in $site)
+		 * Uses that data to create a new PHP Data Object
+		 *
+		 * @param string $ini (ini file to use for database connection configuration)
+		 * @return void
+		 * @example $login = new login()
+		 * @todo Use static parent::load() instead, but this causes errors
+		 */
+
 		public function __construct($ini = 'connect') {
-			/**
-			 * Gets database connection info from /connect.ini (stored in $site)
-			 * Uses that data to create a new PHP Data Object
-			 *
-			 * @param string $ini (ini file to use for database connection configuration)
-			 * @return void
-			 * @example $login = new login()
-			 */
-			parent::__construct($ini);					#login extends _pdo, so create new instance of parent.
-			#[TODO] Use static parent::load() instead, but this causes errors
+			parent::__construct($ini);	//login extends _pdo, so create new instance of parent.
 
 			$this->data = array(
 				'user' => null,
@@ -53,15 +54,15 @@
 			);
 		}
 
-		public function create_from(array $source) {
-			/**
-			 * Creates new user using an array passed as source. Usually $_POST or $_SESSION
-			 *
-			 * @param array $source
-			 * @return boolean
-			 * @example $login->create_from($_POST|$_GET|$_REQUEST|array())
-			 */
+		/**
+		 * Creates new user using an array passed as source. Usually $_POST or $_SESSION
+		 *
+		 * @param array $source
+		 * @return boolean
+		 * @example $login->create_from($_POST|$_GET|$_REQUEST|array())
+		 */
 
+		public function create_from(array $source) {
 			if(array_keys_exist('user', 'password', $source)) {
 				if(array_key_exists('repeat', $source) and $source['password'] !== $source['repeat']) return false;
 				return $this->prepare("
@@ -85,15 +86,15 @@
 			}
 		}
 
-		public function login_with(array $source) {
-			/**
-			 * Intended to find login info from $_COOKIE, $_SESSION, or $_POST
-			 *
-			 * @param array $source
-			 * @return void
-			 * @example $login->login_with($_POST|$_GET|$_REQUEST|$_SESSION|array())
-			 */
+		/**
+		 * Intended to find login info from $_COOKIE, $_SESSION, or $_POST
+		 *
+		 * @param array $source
+		 * @return void
+		 * @example $login->login_with($_POST|$_GET|$_REQUEST|$_SESSION|array())
+		 */
 
+		public function login_with(array $source) {
 			if(array_keys_exist('user', 'password', $source)) {
 				$results = $this->prepare("
 					SELECT `user`,
@@ -115,26 +116,26 @@
 			return ($this->data['logged-in']);
 		}
 
-		public function logout() {
-			/**
-			 * Undo the login. Destroy it. Removes session and cookie. Sets logged_in to false
-			 *
-			 * @param void
-			 * @return void
-			 */
+		/**
+		 * Undo the login. Destroy it. Removes session and cookie. Sets logged_in to false
+		 *
+		 * @param void
+		 * @return void
+		 */
 
+		public function logout() {
 			$this->setUser(null)->setPassword(null)->setRole(null)->setLogged_In(false);
 		}
 
-		public function debug() {
-			/**
-			 * Prints out class information using print_r
-			 * wrapped in <pre> and <code>
-			 *
-			 * @param void
-			 * @return void
-			 */
+		/**
+		 * Prints out class information using print_r
+		 * wrapped in <pre> and <code>
+		 *
+		 * @param void
+		 * @return void
+		 */
 
+		public function debug() {
 			debug($this);
 		}
 	}

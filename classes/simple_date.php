@@ -40,47 +40,48 @@
 			'Saturday'
 		];
 
+		/**
+		 * Creates an associave array containing date info
+		 * Keys[seconds, minutes, hours, mday, wday, mon, year, yday, weekday, month, timestamp]
+		 * All values are stripped of leading '0's
+		 * Seconds, minutes, are exactly what they are... no need to explain.
+		 * Hours are Hours in [0-23]
+		 * mday is numeric day of month [1-31]
+		 * wday is numerica day of the week, starting on Sunday [0-6]
+		 * mon = numeric month [1-12]
+		 * year is numeric year [1-9999]
+		 * yday is numeric day of the year [1-366]
+		 * weekday is the textual day of the week [Sunday-Saturday]
+		 * month is textual month name [January-December]
+		 * timestamp is the unix timstamp and can be either positive or negative integer[+/- int]
+		 *
+		 * $t can be nearly any form of communicating time including a Unix timestamp, a variety
+		 * of datetime formats, date only, time only, or nothing at all
+		 *
+		 * date formats include m/d/y, y-m-d, written [long form or abbreviated]
+		 * time formats include 12/24 hour formats (depending on if AM/PM are included). Seconds are optional
+		 *
+		 * @link http://www.php.net/manual/en/function.getdate.php
+		 * @link http://www.php.net/manual/en/datetime.construct.php
+		 * @param mixed $t (null, int unix_timestamp, [date][time]_format)
+		 */
+
 		public function __construct($t = null) {
-			/**
-			 * Creates an associave array containing date info
-			 * Keys[seconds, minutes, hours, mday, wday, mon, year, yday, weekday, month, timestamp]
-			 * All values are stripped of leading '0's
-			 * Seconds, minutes, are exactly what they are... no need to explain.
-			 * Hours are Hours in [0-23]
-			 * mday is numeric day of month [1-31]
-			 * wday is numerica day of the week, starting on Sunday [0-6]
-			 * mon = numeric month [1-12]
-			 * year is numeric year [1-9999]
-			 * yday is numeric day of the year [1-366]
-			 * weekday is the textual day of the week [Sunday-Saturday]
-			 * month is textual month name [January-December]
-			 * timestamp is the unix timstamp and can be either positive or negative integer[+/- int]
-			 *
-			 * $t can be nearly any form of communicating time including a Unix timestamp, a variety
-			 * of datetime formats, date only, time only, or nothing at all
-			 *
-			 * date formats include m/d/y, y-m-d, written [long form or abbreviated]
-			 * time formats include 12/24 hour formats (depending on if AM/PM are included). Seconds are optional
-			 *
-			 * @link http://www.php.net/manual/en/function.getdate.php
-			 * @link http://www.php.net/manual/en/datetime.construct.php
-			 * @param mixed $t (null, int unix_timestamp, [date][time]_format)
-			 */
 			(preg_match('/^\d+$/', $t)) ? $this->data = getdate($t) : $this->data = getdate(date_timestamp_get(date_create($t)));
 			$this->data['timestamp'] = array_pop($this->data);
 			$this->obj = $this->make();
 			$this->src = $t;
 		}
 
-		public function __set($key, $value) {
-			/**
-			 * Setter method for the class.
-			 *
-			 * @param string $key, mixed $value
-			 * @return void
-			 * @example "$storage->key = $value"
-			 */
+		/**
+		 * Setter method for the class.
+		 *
+		 * @param string $key, mixed $value
+		 * @return void
+		 * @example "$storage->key = $value"
+		 */
 
+		public function __set($key, $value) {
 			$key = str_replace('_', '-', $key);
 			$this->data[$key] = $value;
 			if($key === 'mon') {
@@ -91,15 +92,15 @@
 			}
 		}
 
-		public function __get($key) {
-			/**
-			 * The getter method for the class.
-			 *
-			 * @param string $key
-			 * @return mixed
-			 * @example "$storage->key" Returns $value
-			 */
+		/**
+		 * The getter method for the class.
+		 *
+		 * @param string $key
+		 * @return mixed
+		 * @example "$storage->key" Returns $value
+		 */
 
+		public function __get($key) {
 			$key = str_replace('_', '-', $key);
 			if(array_key_exists($key, $this->data)) {
 				return $this->data[$key];
@@ -107,35 +108,35 @@
 			return false;
 		}
 
-		public function __isset($key) {
-			/**
-			 * @param string $key
-			 * @return boolean
-			 * @example "isset({$storage->key})"
-			 */
+		/**
+		 * @param string $key
+		 * @return boolean
+		 * @example "isset({$storage->key})"
+		 */
 
+		public function __isset($key) {
 			return array_key_exists(str_replace('_', '-', $key), $this->data);
 		}
 
-		public function __unset($index) {
-			/**
-			 * Removes an index from the array.
-			 *
-			 * @param string $key
-			 * @return void
-			 * @example "unset($storage->key)"
-			 */
+		/**
+		 * Removes an index from the array.
+		 *
+		 * @param string $key
+		 * @return void
+		 * @example "unset($storage->key)"
+		 */
 
+		public function __unset($index) {
 			unset($this->data[str_replace('_', '-', $index)]);
 		}
 
-		public function __call($name, array $arguments) {
-			/**
-			 * Chained magic getter and setter
-			 * @param string $name, array $arguments
-			 * @example "$storage->[getName|setName]($value)"
-			 */
+		/**
+		 * Chained magic getter and setter
+		 * @param string $name, array $arguments
+		 * @example "$storage->[getName|setName]($value)"
+		 */
 
+		public function __call($name, array $arguments) {
 			$name = strtolower($name);
 			$act = substr($name, 0, 3);
 			$key = str_replace('_', '-', substr($name, 3));
@@ -151,33 +152,35 @@
 			}
 		}
 
-		public function keys() {
-			/**
-			 * Returns an array of all array keys for $thsi->data
-			 *
-			 * @param void
-			 * @return array
-			 */
+		/**
+		 * Returns an array of all array keys for $thsi->data
+		 *
+		 * @param void
+		 * @return array
+		 */
 
+		public function keys() {
 			return array_keys($this->data);
 		}
 
+		/**
+		 * Converts the object's timestamp into the requested format
+		 *
+		 * @param string $format
+		 * @return string
+		 * @link http://php.net/manual/en/function.date.php
+		 */
+
 		public function out($format = 'Y-m-d\TH:i:s') {
-			/**
-			 * Converts the object's timestamp into the requested format
-			 *
-			 * @param string $format
-			 * @return string
-			 * @link http://php.net/manual/en/function.date.php
-			 */
 			return date($format, $this->data['timestamp']);
 		}
 
+		/**
+		 * @param void
+		 * @retrun void
+		 */
+
 		public function update() {
-			/**
-			 * @param void
-			 * @retrun void
-			 */
 			$str = "{$this->year}-{$this->mon}-{$this->mday}T{$this->hours}:{$this->minutes}:{$this->seconds}";
 			$this->data['timestamp'] = date_timestamp_get(date_create($str));
 //			$updated = new simple_date(

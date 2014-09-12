@@ -12,18 +12,18 @@
 
 		public $stm = null;
 
-		public static function load($ini = 'connect') {
-			/**
-			 * Static load function avoids creating multiple instances/connections
-			 * It stores an array of instances in the static instances array.
-			 * It uses $ini as the key to the array, and the _pdo instance as
-			 * the value.
-			 *
-			 * @params string $ini (.ini file to use for database credentials)
-			 * @return prepared Object
-			 * @example $prepared prepared::load($connect) or $prepared = prepared::load($connect)
-			 */
+		/**
+		 * Static load function avoids creating multiple instances/connections
+		 * It stores an array of instances in the static instances array.
+		 * It uses $ini as the key to the array, and the _pdo instance as
+		 * the value.
+		 *
+		 * @params string $ini (.ini file to use for database credentials)
+		 * @return prepared Object
+		 * @example $prepared prepared::load($connect) or $prepared = prepared::load($connect)
+		 */
 
+		public static function load($ini = 'connect') {
 			if(!array_key_exists($ini, self::$instances)) {
 				self::$instances[$ini] = new self($ini);
 			}
@@ -39,47 +39,47 @@
 			parent::__construct($ini);
 		}
 
-		public function prepare($query) {
-			/**
-			 * Create a prepared statement and save as $stm
-			 *
-			 * Need to use parent::prepare() in order to
-			 * keep code withing the class because otherwise
-			 * we would have to work with a PDOStatement Object
-			 * and lose the chaining benefits as well as the ability
-			 * to define its methods.
-			 *
-			 * @param string $query
-			 * @return prepared Object
-			 * @example
-			 * $prepared->prepare("
-			 * 	SELECT *
-			 * 	FROM `$table`
-			 * 	WHERE `name` = :name
-			 * ");
-			 */
+		/**
+		 * Create a prepared statement and save as $stm
+		 *
+		 * Need to use parent::prepare() in order to
+		 * keep code withing the class because otherwise
+		 * we would have to work with a PDOStatement Object
+		 * and lose the chaining benefits as well as the ability
+		 * to define its methods.
+		 *
+		 * @param string $query
+		 * @return prepared Object
+		 * @example
+		 * $prepared->prepare("
+		 * 	SELECT *
+		 * 	FROM `$table`
+		 * 	WHERE `name` = :name
+		 * ");
+		 */
 
+		public function prepare($query) {
 			$this->stm = $this->pdo->prepare((string)$query);
 			return $this;
 		}
 
-		public function bind(array $binders) {
-			/**
-			 * Bind values to $stm using [$name => $value]
-			 * without needing to use the ':' prefix.
-			 *
-			 * Can bind multiple times in a single call by
-			 * using an array and looping through it.
-			 *
-			 * @param array $binders
-			 * @return prepared Object
-			 * @example
-			 * $prepared->bind([
-			 * 	$name => $value
-			 * 	...
-			 * ])
-			 */
+		/**
+		 * Bind values to $stm using [$name => $value]
+		 * without needing to use the ':' prefix.
+		 *
+		 * Can bind multiple times in a single call by
+		 * using an array and looping through it.
+		 *
+		 * @param array $binders
+		 * @return prepared Object
+		 * @example
+		 * $prepared->bind([
+		 * 	$name => $value
+		 * 	...
+		 * ])
+		 */
 
+		public function bind(array $binders) {
 			foreach($binders as $name => $value) {
 				$this->stm->bindValue(':' . $name, (string)$value);
 			}
@@ -91,14 +91,14 @@
 			return $this;
 		}
 
-		public function get_results($n = null) {
-			/**
-			 * Gets results of prepared statement. $n can be passed to retreive a specific row
-			 *
-			 * @param [int $n]
-			 * @return mixed
-			 */
+		/**
+		 * Gets results of prepared statement. $n can be passed to retreive a specific row
+		 *
+		 * @param [int $n]
+		 * @return mixed
+		 */
 
+		public function get_results($n = null) {
 			$results = [];
 			foreach($this->stm->fetchAll(PDO::FETCH_CLASS) as $data) {			//Convert from an associative array to a stdClass object
 				/*$row = new stdClass();

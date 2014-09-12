@@ -16,125 +16,125 @@
 		protected $pattern, $replacement, $limit = -1, $find;
 		public $in, $result;
 
-		public function __construct($str = null) {
-			/**
-			 * Gets database connection info from /connect.ini (stored in $site)
-			 * Uses that data to create a new PHP Data Object
-			 *
-			 * @param [string $str]
-			 * @return void
-			 * @example $reg = new regexp([$string])
-			 */
+		/**
+		 * Gets database connection info from /connect.ini (stored in $site)
+		 * Uses that data to create a new PHP Data Object
+		 *
+		 * @param [string $str]
+		 * @return void
+		 * @example $reg = new regexp([$string])
+		 */
 
+		public function __construct($str = null) {
 			$this->pattern = array();
 			$this->replacement = array();
 			if(is_string($str)) $this->in = $str;
 		}
 
-		public function __isset($name) {
-			/**
-			 * @param string $key
-			 * @return boolean
-			 * @example "isset({$reg->key})"
-			 */
+		/**
+		 * @param string $key
+		 * @return boolean
+		 * @example "isset({$reg->key})"
+		 */
 
+		public function __isset($name) {
 			return isset($this->$name);
 		}
 
-		public function set_pattern($type = null) {
-			/**
-			 * Set pattern according to presets
-			 *
-			 * @param string $type
-			 * @return self
-			 * @uses functions.php::pattern()
-			 * @example "$reg->set_pattern('number')" sets $this->patttern to "\d+(\.\d{1,})?"
-			 */
+		/**
+		 * Set pattern according to presets
+		 *
+		 * @param string $type
+		 * @return self
+		 * @uses functions.php::pattern()
+		 * @example "$reg->set_pattern('number')" sets $this->patttern to "\d+(\.\d{1,})?"
+		 */
 
+		public function set_pattern($type = null) {
 			$this->pattern = pattern($type);
 			return $this;
 		}
 
-		public function replace($str = null) {
-			/**
-			 * Adds a new pattern to $pattern[]
-			 *
-			 * @param string $str
-			 * @return self
-			 */
+		/**
+		 * Adds a new pattern to $pattern[]
+		 *
+		 * @param string $str
+		 * @return self
+		 */
 
+		public function replace($str = null) {
 			array_push($this->pattern, $this->regexp($str));
 			return $this;
 		}
 
-		public function with($str = null) {
-			/**
-			 * Adds a new replacement to $replacement
-			 *
-			 * @param strign $str
-			 * @return self
-			 */
+		/**
+		 * Adds a new replacement to $replacement
+		 *
+		 * @param strign $str
+		 * @return self
+		 */
 
+		public function with($str = null) {
 			array_push($this->replacement, (string)$str);
 			return $this;
 		}
 
-		public function ends_with($str = null) {
-			/**
-			 * RegExp at end of string
-			 *
-			 * @param string $str
-			 * @return boolean
-			 */
+		/**
+		 * RegExp at end of string
+		 *
+		 * @param string $str
+		 * @return boolean
+		 */
 
+		public function ends_with($str = null) {
 			$this->find = $this->regexp($str, 'end');
 			return $this->test();
 		}
 
-		public function begins_with($str) {
-			/**
-			 * RegExp at beginning of string
-			 *
-			 * @param string $str
-			 * @return boolean
-			 */
+		/**
+		 * RegExp at beginning of string
+		 *
+		 * @param string $str
+		 * @return boolean
+		 */
 
+		public function begins_with($str) {
 			$this->find = $this->regexp((string)$str, 'begin');
 			return $this->test();
 		}
 
-		public function is($str = null) {
-			/**
-			 * RegExp of the full string. Begin and end
-			 *
-			 * @param string $str
-			 * @return boolean
-			 */
+		/**
+		 * RegExp of the full string. Begin and end
+		 *
+		 * @param string $str
+		 * @return boolean
+		 */
 
+		public function is($str = null) {
 			$this->find = $this->regexp($str, 'full');
 			return $this->test();
 		}
 
-		public function has($str = null) {
-			/**
-			 * Location agnostic RegExp
-			 *
-			 * @param string $str
-			 * @return boolean
-			 */
+		/**
+		 * Location agnostic RegExp
+		 *
+		 * @param string $str
+		 * @return boolean
+		 */
 
+		public function has($str = null) {
 			$this->find = $this->regexp($str, null);
 			return $this->test();
 		}
 
-		public function regexp($str = null, $loc = null) {
-			/**
-			 * Creates the RegExp format '/[^]pattern[$]/', replacing dangerous characters
-			 *
-			 * @param string $str[, string $loc]
-			 * @return string (regular expression)
-			 */
+		/**
+		 * Creates the RegExp format '/[^]pattern[$]/', replacing dangerous characters
+		 *
+		 * @param string $str[, string $loc]
+		 * @return string (regular expression)
+		 */
 
+		public function regexp($str = null, $loc = null) {
 			$pattern = preg_quote((string)$str, '/');
 			switch($loc) {
 				case 'begin':
@@ -155,62 +155,61 @@
 			return $pattern;
 		}
 
-		public function test() {
-			/**
-			 * Returns boolean result of a RegExp search
-			 *
-			 * @param void
-			 * @return boolean
-			 */
+		/**
+		 * Returns boolean result of a RegExp search
+		 *
+		 * @param void
+		 * @return boolean
+		 */
 
+		public function test() {
 			return preg_match($this->find, $this->in);
 		}
 
-		public function find($str = null, $loc = null) {
-			/**
-			 * In the case of finding a needle in a haystack, this sis the needle
-			 *
-			 * @param string $str[, string $loc]
-			 * @return self
-			 */
+		/**
+		 * In the case of finding a needle in a haystack, this sis the needle
+		 *
+		 * @param string $str[, string $loc]
+		 * @return self
+		 */
 
+		public function find($str = null, $loc = null) {
 			$this->find = $this->regexp($str, $full);
 			return $this;
 		}
 
-		public function in($str) {
-			/**
-			 * In the case of finding a needle in a haystack, this sis the needle
-			 * @param string $str
-			 * @return self
-			 */
+		/**
+		 * In the case of finding a needle in a haystack, this sis the needle
+		 *
+		 * @param string $str
+		 * @return self
+		 */
 
+		public function in($str) {
 			$this->in = (string)$str;
 			return $this;
 		}
 
-		public function limit($n = 0) {
-			/**
-			 * Optional limit to replacements. Defaults to unlimited
-			 *
-			 * @param int $n
-			 * @return self
-			 */
+		/**
+		 * Optional limit to replacements. Defaults to unlimited
+		 *
+		 * @param int $n
+		 * @return self
+		 */
 
+		public function limit($n = 0) {
 			$this->limit = (int)$n;
 			return $this;
 		}
 
-		public function execute($update = true) {
-			/**
-			 * Runs the RegExp replacement, modifies and returns the string
-			 *
-			 * @param void
-			 * @return string
-			 */
+		/**
+		 * Runs the RegExp replacement, modifies and returns the string
+		 *
+		 * @param void
+		 * @return string
+		 */
 
-			/*$this->in = preg_replace($this->pattern, $this->replacement, $this->in, $this->limit);
-			return $this->in;*/
+		public function execute($update = true) {
 			if($update) {
 				$this->in = preg_replace($this->pattern, $this->replacement, $this->in, $this->limit);
 				return $this->in;
@@ -218,24 +217,24 @@
 			else return preg_replace($this->pattern, $this->replacement, $this->in, $this->limit);
 		}
 
-		public function value() {
-			/**
-			 * @depreciated ?
-			 * @param void
-			 * @return string
-			 */
+		/**
+		 * @depreciated ?
+		 * @param void
+		 * @return string
+		 */
 
+		public function value() {
 			return $this->in;
 		}
 
-		public function matches_pattern($type = null) {
-			/**
-			 * Returns input patterns for html inputs
-			 *
-			 * @param string $type
-			 * @return boolean
-			 */
+		/**
+		 * Returns input patterns for html inputs
+		 *
+		 * @param string $type
+		 * @return boolean
+		 */
 
+		public function matches_pattern($type = null) {
 			$pattern = pattern($type);
 			$this->find = "/^$pattern$/";
 			return $this->test();

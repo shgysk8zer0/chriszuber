@@ -46,24 +46,24 @@
 		private $data, $headers, $row, $empty_row, $table, $thead, $tfoot, $tbody;
 		public $caption;
 
-		public function __construct() {
-			/**
-			 * Sets up default values for class
-			 *
-			 * $data needs to be a multi-dimenstional associative array
-			 *
-			 * $row is the current row (integer) to be working on. Incremented
-			 * by next_row() method.
-			 *
-			 * $empty_row as an associative array with its keys defined by $headers,
-			 * but all of its values null
-			 *
-			 * $thead, $tfoot, & $caption are strings for those elements in a table
-			 *
-			 * @param mixed arguments (will take arguments as an array or comma separated list, either results in an array)
-			 * @example $table = new table($cells[] | 'field1'[, ...])
-			 */
+		/**
+		 * Sets up default values for class
+		 *
+		 * $data needs to be a multi-dimenstional associative array
+		 *
+		 * $row is the current row (integer) to be working on. Incremented
+		 * by next_row() method.
+		 *
+		 * $empty_row as an associative array with its keys defined by $headers,
+		 * but all of its values null
+		 *
+		 * $thead, $tfoot, & $caption are strings for those elements in a table
+		 *
+		 * @param mixed arguments (will take arguments as an array or comma separated list, either results in an array)
+		 * @example $table = new table($cells[] | 'field1'[, ...])
+		 */
 
+		public function __construct() {
 			$this->data = [];
 			$this->headers = flatten(func_get_args());
 			$this->table = null;
@@ -76,31 +76,31 @@
 			$this->data[0] = $this->empty_row;
 		}
 
-		public function __set($cell, $value) {
-			/**
-			 * Magic setter for the class.
-			 *
-			 * Calls the private set() method too add a value to a cell
-			 * @param string $cell
-			 * @param string $value
-			 * @return void
-			 * @example $table->$cell = $value
-			 */
+		/**
+		 * Magic setter for the class.
+		 *
+		 * Calls the private set() method too add a value to a cell
+		 * @param string $cell
+		 * @param string $value
+		 * @return void
+		 * @example $table->$cell = $value
+		 */
 
+		public function __set($cell, $value) {
 			$this->set($cell, (string)$value);
 		}
 
-		public function __get($cell) {
-			/**
-			 * Magic getter method for the class
-			 * Allows for cells to be appended to rather than having to
-			 * be built ahead of time.
-			 *
-			 * @param string $cell
-			 * @return string
-			 * @example $table->$cell .= ' and on and on...'
-			 */
+		/**
+		 * Magic getter method for the class
+		 * Allows for cells to be appended to rather than having to
+		 * be built ahead of time.
+		 *
+		 * @param string $cell
+		 * @return string
+		 * @example $table->$cell .= ' and on and on...'
+		 */
 
+		public function __get($cell) {
 			if(in_array($cell, $this->headers)) {
 				return $this->data[$this->row][$cell];
 			}
@@ -117,37 +117,37 @@
 			unset($this->data[$this->row][$cell]);
 		}
 
-		public function __call($cell, array $arguments) {
-			/**
-			 * Chaninable magic method, in this case only to set values
-			 *
-			 * Also calls the private set() method too add a value to a field
-			 *
-			 * @param string $cell
-			 * @param array $arguments
-			 * @return self
-			 * @example $table->$cell[1]($value1)->$cell[2]($value2)...
-			 */
+		/**
+		 * Chaninable magic method, in this case only to set values
+		 *
+		 * Also calls the private set() method too add a value to a field
+		 *
+		 * @param string $cell
+		 * @param array $arguments
+		 * @return self
+		 * @example $table->$cell[1]($value1)->$cell[2]($value2)...
+		 */
 
+		public function __call($cell, array $arguments) {
 			$this->set($cell, join(null, $arguments));
 
 			return $this;
 		}
 
-		public function next_row() {
-			/**
-			 * Method to move to the next row of $data array.
-			 * Increments $row, which is used in set() method
-			 * when settings data ($data[$row]).
-			 *
-			 * Also sets the data for that row to an empty
-			 * array pre-set with the keys defined by $cells
-			 *
-			 * @param void
-			 * @return self
-			 * @example $table->next_row();
-			 */
+		/**
+		 * Method to move to the next row of $data array.
+		 * Increments $row, which is used in set() method
+		 * when settings data ($data[$row]).
+		 *
+		 * Also sets the data for that row to an empty
+		 * array pre-set with the keys defined by $cells
+		 *
+		 * @param void
+		 * @return self
+		 * @example $table->next_row();
+		 */
 
+		public function next_row() {
 			$this->tbody .= '<tr>' . html_join('td', $this->data[$this->row]) . '</tr>';
 			$this->data[$this->row] = $this->empty_row;
 			$this->row++;
@@ -155,17 +155,17 @@
 			return $this;
 		}
 
-		public function out($echo = false) {
-			/**
-			 * Returns all $data as a CSV formatted string
-			 *
-			 * Uses private build_table() method to convert $data
-			 * array into a <table>
-			 *
-			 * @param bool $echo
-			 * @return mixed (HTML formatted <table> string from $data if $echo is false)
-			 */
+		/**
+		 * Returns all $data as a CSV formatted string
+		 *
+		 * Uses private build_table() method to convert $data
+		 * array into a <table>
+		 *
+		 * @param bool $echo
+		 * @return mixed (HTML formatted <table> string from $data if $echo is false)
+		 */
 
+		public function out($echo = false) {
 			$this->build_table();
 			if($echo) {
 				echo $this->table;
@@ -175,18 +175,18 @@
 			}
 		}
 
-		private function build_table() {
-			/**
-			 * Does all the work for creating a <table> from variables.
-			 * This mostly adds <tfoot>, <thead>, & <tbody> to a <table>,
-			 * as well as <cpation> if $caption is set.
-			 *
-			 * Will also append the current row to $tbody if it hasn't been already
-			 *
-			 * @param void
-			 * @return void
-			 */
+		/**
+		 * Does all the work for creating a <table> from variables.
+		 * This mostly adds <tfoot>, <thead>, & <tbody> to a <table>,
+		 * as well as <cpation> if $caption is set.
+		 *
+		 * Will also append the current row to $tbody if it hasn't been already
+		 *
+		 * @param void
+		 * @return void
+		 */
 
+		private function build_table() {
 			if(is_null($this->table)) {
 				if($this->data[$this->row] !== $this->empty_row) {
 					$this->tbody .= '<tr>' . html_join('td', $this->data[$this->row]) . '</tr>';
@@ -201,24 +201,24 @@
 			}
 		}
 
-		private function set($cell, $value) {
-			/**
-			 * Private method for setting columns for the current $row
-			 *
-			 * Checks if $cell is in the array of available $headers
-			 * and that both arguments are strings.
-			 *
-			 * If these conditions are true, it sets $data[$row][$cell] to $value
-			 * and returns true.
-			 *
-			 * Otherwise returns false without setting any data
-			 *
-			 * @param string $cell (name of field to set for current row)
-			 * @param string $value (value to set it to)
-			 * @return boolean (whether or not $cell is available)
-			 * @example $this->set($cell, $value)
-			 */
+		/**
+		 * Private method for setting columns for the current $row
+		 *
+		 * Checks if $cell is in the array of available $headers
+		 * and that both arguments are strings.
+		 *
+		 * If these conditions are true, it sets $data[$row][$cell] to $value
+		 * and returns true.
+		 *
+		 * Otherwise returns false without setting any data
+		 *
+		 * @param string $cell (name of field to set for current row)
+		 * @param string $value (value to set it to)
+		 * @return boolean (whether or not $cell is available)
+		 * @example $this->set($cell, $value)
+		 */
 
+		private function set($cell, $value) {
 			if(is_string($cell) and in_array($cell, $this->headers)) {
 				$this->data[$this->row][$cell] = (string)$value;
 				return true;

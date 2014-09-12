@@ -19,56 +19,56 @@
 		private static $instance = null;
 		private $data;
 
-		public static function load() {
-			/**
-			 * Static load function avoids creating multiple instances/connections
-			 * It checks if an instance has been created and returns that or a new instance
-			 *
-			 * @params void
-			 * @return storage object/class
-			 * @example $storage = storage::load
-			 */
+		/**
+		 * Static load function avoids creating multiple instances/connections
+		 * It checks if an instance has been created and returns that or a new instance
+		 *
+		 * @params void
+		 * @return storage object/class
+		 * @example $storage = storage::load
+		 */
 
+		public static function load() {
 			if(is_null(self::$instance)) {
 				self::$instance = new self;
 			}
 			return self::$instance;
 		}
 
-		public function __construct() {
-			/**
-			 * Creates new instance of storage.
-			 *
-			 * @params void
-			 * @return void
-			 * @example $storage = new storage
-			 */
+		/**
+		 * Creates new instance of storage.
+		 *
+		 * @params void
+		 * @return void
+		 * @example $storage = new storage
+		 */
 
+		public function __construct() {
 			$this->data = array();
 		}
 
-		public function __set($key, $value) {
-			/**
-			 * Setter method for the class.
-			 *
-			 * @param string $key, mixed $value
-			 * @return void
-			 * @example "$storage->key = $value"
-			 */
+		/**
+		 * Setter method for the class.
+		 *
+		 * @param string $key, mixed $value
+		 * @return void
+		 * @example "$storage->key = $value"
+		 */
 
+		public function __set($key, $value) {
 			$key = str_replace('_', '-', $key);
 			$this->data[$key] = $value;
 		}
 
-		public function __get($key) {
-			/**
-			 * The getter method for the class.
-			 *
-			 * @param string $key
-			 * @return mixed
-			 * @example "$storage->key" Returns $value
-			 */
+		/**
+		 * The getter method for the class.
+		 *
+		 * @param string $key
+		 * @return mixed
+		 * @example "$storage->key" Returns $value
+		 */
 
+		public function __get($key) {
 			$key = str_replace('_', '-', $key);
 			if(array_key_exists($key, $this->data)) {
 				return $this->data[$key];
@@ -76,35 +76,35 @@
 			return false;
 		}
 
-		public function __isset($key) {
-			/**
-			 * @param string $key
-			 * @return boolean
-			 * @example "isset({$storage->key})"
-			 */
+		/**
+		 * @param string $key
+		 * @return boolean
+		 * @example "isset({$storage->key})"
+		 */
 
+		public function __isset($key) {
 			return array_key_exists(str_replace('_', '-', $key), $this->data);
 		}
 
-		public function __unset($key) {
-			/**
-			 * Removes an index from the array.
-			 *
-			 * @param string $key
-			 * @return void
-			 * @example "unset($storage->key)"
-			 */
+		/**
+		 * Removes an index from the array.
+		 *
+		 * @param string $key
+		 * @return void
+		 * @example "unset($storage->key)"
+		 */
 
+		public function __unset($key) {
 			unset($this->data[str_replace('_', '-', $key)]);
 		}
 
-		public function __call($name, array $arguments) {
-			/**
-			 * Chained magic getter and setter
-			 * @param string $name, array $arguments
-			 * @example "$storage->[getName|setName]($value)"
-			 */
+		/**
+		 * Chained magic getter and setter
+		 * @param string $name, array $arguments
+		 * @example "$storage->[getName|setName]($value)"
+		 */
 
+		public function __call($name, array $arguments) {
 			$name = strtolower($name);
 			$act = substr($name, 0, 3);
 			$key = str_replace('_', '-', substr($name, 3));
@@ -121,64 +121,65 @@
 			}
 		}
 
-		public function keys() {
-			/**
-			 * Returns an array of all array keys for $thsi->data
-			 *
-			 * @param void
-			 * @return array
-			 */
+		/**
+		 * Returns an array of all array keys for $thsi->data
+		 *
+		 * @param void
+		 * @return array
+		 */
 
+		public function keys() {
 			return array_keys($this->data);
 		}
 
-		public function save() {
-			/**
-			 * Saves all $data to $_SESSION
-			 *
-			 * @param void
-			 * @return void
-			 */
+		/**
+		 * Saves all $data to $_SESSION
+		 *
+		 * @param void
+		 * @return void
+		 * @todo Make work with more types of data
+		 */
 
-			//[TODO] Make work with more types of data
+		public function save() {
 			$_SESSION['storage'] = $this->data;
 		}
 
-		public function restore() {
-			/**
-			 * Loads existing $data array from $_SESSION
-			 *
-			 * @param void
-			 * @return void
-			 */
+		/**
+		 * Loads existing $data array from $_SESSION
+		 *
+		 * @param void
+		 * @return void
+		 * @todo Make work with more types of data
+		 */
 
-			//[TODO] Make work with more types of data
+		public function restore() {
 			if(array_key_exists('storage', $_SESSION)) {
 				$this->data = $_SESSION['storage'];
 			}
 		}
 
+		/**
+		 * Destroys/clears/deletes
+		 * This message will self destruct
+		 *
+		 * @param void
+		 * @return void
+		 */
+
 		public function clear() {
-			/**
-			 * Destroys/clears/deletes
-			 * This message will self destruct
-			 *
-			 * @param void
-			 * @return void
-			 */
 			unset($this->data);
 			unset($this);
 		}
 
-		public function debug() {
-			/**
-			 * Prints out class information using print_r
-			 * wrapped in <pre> and <code>
-			 *
-			 * @param void
-			 * @return void
-			 */
+		/**
+		 * Prints out class information using print_r
+		 * wrapped in <pre> and <code>
+		 *
+		 * @param void
+		 * @return void
+		 */
 
+		public function debug() {
 			debug($this);
 		}
 	}

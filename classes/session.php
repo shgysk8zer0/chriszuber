@@ -17,35 +17,36 @@
 	* @var boolean $httponly
 	* @var session $instance
 	*/
+
 	class session implements magic_methods {
 		private $name, $expires, $path, $domain, $secure, $httponly;
 		private static $instance = null;
 
-		public static function load($site = null) {
-			/**
-			 * Static load function avoids creating multiple instances/connections
-			 * It checks if an instance has been created and returns that or a new instance
-			 *
-			 * @params [string $site] optional name for session
-			 * @return session object/class
-			 * @example $session = session::load([$site])
-			 */
+		/**
+		 * Static load function avoids creating multiple instances/connections
+		 * It checks if an instance has been created and returns that or a new instance
+		 *
+		 * @params [string $site] optional name for session
+		 * @return session object/class
+		 * @example $session = session::load([$site])
+		 */
 
+		public static function load($site = null) {
 			if(is_null(self::$instance)) {
 				self::$instance = new self($site);
 			}
 			return self::$instance;
 		}
 
-		public function __construct($name = null) {
-			/**
-			 * Creates new instance of session. $name is optional, and sets session_name if session has not been started
-			 *
-			 * @params [string $site] optional name for session
-			 * @return void
-			 * @example $session = new session([$site])
-			 */
+		/**
+		 * Creates new instance of session. $name is optional, and sets session_name if session has not been started
+		 *
+		 * @params [string $site] optional name for session
+		 * @return void
+		 * @example $session = new session([$site])
+		 */
 
+		public function __construct($name = null) {
 			if(session_status() !== PHP_SESSION_ACTIVE) {							#Do not create new session of one has already been created
 				$this->expires = 0;
 				$this->path = '/' . trim(str_replace("{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}", '/', URL), '/');
@@ -65,15 +66,15 @@
 			}
 		}
 
-		public function __get($key) {
-			/**
-			 * The getter method for the class.
-			 *
-			 * @param string $key
-			 * @return mixed
-			 * @example "$session->key" Returns $value
-			 */
+		/**
+		 * The getter method for the class.
+		 *
+		 * @param string $key
+		 * @return mixed
+		 * @example "$session->key" Returns $value
+		 */
 
+		public function __get($key) {
 			$key = strtolower(str_replace('_', '-', $key));
 			if(array_key_exists($key, $_SESSION)) {
 				return $_SESSION[$key];
@@ -81,25 +82,26 @@
 			return false;
 		}
 
+		/**
+		 * Setter method for the class.
+		 *
+		 * @param string $key, mixed $value
+		 * @return void
+		 * @example "$session->key = $value"
+		 */
+
 		public function __set($key, $value) {
-			/**
-			 * Setter method for the class.
-			 *
-			 * @param string $key, mixed $value
-			 * @return void
-			 * @example "$session->key = $value"
-			 */
 			$key = strtolower(str_replace('_', '-', $key));
 			$_SESSION[$key] = trim($value);
 		}
 
-		public function __call($name, array $arguments) {
-			/**
-			 * Chained magic getter and setter
-			 * @param string $name, array $arguments
-			 * @example "$session->[getName|setName]($value)"
-			 */
+		/**
+		 * Chained magic getter and setter
+		 * @param string $name, array $arguments
+		 * @example "$session->[getName|setName]($value)"
+		 */
 
+		public function __call($name, array $arguments) {
 			$name = strtolower($name);
 			$act = substr($name, 0, 3);
 			$key = str_replace('_', '-', substr($name, 3));
@@ -121,38 +123,38 @@
 			}
 		}
 
-		public function __isset($key) {
-			/**
-			 * @param string $key
-			 * @return boolean
-			 * @example "isset({$session->key})"
-			 */
+		/**
+		 * @param string $key
+		 * @return boolean
+		 * @example "isset({$session->key})"
+		 */
 
+		public function __isset($key) {
 			$key = strtolower(str_replace('_', '-', $key));
 			return array_key_exists($key, $_SESSION);
 		}
 
-		public function __unset($key) {
-			/**
-			 * Removes an index from the array.
-			 *
-			 * @param string $key
-			 * @return void
-			 * @example "unset($session->key)"
-			 */
+		/**
+		 * Removes an index from the array.
+		 *
+		 * @param string $key
+		 * @return void
+		 * @example "unset($session->key)"
+		 */
 
+		public function __unset($key) {
 			$key = strtolower(str_replace('_', '-', $key));
 			unset($_SESSION[$key]);
 		}
 
-		public function destroy() {
-			/**
-			* Destroys $_SESSION and attempts to destroy the associated cookie
-			*
-			* @param void
-			* @return void
-			*/
+		/**
+		* Destroys $_SESSION and attempts to destroy the associated cookie
+		*
+		* @param void
+		* @return void
+		*/
 
+		public function destroy() {
 			session_destroy();
 			unset($_SESSION);
 			if(array_key_exists($this->name, $_COOKIE)){
@@ -161,27 +163,27 @@
 			}
 		}
 
-		public function restart() {
-			/**
-			 * Clear $_SESSION. All data in $_SESSION is unset
-			 *
-			 * @param void
-			 * @example $session->restart()
-			 */
+		/**
+		 * Clear $_SESSION. All data in $_SESSION is unset
+		 *
+		 * @param void
+		 * @example $session->restart()
+		 */
 
+		public function restart() {
 			session_unset();
 			return $this;
 		}
 
-		public function debug() {
-			/**
-			 * Prints out class information using print_r
-			 * wrapped in <pre> and <code>
-			 *
-			 * @param void
-			 * @return void
-			 */
+		/**
+		 * Prints out class information using print_r
+		 * wrapped in <pre> and <code>
+		 *
+		 * @param void
+		 * @return void
+		 */
 
+		public function debug() {
 			debug($this);
 		}
 	}

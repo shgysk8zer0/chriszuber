@@ -18,39 +18,38 @@
 		private static $instances = [];
 		public $connected;
 
-		public function load($con = 'connect') {
-			/**
-			 * Static class load method
-			 *
-			 * Creates a new instance and returns it if one does not exist,
-			 * otherwise returns the existing instance
-			 *
-			 * @param mixed $con
-			 * @return pdo_connect
-			 */
+		/**
+		 * Static class load method
+		 *
+		 * Creates a new instance and returns it if one does not exist,
+		 * otherwise returns the existing instance
+		 *
+		 * @param mixed $con
+		 * @return pdo_connect
+		 */
 
+		public function load($con = 'connect') {
 			if(!array_key_exists($con, self::$instances)) {
 				self::$instances[$con] = new self($con);
 			}
 			return self::$instances[$con];
 		}
 
+		/**
+		 * @method __construct
+		 * @desc
+		 * Gets database connection info from /connect.ini (using parse_ini_file)
+		 * The default ini file to use is connect, but can be passed another
+		 * in the $con argument.
+		 *
+		 * Uses that data to create a new PHP Data Object
+		 *
+		 * @param mixed $con (.ini file to use for database credentials)
+		 * @return void
+		 * @example parent::__construct($con)
+		 */
+
 		public function __construct($con = 'connect') {
-			/**
-			 * @method __construct
-			 * @desc
-			 * Gets database connection info from /connect.ini (using parse_ini_file)
-			 * The default ini file to use is connect, but can be passed another
-			 * in the $con argument.
-			 *
-			 * Uses that data to create a new PHP Data Object
-			 *
-			 * @param mixed $con (.ini file to use for database credentials)
-			 * @return void
-			 * @example parent::__construct($con)
-			 */
-
-
 			$this->connected = false;
 
 			if(is_string($con)) {
@@ -80,27 +79,27 @@
 			}
 		}
 
-		private function log($method = null, $line = null, $message = '') {
-			/**
-			 * Writes errors to a log file
-			 *
-			 * @param string $method
-			 * @param int $line
-			 * @param string $message
-			 * @return void
-			 */
+		/**
+		 * Writes errors to a log file
+		 *
+		 * @param string $method
+		 * @param int $line
+		 * @param string $message
+		 * @return void
+		 */
 
+		private function log($method = null, $line = null, $message = '') {
 			file_put_contents(BASE . '/' . __CLASS__ . '.log', "Error in $method in line $line: $message" . PHP_EOL, FILE_APPEND | LOCK_EX);
 		}
 
-		public function restore($fname = null) {
-			/**
-			 * Restores a MySQL database from file $fname
-			 *
-			 * @param string $fname
-			 * @return self
-			 */
+		/**
+		 * Restores a MySQL database from file $fname
+		 *
+		 * @param string $fname
+		 * @return self
+		 */
 
+		public function restore($fname = null) {
 			if(is_null($fname)) {
 				$fname = BASE . DIRECTORY_SEPERATOR . $this->connect->database;
 			}
@@ -114,20 +113,20 @@
 			}
 		}
 
-		public function dump($filename = null) {
-			/**
-			 * Does a mysqldump if permissions allow
-			 *
-			 * Return value is based on whether or not permissions
-			 * allow file to be written, not whether or not it was.
-			 *
-			 * Default filename is the name of the database
-			 * from connection
-			 *
-			 * @param string $filename
-			 * @return boolean
-			 */
+		/**
+		 * Does a mysqldump if permissions allow
+		 *
+		 * Return value is based on whether or not permissions
+		 * allow file to be written, not whether or not it was.
+		 *
+		 * Default filename is the name of the database
+		 * from connection
+		 *
+		 * @param string $filename
+		 * @return boolean
+		 */
 
+		public function dump($filename = null) {
 			if(is_null($filename)) {
 				$filename = BASE . '/' . $this->connect->database;
 			}
