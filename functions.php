@@ -964,30 +964,71 @@
 	function mime_type($file = null) {
 		//Make an absolute path if given a relative path in $file
 
-		$file = (string)$file;
-		if(substr($file, 0, 1) !== '/') $file = BASE . "/$file";
+		$file = realpath($file);
+		switch(extension($file)){ //Start by matching file extensions
+			case 'svg':
+			case 'svgz': {
+				$type = 'image/svg+xml';
+			} break;
 
-		$unsupported_types = [
-			'css' => 'text/css',
-			'js' => 'application/javascript',
-			'svg' => 'image/svg+xml',
-			'woff' => 'application/font-woff',
-			'appcache' => 'text/cache-manifest',
-			'm4a' => 'audio/mp4',
-			'ogg' => 'audio/ogg',
-			'oga' => 'audio/ogg',
-			'ogv' => 'vidoe/ogg'
-		];
+			case 'woff': {
+				$type = 'application/font-woff';
+			} break;
 
-		if(array_key_exists(extension($file), $unsupported_types)) {
-			$mime = $unsupported_types[extension($file)];
+			case 'otf': {
+				$type = 'application/x-font-opentype';
+			} break;
+
+			case 'sql': {
+				$type = 'text/x-sql';
+			} break;
+
+			case 'appcache': {
+				$type = 'text/cache-manifest';
+			} break;
+
+			case 'mml': {
+				$type = 'application/xhtml+xml';
+			} break;
+
+			case 'ogv': {
+				$type = 'video/ogg';
+			} break;
+
+			case 'webm': {
+				$type = 'video/webm';
+			} break;
+
+			case 'ogg':
+			case 'oga':
+			case 'opus': {
+				$type = 'audio/ogg';
+			} break;
+
+			case 'flac': {
+				$type = 'audio/flac';
+			} break;
+
+			case 'm4a': {
+				$type = 'audio/mp4';
+			} break;
+
+			case 'css':
+			case 'cssz': {
+				$type = 'text/css';
+			} break;
+
+			case 'js':
+			case 'jsz': {
+				$type = 'text/javascript';
+			} break;
+
+			default: {		//If not found, try the file's default
+				$finfo = new \finfo(FILEINFO_MIME);
+				$type = preg_replace('/\;.*$/', null, (string)$finfo->file($file));
+			}
 		}
-		else {
-			$finfo = finfo_open(FILEINFO_MIME_TYPE);
-			$mime = finfo_file($finfo, $file);
-			finfo_close($finfo);
-		}
-		return $mime;
+		return $type;
 	}
 
 	/**
@@ -1002,7 +1043,7 @@
 	 */
 
 	function data_uri($file = null) {
-		$file = (string)$file;
+		$file = realpath((string)$file);
 		return 'data:' . mime_type($file) . ';base64,' . encode($file);
 	}
 
