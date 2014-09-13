@@ -23,6 +23,7 @@
 	 * @var int $status [HTTP status]
 	 */
 
+	namespace core;
 	class magic_cache {
 		private $file, $ext, $type, $size, $etag, $mod_time, $gz, $status;
 
@@ -43,12 +44,13 @@
 				$this->etag = md5_file($this->file);
 				$this->mod_time = filemtime($this->file);
 				$this->size = filesize($this->file);
-				$this->fname = pathinfo($this->file, PATHINFO_EXTENSION);
-				$this->ext = pathinfo($this->file, PATHINFO_FILENAME);;
+				$this->fname = pathinfo($this->file, PATHINFO_FILENAME);
+				$this->ext = pathinfo($this->file, PATHINFO_EXTENSION);
 				$this->type_by_extension();
 				$this->cache_control();
 				$this->make_headers();
 				readfile($this->file);
+				exit();
 			}
 			else{
 				$this->status = 404;
@@ -60,24 +62,22 @@
 		 * Where most of the headers are set
 		 *
 		 * Will not reach this point if already have a valid cached copy
+		 * Sets Contet-Type, Content-Length,Content-Encoding, Last-Modified,
+		 * Etag, and Cache-Control
 		 *
 		 * @return void
 		 */
 
 		protected function make_headers(){
-			$gzip = array('svgz', 'cssz', 'jsz');
 			$this->status = 200;
 			$this->http_status();
 			header("Content-Type: {$this->type}");
 			header("Content-Length: {$this->size}");
-			if(in_array($this->ext, $gzip)){
+			if(in_array($this->ext, ['svgz', 'cssz', 'jsz'])){
 				header('Content-Encoding: gzip');
 			}
-			//set last-modified header
 			header("Last-Modified: " . gmdate("D, d M Y H:i:s T", $this->mod_time));
-			//set etag-header
 			header("Etag: {$this->etag}");
-			//make sure caching is turned on
 			header('Cache-Control: public');
 		}
 
@@ -90,8 +90,6 @@
 		 */
 
 		protected function cache_control(){
-			//$ifModifiedSince = (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : false);
-			//get the HTTP_IF_NONE_MATCH header if set (etag: unique file hash)
 			$etagHeader = (isset($_SERVER['HTTP_IF_NONE_MATCH']) ? trim($_SERVER['HTTP_IF_NONE_MATCH']) : false);
 
 			//check if page has changed. If not, send 304 and exit
@@ -110,8 +108,12 @@
 		 * @return void
 		 */
 
-		protected function type_by_extension(){ //Because PHP does a poor job of setting MIME-Type
-			$gzip = array('svgz', 'cssz', 'jsz');
+		protected function type_by_extension(){
+			/*
+			 * PHP does a fairly poor job of getting MIME-type correct.
+			 * Switch on the extension to get MIME-type for unsupported
+			 * types. If not one of these, use finfo to guess.
+			 */
 			switch($this->ext){ //Start by matching file extensions
 				case 'svg':
 				case 'svgz': {
@@ -178,7 +180,7 @@
 		}
 
 		/**
-		 * [http_status description]
+		 * Set HTTP status & exit if no 2##
 		 *
 		 * @return void
 		 */
