@@ -22,6 +22,7 @@
 	* @var string $fname   [filename]
 	*/
 
+	namespace core;
 	class SimpleImage {
 
 		public $image;
