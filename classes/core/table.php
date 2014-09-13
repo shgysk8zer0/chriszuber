@@ -29,7 +29,7 @@
 	 * @var string $captioin
 	 *
 	 * @example
-	 * $table = new \core\table('first_name', 'last_name');
+	 * $table = new table('first_name', 'last_name');
 	 * $table->first_name = 'John';
 	 * $table->last_name = 'Smith';
 	 * $table->foo = 'bar';	//Does nothing
@@ -61,7 +61,7 @@
 		 * $thead, $tfoot, & $caption are strings for those elements in a table
 		 *
 		 * @param mixed arguments (will take arguments as an array or comma separated list, either results in an array)
-		 * @example $table = new \core\table($cells[] | 'field1'[, ...])
+		 * @example $table = new table($cells[] | 'field1'[, ...])
 		 */
 
 		public function __construct() {

@@ -29,7 +29,7 @@
 		 *
 		 * @params [string $site] optional name for session
 		 * @return session object/class
-		 * @example $session = \core\session::load([$site])
+		 * @example $session = session::load([$site])
 		 */
 
 		public static function load($site = null) {
@@ -44,11 +44,11 @@
 		 *
 		 * @params [string $site] optional name for session
 		 * @return void
-		 * @example $session = new \core\session([$site])
+		 * @example $session = new session([$site])
 		 */
 
 		public function __construct($name = null) {
-			if(session_status() !== PHP_SESSION_ACTIVE) {							#Do not create new \core\session of one has already been created
+			if(session_status() !== PHP_SESSION_ACTIVE) {							#Do not create new session of one has already been created
 				$this->expires = 0;
 				$this->path = '/' . trim(str_replace("{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}", '/', URL), '/');
 				$this->domain = $_SERVER['HTTP_HOST'];

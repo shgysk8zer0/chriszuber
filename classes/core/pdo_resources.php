@@ -22,7 +22,7 @@
 		/**
 		 * @method __construct
 		 * @desc
-		 * Gets database connection info from /connect.ini (using \core\ini::load)
+		 * Gets database connection info from /connect.ini (using ini::load)
 		 * The default ini file to use is connect, but can be passed another
 		 * in the $con argument.
 		 *

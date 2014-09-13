@@ -26,7 +26,7 @@
 		 * @method load
 		 * @param  string $con [.ini file to use for database credentials]
 		 * @return _pdo
-		 * @example $pdo = \core\_pdo::load or $pdo = \core\_pdo::load('connect')
+		 * @example $pdo = _pdo::load or $pdo = _pdo::load('connect')
 		 */
 
 		public static function load($con = 'connect') {
@@ -37,7 +37,7 @@
 		}
 
 		/**
-		 * Gets database connection info from /connect.ini (using \core\ini::load)
+		 * Gets database connection info from /connect.ini (using ini::load)
 		 * The default ini file to use is connect, but can be passed another
 		 * in the $con argument.
 		 *

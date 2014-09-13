@@ -11,7 +11,7 @@
 	 * @var array $response
 	 * @var array $instances
 	 *
-	 * @example $resp = new \core\json_response();
+	 * @example $resp = new json_response();
 	 * $resp->notify(...)->html(...)->append(...)->prepend(...)->before(...)->after(...)->attributes(...)->remove(...)->send();
 	 */
 

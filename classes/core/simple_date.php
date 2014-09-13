@@ -184,7 +184,7 @@
 		public function update() {
 			$str = "{$this->year}-{$this->mon}-{$this->mday}T{$this->hours}:{$this->minutes}:{$this->seconds}";
 			$this->data['timestamp'] = date_timestamp_get(date_create($str));
-//			$updated = new \core\simple_date(
+//			$updated = new simple_date(
 		}
 
 		public function make() {

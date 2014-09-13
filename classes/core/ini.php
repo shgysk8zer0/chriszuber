@@ -35,7 +35,7 @@
 		 *
 		 * @param string $file
 		 * @param boolean $multi
-		 * @example $ini = \core\ini::load('connect'[, false]);
+		 * @example $ini = ini::load('connect'[, false]);
 		 */
 
 		public static function load($file = null, $multi = false) {

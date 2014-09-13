@@ -24,7 +24,7 @@
 		 *
 		 * @param string $ini (ini file to use for database connection configuration)
 		 * @return login object/class
-		 * @example $login = _\core\login::load
+		 * @example $login = _login::load
 		 */
 
 		public static function load($ini = 'connect') {
@@ -40,7 +40,7 @@
 		 *
 		 * @param string $ini (ini file to use for database connection configuration)
 		 * @return void
-		 * @example $login = new \core\login()
+		 * @example $login = new login()
 		 * @todo Use static parent::load() instead, but this causes errors
 		 */
 
