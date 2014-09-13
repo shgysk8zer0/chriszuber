@@ -5,10 +5,20 @@
 	 *
 	 * @link http://us3.php.net/set_error_handler
 	 * @author Chris Zuber <shgysk8zer0@gmail.com>
-	 * @copyright 2014, Chris Zuber
-	 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
 	 * @package core_shared
 	 * @version 2014-06-05
+	 * @copyright 2014, Chris Zuber
+	 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
+	 * This program is free software; you can redistribute it and/or
+	 * modify it under the terms of the GNU General Public License
+	 * as published by the Free Software Foundation; either version 2
+	 * of the License, or (at your option) any later version.
+	 *
+	 * This program is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	 * GNU General Public License for more details:
+	 * http://www.gnu.org/licenses/gpl.html
 	 */
 
 	namespace core;

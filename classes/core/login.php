@@ -1,20 +1,31 @@
 <?php
+	/**
+	 * Class to handle login or create new users from form submissions or $_SESSION
+	 * Can check login role as well (new, user, admin, etc)
+	 *
+	 * @author Chris Zuber <shgysk8zer0@gmail.com>
+	 * @package core_shared
+	 * @version 2014-04-19
+	 * @uses /classes/_pdo.php
+	 * @copyright 2014, Chris Zuber
+	 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
+	 * This program is free software; you can redistribute it and/or
+	 * modify it under the terms of the GNU General Public License
+	 * as published by the Free Software Foundation; either version 2
+	 * of the License, or (at your option) any later version.
+	 *
+	 * This program is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	 * GNU General Public License for more details:
+	 * http://www.gnu.org/licenses/gpl.html
+	 *
+	 * @var array $data
+	 * @var login $instance
+	 */
+
 	namespace core;
 	class login extends _pdo {
-		/**
-		 * Class to handle login or create new users from form submissions or $_SESSION
-		 * Can check login role as well (new, user, admin, etc)
-		 *
-		 * @author Chris Zuber <shgysk8zer0@gmail.com>
-		 * @copyright 2014, Chris Zuber
-		 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
-		 * @package core_shared
-		 * @version 2014-04-19
-		 * @uses /classes/_pdo.php
-		 * @var array $useer_data
-		 * @var login $instance
-		 */
-
 		public $data = [];
 		protected static $instance = null;
 

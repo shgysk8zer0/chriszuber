@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	* @author Simon Jarvis
 	* @copyright 2006 Simon Jarvis

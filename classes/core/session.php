@@ -1,21 +1,32 @@
 <?php
 	/**
-	* Since this class is using $_SESSION for all data, there are few variables
-	* There are several methods to make better use of $_SESSION, and it adds the ability to chain
-	* As $_SESSION is used for all storage, there is no pro or con to using __construct vs ::load()
-	*
-	* @author Chris Zuber <shgysk8zer0@gmail.com>
-	* @copyright 2014, Chris Zuber
-	* @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
-	* @package core_shared
-	* @version 2014-04-19
-	* @var string $name
-	* @var int? $expires
-	* @var string $path
-	* @var string $domain
-	* @var boolean $secure
-	* @var boolean $httponly
-	* @var session $instance
+	 * Since this class is using $_SESSION for all data, there are few variables
+	 * There are several methods to make better use of $_SESSION, and it adds the ability to chain
+	 * As $_SESSION is used for all storage, there is no pro or con to using __construct vs ::load()
+	 *
+	 * @author Chris Zuber <shgysk8zer0@gmail.com>
+	 * @package core_shared
+	 * @version 2014-04-19
+	 * @copyright 2014, Chris Zuber
+	 * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3 (GPL-3.0)
+	 * This program is free software; you can redistribute it and/or
+	 * modify it under the terms of the GNU General Public License
+	 * as published by the Free Software Foundation; either version 2
+	 * of the License, or (at your option) any later version.
+	 *
+	 * This program is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	 * GNU General Public License for more details:
+	 * http://www.gnu.org/licenses/gpl.html
+	 *
+	 * @var string $name
+	 * @var int? $expires
+	 * @var string $path
+	 * @var string $domain
+	 * @var boolean $secure
+	 * @var boolean $httponly
+	 * @var session $instance
 	*/
 
 	namespace core;
