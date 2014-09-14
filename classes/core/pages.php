@@ -117,7 +117,11 @@
 			return isset($this->data->$key);
 		}
 
-		public function get_content() {
+		public function debug() {
+			debug($this);
+		}
+
+		private function get_content() {
 			$login = login::load();
 			$DB =_pdo::load('connect');
 
@@ -221,10 +225,6 @@
 					$this->content .= '</div>';
 				} break;
 			}
-		}
-
-		public function debug() {
-			debug($this);
 		}
 
 		private function error_page(
