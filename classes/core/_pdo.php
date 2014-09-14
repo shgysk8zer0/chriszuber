@@ -50,7 +50,7 @@
 		}
 
 		/**
-		 * Gets database connection info from /connect.ini (using ini::load)
+		 * Gets database connection info from connect.ini (using ini::load)
 		 * The default ini file to use is connect, but can be passed another
 		 * in the $con argument.
 		 *
@@ -73,8 +73,8 @@
 		 *
 		 * Returns $this for chaining. Most further functions will do the same where useful
 		 * @method prepare
-		 * @param  [type]  $query [description]
-		 * @return [type]         [description]
+		 * @param  string $query  [Any given MySQL query]
+		 * @return _pdo
 		 */
 
 		public function prepare($query) {
@@ -85,8 +85,8 @@
 		/**
 		 * Binds values to prepared statements
 		 *
-		 * @param array $array
-		 * @return self
+		 * @param array $array    [:key => value]
+		 * @return _pdo
 		 * @example $pdo->prepare(...)->bind([
 		 * 	'col_name' => $value,
 		 * 	'col2' => 'something else'
@@ -104,7 +104,7 @@
 		 * Executes prepared statements. Does not return results
 		 *
 		 * @param void
-		 * @return self
+		 * @return _pdo
 		 */
 
 		public function execute() {
@@ -117,13 +117,13 @@
 		/**
 		 * Gets results of prepared statement. $n can be passed to retreive a specific row
 		 *
-		 * @param [int $n]
+		 * @param int $n   [Optional index for single result to return]
 		 * @return mixed
 		 */
 
 		public function get_results($n = null) {
 			$results = array();
-			foreach($this->prepared->fetchAll(\PDO::FETCH_CLASS) as $data) {		//Convert from an associative array to a \stdClass object
+			foreach($this->prepared->fetchAll(\PDO::FETCH_CLASS) as $data) {
 				$results[] = (object)$data;
 			}
 			//If $n is set, return $results[$n] (row $n of results) Else return all
@@ -174,7 +174,8 @@
 		/**
 		 * Quick & lazy select from table method
 		 *
-		 * @param string $table[, string $these]
+		 * @param string $table    [Name of table]
+		 * @param string $these    [Optional column selector(s)]
 		 * @return array
 		 * @example $pdo->get_table($table)
 		 */
@@ -255,8 +256,8 @@
 		/**
 		 * For simple Name/Value tables. Gets all name/value pairs. Returns \stdClass object
 		 *
-		 * @param [string $table]
-		 * @return obj
+		 * @param string $table
+		 * @return stdClass
 		 */
 
 		public function name_value($table = null) {
