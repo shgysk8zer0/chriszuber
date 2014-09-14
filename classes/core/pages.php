@@ -141,7 +141,7 @@
 						null
 					);
 
-					foreach($DB->prepare("
+					$results = $DB->prepare("
 						SELECT
 							`comment`,
 							`author`,
@@ -151,15 +151,19 @@
 						WHERE `post` = :post
 					")->bind([
 						'post' => $this->data->url
-					])->execute()->get_results() as $comment) {
-						$time = new simple_date($comment->time);
-						$comments_section->comments .= $comments->comment(
-							$comment->comment
-						)->author(
-							(strlen($comment->author_url)) ? "<a href=\"{$comment->author_url}\" target=\"_blank\">{$comment->author}</a>" : $comment->author
-						)->time(
-							$time->out('l, F jS Y h:i A')
-						)->out();
+					])->execute()->get_results();
+					
+					if(is_array($results)) {
+						foreach($results as $comment) {
+							$time = new simple_date($comment->time);
+							$comments_section->comments .= $comments->comment(
+								$comment->comment
+							)->author(
+								(strlen($comment->author_url)) ? "<a href=\"{$comment->author_url}\" target=\"_blank\">{$comment->author}</a>" : $comment->author
+							)->time(
+								$time->out('l, F jS Y h:i A')
+							)->out();
+						}
 					}
 
 					foreach(explode(',', $this->data->keywords) as $tag) {
