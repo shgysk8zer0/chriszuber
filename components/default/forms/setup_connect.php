@@ -1,5 +1,5 @@
 <?php
-	if(file_exists(BASE . '/config/test.ini')) {
+	if(@file_exists(BASE . '/config/test.ini')) {
 		exit('<strong>Loading form to create connection file, but it already exists</strong>');
 	}
 ?>
