@@ -104,18 +104,7 @@
 				if(isset($this->data) and !empty($this->data)) $this->get_content();
 
 				else{
-					http_response_code(404);
-					$this->status = 404;
-					$this->description = 'No results for ' . $this->url;
-					$this->keywords = '';
-					$this->title = 'Woops! Not found (404)';
-					$template = template::load('error_page');
-					$template->status = 404;
-					$template->home = URL;
-					$template->message = "Nothing found for <wbr /><var>{$this->url}</var>";
-					$template->link = $this->url;
-					$template->dump = print_r($this->parsed, true);
-					$this->content = $template->out();
+					$this->error_page();
 				}
 			}
 		}
@@ -200,7 +189,7 @@
 						)->datetime(
 							$time->out()
 						)->out()
-					)->out();;
+					)->out();
 
 				} break;
 
@@ -236,6 +225,30 @@
 
 		public function debug() {
 			debug($this);
+		}
+
+		private function error_page(
+			$code = 404,
+			$title_prefix = 'Woops! Not found',
+			$dump = true
+		) {
+			http_response_code($code);
+			$this->status = $code;
+			$this->description = 'No results for ' . $this->url;
+			$this->keywords = '';
+			$this->title = $title_prefix .  ' (' . $code . ')';
+
+			$template = template::load('error_page');
+			$template->home = URL;
+			$template->message = "Nothing found for <wbr /><var>{$this->url}</var>";
+			$template->link = $this->url;
+			if($dump) {
+				$template->dump = print_r($this->parsed, true);
+			}
+			else {
+				$template->dump = null;
+			}
+			$this->content = $template->out();
 		}
 	}
 ?>
