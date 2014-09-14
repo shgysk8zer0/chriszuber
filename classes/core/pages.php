@@ -30,7 +30,7 @@
 
 		public static function load($url = null) {
 			if(is_null(self::$instance)) {
-				self::$instance = new self();
+				self::$instance = new self($url);
 			}
 			return self::$instance;
 		}
