@@ -42,7 +42,13 @@
 				$this->url = $url;
 			}
 			else {
-				$this->url = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . (array_key_exists('REDIRECT_URL', $_SERVER)) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'];
+				$this->url = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'];
+				if(array_key_exists('REDIRECT_URL', $_SERVER)) {
+					$this->url .= $_SERVER['REDIRECT_URL'];
+				}
+				elseif(array_key_exists('REQUEST_URI', $_SERVER)) {
+					$this->url .= $_SERVER['REQUEST_URI'];
+				}
 			}
 
 			$this->parsed = (object)parse_url(strtolower(urldecode($this->url)));
@@ -152,7 +158,7 @@
 					")->bind([
 						'post' => $this->data->url
 					])->execute()->get_results();
-					
+
 					if(is_array($results)) {
 						foreach($results as $comment) {
 							$time = new simple_date($comment->time);
