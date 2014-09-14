@@ -24,6 +24,7 @@
 	*/
 
 	namespace core;
+	use \core\resources\pdo_resources as pdo_resources;
 	class _pdo extends pdo_resources {
 		protected $pdo, $prepared, $connect;
 		private $query;
