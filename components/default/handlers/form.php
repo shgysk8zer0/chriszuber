@@ -103,12 +103,22 @@
 		case 'new_post': {
 			require_login('admin');
 
+			$title = urldecode(trim(strip_tags($_POST['title'])));
+			$description = trim($_POST['description']);
+			$keywords = urldecode(trim(strip_tags($_POST['keywords'])));
+			$content = trim($_POST['content']);
+
 			$invalid = check_inputs([
 				'title' => true,
 				'description' => '.{10,160}',
-				'keywords' => '[\w-, ]+',
+				'keywords' => '[\w-\, ]+',
 				'content' => true
-			], $_POST);
+			], [
+				'title' => $title,
+				'description' => $description,
+				'keywords' => $keywords,
+				'content' => $content
+			]);
 
 			if(is_null($invalid)) {
 
@@ -121,11 +131,11 @@
 					'user' => $login->user
 				])->execute()->get_results(0);
 
-				$title = urldecode(trim(strip_tags($_POST['title'])));
+				/*$title = urldecode(trim(strip_tags($_POST['title'])));
 				$description = trim($_POST['description']);
 				$keywords = urldecode(trim(strip_tags($_POST['keywords'])));
+				$content = trim($_POST['content']);*/
 				$author = $user->name;
-				$content = trim($_POST['content']);
 				$url = urlencode(strtolower(preg_replace('/\W+/', ' ', $title)));
 				$time = new \core\simple_date();
 
@@ -219,13 +229,25 @@
 		case 'edit_post': {
 			require_login('admin');
 
+			/**
+			 * @todo Convert $_POST['keywords'] into textContent, separeted by ','
+			 */
+
+			$post = [
+				'title' => urldecode(trim(strip_tags($_POST['title']))),
+				'keywords' => urldecode(trim($_POST['keywords'])),
+				'description' => trim($_POST['description']),
+				'content' => trim($_POST['content']),
+				'old_title' => urldecode(trim($_POST['old_title']))
+			];
+			$resp->log($post)->send();
 			$invalid = check_inputs([
 				'title' => true,
 				'old_title' => true,
 				'description' => '.{10,160}',
 				'keywords' => '[\w-, ]+',
 				'content' => true
-			], $_POST);
+			], $post);
 
 			if(is_null($invalid)) {
 				$DB->prepare("
@@ -236,13 +258,7 @@
 					`content` = :content
 					WHERE `title` = :old_title
 					LIMIT 1
-				")->bind([
-					'title' => urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['title']))),
-					'keywords' => urldecode(preg_replace('/' . preg_quote('<br>', '/') . '/', null, trim($_POST['keywords']))),
-					'description' => trim($_POST['description']),
-					'content' => trim($_POST['content']),
-					'old_title' => urldecode(trim($_POST['old_title']))
-				]);
+				")->bind($post);
 				if($DB->execute()) {
 					$resp->notify(
 						"Post has been updated.",
