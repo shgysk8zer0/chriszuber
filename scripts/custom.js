@@ -5,7 +5,12 @@ window.addEventListener('load', function() { /*Cannot rely on $(window).load() t
 		head = $('head');
 		cache = new cache();
 		document.documentElement.classList.swap('no-js', 'js');
-	['svg', 'audio', 'video', 'picture', 'canvas', 'menuitem', 'details', 'dialog', 'dataset', 'classList', 'connectivity', 'visibility', 'notifications', 'ApplicationCache', 'indexedDB', 'localStorage', 'sessionStorage', 'CSSgradients', 'transitions', 'animations',  'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll', 'workers', 'promises', 'ajax', 'FormData'].forEach(function(feat){
+	['svg', 'audio', 'video', 'picture', 'canvas', 'menuitem', 'details',
+	'dialog', 'dataset', 'classList', 'connectivity', 'visibility',
+	'notifications', 'ApplicationCache', 'indexedDB', 'localStorage',
+	'sessionStorage', 'CSSgradients', 'transitions', 'animations',  'CSSvars',
+	'CSSsupports', 'CSSmatches', 'querySelectorAll', 'workers', 'promises',
+	'ajax', 'FormData'].forEach(function(feat){
 		document.documentElement.classList.pick(feat, 'no-' + feat, supports(feat));
 	});
 	document.documentElement.classList.pick('offline', 'online', (supports('connectivity') && !navigator.onLine));
@@ -374,22 +379,21 @@ NodeList.prototype.bootstrap = function() {
 			el.addEventListener('click', function() {
 				let form = document.createElement('form'),
 					article = document.querySelector('article'),
-					title = document.querySelector('article header h1'),
-					keywords = document.querySelector('article header nav'),
-					content = document.querySelector('article section'),
+					header = article.querySelector('header'),
+					title = header.querySelector('[itemprop="headline"]'),
+					keywords = header.querySelector('[itemprop="keywords"]'),
+					content = article.querySelector('[itemprop="text"]'),
 					submit = document.createElement('button'),
 					fieldset = document.createElement('fieldset'),
 					legend = document.createElement('legend'),
 					oldTitle = document.createElement('input'),
-					tags = [],
-					description = document.createElement('textarea');
+					description = document.createElement('textarea'),
+					footer = article.querySelector('footer');
+				footer.parentElement.removeChild(footer);
 				form.name = 'edit_post';
 				form.method = 'POST';
 				form.action = document.baseURI;
 				form.attr('contextmenu', 'wysiwyg_menu');
-				keywords.querySelectorAll('a').forEach(function(tag) {
-					tags.push(tag.textContent);
-				});
 				description.name = 'description';
 				description.value = document.querySelector('meta[name="description"]').content;
 				description.required = true;
@@ -402,7 +406,7 @@ NodeList.prototype.bootstrap = function() {
 				title.data('input-name','title');
 				keywords.attr('contenteditable', 'true');
 				keywords.data('input-name', 'keywords');
-				keywords.innerHTML = tags.join(', ');
+				keywords.setAttribute('open', '');
 				content.attr('contenteditable', 'true');
 				content.data('input-name', 'content');
 				content.data('dropzone', 'main');
@@ -411,9 +415,9 @@ NodeList.prototype.bootstrap = function() {
 				oldTitle.readonly = true;
 				oldTitle.required = true;
 				oldTitle.value = title.textContent;
-				fieldset.append(legend, article, oldTitle, description, submit);
+				fieldset.append(legend, header, content, oldTitle, description, submit);
 				form.appendChild(fieldset);
-				document.querySelector('main').appendChild(form);
+				article.appendChild(form);
 				let retain = setInterval(function(){
 					ajax({
 						url: document.baseURI,
