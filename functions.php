@@ -174,7 +174,7 @@
 		static $DB, $load, $settings, $session, $login, $cookie;
 
 		if(is_null($load)) {
-			$DB = \core\_pdo::load('connect');
+			$DB =\core\_pdo::load('connect');
 			$settings = \core\ini::load('settings');
 			$session = \core\session::load();
 			$login = \core\login::load();
@@ -198,7 +198,7 @@
 					$cookie,
 					$login
 				) {
-					include BASE . 'components' . DIRECTORY_SEPARATOR . $fname . '.php';
+					include BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . $fname . '.php';
 				};
 			}
 		}
