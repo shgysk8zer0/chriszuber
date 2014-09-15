@@ -228,19 +228,15 @@
 
 		case 'edit_post': {
 			require_login('admin');
-
-			/**
-			 * @todo Convert $_POST['keywords'] into textContent, separeted by ','
-			 */
-
+			
 			$post = [
 				'title' => urldecode(trim(strip_tags($_POST['title']))),
-				'keywords' => urldecode(trim($_POST['keywords'])),
+				'keywords' => urldecode(trim(strip_tags(str_replace('</a>', '</a>,', $_POST['keywords'])), ',')),
 				'description' => trim($_POST['description']),
 				'content' => trim($_POST['content']),
 				'old_title' => urldecode(trim($_POST['old_title']))
 			];
-			$resp->log($post)->send();
+
 			$invalid = check_inputs([
 				'title' => true,
 				'old_title' => true,
