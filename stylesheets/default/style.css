@@ -55,6 +55,7 @@ body {
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: center;
+	text-rendering: optimizeLegibility;
 }
 body > header, body > footer {
 	flex: 0 1 100%;

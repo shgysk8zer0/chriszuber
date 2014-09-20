@@ -61,6 +61,7 @@ body {
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
+  text-rendering: optimizeLegibility;
 }
 
 body > header,
