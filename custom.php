@@ -39,9 +39,12 @@
 		return false;
 	}
 
-	function get_template($template) {
-		return file_get_contents(BASE . "/components/templates/{$template}.tpl");
-	}
+	/**
+	 * Update sitemap.xml
+	 *
+	 * @param void
+	 * @return void
+	 */
 
 	function update_sitemap() {
 		$pdo = \core\_pdo::load('connect');
@@ -58,11 +61,27 @@
 		fputs($sitemap, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
 		foreach($pages as $page) {
 			$time = new \core\simple_date($page->created);
-			fputs($sitemap, $template->url( "{$url}/posts/{$page->url}")->mod($time->out('Y-m-d'))->priority('0.8')->out());
+			fputs(
+				$sitemap,
+				$template->url(
+					"{$url}/posts/{$page->url}"
+				)->mod(
+					$time->out('Y-m-d')
+				)->priority(
+					'0.8'
+				)->out()
+			);
 		}
 		fputs($sitemap, '</urlset>');
 		fclose($sitemap);
 	}
+
+	/**
+	 * Updates feed.rss with the $lim most recent posts
+	 *
+	 * @param  integer $lim [Max number to include]
+	 * @return void
+	 */
 
 	function update_rss($lim = 10) {
 		$pdo = \core\_pdo::load('connect');
@@ -72,10 +91,15 @@
 			$template = \core\template::load('rss');
 			$rss = fopen(BASE . '/feed.rss', 'w');
 			$pages = $pdo->fetch_array("
-				SELECT `title`, `url`, `description`, `created`
+				SELECT
+					`title`,
+					`url`,
+					`description`,
+					`created`
 				FROM `posts`
 				WHERE `url` != ''
-				ORDER BY `created` DESC
+				ORDER BY `created`
+				DESC
 			");
 
 			fputs($rss, '<?xml version="1.0" encoding="UTF-8" ?>' . PHP_EOL);
@@ -88,7 +112,17 @@
 			fputs($rss, "<description>{$head->description}</description>" . PHP_EOL);
 
 			foreach($pages as $page) {
-				fputs($rss, $template->title($page->title)->url("{$url}/posts/{$page->url}")->description($page->description)->created(date('r', strtotime($page->created)))->out());
+				fputs(
+					$rss,
+					$template->title(
+						$page->title
+					)->url(
+						"{$url}/posts/{$page->url}"
+					)->description(
+						$page->description
+					)->created(
+						date('r', strtotime($page->created))
+					)->out());
 			}
 
 			fputs($rss, '</channel>');
@@ -97,11 +131,19 @@
 		}
 	}
 
+	/**
+	 * Gets all keywords for all posts
+	 *
+	 * @param void
+	 * @return array [Unique keywords for all posts]
+	 */
+
 	function get_all_tags(){
 		$pdo =\core\_pdo::load('connect');
 		if($pdo->connected) {
 			$keywords = flatten($pdo->fetch_array("
-				SELECT `keywords` FROM `posts`
+				SELECT `keywords`
+				FROM `posts`
 			"));
 			$tags = [];
 			foreach($keywords as $keyword) {
@@ -116,25 +158,32 @@
 		}
 	}
 
-	function get_recent_posts($n = 5, $sel = ['title', 'url', 'description']) {
+
+	/**
+	 * Get $selectors for the $limit most recent posts
+	 *
+	 * @param  integer $limit     [Max number for return]
+	 * @param  array  $selectors  [Select these columns]
+	 * @return array
+	 */
+
+	function get_recent_posts($limit = 5, array $selectors = null) {
 		$pdo =\core\_pdo::load('connect');
 
 		if($pdo->connected) {
-			if(is_string($sel) and $sel !== '*') {
-				$sel = explode(',', $sel);
+
+			if(!is_array($selectors)) {
+				$selectors = ['title', 'url', 'description'];
 			}
-			if(is_array($sel)) {
-				foreach($sel as &$col) {
-					$col = "`{$pdo->escape($col)}`";
-				}
-				$sel = join(', ', $sel);
-			}
+			array_walk($selectors, [$pdo, 'escape']);
+			$selectors = '`' . join('`, `', $selectors) . '`';
 			return $pdo->fetch_array("
-				SELECT `title`, `url`, `description`
+				SELECT {$selectors}
 				FROM `posts`
 				WHERE `url` != ''
-				ORDER BY `created` DESC
-				LIMIT {$n}
+				ORDER BY `created`
+				DESC
+				LIMIT {$limit}
 			");
 		}
 		else {
@@ -142,8 +191,16 @@
 		}
 	}
 
+	/**
+	 * Builds a <datalist> for the request, each result being a <option>
+	 *
+	 * @param  string $list [Requested datalist]
+	 * @return string       [Results as a <datalist>]
+	 */
+
 	function get_datalist($list) {
 		$pdo =\core\_pdo::load('connect');
+
 		switch(strtolower($list)) {
 			case 'tags': {
 				if(!$pdo->connected) return null;
@@ -157,18 +214,24 @@
 					FROM `PHP_errors`
 				");
 				foreach($options as &$option) {
-					//$datalist .= "<option>" . preg_replace('/^' . preg_quote(BASE . '/', '/') . '/', null, $option->file) . '</option>';
-					$option = preg_replace('/^' . preg_quote(BASE . '/', '/') . '/', null, $option->file);
+					$option = preg_replace(
+						'/^' . preg_quote(BASE . '/', '/') . '/',
+						null,
+						$option->file
+					);
 				}
 			} break;
 		}
+
+		$datalist = "<datalist id=\"{$list}\">";
+
 		if(isset($options)) {
-			$datalist = "<datalist id=\"{$list}\">";
 			foreach($options as $option) {
 				$datalist .= "<option value=\"{$option}\">{$option}</option>";
 			}
-			$datalist .= "</datalist>";
-			return $datalist;
 		}
+
+		$datalist .= "</datalist>";
+		return $datalist;
 	}
 ?>
