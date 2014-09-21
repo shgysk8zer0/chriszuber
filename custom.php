@@ -10,28 +10,31 @@
 		$pdo = \core\_pdo::load('connect');
 		$url = preg_replace('/^https/', 'http', URL);
 		$template = \core\template::load('sitemap');
-		$sitemap = fopen(BASE . '/sitemap.xml', 'w');
-		$pages = $pdo->fetch_array("
-			SELECT `url`, `created`
+		$sitemap = fopen(BASE . DIRECTORY_SEPARATOR . 'sitemap.xml', 'w');
+
+		fputs($sitemap, '<?xml version="1.0" encoding="UTF-8"?>');
+		fputs($sitemap, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
+
+		foreach($pdo->fetch_array("
+			SELECT
+				`url`,
+				`created`
 			FROM `posts`
 			WHERE `url` != ''
 			ORDER BY `created` DESC
-		");
-		fputs($sitemap, '<?xml version="1.0" encoding="UTF-8"?>');
-		fputs($sitemap, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
-		foreach($pages as $page) {
-			$time = new \core\simple_date($page->created);
+		") as $page) {
 			fputs(
 				$sitemap,
 				$template->url(
 					"{$url}/posts/{$page->url}"
 				)->mod(
-					$time->out('Y-m-d')
+					date('Y-m-d', strtotime($page->created))
 				)->priority(
 					'0.8'
 				)->out()
 			);
 		}
+
 		fputs($sitemap, '</urlset>');
 		fclose($sitemap);
 	}
@@ -50,17 +53,6 @@
 			$head = $pdo->name_value('head');
 			$template = \core\template::load('rss');
 			$rss = fopen(BASE . '/feed.rss', 'w');
-			$pages = $pdo->fetch_array("
-				SELECT
-					`title`,
-					`url`,
-					`description`,
-					`created`
-				FROM `posts`
-				WHERE `url` != ''
-				ORDER BY `created`
-				DESC
-			");
 
 			fputs($rss, '<?xml version="1.0" encoding="UTF-8" ?>' . PHP_EOL);
 			fputs($rss, '<rss version="2.0">' . PHP_EOL);
@@ -71,7 +63,17 @@
 			fputs($rss, "<language>en-US</language>" . PHP_EOL);
 			fputs($rss, "<description>{$head->description}</description>" . PHP_EOL);
 
-			foreach($pages as $page) {
+			foreach($pdo->fetch_array("
+				SELECT
+					`title`,
+					`url`,
+					`description`,
+					`created`
+				FROM `posts`
+				WHERE `url` != ''
+				ORDER BY `created`
+				DESC
+			") as $page) {
 				fputs(
 					$rss,
 					$template->title(
@@ -82,7 +84,8 @@
 						$page->description
 					)->created(
 						date('r', strtotime($page->created))
-					)->out());
+					)->out()
+				);
 			}
 
 			fputs($rss, '</channel>');
@@ -99,7 +102,7 @@
 	 */
 
 	function get_all_tags(){
-		$pdo =\core\_pdo::load('connect');
+		$pdo = \core\_pdo::load('connect');
 		if($pdo->connected) {
 			return array_unique(flatten(array_map(function($result) {
 				return array_map(
@@ -129,12 +132,17 @@
 		$pdo =\core\_pdo::load('connect');
 
 		if($pdo->connected) {
-
 			if(!is_array($selectors)) {
-				$selectors = ['title', 'url', 'description'];
+				$selectors = [
+					'title',
+					'url',
+					'description'
+				];
 			}
+
 			array_walk($selectors, [$pdo, 'escape']);
 			$selectors = '`' . join('`, `', $selectors) . '`';
+
 			return $pdo->fetch_array("
 				SELECT {$selectors}
 				FROM `posts`
@@ -157,9 +165,9 @@
 	 */
 
 	function get_datalist($list) {
-		$pdo =\core\_pdo::load('connect');
-
+		$pdo = \core\_pdo::load('connect');
 		$datalist = "<datalist id=\"{$list}\">";
+
 		if($pdo->connected) {
 			switch(strtolower($list)) {
 				case 'tags': {
@@ -169,7 +177,7 @@
 				case 'php_errors_files': {
 					$options = array_map(function($option) {
 						return preg_replace(
-							'/^' . preg_quote(BASE . '/', '/') . '/',
+							'/^' . preg_quote(BASE . DIRECTORY_SEPARATOR, '/') . '/',
 							null,
 							$option->file
 						);
