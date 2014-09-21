@@ -30,5 +30,7 @@
 			'script_sample' => $report['script-sample']
 		])->execute();
 	}
-	else header("HTTP/1.1 403 Forbidden");
+	else {
+		http_response_code(403);
+	}
 ?>
