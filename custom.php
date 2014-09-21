@@ -1,45 +1,5 @@
 <?php
 	/**
-	 * autoload function allowing for optional namespaces
-	 *
-	 * @param  string    $cname [Class Name]
-	 * @return boolean
-	 */
-
-	function auto_load($cname) {
-		/*
-			Store $exts as static array so we only have to get
-			them once
-		 */
-		static $exts = null;
-		if(is_null($exts)) {
-			$exts = explode(',', str_replace(' ', null, spl_autoload_extensions()));
-		}
-
-		/*
-			Convert namespaces to paths
-		 */
-		$cname = str_replace('\\', DIRECTORY_SEPARATOR, trim($cname, '\\'));
-
-		/*
-			Loop through $exts until file is found.
-			Include & return true when found.
-		 */
-		foreach($exts as $ext) {
-			if(@file_exists($cname . $ext)) {
-				include($cname . $ext);
-				return true;
-			}
-		}
-
-		/*
-			If file still not found after searching all include_path & exts,
-			return false because it doesn't exist
-		 */
-		return false;
-	}
-
-	/**
 	 * Update sitemap.xml
 	 *
 	 * @param void
