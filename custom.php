@@ -141,17 +141,15 @@
 	function get_all_tags(){
 		$pdo =\core\_pdo::load('connect');
 		if($pdo->connected) {
-			$keywords = flatten($pdo->fetch_array("
+			return array_unique(flatten(array_map(function($result) {
+				return array_map(
+					'trim',
+					explode(',', $result->keywords)
+				);
+			}, $pdo->fetch_array("
 				SELECT `keywords`
 				FROM `posts`
-			"));
-			$tags = [];
-			foreach($keywords as $keyword) {
-				foreach(explode(',', $keyword) as $tag) {
-					$tags[] = trim($tag);
-				}
-			};
-			return array_unique($tags);
+			"))));
 		}
 		else {
 			return [];
@@ -201,33 +199,31 @@
 	function get_datalist($list) {
 		$pdo =\core\_pdo::load('connect');
 
-		switch(strtolower($list)) {
-			case 'tags': {
-				if(!$pdo->connected) return null;
-				$options = get_all_tags();
-			} break;
-
-			case 'php_errors_files': {
-				if(!$pdo->connected) return null;
-				$options = $pdo->fetch_array("
-					SELECT DISTINCT(`file`)
-					FROM `PHP_errors`
-				");
-				foreach($options as &$option) {
-					$option = preg_replace(
-						'/^' . preg_quote(BASE . '/', '/') . '/',
-						null,
-						$option->file
-					);
-				}
-			} break;
-		}
-
 		$datalist = "<datalist id=\"{$list}\">";
+		if($pdo->connected) {
+			switch(strtolower($list)) {
+				case 'tags': {
+					$options = get_all_tags();
+				} break;
+
+				case 'php_errors_files': {
+					$options = array_map(function($option) {
+						return preg_replace(
+							'/^' . preg_quote(BASE . '/', '/') . '/',
+							null,
+							$option->file
+						);
+					}, $pdo->fetch_array("
+						SELECT DISTINCT(`file`)
+						FROM `PHP_errors`
+					"));
+				} break;
+			}
+		}
 
 		if(isset($options)) {
 			foreach($options as $option) {
-				$datalist .= "<option value=\"{$option}\">{$option}</option>";
+				$datalist .= "<option value=\"{$option}\"></option>";
 			}
 		}
 
