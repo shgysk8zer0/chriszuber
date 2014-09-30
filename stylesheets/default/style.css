@@ -66,6 +66,7 @@ body > header {
 	background: transparent var(--tint-glass);
 	border-bottom: 0.2rem solid var(--border-color);
 	box-shadow: 0 0 3rem var(--shadow) inset;
+	align-self: flex-start;
 }
 body > header h1 {
 	font-family: 'PressStart';
@@ -322,7 +323,7 @@ pre > code {
 .no-js dialog {
 	display: none;
 }
-.no-dialog dialog {
+dialog {
 	border: 0.4rem outset var(--primary-color);
 	border-radius: 1rem;
 	box-shadow: 1rem 1rem 1rem black;
