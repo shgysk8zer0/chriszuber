@@ -53,7 +53,7 @@
 <!--[if gt IE 8]><!--> <html lang="en" itemscope itemtype="http://schema.org/WebPage" class="no-js" <?php if(!localhost() and isset($settings->appcache)):?> manifest="<?=$settings->appchache?>"<?php endif?>> <!--<![endif]-->
 <!--<?=date('Y-m-d H:i:s')?>-->
 <?php load('head');?>
-<body contextmenu="main_menu">
+<body contextmenu="main_menu" <?=defined('GA') ?'data-ga="' . GA . '"' : null ?>>
 	<?php if(!$DB->connected) load('forms/install')?>
 	<?php load('forms/login', 'header', 'main', 'footer');?>
 	<dialog id="README">

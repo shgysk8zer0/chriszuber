@@ -81,10 +81,8 @@
 		<script type="application/javascript" src="scripts/combined.js" async></script>
 	<?php endif?>
 <?php endif?>
-<?php if(!localhost() and isset($head->google_analytics_code)):?>
-	<script type="application/javascript" nonce="<?=$session->nonce?>">
-		<?=preg_replace('/' . preg_quote('%GOOGLE_ANALYTICS_CODE%', '/') .'/', $head->google_analytics_code, file_get_contents(BASE . '/scripts/analytics.js'))?>
-	</script>
+<?php if(!localhost() and isset($head->google_analytics_code)): define('GA', $head->google_analytics_code)?>
+	<script type="application/javascript" src="scripts/analytics.js" async defer></script>
 <?php endif?>
 <!--[if lte IE 8]>
 <script type="text/javascript">
