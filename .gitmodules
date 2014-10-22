@@ -1,3 +1,6 @@
 [submodule "classes/core"]
 	path = classes/core
 	url = git@github.com:shgysk8zer0/core.git
+[submodule "classes/phpqr"]
+	path = classes/phpqr
+	url = git://git.code.sf.net/p/phpqrcode/git

@@ -24,6 +24,24 @@
 	init();
 
 	/**
+	 * Prevents functions registering from executing multiple times {Opt-in}.
+	 *
+	 * @param   Callable $function [Register with __FUNCTION__ magic constant]
+	 * @return  boolean            [Whether or not it has been executed already]
+	 * @example if(first_run(__FUNCTION__)) {...}
+	 * @example if(!first_run(__FUNCTION__)) return;
+	 */
+
+	function first_run(Callable $function = null) {
+		static $ran = [];
+		if(array_key_exists($function, $ran)) return false;
+		else {
+			$ran[$function] = true;
+			return true;
+		}
+	}
+
+	/**
 	 * Initial configuration. Setup include_path, gather database
 	 * connection information, set undefined properties to
 	 * default values, start a new \core\session, and set nonce
@@ -33,8 +51,8 @@
 	 */
 
 	function init($session = true) {
+		if(!first_run(__FUNCTION__)) return;
 		//Include current directory, config/, and classes/ directories in include path
-		//set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . PATH_SEPARATOR . __DIR__  . DIRECTORY_SEPARATOR . 'config' . PATH_SEPARATOR . __DIR__ . DIRECTORY_SEPARATOR . 'classes');
 		set_include_path(__DIR__ . DIRECTORY_SEPARATOR . 'classes' . PATH_SEPARATOR . get_include_path() . PATH_SEPARATOR . __DIR__ . PATH_SEPARATOR . __DIR__  . DIRECTORY_SEPARATOR . 'config');
 
 		if(@file_exists('./config/define.ini')) {
@@ -44,7 +62,8 @@
 		}
 
 		if(!defined('BASE')) define('BASE', __DIR__);
-		if(!defined('URL')) ($_SERVER['DOCUMENT_ROOT'] === __DIR__ . DIRECTORY_SEPARATOR or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/" . end(explode('/', BASE)));
+		if(PHP_SAPI == 'cli' and !defined('URL')) define('URL', 'http://localhost');
+		else if(!defined('URL')) ($_SERVER['DOCUMENT_ROOT'] === __DIR__ . DIRECTORY_SEPARATOR or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/" . end(explode('/', BASE)));
 		if($session) {
 			\core\session::load();
 			nonce(50);									// Set a nonce of n random characters
@@ -52,15 +71,16 @@
 	}
 
 	/**
-	* Load and configure site settings
-	* Loads all files in requires directive
-	* Setup custom error handler
-	*
-	* @parmam void
-	* @return void
-	*/
+	 * Load and configure site settings
+	 * Loads all files in requires directive
+	 * Setup custom error handler
+	 *
+	 * @parmam void
+	 * @return void
+	 */
 
 	function config($settings_file = 'settings') {
+		if(!first_run(__FUNCTION__)) return;
 		$settings = \core\ini::load((string)$settings_file);
 		if(isset($settings->path)) {
 			set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
@@ -143,18 +163,32 @@
 	 * @return mixed (boolen false will result in PHP default error handling)
 	 */
 
-	function error_reporter_class($error_level = null, $error_message = null, $file = null, $line = null, $scope = null) {
+	function error_reporter_class(
+		$error_level = null,
+		$error_message = null,
+		$file = null,
+		$line = null,
+		$scope = null
+	) {
 		static $reporter = null;
 
 		if(is_null($reporter)) {
 			$settings = \core\ini::load('settings');
-			$reporter = \core\error_reporter::load((isset($settings->error_method)) ? $settings->error_method : 'log');
+			$reporter = \core\error_reporter::load(
+				(isset($settings->error_method)) ? $settings->error_method : 'log'
+			);
 			if(is_null($settings->error_method or $settings->error_method === 'log')) {
 				$reporter->log = (isset($settings->error_log)) ? $settings->error_log : 'errors.log';
 			}
 		}
 
-		return $reporter->report((string)$error_level, (string)$error_message, (string)$file, (string)$line, $scope);
+		return $reporter->report(
+			(string)$error_level,
+			(string)$error_message,
+			(string)$file,
+			(string)$line,
+			$scope
+		);
 	}
 
 	/**
@@ -223,6 +257,74 @@
 	}
 
 	/**
+	 * Loads a widget as an <iframe>
+	 * Sets src attribute to $src if it is a URL, otherwise sets the source
+	 * to a data-uri of the contents if it is a file and readable.
+	 *
+	 * @link http://www.w3schools.com/tags/tag_iframe.asp
+	 *
+	 * @param  string $src        [filename/path or URI]
+	 * @param  array  $sandbox    [Sanbox permissions]
+	 * @param  array  $attributes [$name => $value | $value attributes set]
+	 * @param boolean $print      [echoes if true, returns if false]
+	 * @return string             [an iframe element]
+	 */
+
+	function load_widget(
+		$src,
+		array $sandbox = null,
+		array $attributes = null,
+		$print = true
+	) {
+		$iframe = '';
+		if(is_url($src)) {
+			$iframe .= ' src="'. $src . '"';
+		}
+		elseif(@file_exists($src) and is_readable($src)) {
+			if(in_array(mime_type($src), ['application/x-php'])) {
+				ob_start();
+				include $src;
+				$iframe .=' srcdoc="' . str_replace(
+					['"', PHP_EOL, "\t"],
+					['&quot;', null, null],
+					ob_get_clean()
+				) . '"';
+
+				$iframe .= ' src=""';
+			}
+			else {
+				$iframe .= ' src="'. data_uri($src) . '"';
+			}
+		}
+		else return;
+
+		if(is_array($sandbox)) {
+			$iframe .= ' sandbox="';
+			if(in_array('same-origin', $sandbox)) $iframe .= 'allow-same-origin';
+			if(in_array('top-navigation', $sandbox)) $iframe .= ' allow-top-navigation';
+			if(in_array('forms', $sandbox)) $iframe .= ' allow-forms';
+			if(in_array('scripts', $sandbox)) $iframe .= ' allow-scripts';
+			$iframe .='"';
+		}
+
+		if(is_array($attributes)) {
+			foreach($attributes as $key => &$value) {
+				if(is_int($key)) {
+					$value = htmlspecialchars($value);
+				}
+				else {
+					$value = htmlspecialchars($key) . '="' . htmlspecialchars($value) .'"';
+				}
+			}
+			$iframe .= ' ' . join(' ', $attributes);
+		}
+
+		$iframe = '<iframe' . $iframe . '></iframe>';
+		if($print) echo $iframe;
+		else return $iframe;
+	}
+
+	/**
 	 * Reads a file and returns a json_decoded object
 	 *
 	 * @link http://php.net/manual/en/function.json-decode.php
@@ -233,8 +335,71 @@
 	 * @return \stdClass Object
 	 */
 
-	function parse_json_file($filename = null, $assoc = false, $depth = 512, $options = 0) {
-		return json_decode(file_get_contents("{$filename}.json", true), $assoc, $depth, $options);
+	function parse_json_file(
+		$filename = null,
+		$assoc = false,
+		$depth = 512,
+		$options = 0
+	) {
+		return json_decode(
+			file_get_contents(
+				(string)$filename  . '.json',
+				true
+			),
+			(bool)$assoc,
+			(int)$depth,
+			(int)$options
+		);
+	}
+
+	/**
+	 * Convert a CSV file into an multi-dimensional array containing it's data
+	 *
+	 * If $headers is true, the first row will be considered column names
+	 * and will be used as keys for an associattive array.
+	 *
+	 * Otherwise, it will be an indexed array
+	 *
+	 * @link http://php.net/manual/en/function.fgetcsv.php
+	 * @param  string   $fname     [Name of file]
+	 * @param  boolean  $headers   [First row of CSV file is headers?]
+	 * @param  integer  $length    [Max line length. 0 is unlimited]
+	 * @param  string   $delimiter [Set the field delimiter (one character only)]
+	 * @param  string   $enclosure [Set the field enclosure character (one character only). ]
+	 * @param  string   $escape    [Set the escape character (one character only). Defaults as a backslash. ]
+	 * @return array               [CSV file parsed as an array (will be empty if file cannot be read)]
+	 */
+
+	function parse_csv_file(
+		$fname = null,
+		$headers = false,
+		$length = 0,
+		$delimiter = ',',
+		$enclosure = '"',
+		$escape = '\\'
+	) {
+		if(is_null($fname)) return [];
+		$rows = [];
+		$fname = realpath($fname);
+
+		if(@is_readable($fname)) {
+			$handle = fopen($fname, 'r');
+			if(isset($handle)) {
+				if($headers) {
+					$cols = fgetcsv($handle);
+					while(($row = fgetcsv($handle, $length, $delimiter, $enclosure, $escape)) !== false) {
+						array_push($rows, array_combine($cols, $row));
+					}
+				}
+				else {
+					while(($row = fgetcsv($$handle, $length, $delimiter, $enclosure, $escape)) !== false) {
+						array_push($rows, $row);
+					}
+				}
+				fclose($handle);
+			}
+		}
+		return $rows;
 	}
 
 	/**
@@ -260,11 +425,22 @@
 	 * @return string
 	 */
 
-	function html_join($tag, array $content = null, array $attributes = null) {
+	function html_join(
+		$tag,
+		array $content = null,
+		array $attributes = null
+	) {
 		$tag = preg_replace('/[^a-z]/', null, strtolower((string)$tag));
 		$attributes = array_to_attributes($attributes);
 		return "<{$tag} {$attributes}>" . join("</{$tag}><{$tag}>", $content) . "</{$tag}>";
 	}
+
+	/**
+	 * Converts ['attr' => 'value'...] to attr="value"
+	 *
+	 * @param  array $attributes  [Key => value pairing of attributes]
+	 * @return string
+	 */
 
 	function array_to_attributes(array $attributes = null) {
 		/**
@@ -278,7 +454,9 @@
 
 		if(is_null($attributes)) return null;
 		$str = '';
-		foreach($attributes as $name => $value) $str .= " {$name}=\"{$value}\"";
+		foreach($attributes as $name => $value) {
+			$str .= $name . '=' . htmlspecialchars($value);
+		}
 		return trim($str);
 	}
 
@@ -302,6 +480,15 @@
 			echo '</code></pre>';
 		}
 	}
+
+	/**
+	 * Check login status, and optionally role
+	 *
+	 * @param  tring $role  [user, admin, etc]
+	 * @param  string $exit [option for action if checks do not pass]
+	 *
+	 * @return void
+	 */
 
 	function require_login($role = null, $exit = 'notify') {
 		$login = \core\login::load();
@@ -382,11 +569,17 @@
 	 */
 
 	function check_nonce() {
-		if(!(array_key_exists('nonce', $_POST) and array_key_exists('nonce', $_SESSION)) or $_POST['nonce'] !== $_SESSION['nonce']) {
+		if(
+			!(
+				array_key_exists('nonce', $_POST) and
+				array_key_exists('nonce', $_SESSION)
+			)
+			or $_POST['nonce'] !== $_SESSION['nonce']
+		) {
 			$resp = new \core\json_response();
 			$resp->notify(
 				'Something went wrong :(',
-				'Your session has exired. Try refreshing the page',
+				'Your session has expired. Try again',
 				'images/icons/network-server.png'
 			)->error(
 				"nonce not set or does not match"
@@ -417,22 +610,22 @@
 	 */
 
 	function CSP() {
-		$CSP = '';									 // Begin with an empty string
-		$CSP_Policy = parse_ini_file('csp.ini');	// Read ini
+		$CSP = '';				 // Begin with an empty string
+		$CSP_Policy = parse_ini_file('csp.ini');
 		if(!$CSP_Policy) return;
 		$enforce = array_remove('enforce', $CSP_Policy);
 		if(is_null($enforce)) $enforce = true;
-		foreach($CSP_Policy as $type => $src) {		// Convert config array to string for CSP header
+		foreach($CSP_Policy as $type => $src) {
 			$CSP .= "{$type} {$src};";
 		}
 		$CSP = str_replace('%NONCE%', $_SESSION['nonce'], $CSP);
-		if($enforce) {								// If in debug mode, CSP should be "report-only"
-													// Set headers for all prefixed versions
+		if($enforce) {			// If in debug mode, CSP should be "report-only"
+								// Set headers for all prefixed versions
 			header("Content-Security-Policy: $CSP");
 			//header("X-Content-Security-Policy: $CSP");
 			//header("X-Webkit-CSP: $CSP");
 		}
-		else{										// If not, CSP will be enforced
+		else{					// If not, CSP will be enforced
 			header("Content-Security-Policy-Report-Only: $CSP");
 		}
 	}
@@ -472,14 +665,38 @@
 	}
 
 	/**
+	* Convert an address to GPS coordinates (longitude & latitude)
+	* using Google Maps API
+	*
+	* @param  string $Address [Postal address]
+	* @return [stdClass]          [{"lat": $latitude, "lng": $longitude}]
+	*/
+
+	function address_to_gps($Address = null) {
+		if(!is_string($Address)) return false;
+		$request_url = "http://maps.googleapis.com/maps/api/geocode/xml?address=".urlencode($Address)."&sensor=true";
+		$xml = simplexml_load_file($request_url);
+
+		if (!empty($xml) and $xml->status == "OK") {
+			return $xml->result->geometry->location;
+		}
+		else {
+			return false;
+		}
+	}
+
+	/**
 	 * Checks for the custom Request-Type header sent in my ajax requests
 	 *
 	 * @param void
 	 * @return boolean
 	 */
 
-	function is_ajax() {							// Try to determine if this is and ajax request
-		return (isset($_SERVER['HTTP_REQUEST_TYPE']) and $_SERVER['HTTP_REQUEST_TYPE'] === 'AJAX');
+	function is_ajax() {
+		return (
+			isset($_SERVER['HTTP_REQUEST_TYPE'])
+			and $_SERVER['HTTP_REQUEST_TYPE'] === 'AJAX'
+		);
 	}
 
 	/**
@@ -488,7 +705,7 @@
 	 * @return void
 	 */
 
-	function header_type($type = null) {							// Set content-type header.
+	function header_type($type = null) {
 		header('Content-Type: ' . (string)$type . PHP_EOL);
 	}
 
@@ -500,7 +717,7 @@
 	 * @return void
 	 */
 
-	function define_UA() {								// Define Browser and OS according to user-agent string
+	function define_UA() {
 		if(!defined('UA')){
 			if(isset($_SERVER['HTTP_USER_AGENT'])) {
 				define('UA', $_SERVER['HTTP_USER_AGENT']);
@@ -532,17 +749,17 @@
 	 * @return string
 	 */
 
-	function nonce($length = 50) {						// generate a nonce of $length random characters
+	function nonce($length = 50) {
 		$length = (int)$length;
-		if(array_key_exists('nonce', $_SESSION)) {	// Use existing nonce instead of a new one
+		if(array_key_exists('nonce', $_SESSION)) {
 			return $_SESSION['nonce'];
 		}
 		//We are going to shuffle an alpha-numeric string to get random characters
 		$str = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
-		if(strlen($str) < $length) {					// $str length is limited to length of available characters. Be recursive for extra length
+		if(strlen($str) < $length) {
 			$str .= nonce($length - strlen($str));
 		}
-		$_SESSION['nonce'] = $str;							// Save this to session for re-use
+		$_SESSION['nonce'] = $str;
 		return $str;
 	}
 
@@ -554,7 +771,7 @@
 	 * @return boolean
 	 */
 
-	function same_origin() {							// Determine if request is from us
+	function same_origin() {
 		if(isset($_SERVER['HTTP_ORIGIN'])) {
 			$origin = $_SERVER['HTTP_ORIGIN'];
 		}
@@ -587,7 +804,7 @@
 	function array_remove($key = null, array &$array) {
 		$key = (string)$key;
 		if(array_key_exists($key, $array)) {
-			$val = $array[$key];					// Need to store to variable before unsetting, then return the variable
+			$val = $array[$key];
 			unset($array[$key]);
 			return $val;
 		}
@@ -595,25 +812,34 @@
 	}
 
 	/**
-	* Checks if the array that is the product
-	* of array_diff is empty or not.
-	*
-	* First, store all arguments as an array using
-	* func_get_arg() as $keys.
-	*
-	* Then, pop off the last argument as $arr, which is assumed
-	* to be the array to be searched and save it as its
-	* own variable. This will also remove it from
-	* the arguments array.
-	*
-	* Then, convert the array to its keys using $arr = array_keys($arr)
-	*
-	* Finally, compare the $keys by lopping through and checking if
-	* each $key is in $arr using in_array($key, $arr)
-	*
+	 * Checks if the array that is the product
+	 * of array_diff is empty or not.
+	 *
+	 * First, store all arguments as an array using
+	 * func_get_arg() as $keys.
+	 *
+	 * Then, pop off the last argument as $arr, which is assumed
+	 * to be the array to be searched and save it as its
+	 * own variable. This will also remove it from
+	 * the arguments array.
+	 *
+	 * Then, convert the array to its keys using $arr = array_keys($arr)
+	 *
+	 * Finally, compare the $keys by lopping through and checking if
+	 * each $key is in $arr using in_array($key, $arr)
+	 *
 	 * @param string[, string, .... string] array
 	 * @return boolean
-	 * @example array_keys_exist('red', 'green', 'blue', ['red' => '#f00', 'green' => '#0f0', 'blue' => '#00f']) // true
+	 * @example array_keys_exist(
+	 *          	'red',
+	 *           	'green',
+	 *           	'blue',
+	 *            	[
+	 *          	  'red' => '#f00',
+	 *          	  'green' => '#0f0',
+	 *          	  'blue' => '#00f'
+	 *             	]
+	 *          ) // true
 	 */
 
 	function array_keys_exist() {
@@ -738,18 +964,18 @@
 	 *
 	 * @param string $str
 	 * @return boolean
-	*/
+	 */
 
 	function is_datetime($str) {
 		return pattern_check('datetime', $str);
 	}
 
 	/**
-	* Checks $str againts the pattern for its type
-	*
-	* @param string $str
-	* @return boolean
-	*/
+	 * Checks $str againts the pattern for its type
+	 *
+	 * @param string $str
+	 * @return boolean
+	 */
 
 	function is_date($date) {
 		return pattern_check('date', $str);
@@ -760,41 +986,41 @@
 	 *
 	 * @param string $str
 	 * @return boolean
-	*/
+	 */
 
 	function is_week($str) {
 		return pattern_check('week', $str);
 	}
 
 	/**
-	* Checks $str againts the pattern for its type
-	*
-	* @param string $str
-	* @return boolean
-	*/
+	 * Checks $str againts the pattern for its type
+	 *
+	 * @param string $str
+	 * @return boolean
+	 */
 
 	function is_time($str) {
 		return pattern_check('time', $str);
 	}
 
 	/**
-	* Checks $str againts the pattern for its type
-	*
-	* @param string $str
-	* @return boolean
-	*/
+	 * Checks $str againts the pattern for its type
+	 *
+	 * @param string $str
+	 * @return boolean
+	 */
 
 	function is_color($str) {
 		return pattern_check('color', $str);
 	}
 
 	/**
-	* Checks $str againts the pattern $type
-	*
-	* @param string $str
-	* @param string $type
-	* @return boolean
-	*/
+	 * Checks $str againts the pattern $type
+	 *
+	 * @param string $str
+	 * @param string $type
+	 * @return boolean
+	 */
 
 	function pattern_check($type, $str) {
 		return preg_match('/^' . pattern($type) . '$/', (string)$str);
@@ -880,7 +1106,7 @@
 			} break;
 
 			case 'datetime': {
-				$pattern = '(19|20)\d{2}-(0?[1-9]|1[12])-(0?[1-9]|[12]\d?|3[01])T([01]\d|2[0-3])(:[0-5]\d)+';
+				$pattern = '(19|20)\d{2}-(0?[1-9]|1[0-2])-(0?[1-9]|[12]\d?|3[01])T([01]\d|2[0-3])(:[0-5]\d)+';
 			} break;
 
 			case 'week': {
@@ -965,7 +1191,7 @@
 		//Make an absolute path if given a relative path in $file
 
 		$file = realpath($file);
-		switch(extension($file)){ //Start by matching file extensions
+		switch(str_replace('.', null, extension($file))){ //Start by matching file extensions
 			case 'svg':
 			case 'svgz': {
 				$type = 'image/svg+xml';
@@ -997,6 +1223,10 @@
 
 			case 'webm': {
 				$type = 'video/webm';
+			} break;
+
+			case 'php': {
+				$type = 'application/x-php';
 			} break;
 
 			case 'ogg':
@@ -1136,7 +1366,7 @@
 	 *
 	 * @param int $n
 	 * @return boolean
-	*/
+	 */
 
 	function even($n) {
 		return ((int)$n % 2) === 0;
@@ -1148,10 +1378,58 @@
 	 *
 	 * @param int $n
 	 * @return boolean
-	*/
+	 */
 
 	function odd($n) {
 		return !even($n);
+	}
+
+	/**
+	 * Returns the sum of function's arguments
+	 *
+	 * @param numeric  [List of numbers]
+	 * @return numeric [sum]
+	 */
+
+	function sum() {
+		return array_sum(func_get_args());
+	}
+
+	/**
+	 * Returns $n squared
+	 *
+	 * @param  numeric $n [base number]
+	 * @return numeric     [$n squared]
+	 */
+
+	function sqr($n = 0) {
+		return (is_numeric($n)) ? pow($n, 2) : 0;
+	}
+
+	/**
+	 * Uses the pythagorean theorem to compute the magnitude of a
+	 * hypotenuse in n dimensions
+	 *
+	 * In any number of dimensions, the hypotenuse is the square root of
+	 * the sum of the squares of each dimension.
+	 *
+	 * @param numeric  [Uses func_get_args, so any number of numeric args]
+	 * @return numeric    [magnitude of hypotenuse]
+	 */
+
+	function magnitude() {
+		return sqrt(array_sum(array_map('sqr', func_get_args())));
+	}
+
+	/**
+	 * Alias of magnitude
+	 *
+	 * @param numeric $n  [Uses func_get_args, so any number of numeric args]
+	 * @return numeric    [magnitude of hypotenuse]
+	 */
+
+	function distance(){
+		return call_user_func_array('magnitude', func_get_args());
 	}
 
 	/**
@@ -1202,7 +1480,7 @@
 	 * @return int
 	 * @example get_time_offset('1 week'); //returns 604800
 	 * @example get_time_offset('1 week +1 second'); //returns 604801
-	*/
+	 */
 
 	function get_time_offset($time) {
 		return strtotime('+' . $time, 0);
@@ -1239,7 +1517,7 @@
 	 * @return string
 	 */
 
-	function curl_post($url = null, $request = null) {			//cURL for post instead of get
+	function curl_post($url = null, $request = null) {
 		$requestBody = http_build_query($request);
 		$connection = curl_init();
 		curl_setopt($connection, CURLOPT_URL, (string)$url);
@@ -1254,6 +1532,28 @@
 		curl_setopt($connection, CURLOPT_HTTP_VERSION, 1);		// HTTP version must be 1.0
 		$response = curl_exec($connection);
 		return $response;
+	}
+
+	/**
+	 * Converts ['path', 'to', 'something'] to '/path/to/something/'
+	 *
+	 * @param  array  $path_array [Path components]
+	 * @return string             [Final path]
+	 */
+
+	function array_to_path(array &$path_array) {
+		return DIRECTORY_SEPARATOR . trim(join(DIRECTORY_SEPARATOR, $path_array), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+	}
+
+	/**
+	 * Build a path using a set of arguments
+	 *
+	 * @param string  [Any number of directories using func_get_args()]
+	 * @return string [Final path]
+	 */
+
+	function build_path() {
+		return array_to_path(func_get_args());
 	}
 
 	/**
@@ -1305,5 +1605,34 @@
 		else {																	//Otherwise return null
 			return null;
 		}
+	}
+
+	/**
+	 * [Returns days of a week in an array (Mon - Fri | Sun - Sat)]
+	 *
+	 * @param  bool $full           [Mon-Fri only]
+	 *
+	 * @return array                [Array of requested days]
+	 */
+
+	function weekdays($full = true) {
+		if($full) {
+			return [
+				'Sunday',
+				'Monday',
+				'Tuesday',
+				'Wednesday',
+				'Thursday',
+				'Friday',
+				'Saturday'
+			];
+		}
+		return [
+			'Monday',
+			'Tuesday',
+			'Wednesday',
+			'Thursday',
+			'Friday'
+		];
 	}
 ?>
