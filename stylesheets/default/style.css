@@ -262,6 +262,29 @@ figure figcaption {
 	text-decoration: underline;
 	font-style: italic;
 }
+blockquote {
+	color: #444;
+	font-family: 'Libertine';
+}
+blockquote::before, blockquote::after {
+	
+	display: inline;
+	font-size: 2rem;
+	font-family: 'Acme';
+	color: gray;
+}
+blockquote::before {
+	float: left;
+	margin-left: -2rem;
+	margin-top: -1rem;
+	content: '“';
+}
+blockquote::after {
+	float: right;
+	margin-right: -1rem;
+	margin-top: -4.5rem;
+	content: '”';
+}
 a, button:not(:disabled), [role=button], input[type=submit], input[type=reset], input[type=image], details > summary , [data-show], [data-show-modal], [data-close] {
 	cursor: var(--pointer);
 }
