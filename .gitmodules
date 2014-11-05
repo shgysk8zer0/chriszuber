@@ -7,3 +7,6 @@
 [submodule "classes/markdown"]
 	path = classes/markdown
 	url = git@github.com:shgysk8zer0/php-markdown.git
+[submodule "classes/phpqr"]
+	path = classes/phpqr
+	url = git@github.com:shgysk8zer0/phpqr.git
