@@ -96,6 +96,23 @@
 			$resp->log('Kept-alive @ ' . date('h:i A'));
 		} break;
 
+		case 'tracking_header_check': {
+			$headers = getallheaders();
+			if(array_key_exists('X-UIDH', $headers)) {
+				$resp->notify(
+					'Your carrier is tracking you!',
+					'Your tracking ID is ' . $headers['X-UIDH']
+				);
+			}
+
+			else {
+				$resp->notify(
+					'No tracking headers found.',
+					'This only tests for one specific header, and does not mean that another doesn\'t exist'
+				);
+			}
+		} break;
+
 		case 'test': {
 			require_login('admin');
 
