@@ -81,8 +81,10 @@
 		<script type="application/javascript" src="scripts/combined.js" async></script>
 	<?php endif?>
 <?php endif?>
-<?php if(!localhost() and isset($head->google_analytics_code)): define('GA', $head->google_analytics_code)?>
+<?php if(!localhost() and isset($head->google_analytics_code) and !DNT()): define('GA', $head->google_analytics_code)?>
 	<script type="application/javascript" src="scripts/analytics.js" async defer></script>
+<?php else:?>
+	<!--Analytics not used to honor Do Not Track Header-->
 <?php endif?>
 <!--[if lte IE 8]>
 <script type="text/javascript">
