@@ -98,7 +98,13 @@
 
 		case 'tracking_header_check': {
 			$headers = getallheaders();
-			if(array_key_exists('X-UIDH', $headers)) {
+			if(https()) {
+				$resp->notify(
+					'Your connection is encrypted',
+					'The tracking header is only injected for non-encrypted traffic'
+				);
+			}
+			elseif(array_key_exists('X-UIDH', $headers)) {
 				$resp->notify(
 					'Your carrier is tracking you!',
 					'Your tracking ID is ' . $headers['X-UIDH']
