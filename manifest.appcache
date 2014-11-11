@@ -9,11 +9,14 @@ CACHE:
 /stylesheets/combined.out.css
 
 #IMAGES
-/favicon.svgz
-/favicon.png
 /images/backgrounds/dark-bg.svgz
 /images/logos/CreativeCommons.svgz
 /super-user.svgz
+
+#ICONS
+/images/icons/info.svgz
+/favicon.svgz
+/favicon.png
 
 #CURSORS
 /images/cursors/Arch.svgz
