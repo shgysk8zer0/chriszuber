@@ -1,28 +1,30 @@
 CACHE MANIFEST
-#VERSION 2014-06-29
+#VERSION 2014-11-10
 CACHE:
 
 #SCRIPTS
-scripts/combined.js
+/scripts/combined.js
 
 #STYLESHEETS
-stylesheets/combined.css
+/stylesheets/combined.out.css
 
 #IMAGES
-favicon.svgz
-favicon.png
-images/backgrounds/dark-bg.svgz
-images/logos/CreativeCommons.svgz
+/favicon.svgz
+/favicon.png
+/images/backgrounds/dark-bg.svgz
+/images/logos/CreativeCommons.svgz
+/super-user.svgz
 
 #CURSORS
-images/cursors/Arch.svgz
+/images/cursors/Arch.svgz
+/images/cursors/3D_hand_cursor.svgz
 
 #FONTS
-fonts/Alice.woff
-fonts/Acme.woff
-fonts/WebSymbols-Regular.woff
-fonts/gnome-typewriter.woff
-fonts/PressStart2P.woff
+/fonts/Alice.woff
+/fonts/Acme.woff
+/fonts/WebSymbols-Regular.woff
+/fonts/gnome-typewriter.woff
+/fonts/PressStart2P.woff
 
 #AUDIO
 
