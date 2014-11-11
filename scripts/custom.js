@@ -186,7 +186,10 @@ NodeList.prototype.bootstrap = function() {
 		node.query('script:not([src])').forEach(function(script) {
 			eval(script.textContent);
 		});
-		node.query('a[href^="' + document.location.origin + '"]:not([target="_blank"]):not([download])').forEach(function(a) {
+		$('a').filter(function(a) {return new RegExp(document.location.origin).test(a.href)})
+		node.query(':not([target="_blank"]):not([download])').filter(function(a) {
+			return new RegExp(document.location.origin).test(a.href);
+		}).forEach(function(a) {
 			a.addEventListener('click', function(event) {
 				if(typeof ga === 'function') {
 					ga('send', 'pageview', this.href);
