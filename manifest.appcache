@@ -39,4 +39,4 @@ NETWORK:
 FALLBACK:
 
 SETTINGS:
-fast
+prefer-online
