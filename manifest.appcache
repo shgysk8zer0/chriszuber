@@ -6,7 +6,7 @@ CACHE:
 /scripts/combined.js
 
 #STYLESHEETS
-/stylesheets/combined.out.css
+/stylesheets/default/combined.out.css
 
 #IMAGES
 /images/backgrounds/dark-bg.svgz
@@ -24,7 +24,7 @@ CACHE:
 
 #FONTS
 /fonts/Alice.woff
-/fonts/Acme.woff
+/fonts/acme.woff
 /fonts/WebSymbols-Regular.woff
 /fonts/gnome-typewriter.woff
 /fonts/PressStart2P.woff
