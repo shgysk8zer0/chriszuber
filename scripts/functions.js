@@ -1035,7 +1035,44 @@ zQ.prototype.on = function (event, callback) {
 	return this;
 };
 /*Listeners per event type*/
-['click','dblclick','contextmenu','keypress','keyup','keydown','mouseenter','mouseleave','mouseover','mouseout','mousemove','mousedown','mouseup','input','change','submit','reset' ,'invalid','select','focus','blur','resize','updateready','DOMContentLoaded','load','unload','beforeunload','abort','error','scroll','drag','offline', 'online','visibilitychange','popstate', 'pagehide'].forEach(function(ev){
+[
+	'click',
+	'dblclick',
+	'contextmenu',
+	'keypress',
+	'keyup',
+	'keydown',
+	'mouseenter',
+	'mouseleave',
+	'mouseover',
+	'mouseout',
+	'mousemove',
+	'mousedown',
+	'mouseup',
+	'input',
+	'change',
+	'submit',
+	'reset',
+	'invalid',
+	'select',
+	'focus',
+	'blur',
+	'resize',
+	'updateready',
+	'DOMContentLoaded',
+	'load',
+	'unload',
+	'beforeunload',
+	'abort',
+	'error',
+	'scroll',
+	'drag',
+	'offline',
+	'online',
+	'visibilitychange',
+	'popstate',
+	'pagehide'
+].forEach(function(ev){
 	zQ.prototype[ev] = function(callback){
 		return this.on(ev, callback);
 	};
