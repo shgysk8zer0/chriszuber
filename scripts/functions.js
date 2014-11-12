@@ -1140,15 +1140,14 @@ zQ.prototype.$ = function (q) {
 	}).join(', '));
 };
 $(window).popstate(function (event) {
-	var state = event.originalEvent.state;
-		ajax({
-			url: location.pathname,
-			type: 'GET'
-		}).then(
-			handleJSON,
-			console.error
-		);
-	});
+	ajax({
+		url: location.pathname,
+		type: 'GET'
+	}).then(
+		handleJSON,
+		console.error
+	);
+});
 Object.prototype.$ = function(q) {
 	if(this === document || this === window){
 		return $(q);
