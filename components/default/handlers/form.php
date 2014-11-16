@@ -9,7 +9,10 @@
 			]);
 
 			if(is_null($invalid)) {
-				$login->login_with($_POST);
+				$login->login_with([
+					'user' => $_POST['user'],
+					'password' => $_POST['password']
+				]);
 
 				if($login->logged_in) {
 					$session->setUser($login->user)->setPassword($login->password)->setRole($login->role)->setLogged_In(true);
@@ -228,7 +231,7 @@
 
 		case 'edit_post': {
 			require_login('admin');
-			
+
 			$post = [
 				'title' => urldecode(trim(strip_tags($_POST['title']))),
 				'keywords' => urldecode(trim(strip_tags(str_replace('</a>', '</a>,', $_POST['keywords'])), ',')),
