@@ -27,7 +27,7 @@
 
 		case 'Clear PHP_errors': {
 			require_login('admin');
-			$pdo =\core\_pdo::load('connect');
+			$pdo =\core\PDO::load('connect');
 
 			$pdo->reset_table('PHP_errors');
 			file_put_contents(BASE . '/errors.log', null, LOCK_EX);

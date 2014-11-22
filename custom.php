@@ -7,7 +7,7 @@
 	 */
 
 	function update_sitemap() {
-		$pdo = \core\_pdo::load('connect');
+		$pdo = \core\PDO::load('connect');
 		$url = preg_replace('/^https/', 'http', URL);
 		$template = \core\template::load('sitemap');
 		$sitemap = fopen(BASE . DIRECTORY_SEPARATOR . 'sitemap.xml', 'w');
@@ -47,7 +47,7 @@
 	 */
 
 	function update_rss($lim = 10) {
-		$pdo = \core\_pdo::load('connect');
+		$pdo = \core\PDO::load('connect');
 		if($pdo->connected) {
 			$url = preg_replace('/^https/', 'http', URL);
 			$head = $pdo->name_value('head');
@@ -102,7 +102,7 @@
 	 */
 
 	function get_all_tags(){
-		$pdo = \core\_pdo::load('connect');
+		$pdo = \core\PDO::load('connect');
 		if($pdo->connected) {
 			return array_unique(flatten(array_map(function($result) {
 				return array_map(
@@ -129,7 +129,7 @@
 	 */
 
 	function get_recent_posts($limit = 5, array $selectors = null) {
-		$pdo =\core\_pdo::load('connect');
+		$pdo =\core\PDO::load('connect');
 
 		if($pdo->connected) {
 			if(!is_array($selectors)) {
@@ -165,7 +165,7 @@
 	 */
 
 	function get_datalist($list) {
-		$pdo = \core\_pdo::load('connect');
+		$pdo = \core\PDO::load('connect');
 		$datalist = "<datalist id=\"{$list}\">";
 
 		if($pdo->connected) {

@@ -18,7 +18,7 @@
 		}
 	}
 
-	spl_autoload_extensions('.php');
+	spl_autoload_extensions('.class.php');
 	spl_autoload_register();				 //Load class by naming it
 
 	init();
@@ -208,7 +208,7 @@
 		static $DB, $load, $settings, $session, $login, $cookie;
 
 		if(is_null($load)) {
-			$DB =\core\_pdo::load('connect');
+			$DB =\core\PDO::load('connect');
 			$settings = \core\ini::load('settings');
 			$session = \core\session::load();
 			$login = \core\login::load();

@@ -601,7 +601,7 @@
 							)
 						)
 					) {
-						$pdo = new _pdo($root);
+						$pdo = new PDO($root);
 						if($pdo->connected) {
 							if(is_object($con)) {
 								$ini = fopen(BASE . '/config/connect.ini', 'w');
@@ -633,7 +633,7 @@
 								'password' => $con_ini->password
 							])->execute();
 							unset($DB);
-							$DB = new _pdo($con_ini);
+							$DB = new PDO($con_ini);
 							if($DB->connected) {
 								if(file_exists(BASE . '/default.sql')) {
 									if($DB->restore('default')) {
