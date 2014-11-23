@@ -85,6 +85,12 @@
 		if(isset($settings->path)) {
 			set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
 		}
+		if(isset($settings->charset) and is_string($settings->charset)) {
+			ini_set('default_charset', strtoupper($settings->charset));
+		}
+		else {
+			ini_set('default_charset', 'UTF-8');
+		}
 
 		if(isset($settings->requires)) {
 			foreach(explode(',', $settings->requires) as $file) {
@@ -854,6 +860,17 @@
 	}
 
 	/**
+	 * Tests if each value in an array is true
+	 * @param  array  $arr [the array to test]
+	 * @return bool        [all array values are true]
+	 */
+
+	function array_all_true(array $arr) {
+		$arr = array_unique($arr);
+		return (count($arr) === 1 and $arr[0] === true);
+	}
+
+	/**
 	 * Convert a multi-dimensional array into a simple array
 	 *
 	 * Can't say that I'm entirely sure how it does what it does,
@@ -1306,6 +1323,36 @@
 
 	function filename($file = null) {
 		return pathinfo((string)$file, PATHINFO_FILENAME);
+	}
+
+	/**
+	* Download a file by settings headers and exiting with file content
+	*
+	* @param  string $file [local filname]
+	* @param  string $name [name of file when downloaded]
+	*
+	* @return void
+	*/
+
+	function download($file = null, $name = null) {
+		if(isset($file) and file_exists($file)) {
+			if(is_null($name)) {
+				$name = filename($file) . '.' . extension($file);
+			}
+			http_response_code(200);
+			header("Pragma: public");
+			header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+			header("Cache-Control: private", false);
+			header("Content-type: " . mime_type($file));
+			header("Content-Disposition: attachment; filename=\"{$name}\"");
+			header("Content-Transfer-Encoding: binary");
+			header("Content-Length: " . filesize($file));
+			exit(file_get_contents($file));
+		}
+		else {
+			http_response_code(404);
+			exit();
+		}
 	}
 
 	/**
