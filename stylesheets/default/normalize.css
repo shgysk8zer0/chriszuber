@@ -70,6 +70,8 @@ body{
 	box-sizing:border-box;
 	-webkit-animation-fill-mode:forwards;
 	animation-fill-mode:forwards;
+	max-width: 100%;
+	overflow: auto;
 }
 article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary,picture{
 	display:block;
