@@ -5,6 +5,7 @@
 /scripts/*
 
 # Allow
+!/webhook.php
 !/index.php
 !/ajax.php
 !/functions.php
