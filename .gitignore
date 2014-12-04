@@ -3,6 +3,7 @@
 /stylesheets/*
 /components/*
 /scripts/*
+/config/github.json
 
 # Allow
 !/webhook.php
