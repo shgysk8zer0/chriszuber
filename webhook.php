@@ -1,5 +1,5 @@
 <?php
-	error_reporting();
+	error_reporting(0);
 	set_include_path(__DIR__ . DIRECTORY_SEPARATOR . 'classes' . PATH_SEPARATOR . get_include_path());
 	spl_autoload_extensions('.class.php');
 	spl_autoload_register();
