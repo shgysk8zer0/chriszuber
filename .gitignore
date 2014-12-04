@@ -3,7 +3,6 @@
 /stylesheets/*
 /components/*
 /scripts/*
-/config/github.json
 
 # Allow
 !/webhook.php
@@ -56,6 +55,7 @@
 !/components/green/**
 
 # Always Ignore
+/config/github.json
 **connect.ini
 **connect.json
 /images/contact/
