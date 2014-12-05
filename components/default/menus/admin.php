@@ -48,6 +48,7 @@
 		</menu>
 	<menuitem type="command" label="Search PHP errors" icon="images/icons/db.svgz" data-request="load_form=php_errors"></menuitem>
 	<menuitem type="command" label="test" icon="images/icons/coffee.svgz" data-request="action=test"></menuitem>
+	<menuitem type="command" label="Compose email" icon="images/icons/envelope.svgz" data-request="load_form=compose_email"></menuitem>
 	<?php endif?>
 	<menuitem type="command" label="Clear Cache" icon="images/icons/settings.svgz" data-confirm="Are you sure you want to clear your cache for this site?"></menuitem>
 </menu>
