@@ -372,6 +372,14 @@ blockquote::after {
   content: '”';
 }
 
+blockquote cite {
+  display: block;
+}
+
+blockquote cite::before {
+  content: ' — ';
+}
+
 a,
 button:not(:disabled),
 [role=button],
@@ -381,7 +389,8 @@ input[type=image],
 details > summary,
 [data-show],
 [data-show-modal],
-[data-close] {
+[data-close],
+[data-delete] {
   cursor: url('../../images/cursors/3D_hand_cursor.svgz'), pointer;
 }
 
@@ -434,7 +443,8 @@ progress[value]::-moz-progress-bar {
   background-image: linear-gradient(rgba(129, 23, 23, 1), rgba(237, 24, 24, 1), rgba(129, 23, 23, 1));
 }
 
-[data-close]::after {
+[data-close]::after,
+[data-delete]::after {
   font-family: 'Web Symbols';
   content: '\'';
 }
@@ -495,6 +505,11 @@ dialog[open]::backdrop {
   left: 0;
   bottom: 0;
   right: 0;
+}
+
+[contenteditable=true]:empty {
+  min-height: 1.3rem;
+  border: 1px dotted dimgray;
 }
 
 ol > ol {
@@ -866,6 +881,11 @@ body > progress {
   font-stretch: none;
   content: ' 'attr(data-icon)' ';
   vertical-align: baseline;
+}
+
+.resizeable {
+  resize: both;
+  overflow: auto;
 }
 
 .copyleft {
