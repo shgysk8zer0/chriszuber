@@ -378,6 +378,13 @@ NodeList.prototype.bootstrap = function() {
 				}
 			);
 		});
+		node.query('[data-delete]').forEach(function(el) {
+			el.addEventListener('click', function() {
+				document.querySelectorAll(this.data('delete')).forEach(function(remove) {
+					remove.parentElement.removeChild(remove);
+				});
+			});
+		});
 		node.query('menuitem[label="Edit Post"]').forEach(function(el) {
 			el.addEventListener('click', function() {
 				let form = document.createElement('form'),

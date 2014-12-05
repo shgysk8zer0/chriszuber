@@ -267,7 +267,7 @@ blockquote {
 	font-family: 'Libertine';
 }
 blockquote::before, blockquote::after {
-	
+
 	display: inline;
 	font-size: 2rem;
 	font-family: 'Acme';
@@ -285,7 +285,14 @@ blockquote::after {
 	margin-top: -4.5rem;
 	content: '”';
 }
-a, button:not(:disabled), [role=button], input[type=submit], input[type=reset], input[type=image], details > summary , [data-show], [data-show-modal], [data-close] {
+blockquote cite{
+	display: block;
+}
+blockquote cite::before {
+	content: ' — ';
+
+}
+a, button:not(:disabled), [role=button], input[type=submit], input[type=reset], input[type=image], details > summary , [data-show], [data-show-modal], [data-close], [data-delete] {
 	cursor: var(--pointer);
 }
 .no-details details[open] > summary::before {
@@ -325,7 +332,7 @@ progress[value]::-webkit-progress-value {
 progress[value]::-moz-progress-bar {
 	background-image: var(--progress-grad);
 }
-[data-close]::after {
+[data-close]::after, [data-delete]::after {
 	font-family: var(--icon-font);
 	content: '\'';
 }
@@ -378,6 +385,10 @@ dialog[open]::backdrop {
 	left: 0;
 	bottom: 0;
 	right: 0;
+}
+[contenteditable=true]:empty {
+	min-height: 1.3rem;
+	border: 1px dotted dimgray;
 }
 ol > ol {
 	list-style-type: upper-alpha;
@@ -627,6 +638,10 @@ body > progress {
 	font-stretch: none;
 	content: ' 'attr(data-icon)' ';
 	vertical-align: baseline;
+}
+.resizeable {
+	resize: both;
+	overflow: auto;
 }
 .copyleft {
 	color: var(--alt-color);
