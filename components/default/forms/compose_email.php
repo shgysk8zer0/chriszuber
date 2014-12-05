@@ -4,6 +4,9 @@
 <dialog id="<?=$formname?>_dialog">
 	<form name="<?=$formname?>" action="<?=URL?>/" method="post">
 		<fieldset form="<?=$formname?>">
+			<legend>
+				Compose new email
+			</legend>
 			<label for="<?=$formname?>[to]" data-icon="@" title="to"></label>
 			<input type="email" name="<?=$formname?>[to]" id="<?=$formname?>[to]" placeholder="To: user@example.com" multiple autofocus required/><br />
 			<details>
@@ -18,7 +21,7 @@
 			<input type="text" name="<?=$formname?>[subject]" id="<?=$formname?>[subject]" placeholder="Subject" required/>
 			<div contenteditable="true" contextmenu="wysiwyg_menu" class="resizeable" data-input-name="<?=$formname?>[message]" data-dropzone="#<?=$formname?>_dialog"></div>
 		</fieldset>
-		<button type="submit" data-icon="."></button>
-		<button type="button" data-delete="#<?=$formname?>_dialog"></button>
+		<button type="submit" title="Send" data-icon="."></button>
+		<button type="button" title="Close Dialog" data-delete="#<?=$formname?>_dialog"></button>
 	</form>
 </dialog>

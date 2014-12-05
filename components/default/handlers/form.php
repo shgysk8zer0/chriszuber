@@ -49,18 +49,19 @@
 			}
 		}break;
 
-		case 'email': {
+		case 'compose_email': {
 			require_login('admin');
 			$email = new \core\email(
-				array_map('trim', explode(',', $_POST['email']['to'])),
-				trim($_POST['email']['subject']),
-				$_POST['email']['message']
+				array_map('trim', explode(',', $_POST['compose_email']['to'])),
+				trim($_POST['compose_email']['subject']),
+				$_POST['compose_email']['message']
 			);
 
 			if($email->send(true)) {
 				$resp->notify(
 					'Success!',
-					'Email Sent'
+					'Email Sent',
+					'images/icons/envelope.png'
 				)->remove(
 					'#email_dialog'
 				);
@@ -68,7 +69,8 @@
 			else {
 				$resp->notify(
 					'Failed!',
-					'Unable to send email, check your Internet connection'
+					'Unable to send email, check your Internet connection',
+					'images/icons/envelope.png'
 				);
 			}
 		} break;
