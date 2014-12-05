@@ -49,6 +49,30 @@
 			}
 		}break;
 
+		case 'email': {
+			require_login('admin');
+			$email = new \core\email(
+				array_map('trim', explode(',', $_POST['email']['to'])),
+				trim($_POST['email']['subject']),
+				$_POST['email']['message']
+			);
+
+			if($email->send(true)) {
+				$resp->notify(
+					'Success!',
+					'Email Sent'
+				)->remove(
+					'#email_dialog'
+				);
+			}
+			else {
+				$resp->notify(
+					'Failed!',
+					'Unable to send email, check your Internet connection'
+				);
+			}
+		} break;
+
 		case 'tag_search': {
 			$invalid = check_inputs([
 				'tags' => '[\w- ]+'
