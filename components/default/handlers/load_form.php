@@ -66,6 +66,16 @@
 			]);
 		} break;
 
+		case 'compose_email': {
+			require_login('admin');
+			$resp->prepend(
+				'body',
+				load_results('forms/compose_email')
+			)->showModal(
+				'#compose_email_dialog'
+			)->send();
+		} break;
+
 		case 'php_errors': {
 			require_login('admin');
 
