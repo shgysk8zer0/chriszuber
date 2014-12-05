@@ -15,9 +15,20 @@
 		"Alice",
 		"Web Symbols",
 		"Acme",
-		"GNUTypewriter",
 		"PressStart",
-		"GNUTypewriter"
+		"GNUTypewriter",
+		"Comfortaa",
+		"Chancery",
+		"Intuitive"
+	];
+
+	$colors = [
+		'Red' => 'red',
+		'Green' => 'green',
+		'Blue' => 'blue',
+		'White' => 'white',
+		'Black' => 'black',
+		'Gray' => 'gray'
 	];
 
 	$special_characters = [
@@ -125,6 +136,11 @@
 				<menuitem label="<?=$font?>" data-editor-command="fontname" data-editor-value="<?=$font?>"></menuitem>
 				<?php endforeach?>
 				<menuitem label="Other?" data-editor-command="fontname" data-prompt="What font would you like to use?"></menuitem>
+			</menu>
+			<menu label="Font Color">
+				<?php foreach($colors as $name => $color):?>
+					<menuitem label="<?=$name?>" data-editor-command="forecolor" data-editor-value="<?=$color?>"></menuitem>
+				<?php endforeach?>
 			</menu>
 		</menu>
 		<menuitem label="Paragraph" data-editor-command="insertparagraph"></menuitem>
