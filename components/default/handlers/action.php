@@ -119,6 +119,19 @@
 			}
 		} break;
 
+		case 'git_command': {
+			require_login('admin');
+			if(array_key_exists('prompt_value', $_POST) and strlen($_POST['prompt_value'])) {
+				$command = 'git ' . escapeshellcmd($_POST['prompt_value']);
+				$result = `{$command}`;
+				$resp->notify(
+					$command,
+					$result,
+					'images/logos/git.png'
+				);
+			}
+		} break;
+
 		case 'test': {
 			require_login('admin');
 
