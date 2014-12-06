@@ -518,12 +518,38 @@
 						'<br><p><span><div><a><ul><ol><li><i><u><b><em><u><h1><h2><h3><h4><h5><h6><pre><s><samp><strong><big><small><sup><sub><del><ins><code><var><kbd><cite>'
 					)
 				);
+
 				$post = $_POST['for_post'];
 				$template = \core\template::load('comments');
 				$author = $_POST['comment_author'];
 				$author_url = (array_key_exists('comment_url', $_POST) and is_url($_POST['comment_url'])) ? $_POST['comment_url'] : '';
 				$author_email = $_POST['comment_email'];
 				$time = date('Y-m-d H:i:s');
+				$post_title = ucwords(urldecode($post));
+				$email = new \core\email(
+					$_SERVER['SERVER_ADMIN'],
+					"New comment on {$post_title} by {$author}",
+					\core\template::load(
+						'comment_created_notification'
+					)->author(
+						$author
+					)->author_url(
+						$author_url
+					)->author_email(
+						"{$author} <{$author_email}>"
+					)->time(
+						date('r', strtotime($time))
+					)->comment(
+						$comment
+					)->post(
+						ucwords(urldecode($post))
+					)->post_url(
+						URL . "/posts/{$post}"
+					)->out(),
+					[
+						'Reply-To' => "{$author} <{$author_email}>"
+					]
+				);
 
 				$DB->prepare("
 					INSERT INTO `comments`(
@@ -568,6 +594,7 @@
 				)->log(
 					$_POST
 				);
+				$email->send(true);
 			}
 		} break;
 
