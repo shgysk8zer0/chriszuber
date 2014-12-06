@@ -75,6 +75,31 @@
 			}
 		} break;
 
+		case 'email_admin': {
+			if(is_email($_POST['email_admin']['from'])) {
+				$email = new \core\email(
+					$_SERVER['SERVER_ADMIN'],
+					$_POST['email_admin']['subject'],
+					strip_tags($_POST['email_admin']['message'])
+				);
+				$email->reply_to = $_POST['email_admin']['from'];
+				if($email->send()) {
+					$resp->notify(
+						'Thanks!',
+						"Email sent.\nI will try to get back to you as soon as possible",
+						'images/icons/envelope.png'
+					)->clear(
+						'email_admin'
+					)->close(
+						'#email_admin_dialog'
+					);
+				}
+			}
+			else {
+				$invalid = 'form[name="email_admin"] input[name="email_admin[from]"]';
+			}
+		} break;
+
 		case 'tag_search': {
 			$invalid = check_inputs([
 				'tags' => '[\w- ]+'
