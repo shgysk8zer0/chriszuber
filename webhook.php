@@ -41,7 +41,7 @@
 				} break;
 
 				default: {
-					throw new \Exception('Unhandled event: ' . $webhook->event, 501);
+					throw new \Exception("Unhandled event: {$webhook->event}", 501);
 				};
 			}
 		}
