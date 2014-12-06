@@ -655,11 +655,11 @@ function ajax(data) {
 	});
 }
 function handleJSON(json){
-	if(typeof json === 'undefined') {
-		return false;
-	}
 	if(typeof json === 'string') {
 		json = JSON.parse(json.trim());
+	}
+	else if(typeof json !== 'object') {
+		return false;
 	}
 	if ('remove' in json) {
 		document.querySelectorAll(json.remove).forEach(function(el){
@@ -764,6 +764,12 @@ function handleJSON(json){
 	}
 	if('log' in json){
 		console.log(json.log);
+	}
+	if('table' in json) {
+		('table' in console) ? console.table(json.table) : console.log(json.table);
+	}
+	if('dir' in json) {
+		('dir' in console) ? console.dir(json.dir) : console.log(json.dir);
 	}
 	if('info' in json){
 		console.info(json.info);
