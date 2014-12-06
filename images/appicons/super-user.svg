@@ -1,0 +1,61 @@
+<svg id="svg2844" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2100 2400" height="100%" width="100%" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<title id="title2988">Super User</title>
+<defs id="defs11">
+<linearGradient id="linearGradient3040-3" y2="163.21" xlink:href="#linearGradient2994-3-6" spreadMethod="reflect" gradientUnits="userSpaceOnUse" y1="62.865" gradientTransform="matrix(9.3195916,0,0,10.430673,30.282851,267.35738)" x2="109.24" x1="110.01"/>
+<linearGradient id="linearGradient2994-3-6" y2="163.21" spreadMethod="reflect" gradientUnits="userSpaceOnUse" x2="109.24" gradientTransform="matrix(9.3195916,0,0,10.430673,30.282864,244.77053)" y1="62.865" x1="110.01">
+<stop id="stop3779-4-7" stop-color="#1a1a1a" offset="0"/>
+<stop id="stop3781-1-9" stop-color="#505050" offset="1"/>
+</linearGradient>
+</defs>
+<metadata id="metadata7">
+<rdf:RDF>
+<cc:Work>
+<dc:format>image/svg+xml</dc:format>
+<dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+<cc:license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/3.0/"/>
+<dc:publisher>
+<cc:Agent rdf:about="http://openclipart.org/">
+<dc:title>Openclipart</dc:title>
+</cc:Agent>
+</dc:publisher>
+<dc:title>Super User</dc:title>
+<dc:date>2014-04-09T20:34:25</dc:date>
+<dc:description/>
+<dc:source>http://chriszuber.com/favicon.svg</dc:source>
+<dc:creator>
+<cc:Agent>
+<dc:title>Chris Zuber</dc:title>
+</cc:Agent>
+</dc:creator>
+<dc:subject>
+<rdf:Bag>
+<rdf:li>Linux</rdf:li>
+<rdf:li>Super User</rdf:li>
+<rdf:li>sudo</rdf:li>
+</rdf:Bag>
+</dc:subject>
+<dc:identifier>favicon</dc:identifier>
+</cc:Work>
+<cc:License rdf:about="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+<cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+<cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+<cc:requires rdf:resource="http://creativecommons.org/ns#Notice"/>
+<cc:requires rdf:resource="http://creativecommons.org/ns#Attribution"/>
+<cc:prohibits rdf:resource="http://creativecommons.org/ns#CommercialUse"/>
+<cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+<cc:requires rdf:resource="http://creativecommons.org/ns#ShareAlike"/>
+</cc:License>
+</rdf:RDF>
+</metadata>
+<g id="layer2">
+<g id="g3139" transform="translate(-4.8950195e-5,-52.73343)">
+<g id="g3142" stroke-linejoin="round" stroke="#0FF" stroke-linecap="round" stroke-miterlimit="4" stroke-dasharray="none" stroke-width="66.1690979" fill="url(#linearGradient3040-3)">
+<path id="path3774" d="m1151.2,845.34-159.98,0-46.179,205.51,161.08,0,45.08-205.51m-82.463-350.1-57.174,255.35,160.53,0,57.724-255.35,87.961,0-56.625,255.35,171.52,0,0,94.756-192.96,0-45.08,205.51,174.82,0,0,94.14-196.26,0-57.174,254.73-87.96,0,56.625-254.73-161.08,0-56.625,254.73-88.51,0,57.174-254.73-173.17,0,0-94.14,193.51,0,46.179-205.51-177.02,0,0-94.756,198.46,0,56.075-255.35,89.06,0m-731.33-227.82-306.89,543.22l94.407,107.48,0.54408-0.6058,829.78,943.93-0.81574,1.218,94.128,107.18,0.8154-1.2181,0.2712,0.3075,94.407-107.18-0.2712-0.6058,825.97-939.36,96.583-109.92v-0.3076l0.8155-0.9133-53.868-95.002-2.7206-3.0447-166.77-294.15h1.6323l-84.882-150.42h-1.6324l-0.2712-0.60577h-96.583l-0.8155,0.60577h-1192.1l-0.81575-0.60577h-130.86z"/>
+<path id="path3151" d="m337.17,267.36-306.88,543.22,94.407,107.48,0.54408-0.6058,829.78,943.93-0.81574,1.218,94.128,107.18,0.8154-1.2181,0.2712,0.3075,94.407-107.18-0.2712-0.6058,825.97-939.36,96.583-109.92,0-0.3076,0.8155-0.9133-53.868-95.002-2.7206-3.0447-166.77-294.15,1.6323,0-84.882-150.42-1.6324,0-0.2712-0.60577-96.583,0-0.8155,0.60577-1192.2,0-0.81575-0.60577-130.86,0z"/>
+</g>
+</g>
+</g>
+<g id="layer4">
+<path id="path3774-9" stroke-linejoin="round" d="m1152.1,749.85-159.98,0-46.179,205.51,161.08,0,45.08-205.51m-82.463-350.1-57.174,255.35,160.53,0,57.724-255.35,87.961,0-56.625,255.35,171.52,0,0,94.756-192.96,0-45.08,205.51,174.82,0,0,94.14-196.26,0-57.174,254.73-87.96,0,56.625-254.73-161.08,0-56.625,254.73-88.51,0,57.174-254.73-173.17,0,0-94.14,193.51,0,46.179-205.51-177.02,0,0-94.756,198.46,0,56.075-255.35,89.06,0" stroke="#0FF" stroke-linecap="round" stroke-miterlimit="4" stroke-dasharray="none" stroke-width="66.1690979" fill="#FFF"/>
+</g>
+</svg>

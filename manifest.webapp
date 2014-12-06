@@ -1,0 +1,25 @@
+{
+	"version": "0.0.1",
+	"name": "Super User Blog",
+	"description": "My HTML5 playground",
+	"launch_path": "/index.php",
+	"icons": {
+		"all": "/images/appicons/super-user.svg",
+		"16": "/images/appicons/16.png",
+		"48": "/images/appicons/48.png",
+		"60": "/images/appicons/60.png",
+		"128": "/images/appicons/128.png"
+	},
+	"developer": {
+		"name": "Chris Zuber",
+		"url": "http://chriszuber.com"
+	},
+	"type": "privileged",
+	"systemXHR": {
+		"description": "Required to load remote content"
+	},
+	"installs_allowed_from": [
+		"http://chriszuber.com"
+	]
+
+}

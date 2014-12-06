@@ -5,6 +5,7 @@
 /scripts/*
 
 # Allow
+!/manifest.webapp
 !/webhook.php
 !/index.php
 !/ajax.php
