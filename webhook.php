@@ -9,7 +9,7 @@
 			switch(trim(strtolower($webhook->event))) {
 				case 'push': {
 					$table = new \core\table('author', 'commit', 'message', 'time', 'modified', 'added', 'removed');
-					$table->caption = "Recently pushed to <a href=\"{$webook->parsed->repository->html_url}\" target=\"_blank\">{$webook->parsed->repository->full_name}";
+					$table->caption = "Recently pushed to <a href=\"{$webhook->parsed->repository->html_url}\" target=\"_blank\">{$webhook->parsed->repository->full_name}";
 					array_map(function($commit) use (&$table) {
 						$table->author(
 							"<a href=\"mailto:{$commit->author->email}\" title=\"{$commit->author->name}\">{$commit->author->username}</a>"
@@ -30,7 +30,7 @@
 
 					$email = new \core\email(
 						$_SERVER['SERVER_ADMIN'],
-						"Recently pushed to {$webook->parsed->repository->full_name}",
+						"Recently pushed to {$webhook->parsed->repository->full_name}",
 						$table->out(false, true)
 					);
 					if(!$email->send(true)) {
