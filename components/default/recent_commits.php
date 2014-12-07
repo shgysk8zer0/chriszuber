@@ -10,7 +10,7 @@
 		$table->SHA(
 			"<code>{$commit->SHA}</code>"
 		)->Commit(
-			"<a href=\"{$commit->URL}\" target=\"_blank\">{$commit->Message}</a>"
+			'<a href="' . $commit->URL .'" target="_blank">' . utf($commit->Message) . '</a>'
 		)->Author(
 			$commit->Author
 		)->Timestamp(
