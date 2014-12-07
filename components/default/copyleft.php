@@ -1,7 +1,7 @@
 
 <dialog id="copyleftDialog">
 	<button type="button" title="Close Dialog" data-close="#copyleftDialog"></button><br />
-	<div class="logo"><?php include(BASE . '/images/logos/copyleft.svg')?><?=date('Y')?></div>
+	<div>&copy;&nbsp;<?=date('Y')?></div>
 	<strong>All code related to this site is protected by <del>copyright</del><ins>copyleft</ins></strong>
 	<p>It is, however, freely available for you to use, study, modify, and redistribute.<p>
 	<details>
