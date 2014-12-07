@@ -222,7 +222,7 @@
 		static $DB, $load, $settings, $session, $login, $cookie;
 
 		if(is_null($load)) {
-			$DB =\core\PDO::load('connect.ini');
+			$DB =\core\PDO::load('connect');
 			$settings = \core\ini::load('settings');
 			$session = \core\session::load();
 			$login = \core\login::load();
