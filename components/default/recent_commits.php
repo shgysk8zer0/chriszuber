@@ -10,7 +10,7 @@
 		$table->SHA(
 			"<code>{$commit->SHA}</code>"
 		)->Commit(
-			'<a href="' . $commit->URL .'" target="_blank">' . utf($commit->Message) . '</a>'
+			'<a href="' . $commit->URL .'" target="_blank">' . utf(end(explode(PHP_EOL, $commit->Message, 1))) . '</a>'
 		)->Author(
 			$commit->Author
 		)->Timestamp(
@@ -30,6 +30,6 @@
 	"));
 ?>
 <dialog id="<?=$filename?>_dialog">
-	<button type="button" data-close="#<?=$filename?>_dialog"></button>
+	<button type="button" data-delete="#<?=$filename?>_dialog"></button>
 	<?=$table->out(true, true);?>
 </dialog>

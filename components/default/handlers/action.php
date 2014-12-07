@@ -132,6 +132,15 @@
 			}
 		} break;
 
+		case 'recent_commits': {
+			$resp->append(
+				'body',
+				load_results('recent_commits')
+			)->showModal(
+				'#recent_commits_dialog'
+			);
+		} break;
+
 		case 'test': {
 			require_login('admin');
 
