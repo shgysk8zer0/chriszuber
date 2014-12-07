@@ -27,6 +27,7 @@
 		header("Location: {$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_ADDR']}{$_SERVER['REQUEST_URI']}");
 		exit();
 	}
+
 	$DB = \core\PDO::load('connect');
 	$login = \core\login::load('connect');
 	$session = \core\session::load();

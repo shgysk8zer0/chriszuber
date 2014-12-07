@@ -85,11 +85,19 @@
 		if(isset($settings->path)) {
 			set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
 		}
+
 		if(isset($settings->charset) and is_string($settings->charset)) {
 			ini_set('default_charset', strtoupper($settings->charset));
 		}
 		else {
 			ini_set('default_charset', 'UTF-8');
+		}
+
+		if(isset($settings->credentials_extension)) {
+			\core\resources\pdo_connect::$ext = $settings->credentials_extension;
+		}
+		else {
+			\core\resources\pdo_connect::$ext = 'ini';
 		}
 
 		if(isset($settings->requires)) {
@@ -214,7 +222,7 @@
 		static $DB, $load, $settings, $session, $login, $cookie;
 
 		if(is_null($load)) {
-			$DB =\core\PDO::load('connect');
+			$DB =\core\PDO::load('connect.ini');
 			$settings = \core\ini::load('settings');
 			$session = \core\session::load();
 			$login = \core\login::load();

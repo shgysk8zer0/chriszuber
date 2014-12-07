@@ -29,7 +29,7 @@
 				date('Y-m-d', strtotime($post->created))
 			));
 			$url->appendChild(new \DOMElement('priority', '0.8'));
-		}, \core\PDO::load('connect')->fetch_array("
+		}, \core\PDO::load('connect.ini')->fetch_array("
 			SELECT `url`, `created`
 			FROM `posts`
 			WHERE `url` != ''
@@ -49,7 +49,7 @@
 
 	function update_rss($lim = 10, $name = 'feed.rss') {
 		$lim = (int)$lim;
-		$pdo = \core\PDO::load('connect');
+		$pdo = \core\PDO::load('connect.ini');
 		if($pdo->connected) {
 			$url = preg_replace('/^https/', 'http', URL);
 			$head = $pdo->name_value('head');
@@ -115,7 +115,7 @@
 	 */
 
 	function get_all_tags(){
-		$pdo = \core\PDO::load('connect');
+		$pdo = \core\PDO::load('connect.ini');
 		if($pdo->connected) {
 			return array_unique(flatten(array_map(function($result) {
 				return array_map(
@@ -142,7 +142,7 @@
 	 */
 
 	function get_recent_posts($limit = 5, array $selectors = null) {
-		$pdo =\core\PDO::load('connect');
+		$pdo =\core\PDO::load('connect.ini');
 
 		if($pdo->connected) {
 			if(!is_array($selectors)) {
@@ -178,7 +178,7 @@
 	 */
 
 	function get_datalist($list) {
-		$pdo = \core\PDO::load('connect');
+		$pdo = \core\PDO::load('connect.ini');
 		$datalist = "<datalist id=\"{$list}\">";
 
 		if($pdo->connected) {
