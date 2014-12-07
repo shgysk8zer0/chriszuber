@@ -11,13 +11,26 @@
 					$PDO = new \core\PDO($webhook->config->database);
 					if($PDO->connected) {
 						$PDO->prepare("
-							INSERT INTO `Commits` VALUES (
+							INSERT INTO `Commits` (
+								`SHA`,
+								`Repository_Name`,
+								`Repository_URL`,
+								`Commit_URL`,
+								`Commit_Message`,
+								`Author_Name`,
+								`Author_Username`,
+								`Author_Email`,
+								`Modified`,
+								`Added`,
+								`Removed`,
+								`Time`
+							) VALUES (
 								:SHA,
 								:Repository_Name,
 								:Repository_URL,
 								:Commit_URL,
 								:Commit_Message,
-								:Author_Nam,
+								:Author_Name,
 								:Author_Username,
 								:Author_Email,
 								:Modified,
@@ -27,8 +40,8 @@
 							);
 						");
 
-						array_map(function($commit) use (&$PDO, $webhook) {
-							$PDO->bind([
+						$successes = array_filter($webhook->parsed->commits, function($commit) use (&$PDO, $webhook) {
+							return $PDO->bind([
 								'SHA' => $commit->id,
 								'Repository_Name' => $webhook->parsed->repository->full_name,
 								'Repository_URL' => $webhook->parsed->repository->html_url,
@@ -42,7 +55,8 @@
 								'Removed' => join(', ', $commit->removed),
 								'Time' => date('Y-m-d H:i:s', strtotime($commit->timestamp))
 							])->execute();
-						}, $webhook->parsed->commits);
+						});
+						exit('Imported' . count($successes) . ' of ' . count($webhook->parsed->commits));
 					}
 
 					else {
