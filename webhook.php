@@ -8,7 +8,7 @@
 		if($webhook->validate()) {
 			switch(trim(strtolower($webhook->event))) {
 				case 'push': {
-					$PDO = \core\PDO::load($webhook->database);
+					$PDO = new \core\PDO($webhook->config->database);
 					if($PDO->connected) {
 						$PDO->prepare("
 							INSERT INTO `Commits` VALUES (
