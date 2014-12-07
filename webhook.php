@@ -1,40 +1,52 @@
 <?php
 	error_reporting(0);
-	require_once __DIR__ . DIRECTORY_SEPARATOR . 'functions.php';
 	header('Content-Type: text/plain');
+	require_once __DIR__ . DIRECTORY_SEPARATOR . 'functions.php';
 
 	$webhook = new \core\GitHubWebhook('config/github.json');
 	try {
 		if($webhook->validate()) {
 			switch(trim(strtolower($webhook->event))) {
 				case 'push': {
-					$table = new \core\table('author', 'commit', 'message', 'time', 'modified', 'added', 'removed');
-					$table->caption = "Recently pushed to <a href=\"{$webhook->parsed->repository->html_url}\" target=\"_blank\">{$webhook->parsed->repository->full_name}";
-					array_map(function($commit) use (&$table) {
-						$table->author(
-							"<a href=\"mailto:{$commit->author->email}\" title=\"{$commit->author->name}\">{$commit->author->username}</a>"
-						)->commit(
-							"<a href=\"{$commit->url}\" target=\"_blank\">{$commit->id}</a>"
-						)->message(
-							$commit->message
-						)->time(
-							date('Y-m-d H:i:s', strtotime($commit->timestamp))
-						)->modified(
-							join(', ', $commit->modified)
-						)->added(
-							join(', ', $commit->added)
-						)->removed(
-							join(', ', $commit->removed)
-						)->next_row();
-					}, $webhook->parsed->commits);
+					$PDO = \core\PDO::load($webhook->database);
+					if($PDO->connected) {
+						$PDO->prepare("
+							INSERT INTO `Commits` VALUES (
+								:SHA,
+								:Repository_Name,
+								:Repository_URL,
+								:Commit_URL,
+								:Commit_Message,
+								:Author_Nam,
+								:Author_Username,
+								:Author_Email,
+								:Modified,
+								:Added,
+								:Removed,
+								:Time
+							);
+						");
 
-					$email = new \core\email(
-						$_SERVER['SERVER_ADMIN'],
-						"Recently pushed to {$webhook->parsed->repository->full_name}",
-						$table->out(false, true)
-					);
-					if(!$email->send(true)) {
-						throw new \Exception('Failed sending email', 500);
+						array_map(function($commit) use (&$PDO, $webhook) {
+							$PDO->bind([
+								'SHA' => $commit->id,
+								'Repository_Name' => $webhook->parsed->repository->full_name,
+								'Repository_URL' => $webhook->parsed->repository->html_url,
+								'Commit_URL' => $commit->url,
+								'Commit_Message' => $commit->message,
+								'Author_Name' => $commit->author->name,
+								'Author_Username' => $commit->author->username,
+								'Author_Email' => $commit->author->email,
+								'Modified' => join(', ', $commit->modified),
+								'Added' => join(', ', $commit->added),
+								'Removed' => join(', ', $commit->removed),
+								'Time' => date('Y-m-d H:i:s', strtotime($commit->timestamp))
+							])->execute();
+						}, $webhook->parsed->commits);
+					}
+
+					else {
+						throw new \Exception('Failed to connect to database', 500);
 					}
 				} break;
 
