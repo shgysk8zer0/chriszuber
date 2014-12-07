@@ -8,13 +8,13 @@
 
 	array_map(function($commit) use (&$table) {
 		$table->SHA(
-		$commit->SHA
+			"<code>{$commit->SHA}</code>"
 		)->Commit(
-		"<a href=\"{$commit->URL}\" target=\"_blank\">{$commit->Message}</a>"
+			"<a href=\"{$commit->URL}\" target=\"_blank\">{$commit->Message}</a>"
 		)->Author(
-		$commit->Author
+			$commit->Author
 		)->Timestamp(
-		$commit->Timestamp
+			"<time>{$commit->Timestamp}</time>"
 		)->next_row();
 	}, $PDO->fetch_array("
 		SELECT
