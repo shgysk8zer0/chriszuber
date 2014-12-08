@@ -64,6 +64,61 @@
 					}
 				} break;
 
+				case 'issues': {
+					$PDO = new \core\PDO($webhook->config->database);
+					if($PDO->connected) {
+						$PDO->prepare("
+							INSERT INTO `Issues` (
+								`Number`,
+								`Title`,
+								`URL`,
+								`Labels`,
+								`State`,
+								`Milestone`,
+								`Created_At`,
+								`Closed_At`,
+								`Body`,
+								`Repository`,
+								`Repository_URL`
+							) VALUES (
+								:Number,
+								:Title,
+								:URL,
+								:Labels,
+								:State,
+								:Milestone,
+								:Created_At,
+								:Closed_At,
+								:Body,
+								:Repository,
+								:Repository_URL
+							);
+						")->bind([
+							'Number' => $issue->number,
+							'Title' => $issue->title,
+							'URL' => $issue->html_url,
+							'Labels' => join(', ', array_map(function($label){
+								return trim($label->name);
+							}, $issue->labels)),
+							'State' => $issue->state,
+							'Milestone' => $issue->milestone,
+							'Created_At' => date('Y-m-d H:i:s', strtotime($issue->created_at)),
+							'Closed_At' => date('Y-m-d H:i:s', strtotime($issue->closed_at)),
+							'Body' => $issue->body,
+							'Repository' => $issue->repository->full_name,
+							'Repository_URL' => $issue->repository->html_url
+						]);
+
+						if(!$PDO->execute()) {
+							throw new \Exception('Failed inserting issue to database', 500);
+						}
+					}
+
+					else {
+						throw new \Exception('Failed to connect to database', 500);
+					}
+				} break;
+
 				default: {
 					file_put_contents($webhook->event . '_' . date('Y-m-d\TH:i:s') . '.json', json_encode($webhook->parsed, JSON_PRETTY_PRINT));
 					throw new \Exception("Unhandled event: {$webhook->event}", 501);
