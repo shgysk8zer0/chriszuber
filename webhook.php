@@ -92,7 +92,15 @@
 								:Body,
 								:Repository,
 								:Repository_URL
-							);
+							)
+							ON DUPLICATE KEY UPDATE
+								`Title` = :Title,
+								`Labels` = :Labels,
+								`State` = :State,
+								`Milestone` = :Milestone,
+								`Closed_At` = :Closed_At,
+								`Body` = :Body
+							;
 						")->bind([
 							'Number' => $webhook->parsed->issue->number,
 							'Title' => $webhook->parsed->issue->title,
