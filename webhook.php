@@ -76,8 +76,10 @@
 								`URL`,
 								`Labels`,
 								`Assignee`,
+								`Avatar`,
 								`State`,
 								`Milestone`,
+								`Milestone_URL`,
 								`Created_At`,
 								`Updated_At`,
 								`Closed_At`
@@ -90,8 +92,10 @@
 								:URL,
 								:Labels,
 								:Assignee,
+								:Avatar,
 								:State,
 								:Milestone,
+								:Milestone_URL,
 								:Created_At,
 								:Updated_At,
 								:Closed_At
@@ -114,9 +118,11 @@
 							'Labels' => join(', ', array_map(function($label) {
 								return trim($label->name);
 							}, $webhook->parsed->issue->labels)),
-							'Assignee' => $webhook->issue->assignee->login,
+							'Assignee' => $webhook->parsed->issue->assignee->login,
+							'Avatar' => $webhook->parsed->issue->assignee->avatar_url,
 							'State' => $webhook->parsed->issue->state,
-							'Milestone' => $webhook->parsed->issue->milestone,
+							'Milestone' => $webhook->parsed->issue->milestone->title,
+							'Milestone_URL' => $webhook->parsed->issue->milestone->url,
 							'Created_At' => date('Y-m-d H:i:s', strtotime($webhook->parsed->issue->created_at)),
 							'Updated_At' => date('Y-m-d H:i:s', strtotime($webhook->parsed->issue->updated_at)),
 							'Closed_At' => date('Y-m-d H:i:s', strtotime($webhook->parsed->issue->closed_at))
