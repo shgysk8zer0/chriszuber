@@ -842,6 +842,10 @@ img[src$="CreativeCommons.svgz"] {
   height: 2.6rem;
 }
 
+iframe {
+  height: auto;
+}
+
 .logo {
   display: inline-block;
   *display: inline;

@@ -609,6 +609,9 @@ img[src$="CreativeCommons.svgz"] {
 	width: 6rem;
 	height: 2.6rem;
 }
+iframe {
+	height: auto;
+}
 .logo {
 	display: inline-block;
 	*display: inline;
