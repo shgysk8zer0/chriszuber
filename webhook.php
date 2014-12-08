@@ -105,8 +105,8 @@
 							'Created_At' => date('Y-m-d H:i:s', strtotime($webhook->parsed->issue->created_at)),
 							'Closed_At' => date('Y-m-d H:i:s', strtotime($webhook->parsed->issue->closed_at)),
 							'Body' => $webhook->parsed->issue->body,
-							'Repository' => $webhook->parsed->issue->repository->full_name,
-							'Repository_URL' => $webhook->parsed->issue->repository->html_url
+							'Repository' => $webhook->parsed->repository->full_name,
+							'Repository_URL' => $webhook->parsed->repository->html_url
 						]);
 
 						if(!$PDO->execute()) {
