@@ -64,6 +64,74 @@
 					}
 				} break;
 
+				case 'issues': {
+					$PDO = new \core\PDO($webhook->config->database);
+					if($PDO->connected) {
+						$PDO->prepare("INSERT INTO `Issues` (
+								`Number`,
+								`Repository`,
+								`Repository_URL`,
+								`Title`,
+								`Body`,
+								`URL`,
+								`Labels`,
+								`Assignee`,
+								`State`,
+								`Milestone`,
+								`Created_At`,
+								`Updated_At`,
+								`Closed_At`
+							) VALUES (
+								:Number,
+								:Repository,
+								:Repository_URL,
+								:Title,
+								:Body,
+								:URL,
+								:Labels,
+								:Assignee,
+								:State,
+								:Milestone,
+								:Created_At,
+								:Updated_At,
+								:Closed_At
+							) ON DUPLICATE KEY UPDATE
+								`Title` = :Title,
+								`Body` = :Body,
+								`Labels` = :Labels,
+								`Assignee` = :Assignee,
+								`State` = :State,
+								`Milestone` = :Milestone,
+								`Updated_At` = :Updated_At,
+								`Closed_At` = :Closed_At;
+						")->bind([
+							'Number' => $webhook->parsed->issue->number,
+							'Repository' => $webhook->parsed->repository->full_name,
+							'Repository_URL' => $webhook->parsed->repository->html_url,
+							'Title' => $webhook->parsed->issue->title,
+							'Body' => $webhook->parsed->issue->body,
+							'URL' => $webhook->parsed->issue->html_url,
+							'Labels' => join(', ', array_map(function($label) {
+								return trim($label->name);
+							}, $webhook->parsed->issue->labels)),
+							'Assignee' => $webhook->issue->assignee->login,
+							'State' => $webhook->parsed->issue->state,
+							'Milestone' => $webhook->parsed->issue->milestone,
+							'Created_At' => date('Y-m-d H:i:s', strtotime($webhook->parsed->issue->created_at)),
+							'Updated_At' => date('Y-m-d H:i:s', strtotime($webhook->parsed->issue->updated_at)),
+							'Closed_At' => date('Y-m-d H:i:s', strtotime($webhook->parsed->issue->closed_at))
+						]);
+
+						if(!$PDO->execute()) {
+							throw new \Exception('Failed inserting issue to database', 500);
+						}
+					}
+
+					else {
+						throw new \Exception('Failed to connect to database', 500);
+					}
+				} break;
+
 				default: {
 					file_put_contents($webhook->event . '_' . date('Y-m-d\TH:i:s') . '.json', json_encode($webhook->parsed, JSON_PRETTY_PRINT));
 					throw new \Exception("Unhandled event: {$webhook->event}", 501);
