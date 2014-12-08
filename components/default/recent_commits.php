@@ -7,10 +7,15 @@
 	$table->caption = 'Recent Commits';
 
 	array_map(function($commit) use (&$table) {
+		$commit->Message = nl2br($commit->Message, false);
+		$commit->Message = htmlentities($commit->Message, ENT_QUOTES | ENT_HTML5, 'UTF-8', false);
+		$commit->Message = explode('&lt;br&gt;', $commit->Message);
 		$table->SHA(
 			"<code>{$commit->SHA}</code>"
 		)->Commit(
-			'<a href="' . $commit->URL .'" target="_blank">' . utf(substr($commit->Message, 0, 80)) . '</a>'
+			'<details><summary>' . array_shift($commit->Message) . '</summary>
+			<a href="' . $commit->URL .'" target="_blank">'
+			. join('<br>', $commit->Message) . '</a></details>'
 		)->Author(
 			$commit->Author
 		)->Timestamp(
