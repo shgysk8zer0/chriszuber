@@ -521,6 +521,9 @@ article > :not(footer) img {
 			min-width: 100%;
 			order: 2;
 		}
+		iframe {
+			height: auto;
+		}
 	}
 }
 aside h3 {
@@ -608,9 +611,6 @@ form[name="new_post"] textarea {
 img[src$="CreativeCommons.svgz"] {
 	width: 6rem;
 	height: 2.6rem;
-}
-iframe {
-	height: auto;
 }
 .logo {
 	display: inline-block;
