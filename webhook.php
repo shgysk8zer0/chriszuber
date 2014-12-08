@@ -94,19 +94,19 @@
 								:Repository_URL
 							);
 						")->bind([
-							'Number' => $issue->number,
-							'Title' => $issue->title,
-							'URL' => $issue->html_url,
+							'Number' => $webhook->parsed->issue->number,
+							'Title' => $webhook->parsed->issue->title,
+							'URL' => $webhook->parsed->issue->html_url,
 							'Labels' => join(', ', array_map(function($label){
 								return trim($label->name);
-							}, $issue->labels)),
-							'State' => $issue->state,
-							'Milestone' => $issue->milestone,
-							'Created_At' => date('Y-m-d H:i:s', strtotime($issue->created_at)),
-							'Closed_At' => date('Y-m-d H:i:s', strtotime($issue->closed_at)),
-							'Body' => $issue->body,
-							'Repository' => $issue->repository->full_name,
-							'Repository_URL' => $issue->repository->html_url
+							}, $webhook->parsed->issue->labels)),
+							'State' => $webhook->parsed->issue->state,
+							'Milestone' => $webhook->parsed->issue->milestone,
+							'Created_At' => date('Y-m-d H:i:s', strtotime($webhook->parsed->issue->created_at)),
+							'Closed_At' => date('Y-m-d H:i:s', strtotime($webhook->parsed->issue->closed_at)),
+							'Body' => $webhook->parsed->issue->body,
+							'Repository' => $webhook->parsed->issue->repository->full_name,
+							'Repository_URL' => $webhook->parsed->issue->repository->html_url
 						]);
 
 						if(!$PDO->execute()) {
