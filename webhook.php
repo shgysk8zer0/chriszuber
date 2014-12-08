@@ -67,8 +67,7 @@
 				case 'issues': {
 					$PDO = new \core\PDO($webhook->config->database);
 					if($PDO->connected) {
-						$PDO->prepare("
-							INSERT INTO `Issues` (
+						$PDO->prepare("INSERT INTO `Issues` (
 								`Number`,
 								`Repository`,
 								`Repository_URL`,
@@ -85,7 +84,7 @@
 							) VALUES (
 								:Number,
 								:Repository,
-								:Repository_URL
+								:Repository_URL,
 								:Title,
 								:Body,
 								:URL,
@@ -96,8 +95,7 @@
 								:Created_At,
 								:Updated_At,
 								:Closed_At
-							)
-							ON DUPLICATE KEY UPDATE
+							) ON DUPLICATE KEY UPDATE
 								`Title` = :Title,
 								`Body` = :Body,
 								`Labels` = :Labels,
@@ -105,19 +103,18 @@
 								`State` = :State,
 								`Milestone` = :Milestone,
 								`Updated_At` = :Updated_At,
-								`Closed_At` = :Closed_At
-							;
+								`Closed_At` = :Closed_At;
 						")->bind([
 							'Number' => $webhook->parsed->issue->number,
 							'Repository' => $webhook->parsed->repository->full_name,
 							'Repository_URL' => $webhook->parsed->repository->html_url,
 							'Title' => $webhook->parsed->issue->title,
-							'Body' => $webhook->parsed->issue->body
+							'Body' => $webhook->parsed->issue->body,
 							'URL' => $webhook->parsed->issue->html_url,
-							'Labels' => join(', ', array_map(function($label){
+							'Labels' => join(', ', array_map(function($label) {
 								return trim($label->name);
 							}, $webhook->parsed->issue->labels)),
-							'Assignee' => $webhook->issue->assignee,
+							'Assignee' => $webhook->issue->assignee->login,
 							'State' => $webhook->parsed->issue->state,
 							'Milestone' => $webhook->parsed->issue->milestone,
 							'Created_At' => date('Y-m-d H:i:s', strtotime($webhook->parsed->issue->created_at)),
