@@ -70,51 +70,59 @@
 						$PDO->prepare("
 							INSERT INTO `Issues` (
 								`Number`,
+								`Repository`,
+								`Repository_URL`,
 								`Title`,
+								`Body`,
 								`URL`,
 								`Labels`,
+								`Assignee`,
 								`State`,
 								`Milestone`,
 								`Created_At`,
-								`Closed_At`,
-								`Body`,
-								`Repository`,
-								`Repository_URL`
+								`Updated_At`,
+								`Closed_At`
 							) VALUES (
 								:Number,
+								:Repository,
+								:Repository_URL
 								:Title,
+								:Body,
 								:URL,
 								:Labels,
+								:Assignee,
 								:State,
 								:Milestone,
 								:Created_At,
-								:Closed_At,
-								:Body,
-								:Repository,
-								:Repository_URL
+								:Updated_At,
+								:Closed_At
 							)
 							ON DUPLICATE KEY UPDATE
 								`Title` = :Title,
+								`Body` = :Body,
 								`Labels` = :Labels,
+								`Assignee` = :Assignee,
 								`State` = :State,
 								`Milestone` = :Milestone,
-								`Closed_At` = :Closed_At,
-								`Body` = :Body
+								`Updated_At` = :Updated_At,
+								`Closed_At` = :Closed_At
 							;
 						")->bind([
 							'Number' => $webhook->parsed->issue->number,
+							'Repository' => $webhook->parsed->repository->full_name,
+							'Repository_URL' => $webhook->parsed->repository->html_url,
 							'Title' => $webhook->parsed->issue->title,
+							'Body' => $webhook->parsed->issue->body
 							'URL' => $webhook->parsed->issue->html_url,
 							'Labels' => join(', ', array_map(function($label){
 								return trim($label->name);
 							}, $webhook->parsed->issue->labels)),
+							'Assignee' => $webhook->issue->assignee,
 							'State' => $webhook->parsed->issue->state,
 							'Milestone' => $webhook->parsed->issue->milestone,
 							'Created_At' => date('Y-m-d H:i:s', strtotime($webhook->parsed->issue->created_at)),
-							'Closed_At' => date('Y-m-d H:i:s', strtotime($webhook->parsed->issue->closed_at)),
-							'Body' => $webhook->parsed->issue->body,
-							'Repository' => $webhook->parsed->repository->full_name,
-							'Repository_URL' => $webhook->parsed->repository->html_url
+							'Updated_At' => date('Y-m-d H:i:s', strtotime($webhook->parsed->issue->updated_at)),
+							'Closed_At' => date('Y-m-d H:i:s', strtotime($webhook->parsed->issue->closed_at))
 						]);
 
 						if(!$PDO->execute()) {
