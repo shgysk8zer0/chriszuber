@@ -8,7 +8,7 @@
 
 	array_map(function($commit) use (&$table) {
 		$commit->Message = nl2br($commit->Message, false);
-		$commit->Message = htmlentities($commit->Message, ENT_QUOTES | ENT_HTML5, 'UTF-8', false);
+		$commit->Message = htmlentities($commit->Message, ENT_QUOTES | ENT_HTML5, 'UTF-8', true);
 		$commit->Message = explode('&lt;br&gt;', $commit->Message);
 		$table->SHA(
 			"<code>{$commit->SHA}</code>"
