@@ -30,8 +30,6 @@
 ?>
 <dialog id="<?=$filename?>_dialog">
 	<button type="button" data-delete="#<?=$filename?>_dialog"></button>
-	<button type="button" title="Previous" rel="prev" data-request="action=recent_commits&commit_start=<?=$start - 10?>"<?=($start > 0) ? null : ' disabled';?>></button>
-	<button type="button" title="Next" rel="next" data-request="action=recent_commits&commit_start=<?=$end?>"<?=(count($commits) < 10) ? ' disabled' : null;?>></button>
 	<br />
 	<table border="1">
 		<caption>
@@ -76,5 +74,9 @@
 		<?php endforeach;?>
 		</tbody>
 	</table>
+	<nav>
+		<button type="button" title="Previous" rel="prev" data-request="action=recent_commits&commit_start=<?=$start - 10?>"<?=($start > 0) ? null : ' disabled';?>></button>
+		<button type="button" title="Next" rel="next" data-request="action=recent_commits&commit_start=<?=$end?>"<?=(count($commits) < 10) ? ' disabled' : null;?>></button>
+	</nav>
 	<var><?=$start + 1;?></var> - <var><?=$start + count($commits);?></var>
 </dialog>
