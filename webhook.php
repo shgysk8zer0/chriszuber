@@ -6,9 +6,9 @@
 	$webhook = new \core\GitHubWebhook('config/github.json');
 	try {
 		if($webhook->validate()) {
+			$PDO = new \core\PDO($webhook->config);
 			switch(trim(strtolower($webhook->event))) {
 				case 'push': {
-					$PDO = new \core\PDO($webhook->config->database);
 					if($PDO->connected) {
 						$PDO->prepare("
 							INSERT INTO `Commits` (
@@ -65,7 +65,6 @@
 				} break;
 
 				case 'issues': {
-					$PDO = new \core\PDO($webhook->config->database);
 					if($PDO->connected) {
 						$PDO->prepare("INSERT INTO `Issues` (
 								`Number`,
