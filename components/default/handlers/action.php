@@ -133,7 +133,9 @@
 		} break;
 
 		case 'recent_commits': {
-			$resp->append(
+			$resp->remove(
+				'#recent_commits_dialog, .backdrop'
+			)->append(
 				'body',
 				load_results('recent_commits')
 			)->showModal(

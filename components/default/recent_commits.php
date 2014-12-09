@@ -28,8 +28,8 @@
 ?>
 <dialog id="<?=$filename?>_dialog">
 	<button type="button" data-delete="#<?=$filename?>_dialog"></button>
-	<button type="button" title="Previous" role="prev" data-icon="<" data-request="action=recent_commits&commit_start=<?=$start - 10?>" data-delete="#<?=$filename?>_dialog"<?=($start > 0) ? null : ' disabled';?>></button>
-	<button type="button" title="Next" role="next" data-icon=">" data-request="action=recent_commits&commit_start=<?=$end?>" data-delete="#<?=$filename?>_dialog"<?=(count($commits) <10) ? ' disabled' : null;?>></button>
+	<button type="button" title="Previous" role="prev" data-icon="<" data-request="action=recent_commits&commit_start=<?=$start - 10?>"<?=($start > 0) ? null : ' disabled';?>></button>
+	<button type="button" title="Next" role="next" data-icon=">" data-request="action=recent_commits&commit_start=<?=$end?>"<?=(count($commits) <10) ? ' disabled' : null;?>></button>
 	<br />
 	<table border="1">
 		<caption>
