@@ -143,6 +143,14 @@
 			);
 		} break;
 
+		case 'github_issues': {
+			$resp->append(
+				'body',
+				load_results('github_issues')
+			)->showModal(
+				'#github_issues_dialog'
+			);
+		} break;
 		case 'test': {
 			require_login('admin');
 

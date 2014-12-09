@@ -14,20 +14,20 @@
 			`Created_At` AS `Created`,
 			`Updated_At` AS `Updated`
 		FROM `Issues`
-		WHERE `State` = :state;
+		WHERE `State` = :state
 		AND `Repository` = :repo
 	")->bind([
 		'state' => 'open',
-		'repo' => 'Kern-River-Corp/mother-brain'
+		'repo' => $github->repository->full_name
 	])->execute()->get_results();
 
 	$new_issue = "<a href=\"https://github.com/{$github->repository->full_name}/issues/new\" target=\"_blank\" title=\"New\" role=\"button\" data-icon=\"+\"></a>";
 ?>
 <dialog id="<?=$file?>_dialog">
 	<button type="button" data-delete="#<?=$file?>_dialog"></button><br />
-	<table>
+	<table border="1">
 		<caption>
-			Open Issues on <?=$github->repository->name;?> <?=$new_issue;?>
+			Open Issues on <?=$github->repository->name;?> <?=$new_issue;?><br /><br />
 		</caption>
 		<thead>
 			<tr>
@@ -60,7 +60,7 @@
 				<td>
 					<details>
 						<summary><?=utf($issue->Title);?></summary>
-						<kbd><?=nl2br(utf($issue->Body));?></kbd>
+						<samp><?=nl2br(utf($issue->Body));?></samp>
 					</details>
 				</td>
 				<td>
