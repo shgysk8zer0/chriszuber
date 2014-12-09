@@ -189,15 +189,17 @@ a[rel=tag]::after {
   content: '  , ';
 }
 
-a[rel=next]::after {
-  font-size: 3rem;
-  color: rgba(41, 41, 41, 1);
+[rel=next]::after {
+  font-size: 1rem;
+  font-family: 'Web Symbols';
+  color: rgba(252, 252, 252, 1);
   content: ')';
 }
 
 [rel=prev]::after {
-  font-size: 3rem;
-  color: rgba(41, 41, 41, 1);
+  font-size: 1rem;
+  font-family: 'Web Symbols';
+  color: rgba(252, 252, 252, 1);
   content: '(';
 }
 

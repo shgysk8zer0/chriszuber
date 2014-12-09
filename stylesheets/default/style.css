@@ -139,14 +139,16 @@ main a::after {
 a[rel=tag]::after {
 	content: '  , ';
 }
-a[rel=next]::after {
-	font-size: 3rem;
-	color: var(--alt-color);
+[rel=next]::after {
+	font-size: 1rem;
+	font-family: var(--icon-font);
+	color: var(--default-color);
 	content: ')';
 }
 [rel=prev]::after {
-	font-size: 3rem;
-	color: var(--alt-color);
+	font-size: 1rem;
+	font-family: var(--icon-font);
+	color: var(--default-color);
 	content: '(';
 }
 a[rel=bookmark]::after {
