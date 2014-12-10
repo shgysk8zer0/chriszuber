@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 var body = document.body,
 	html = document.documentElement,
 	prefixes = ['', '-moz-', '-webkit-', '-o-', '-ms-'];
@@ -796,7 +796,7 @@ function handleJSON(json){
 		document.forms[json.clear].reset();
 	}
 	if('open' in json) {
-		let specs = [];
+		var specs = [];
 		json.open.specs.keys().forEach(function(spec) {
 			specs.push(spec + '=' + json.open.specs[spec]);
 		});
@@ -818,7 +818,7 @@ function handleJSON(json){
 	if('triggerEvent' in json) {
 		Object.keys(json.triggerEvent).forEach(function(selector) {
 			document.querySelectorAll(selector).forEach(function(target){
-				let event = json.triggerEvent[selector].toLowerCase();
+				var event = json.triggerEvent[selector].toLowerCase();
 				if(event === 'click') {
 					target.dispatchEvent(new MouseEvent(event));
 				}
@@ -829,7 +829,7 @@ function handleJSON(json){
 		});
 	}
 	if('serverEvent' in json) {
-		let serverEvent = new EventSource(json.serverEvent);
+		var serverEvent = new EventSource(json.serverEvent);
 		serverEvent.addEventListener('ping', function(event) {
 			handleJSON(JSON.parse(event.data));
 		});
@@ -1171,7 +1171,7 @@ zQ.prototype.css = function (args) { /*Set style using CSS syntax*/
 		value[i] = args[i].slice(args[i].indexOf(':') + 1).trim();
 		args[i] = args[i].slice(0, args[i].indexOf(':')).trim().camelCase();
 	}
-	for (let i = 0; i < args.length; i++) {
+	for (var i = 0; i < args.length; i++) {
 		this.each(function (e) {
 			e.style[args[i]] = value[i];
 		});

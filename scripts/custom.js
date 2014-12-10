@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 window.addEventListener('load', function() { /*Cannot rely on $(window).load() to work, so use this instead*/
-	let html = $('html'),
+	var html = $('html'),
 		body = $('body'),
 		head = $('head');
 		cache = new cache();
@@ -26,7 +26,7 @@ window.addEventListener('load', function() { /*Cannot rely on $(window).load() t
 		attributes: function(){
 			switch(this.attributeName) {
 				case 'contextmenu': {
-					let menu = this.target.attr('contextmenu');
+					var menu = this.target.attr('contextmenu');
 					if(this.oldValue !== '') {
 						$('menu#' + this.oldValue).delete();
 					}
@@ -136,7 +136,7 @@ NodeList.prototype.bootstrap = function() {
 		}
 		if(supports('menuitem')) {
 			node.query('[contextmenu]').forEach(function(el) {
-				let menu = el.attr('contextmenu');
+				var menu = el.attr('contextmenu');
 				if(menu && menu !== '') {
 					if(!$('menu#'+ menu).found){
 						ajax({
@@ -167,8 +167,8 @@ NodeList.prototype.bootstrap = function() {
 		if(!supports('picture')) {
 			node.query('picture').forEach(function(picture) {
 				if('matchMedia' in window) {
-					let sources = picture.querySelectorAll('source[media][srcset]');
-					for(let n = 0; n < sources.length; n++) {
+					var sources = picture.querySelectorAll('source[media][srcset]');
+					for(var n = 0; n < sources.length; n++) {
 						if(matchMedia(sources[n].getAttribute('media')).matches) {
 							picture.getElementsByTagName('img')[0].src = sources[n].getAttribute('srcset');
 							break;
@@ -222,7 +222,7 @@ NodeList.prototype.bootstrap = function() {
 				}
 			});
 			if(form.name === 'new_post') {
-				let retain = setInterval(function(){
+				var retain = setInterval(function(){
 					ajax({
 						url: document.baseURI,
 						request: 'action=keep-alive'
@@ -288,7 +288,7 @@ NodeList.prototype.bootstrap = function() {
 		});
 		node.query('[data-editor-command]').forEach(function(item) {
 			item.addEventListener('click', function() {
-				let arg = null;
+				var arg = null;
 				if(this.data('editor-value')) {
 					arg = this.data('editor-value');
 				}
@@ -296,7 +296,7 @@ NodeList.prototype.bootstrap = function() {
 					arg = prompt(this.data('prompt'));
 				}
 				else if(this.data('selection-to')) {
-					let createdEl = document.createElement(this.data('selection-to'));
+					var createdEl = document.createElement(this.data('selection-to'));
 					createdEl.textContent = getSelection().toString();
 					arg = createdEl.outerHTML;
 				}
@@ -387,7 +387,7 @@ NodeList.prototype.bootstrap = function() {
 		});
 		node.query('menuitem[label="Edit Post"]').forEach(function(el) {
 			el.addEventListener('click', function() {
-				let form = document.createElement('form'),
+				var form = document.createElement('form'),
 					article = document.querySelector('article'),
 					header = article.querySelector('header'),
 					title = header.querySelector('[itemprop="headline"]'),
@@ -428,7 +428,7 @@ NodeList.prototype.bootstrap = function() {
 				fieldset.append(legend, header, content, oldTitle, description, submit);
 				form.appendChild(fieldset);
 				article.appendChild(form);
-				let retain = setInterval(function(){
+				var retain = setInterval(function(){
 					ajax({
 						url: document.baseURI,
 						request: 'action=keep-alive'
@@ -453,7 +453,7 @@ NodeList.prototype.bootstrap = function() {
 	return this;
 };
 Element.prototype.worker_clock=function(){
-	let clockWorker = new Worker(document.baseURI + 'scripts/workers/clock.js'),
+	var clockWorker = new Worker(document.baseURI + 'scripts/workers/clock.js'),
 		time = this;
 	clockWorker.addEventListener('message', function(e){
 		time.textContent = e.data.norm;
@@ -488,8 +488,8 @@ Element.prototype.DnD = function (sets) {
 		e.preventDefault();
 		console.log(e);
 		if(e.dataTransfer.files.length) {
-			for(let i=0; i < e.dataTransfer.files.length; i++) {
-				let file = e.dataTransfer.files[i],
+			for(var i=0; i < e.dataTransfer.files.length; i++) {
+				var file = e.dataTransfer.files[i],
 					reader = new FileReader(),
 					progress = document.createElement('progress');
 				progress.min = 0;
