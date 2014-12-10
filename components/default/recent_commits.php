@@ -1,6 +1,6 @@
 <?php
 	$filename = filename(__FILE__);
-	$github = json_decode(file_get_contents('config/github.json'));
+	$github = \core\resources\Parser::parse('github.json');
 	$PDO = new \core\PDO($github);
 	$start = (
 		array_key_exists('commit_start', $_REQUEST)

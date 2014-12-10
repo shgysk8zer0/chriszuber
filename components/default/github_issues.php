@@ -1,6 +1,6 @@
 <?php
 	$file = filename(__FILE__);
-	$github = json_decode(file_get_contents('config/github.json'));
+	$github = \core\resources\Parser::parse('github.json');
 	$PDO = new \core\PDO($github);
 	if(!$PDO->connected) exit();
 	$issues = $PDO->prepare("SELECT `Number`,
@@ -60,7 +60,7 @@
 				<td>
 					<details>
 						<summary><?=utf($issue->Title);?></summary>
-						<samp><?=nl2br(utf($issue->Body));?></samp>
+						<kbd><?=nl2br(utf($issue->Body));?></kbd>
 					</details>
 				</td>
 				<td>
