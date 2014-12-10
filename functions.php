@@ -1334,6 +1334,44 @@
 	}
 
 	/**
+	* Concatonate an array of SVG files into a single SVG as <symbol>s
+	*
+	* If $output is given, the results will be saved to that file.
+	* Otherwise, the results will be returned as a string.
+	*
+	* @param array  $svgs   [Array of SVG files]
+	* @param string $output [Optional name of output file]
+	* @link http://css-tricks.com/svg-symbol-good-choice-icons/
+	*/
+
+	function SVG_symbols(array $svgs, $output = null) {
+		$dom = new \DOMDocument('1.0');
+		$svg = $dom->appendChild(new \DOMElement('svg', null, 'http://www.w3.org/2000/svg'));
+
+		array_map(function($file) use (&$dom){
+			$tmp = new \DOMDocument('1.0');
+			$svg = file_get_contents($file);
+			if(is_string($svg) and @file_exists($file)) {
+				$svg = str_replace(["\r", "\n", "\t"], [], $svg);
+				$svg = preg_replace('/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/', null, $svg);
+				$svg = preg_replace(['/^\<svg/', '/\<\/svg\>/'], ['<symbol', '</symbol>'], $svg);
+				$tmp->loadXML($svg);
+				$tmp->getElementsByTagName('symbol')->item(0)->setAttribute('id', pathinfo($file, PATHINFO_FILENAME));
+				$symbol = $dom->importNode($tmp->getElementsByTagName('symbol')->item(0), true);
+				$dom->documentElement->appendChild($symbol);
+			}
+		}, $svgs);
+
+		$results = $dom->saveXML($dom->getElementsByTagName('svg')->item(0));
+		if(is_string($output)) {
+			file_put_contents($output, $results);
+		}
+		else {
+			return $results;
+		}
+	}
+
+	/**
 	 * Trim a sentence to a specified number of words
 	 *
 	 * @param  string  $text      [original sentence]
