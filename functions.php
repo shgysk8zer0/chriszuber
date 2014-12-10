@@ -1334,13 +1334,29 @@
 	}
 
 	/**
-	* Download a file by settings headers and exiting with file content
-	*
-	* @param  string $file [local filname]
-	* @param  string $name [name of file when downloaded]
-	*
-	* @return void
-	*/
+	 * Trim a sentence to a specified number of words
+	 *
+	 * @param  string  $text      [original sentence]
+	 * @param  integer $max_words [maximum number of words to return]
+	 *
+	 * @return string             the first $max_words of $text
+	 */
+
+	function trim_words($text, $max_words = 0) {
+		$words = explode(' ', $text);
+		if(count($words) > $max_words) {
+			$text = join(' ', array_splice($words, 0, $max_words));
+		}
+		return $text;
+	}
+	/**
+	 * Download a file by settings headers and exiting with file content
+	 *
+	 * @param  string $file [local filname]
+	 * @param  string $name [name of file when downloaded]
+	 *
+	 * @return void
+	 */
 
 	function download($file = null, $name = null) {
 		if(isset($file) and file_exists($file)) {
