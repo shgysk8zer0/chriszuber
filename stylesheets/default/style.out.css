@@ -843,9 +843,15 @@ form[name="new_post"] textarea {
   pointer-events: none;
 }
 
-img[src$="CreativeCommons.svgz"] {
+img[src$="CreativeCommons.svgz"],
+article footer svg {
   width: 6rem;
   height: 2.6rem;
+}
+
+.logo svg {
+  width: 100%;
+  height: 100%;
 }
 
 .logo {
@@ -853,6 +859,7 @@ img[src$="CreativeCommons.svgz"] {
   *display: inline;
   *zoom: 1;
   width: 3rem;
+  height: 3rem;
   overflow: visible;
 }
 
