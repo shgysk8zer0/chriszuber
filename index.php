@@ -56,6 +56,5 @@
 <body contextmenu="main_menu" <?=defined('GA') ?'data-ga="' . GA . '"' : null ?>>
 	<?php if(!$DB->connected) load('forms/install');?>
 	<?php load('forms/login', 'header', 'main', 'footer');?>
-	<span hidden><?php readfile('images/icons/combined.svg');?></span>
 </body>
 </html>
