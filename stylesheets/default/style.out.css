@@ -861,20 +861,16 @@ article footer svg {
   width: 3rem;
   height: 3rem;
   overflow: visible;
+  -webkit-transition: all 1s;
+  transition: all 1s;
 }
 
 .logo svg,
 .logo img {
   overflow: visible;
-  -webkit-transform-origin: center;
-  -ms-transform-origin: center;
-  transform-origin: center;
-  -webkit-transition: all 1s;
-  transition: all 1s;
 }
 
-.logo svg:hover,
-.logo img:hover {
+.logo:hover {
   -webkit-transform: scale(2)rotateZ(360deg);
   transform: scale(2)rotateZ(360deg);
 }

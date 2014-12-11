@@ -625,13 +625,12 @@ img[src$="CreativeCommons.svgz"], article footer svg {
 	width: 3rem;
 	height: 3rem;
 	overflow: visible;
+	transition: all 1s;
 }
 .logo svg, .logo img {
 	overflow: visible;
-	transform-origin: center;
-	transition: all 1s;
 }
-.logo svg:hover, .logo img:hover {
+.logo:hover {
 	transform: scale(2)rotateZ(360deg);
 }
 body > progress {
