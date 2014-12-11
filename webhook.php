@@ -45,7 +45,7 @@
 						$successes = array_filter($webhook->parsed->commits, function($commit) use (&$PDO, $webhook) {
 							return $PDO->bind([
 								'SHA' => $commit->id,
-								'Branch' => end(explode('/', $webhook->parsed->ref)),
+								'Branch' => $webhook->parsed->ref,
 								'Repository_Name' => $webhook->parsed->repository->full_name,
 								'Repository_URL' => $webhook->parsed->repository->html_url,
 								'Commit_URL' => $commit->url,
