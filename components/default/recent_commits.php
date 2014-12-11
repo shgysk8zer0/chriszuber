@@ -11,6 +11,7 @@
 
 	$commits = $PDO->prepare("SELECT
 			`SHA`,
+			`Branch`,
 			`Commit_URL` AS `URL`,
 			`Commit_Message` AS `Message`,
 			`Author_Username` AS `Author`,
@@ -40,12 +41,12 @@
 		</caption>
 		<thead>
 			<tr>
-				<th>SHA</th><th>Commit</th><th>Author</th><th>Timestamp</th>
+				<th>SHA</th><th>Commit</th><th>Branch</th><th>Author</th><th>Timestamp</th>
 			</tr>
 		</thead>
 		<tfoot>
 			<tr>
-				<th>SHA</th><th>Commit</th><th>Author</th><th>Timestamp</th>
+				<th>SHA</th><th>Commit</th><th>Branch</th><th>Author</th><th>Timestamp</th>
 			</tr>
 		</tfoot>
 		<tbody>
@@ -63,6 +64,9 @@
 						</summary>
 						<samp><?=join('<br>', $commit->Message);?></samp>
 					</details>
+				</td>
+				<td>
+					<?=$commit->Branch;?>
 				</td>
 				<td>
 					<a href="mailto:<?=$commit->Email?>?subject=Commit <?=$commit->SHA?> on <?=$github->repository->full_name?>" target="_blank"><?=$commit->Author;?></i>
