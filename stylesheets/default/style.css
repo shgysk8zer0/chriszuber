@@ -456,7 +456,6 @@ main aside {
 	float: left;
 }
 article header, aside h3 {
-	position: sticky;
 	top: 0;
 	left: 0;
 	padding: 0.4rem;
@@ -468,6 +467,11 @@ article header, aside h3 {
 	font-size: 1.3rem;
 	text-shadow: 0.1rem 0.1rem 0 dimgray, 0.15rem 0.15rem 0 black;
 	box-shadow: 0 0 1rem var(--shadow);
+}
+@media screen and (min-width: 800px) {
+	article header, aside h3 {
+		position: sticky;
+	}
 }
 article nav a {
 	color: inherit;

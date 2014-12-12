@@ -595,8 +595,6 @@ main aside {
 
 article header,
 aside h3 {
-  position: -webkit-sticky;
-  position: sticky;
   top: 0;
   left: 0;
   padding: 0.4rem;
@@ -609,6 +607,14 @@ aside h3 {
   font-size: 1.3rem;
   text-shadow: 0.1rem 0.1rem 0 dimgray, 0.15rem 0.15rem 0 black;
   box-shadow: 0 0 1rem rgba(20, 20, 20, 0.9);
+}
+
+@media screen and (min-width: 800px) {
+  article header,
+  aside h3 {
+    position: -webkit-sticky;
+    position: sticky;
+  }
 }
 
 article nav a {
