@@ -219,41 +219,32 @@
 	 */
 
 	function load() {
-		static $DB, $load, $settings, $session, $login, $cookie;
-
-		if(is_null($load)) {
-			$DB =\core\PDO::load('connect');
-			$settings = \core\ini::load('settings');
+		static $DB, $settings, $session, $login, $cookie, $path = null;
+		if(is_null($path)) {
+			$DB = \core\PDO::load('connect');
+			$settings = \core\resources\Parser::parse('settings.ini');
 			$session = \core\session::load();
 			$login = \core\login::load();
 			$cookie = \core\cookies::load();
+
 			if(defined('THEME')) {
-				$load = function($fname) use (
-					$DB,
-					$settings,
-					$session,
-					$cookie,
-					$login
-				) {
-					include BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . THEME . DIRECTORY_SEPARATOR . $fname . '.php';
-				};
+				$path = BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . THEME . DIRECTORY_SEPARATOR;
 			}
 			else {
-				$load = function($fname) use (
-					$DB,
-					$settings,
-					$session,
-					$cookie,
-					$login
-				) {
-					include BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . $fname . '.php';
-				};
+				$path = BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR;
 			}
 		}
 
-		foreach(flatten(func_get_args()) as $fname) {
-			$load((string)$fname);
-		}
+		array_map(function($fname) use (
+			$DB,
+			$path,
+			$settings,
+			$session,
+			$cookie,
+			$login
+		) {
+			include $path . $fname . '.php';
+		}, flatten(func_get_args()));
 	}
 
 	/**
