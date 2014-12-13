@@ -1363,6 +1363,18 @@
 	}
 
 	/**
+	 * Quick way to use an SVG <symbol>
+	 *
+	 * @param string $icon [ID from the SVG source's symbols]
+	 * @param string $src  [The link to the SVG file to use]
+	 * @return string      [HTML/SVG element containing a <use>]
+	 */
+
+	function SVG_use($icon, $src = 'images/icons/combined.svg') {
+		return "<svg><use xlink:href=\"{$src}#{$icon}\" /></svg>";
+	}
+
+	/**
 	 * Trim a sentence to a specified number of words
 	 *
 	 * @param  string  $text      [original sentence]
