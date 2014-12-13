@@ -168,6 +168,7 @@
 			$icons = \core\resources\Parser::parse('icons.json');
 			$found = array_filter($icons->icons, 'file_exists');
 			if(count($found) === count($icons->icons)) {
+				SVG_symbols($icons->icons, $icons->output);
 				$resp->notify(
 					'Success!',
 					"Icons have been saved to {$icons->output}"
