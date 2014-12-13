@@ -163,6 +163,28 @@
 			);
 		} break;
 
+		case 'update_icons': {
+			require_login('admin');
+			$icons = \core\resources\Parser::parse('icons.json');
+			$found = array_filter($icons->icons, 'file_exists');
+			if(count($found) === count($icons->icons)) {
+				$resp->notify(
+					'Success!',
+					"Icons have been saved to {$icons->output}"
+				);
+			}
+			else {
+				$resp->notify(
+					'We have a problem :(',
+					'Some icons are missing. Check your browser\'s log'
+				)->log([
+					'Icons' => $icons,
+					'Found' => $found,
+					'Missing' => array_diff($icons->icons, $found)
+				]);
+			}
+		} break;
+
 		case 'test': {
 			require_login('admin');
 
