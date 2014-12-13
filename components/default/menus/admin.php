@@ -20,7 +20,7 @@
 	* and Mutation Observers handle applying the listeners for ajax requests.
 	*/
 
-	$connect = \core\ini::load('connect');
+	$connect = \core\resources\parser::parse('connect.json');
 
 	$tables = $DB->show_tables();
 ?>
@@ -47,9 +47,10 @@
 		<menuitem type="command" label="Clear CSP" icon="images/icons/db.svgz" data-request="reset_table=CSP_errors&nonce=<?=$session->nonce?>"></menuitem>
 		</menu>
 	<menuitem type="command" label="Search PHP errors" icon="images/icons/db.svgz" data-request="load_form=php_errors"></menuitem>
-	<menuitem type="command" label="test" icon="images/icons/coffee.svgz" data-request="action=test"></menuitem>
+	<menuitem type="command" label="Update Icons" icon="images/icons/photo.svg" data-request="action=update_icons"></menuitem>
 	<menuitem type="command" label="Compose email" icon="images/icons/envelope.svgz" data-request="load_form=compose_email"></menuitem>
 	<menuitem type="command" label="Git Command" icon="images/logos/git.svgz" data-request="action=git_command" data-prompt="Type your Git command:"></menuitem>
+	<menuitem type="command" label="test" icon="images/icons/coffee.svgz" data-request="action=test"></menuitem>
 	<?php endif?>
 	<menuitem type="command" label="Clear Cache" icon="images/icons/settings.svgz" data-confirm="Are you sure you want to clear your cache for this site?"></menuitem>
 </menu>
