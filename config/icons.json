@@ -1,0 +1,33 @@
+{
+	"icons": [
+		"images/logos/github.svg",
+		"images/icons/rss.svg",
+		"images/logos/Google_plus.svg",
+		"images/logos/Facebook.svg",
+		"images/logos/twitter.svg",
+		"images/logos/YouTube.svg",
+		"images/logos/git.svg",
+		"images/icons/issues-open.svg",
+		"images/icons/envelope.svg",
+		"images/icons/people.svg",
+		"images/icons/info.svg",
+		"images/logos/copyleft.svg",
+		"images/icons/close.svg",
+		"images/icons/check.svg",
+		"images/icons/commit.svg",
+		"images/icons/home.svg",
+		"images/icons/next.svg",
+		"images/icons/prev.svg",
+		"images/icons/chat.svg",
+		"images/icons/cart.svg",
+		"images/icons/map.svg",
+		"images/icons/photo.svg",
+		"images/icons/video.svg",
+		"images/icons/music.svg",
+		"images/icons/telephone.svg",
+		"images/icons/mobile_icon.svg",
+		"images/icons/settings.svg",
+		"images/icons/search.svg"
+	],
+	"output": "images/icons/combined.svg"
+}
