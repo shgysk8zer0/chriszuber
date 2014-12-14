@@ -36,7 +36,7 @@
 			if(!isset($report->{'script-sample'})) $report->{'script-sample'} = '';
 			if(!isset($report->{'source-file'})) $report->{'source-file'} = null;
 
-			$DB =new \core\PDO('connect');
+			$DB =new \core\PDO('connect.json');
 
 			if(!$DB->connected) {
 				throw new \Exception('Database connection failed', 504);

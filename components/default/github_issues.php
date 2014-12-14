@@ -4,6 +4,8 @@
 	$PDO = new \core\PDO($github);
 	if(!$PDO->connected) exit();
 	$issues = $PDO->prepare("SELECT `Number`,
+			`Repository` AS `repo`,
+			`Repository_URL` AS `repo_url`,
 			`Title`,
 			`Body`,
 			`URL`,
@@ -15,10 +17,9 @@
 			`Updated_At` AS `Updated`
 		FROM `Issues`
 		WHERE `State` = :state
-		AND `Repository` = :repo
+		ORDER BY `Created` ASC
 	")->bind([
-		'state' => 'open',
-		'repo' => $github->repository->full_name
+		'state' => 'open'
 	])->execute()->get_results();
 
 	$new_issue = "<a href=\"https://github.com/{$github->repository->full_name}/issues/new\" target=\"_blank\" title=\"New\" role=\"button\" data-icon=\"+\"></a>";
@@ -27,11 +28,12 @@
 	<button type="button" data-delete="#<?=$file?>_dialog"></button><br />
 	<table border="1">
 		<caption>
-			Open Issues on <?=$github->repository->name;?> <?=$new_issue;?><br /><br />
+			<?=count($issues);?> Open Issues on <a href="<?=$github->repository->html_url;?>" target="_blank"><?=$github->repository->name;?></a> <?=$new_issue;?>
 		</caption>
 		<thead>
 			<tr>
 				<th>Number</th>
+				<th>Repo</th>
 				<th>Issue</th>
 				<th>Created</th>
 				<th>Updated</th>
@@ -43,6 +45,7 @@
 		<tfoot>
 			<tr>
 				<th>Number</th>
+				<th>Repo</th>
 				<th>Issue</th>
 				<th>Created</th>
 				<th>Updated</th>
@@ -56,6 +59,9 @@
 			<tr>
 				<td>
 					<a href="<?=$issue->URL;?>" target=\"_blank\"><?=$issue->Number;?></a>
+				</td>
+				<td>
+					<a href="<?=$issue->repo_url?>" target="_blank"><?=end(explode('/', $issue->repo));?></a>
 				</td>
 				<td>
 					<details>
@@ -76,7 +82,7 @@
 					<?=$issue->Assignee;?>
 				</td>
 				<td>
-					<a href="<?=$issue->Milestone_URL;?>" target="_blank"><?=$issue->Milestone;?></a>
+					<?php if(!empty($issue->Milestone)):?><a href="<?=$issue->Milestone_URL;?>" target="_blank"><?=$issue->Milestone;?></a><?php endif;?>
 				</td>
 			</tr>
 		<?php endforeach;?>

@@ -728,6 +728,19 @@ function handleJSON(json){
 			});
 		});
 	}
+	if('increment' in json) {
+		Object.keys(json.increment).forEach(function(selector) {
+			let el = document.querySelector(selector);
+			Object.keys(json.increment[selector]).forEach(function(attribute) {
+				if(attribute in el) {
+					el[attribute] += json.increment[selector][attribute]
+				}
+				else {
+					el.setAttribute(attribute, parseFloat(el.getAttribute(attribute) + json.increment[selector][attribute]));
+				}
+			});
+		})
+	}
 	if('style' in json) {
 		Object.keys(json.style).forEach(function(sel) {
 			document.querySelectorAll(sel).forEach(function(el) {
