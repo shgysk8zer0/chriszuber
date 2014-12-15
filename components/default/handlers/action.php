@@ -43,7 +43,7 @@
 		case 'restore database': {
 			require_login('admin');
 
-			$connect = \core\ini::load('connect');
+			$connect = \core\resources\Parser::parse('connect.json');
 			($DB->restore($connect->database)) ? $resp->notify(
 				'Success',
 				"The database has been restored from {$connect->database}.sql",
@@ -58,7 +58,7 @@
 		case 'backup database': {
 			require_login('admin');
 
-			$connect = \core\ini::load('connect');
+			$connect = \core\resources\Parser::parse('connect.json');
 			($DB->dump()) ? $resp->notify(
 				'Success',
 				"The database has been backed up to {$connect->database}.sql",

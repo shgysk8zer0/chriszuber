@@ -699,7 +699,7 @@
 									exit();
 								}
 							}
-							$con_ini = new \core\ini('connect');
+							$con_ini = \core\resources\Parser::parse('connect.json');
 							$database = "`{$pdo->escape($con_ini->database)}`";
 							$pdo->query("CREATE DATABASE IF NOT EXISTS {$database}");
 							$pdo->prepare("
