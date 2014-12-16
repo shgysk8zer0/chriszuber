@@ -616,8 +616,8 @@
 
 	function CSP() {
 		$CSP = '';				 // Begin with an empty string
-		$CSP_Policy = parse_ini_file('csp.ini');
-		if(!$CSP_Policy) return;
+		$CSP_Policy = (array)\core\resources\Parser::parse('csp.json');
+		if(!is_array($CSP_Policy)) return;
 		$enforce = array_remove('enforce', $CSP_Policy);
 		if(is_null($enforce)) $enforce = true;
 		foreach($CSP_Policy as $type => $src) {
