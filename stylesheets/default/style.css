@@ -634,6 +634,12 @@ img[src$="CreativeCommons.svgz"], article footer svg {
 .logo svg, .logo img {
 	overflow: visible;
 }
+footer .logo{
+	color: #333;
+}
+svg.icon * {
+	fill: currentColor;
+}
 .logo:hover {
 	transform: scale(2)rotateZ(360deg);
 }

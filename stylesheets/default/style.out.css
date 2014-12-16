@@ -876,6 +876,14 @@ article footer svg {
   overflow: visible;
 }
 
+footer .logo {
+  color: #333;
+}
+
+svg.icon * {
+  fill: currentColor;
+}
+
 .logo:hover {
   -webkit-transform: scale(2)rotateZ(360deg);
   transform: scale(2)rotateZ(360deg);
