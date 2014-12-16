@@ -45,9 +45,14 @@
 				'class' => 'logo',
 				'data-show-modal' => '#copyleftDialog'
 			]
-		] as $icon => $attributes) {
-			echo SVG_use($icon, $attributes);
-		}
+		] as $icon => $attributes) :{?>
+			<span <?=join(' ', array_map(function($key, $value) {
+				return "{$key}=\"{$value}\"";
+			}, array_keys($attributes), array_values($attributes)))?>>
+				<?=SVG_use($icon);?>
+			</span>
+	<?php }
+		endforeach;
 		load(
 			'contact',
 			'copyleft',
