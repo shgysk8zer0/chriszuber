@@ -615,24 +615,29 @@
 	 */
 
 	function CSP() {
-		$CSP = '';				 // Begin with an empty string
-		$CSP_Policy = (array)\core\resources\Parser::parse('csp.json');
-		if(!is_array($CSP_Policy)) return;
-		$enforce = array_remove('enforce', $CSP_Policy);
-		if(is_null($enforce)) $enforce = true;
+		$CSP = '';
+		$CSP_Policy = \core\resources\Parser::parse('csp.json');
+
+		if(!is_object($CSP_Policy)) return;
+
+		if(isset($CSP_Policy->enforce)) {
+			$enforce = $CSP_Policy->enforce;
+			unset($CSP_Policy->enforce);
+		}
+		else {
+			$enforce = true;
+		}
+
 		foreach($CSP_Policy as $type => $src) {
 			$CSP .= "{$type} {$src};";
 		}
+
 		$CSP = str_replace('%NONCE%', $_SESSION['nonce'], $CSP);
-		if($enforce) {			// If in debug mode, CSP should be "report-only"
-								// Set headers for all prefixed versions
-			header("Content-Security-Policy: $CSP");
-			//header("X-Content-Security-Policy: $CSP");
-			//header("X-Webkit-CSP: $CSP");
-		}
-		else{					// If not, CSP will be enforced
-			header("Content-Security-Policy-Report-Only: $CSP");
-		}
+
+		header(($enforce)
+			? "Content-Security-Policy: {$CSP}"
+			: "Content-Security-Policy-Report-Only: {$CSP}"
+		);
 	}
 
 	/**
