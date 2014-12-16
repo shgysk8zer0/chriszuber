@@ -1365,13 +1365,26 @@
 	/**
 	 * Quick way to use an SVG <symbol>
 	 *
-	 * @param string $icon [ID from the SVG source's symbols]
-	 * @param string $src  [The link to the SVG file to use]
-	 * @return string      [HTML/SVG element containing a <use>]
+	 * @param string  $icon        [ID from the SVG source's symbols]
+	 * @param array   $attributes  [key => value set of attributes to set on SVG]
+	 * @param string  $src         [The link to the SVG file to use]
+	 * @return string              [HTML/SVG element containing a <use>]
+	 *
+	 * @uses DOMDocument, DOMElement
 	 */
 
-	function SVG_use($icon, $src = 'images/icons/combined.svg') {
-		return "<svg><use xlink:href=\"{$src}#{$icon}\" /></svg>";
+	function SVG_use($icon, array $attributes = null, $src = 'images/icons/combined.svg') {
+		$dom = new \DOMDocument('1.0');
+		$svg = $dom->appendChild(new \DOMElement('svg', null, 'http://www.w3.org/2000/svg'));
+		$use = $svg->appendChild(new \DOMElement('use'));
+		$use->setAttribute('xlink:href', "{$src}#{$icon}");
+
+		if(is_array($attributes)) {
+			foreach($attributes as $attr => $val) {
+				$svg->setAttribute($attr, $val);
+			}
+		}
+		return $dom->saveXML($dom->getElementsByTagName('svg')->item(0));
 	}
 
 	/**
