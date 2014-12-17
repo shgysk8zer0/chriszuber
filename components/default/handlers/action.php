@@ -192,17 +192,7 @@
 			$resp->notify(
 				'Edit Me',
 				'I am on line ' . __LINE__ . ' in ' . __FILE__
-			)->table($DB->fetch_array("
-				SELECT
-					`line` AS `Line #`,
-					`file` AS `File`,
-					`error_type` AS `Type`,
-					`error_message` AS `Message`,
-					`datetime` AS `Timestamp`
-				FROM `PHP_errors`
-				GROUP BY `file`, `line`
-				ORDER BY `Timestamp` DESC
-			"));
+			);
 		}break;
 	}
 ?>
