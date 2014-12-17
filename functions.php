@@ -1379,8 +1379,13 @@
 	 */
 
 	function SVG_use($icon, array $attributes = null, $src = 'images/icons/combined.svg') {
+		if(is_string($src) and !is_url($src)) {
+			$src = URL . '/' . $src;
+		}
 		$dom = new \DOMDocument('1.0');
 		$svg = $dom->appendChild(new \DOMElement('svg', null, 'http://www.w3.org/2000/svg'));
+		$svg->setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+		$svg->setAttribute('version', '1.1');
 		$use = $svg->appendChild(new \DOMElement('use'));
 		$use->setAttribute('xlink:href', "{$src}#{$icon}");
 
@@ -1390,6 +1395,21 @@
 			}
 		}
 		return $dom->saveXML($dom->getElementsByTagName('svg')->item(0));
+	}
+
+	/**
+	 * SVG_us(), but as a data-URI
+	 *
+	 * @param string  $icon        [ID from the SVG source's symbols]
+	 * @param array   $attributes  [key => value set of attributes to set on SVG]
+	 * @param string  $src         [The link to the SVG file to use]
+	 * @return string              [URL encoded SVG]
+	 *
+	 * @uses DOMDocument, DOMElement
+	 */
+
+	function SVG_use_URI($icon, array $attributes = null, $src = 'images/icons/combined.svg') {
+		return 'data:image/svg+xml;utf8,' . rawurlencode(SVG_use($icon, $attributes, $src));
 	}
 
 	/**
