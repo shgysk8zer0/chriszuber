@@ -730,7 +730,7 @@ function handleJSON(json){
 	}
 	if('increment' in json) {
 		Object.keys(json.increment).forEach(function(selector) {
-			let el = document.querySelector(selector);
+			var el = document.querySelector(selector);
 			Object.keys(json.increment[selector]).forEach(function(attribute) {
 				if(attribute in el) {
 					el[attribute] += json.increment[selector][attribute]
@@ -740,6 +740,20 @@ function handleJSON(json){
 				}
 			});
 		})
+	}
+	if('stepUp' in json) {
+		Object.keys(json.stepUp.forEach(function(selector) {
+			document.querySelectorAll(selector).forEach(function(el) {
+				el.stepUp(json.stepUp[selector]);
+			});
+		}));
+	}
+	if('stepDown' in json) {
+		Object.keys(json.stepDown.forEach(function(selector) {
+			document.querySelectorAll(selector).forEach(function(el) {
+				el.stepDown(json.stepDown[selector]);
+			});
+		}));
 	}
 	if('style' in json) {
 		Object.keys(json.style).forEach(function(sel) {
