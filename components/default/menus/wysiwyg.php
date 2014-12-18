@@ -26,9 +26,37 @@
 		'Red' => 'red',
 		'Green' => 'green',
 		'Blue' => 'blue',
-		'White' => 'white',
+		'Cyan' => 'cyan',
+		'Magenta' => 'magenta',
+		'Yellow' => 'yellow',
+		'Orange' => 'orange',
+		'Purple' => 'purple',
+		'Pink' => 'pink',
 		'Black' => 'black',
-		'Gray' => 'gray'
+		'White' => 'white',
+		'White Smoke' => 'whitesmoke',
+		'Azure' => 'azure',
+		'Gray' => 'gray',
+		'Dim Gray' => 'dimgray',
+		'Dark Gray' => 'darkgray',
+		'Light Gray' => 'lightgray',
+		'DarkSlateGray' => 'darkslategray',
+		'Slate Gray' => 'slategray',
+		'Ivory' => 'ivory',
+		'Snow' => 'snow',
+		'Lavender' => 'lavender',
+		'Aqua' => 'aqua',
+		'Navy' => 'navy',
+		'Lime' => 'lime',
+		'Lime Green' => 'limegreen',
+		'Coral' => 'coral',
+		'Crimson' => 'crimson',
+		'Maroon' => 'maroon',
+		'Tomato' => 'tomato',
+		'Fuchsia' => 'fuchsia',
+		'Salmon' => 'salmon',
+		'Gold' => 'gold',
+		'Green-Yellow' => 'greenyellow'
 	];
 
 	$special_characters = [
@@ -139,7 +167,7 @@
 			</menu>
 			<menu label="Font Color">
 				<?php foreach($colors as $name => $color):?>
-					<menuitem label="<?=$name?>" data-editor-command="forecolor" data-editor-value="<?=$color?>"></menuitem>
+					<menuitem label="<?=$name?>" data-editor-command="forecolor" data-editor-value="<?=$color?>" icon="data:image/svg+xml;utf8,<?=rawurlencode('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><rect width="1" height="1" fill="' . $color . '"/></svg>');?>"></menuitem>
 				<?php endforeach?>
 			</menu>
 		</menu>
