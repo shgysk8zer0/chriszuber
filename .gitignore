@@ -17,6 +17,7 @@
 !/.htaccess
 !/**.htaccess
 !/.gitignore
+!/.gitattributes
 !/LICENSE.txt
 !/robots.txt
 !/README.md
