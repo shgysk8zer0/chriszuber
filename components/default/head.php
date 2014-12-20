@@ -37,10 +37,18 @@
 <meta name="robots" content="<?=$head->robots?>"/>
 <meta name="author" content="<?=$head->author?>"/>
 <meta itemprop="name" content="<?=(is_null($pages->title) or $pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?>"/>
-<meta itemprop="url" content="<?=URL . $_SERVER['REQUEST_URI']?>"/>
+<meta itemprop="url" content="<?=URL . $_SERVER['REQUEST_URI'];?>"/>
 <meta itemprop="description" content="<?=isset($pages->description) ? $pages->description : $head->description?>"/>
 <meta itemprop="keywords" content="<?=isset($pagse->keywords) ? $pages->keywords : $head->keywords?>"/>
 <meta itemprop="image" content="<?=URL?>/super-user.png"/>
+<!--=====================Facebook meta tags==================================-->
+<meta property="og:title" content="<?=$head->title;?>"/>
+<meta property="og:site_name" content="<?=TITLE;?>"/>
+<meta property="og:url" content="<?=URL . $_SERVER['REQUEST_URI'];?>"/>
+<meta property="og:description" content="<?=isset($pages->description) ? $pages->description : $head->description?>"/>
+<meta property="og:image" content="<?=URL?>/super-user.png"/>
+<meta property="og:app_id" content="Need to set this still"/>
+<!--=========================================================================-->
 <meta name="viewport" content="<?=$head->viewport?>"/>
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="canonical" href="<?=preg_replace('/^http(s)?' . preg_quote('://', '/')  .'(www\.)?/', 'http://', URL) . $_SERVER['REQUEST_URI']?>"/>
