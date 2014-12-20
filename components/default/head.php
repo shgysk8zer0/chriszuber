@@ -49,7 +49,7 @@
 <meta property="og:url" content="<?=URL . $_SERVER['REQUEST_URI'];?>"/>
 <meta property="og:description" content="<?=isset($pages->description) ? $pages->description : $head->description?>"/>
 <meta property="og:image" content="<?=URL?>/super-user.png"/>
-<meta property="og:app_id" content="<?=$head->facebook_id;?>"/>
+<meta property="og:type" content="website"/>
 <meta property="og:locale" content="en_us"/>
 <!--=========================================================================-->
 <meta name="viewport" content="<?=$head->viewport?>"/>
