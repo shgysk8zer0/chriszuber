@@ -43,6 +43,9 @@
 <meta itemprop="description" content="<?=isset($pages->description) ? $pages->description : $head->description?>"/>
 <meta itemprop="keywords" content="<?=isset($pagse->keywords) ? $pages->keywords : $head->keywords?>"/>
 <meta itemprop="image" content="<?=URL?>/super-user.png"/>
+<!--======================Twitter meta tags==================================-->
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:site" content="@shgysk8zer0"/>
 <!--=====================Facebook meta tags==================================-->
 <meta property="og:title" content="<?=$head->title;?>"/>
 <meta property="og:site_name" content="<?=TITLE;?>"/>
