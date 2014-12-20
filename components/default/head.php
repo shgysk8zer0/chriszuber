@@ -47,7 +47,8 @@
 <meta property="og:url" content="<?=URL . $_SERVER['REQUEST_URI'];?>"/>
 <meta property="og:description" content="<?=isset($pages->description) ? $pages->description : $head->description?>"/>
 <meta property="og:image" content="<?=URL?>/super-user.png"/>
-<meta property="og:app_id" content="Need to set this still"/>
+<meta property="og:app_id" content="<?=$head->facebook_id;?>"/>
+<meta property="og:locale" content="en_us"/>
 <!--=========================================================================-->
 <meta name="viewport" content="<?=$head->viewport?>"/>
 <meta name="mobile-web-app-capable" content="yes">
