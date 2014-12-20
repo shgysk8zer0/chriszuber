@@ -32,10 +32,12 @@
 <meta charset="<?=$head->charset?>"/>
 <title><?=(!(isset($pages) and is_string($pages->title) and strlen($pages->title)) or $pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?></title>
 <base href="<?=URL?>/"/>
+<!--=====================Standard meta tags==================================-->
 <meta name="description" content="<?=isset($pages->description) ? $pages->description : $head->description?>"/>
 <meta name="keywords" content="<?=isset($pages->keywords) ? $pages->keywords : $head->keywords?>"/>
 <meta name="robots" content="<?=$head->robots?>"/>
 <meta name="author" content="<?=$head->author?>"/>
+<!--==============================Schema.org=================================-->
 <meta itemprop="name" content="<?=(is_null($pages->title) or $pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?>"/>
 <meta itemprop="url" content="<?=URL . $_SERVER['REQUEST_URI'];?>"/>
 <meta itemprop="description" content="<?=isset($pages->description) ? $pages->description : $head->description?>"/>
