@@ -18,7 +18,6 @@
 			`Author_Email` AS `Email`,
 			`Time` AS `Timestamp`
 		FROM `Commits`
-		WHERE `Branch` = 'refs/heads/master'
 		ORDER BY `Timestamp`
 		DESC
 		LIMIT {$start}, 10;
