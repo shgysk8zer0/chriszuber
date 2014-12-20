@@ -15,6 +15,6 @@
 			<textarea name="<?=$formname?>[message]" placeholder="No HTML Allowed" required></textarea>
 		</fieldset>
 		<button type="submit" title="Send" data-icon="."></button>
-		<button type="button" title="Close Dialog" data-delete="#<?=$formname?>_dialog"></button>
+		<button type="button" title="Close Dialog" data-close="#<?=$formname?>_dialog"></button>
 	</form>
 </dialog>
