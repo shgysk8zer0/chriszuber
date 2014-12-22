@@ -5,7 +5,7 @@
 		"*.google-analytics.com",
 		"https:\/\/apis.google.com",
 		"https:\/\/platform.twitter.com",
-		"https:\/\/gist.github.com",
+		"https:\/\/gist.github.com"
 	],
 	"style-src": [
 		"'self'",
@@ -19,7 +19,7 @@
 	],
 	"img-src": [
 		"'self'",
-		"'data'",
+		"data:",
 		"*.google-analytics.com",
 		"*.googleusercontent.com",
 		"chriszuber.com"
