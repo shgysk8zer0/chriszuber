@@ -47,7 +47,7 @@
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:site" content="@shgysk8zer0"/>
 <!--=====================Facebook meta tags==================================-->
-<meta property="og:title" content="<?=(is_null($pages->title) or $pages->title === TITLE) ? TITLE : "{$pages->title}";?>"/>
+<meta property="og:title" content="<?=(is_null($pages->title) or $pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?>"/>
 <meta property="og:site_name" content="<?=TITLE;?>"/>
 <meta property="og:url" content="<?=URL . $_SERVER['REQUEST_URI'];?>"/>
 <meta property="og:description" content="<?=isset($pages->description) ? $pages->description : $head->description?>"/>
