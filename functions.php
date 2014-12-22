@@ -629,7 +629,7 @@
 		}
 
 		foreach($CSP_Policy as $type => $src) {
-			$CSP .= "{$type} {$src};";
+			$CSP .= (is_array($src)) ? $type . ' ' . join(' ', $src) . ';' : "{$type} {$src};";
 		}
 
 		$CSP = str_replace('%NONCE%', $_SESSION['nonce'], $CSP);
