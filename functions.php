@@ -64,7 +64,7 @@
 		if(!defined('BASE')) define('BASE', __DIR__);
 		if(PHP_SAPI == 'cli' and !defined('URL')) define('URL', 'http://localhost');
 		else if(!defined('URL')) {
-			(trim(str_replace('/', DIRECTORY_SEPARATOR, $_SERVER['DOCUMENT_ROOT']), DIRECTORY_SEPARATOR) === __DIR__)
+			(rtrim(str_replace('/', DIRECTORY_SEPARATOR, $_SERVER['DOCUMENT_ROOT']), DIRECTORY_SEPARATOR) === __DIR__)
 				? define('URL', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}")
 				: define('URL', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/" . end(explode(DIRECTORY_SEPARATOR, BASE)));
 		}
