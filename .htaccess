@@ -94,14 +94,10 @@ AddDefaultCharset utf-8
 # danger when anyone has access to them.
 
 <FilesMatch "(^#.*#|\.(bak|config|dist|fla|inc|ini|log|psd|sql|sw[op]|asc|(ba)?sh)|gpg|pgp|~)$">
-	Order allow,deny
-	Deny from all
-	Satisfy All
+	Require all denied
 </FilesMatch>
 <FilesMatch "^(ajax|functions|custom)\.php$">
-	Order allow,deny
-	Deny from all
-	Satisfy All
+	Require all denied
 </FilesMatch>
 <IfModule deflate_module>
 	# Force compression for mangled headers.
@@ -118,23 +114,25 @@ AddDefaultCharset utf-8
 	#  and can remove the `<IfModule filter_module>` and `</IfModule>` lines
 	#  as `AddOutputFilterByType` is still in the core directives).
 	<IfModule filter_module>
-		AddOutputFilterByType DEFLATE application/atom+xml \
-		application/javascript \
-		application/json \
-		application/rss+xml \
-		application/vnd.ms-fontobject \
-		application/x-font-ttf \
-		application/x-web-app-manifest+json \
-		application/xhtml+xml \
-		application/xml \
-		font/opentype \
-		image/svg+xml \
-		image/x-icon \
-		text/css \
-		text/html \
-		text/plain \
-		text/x-component \
-		text/xml
+		<IfModule deflate_module>
+			AddOutputFilterByType DEFLATE application/atom+xml \
+			application/javascript \
+			application/json \
+			application/rss+xml \
+			application/vnd.ms-fontobject \
+			application/x-font-ttf \
+			application/x-web-app-manifest+json \
+			application/xhtml+xml \
+			application/xml \
+			font/opentype \
+			image/svg+xml \
+			image/x-icon \
+			text/css \
+			text/html \
+			text/plain \
+			text/x-component \
+			text/xml
+		</IfModule>
 	</IfModule>
 </IfModule>
 
