@@ -21,6 +21,15 @@
 	spl_autoload_extensions('.class.php');
 	spl_autoload_register();				 //Load class by naming it
 
+	if(!function_exists('mb_strimwidth')) {
+		function mb_strimwidth($str, $start, $width, $trimmarker = '', $encoding = '') {
+			if(strlen($str) > $start - $width) {
+				return substr($str, $start, $width) . $trimmarker;
+			}
+			return substr($str, $start, $width);
+		}
+	}
+
 	init();
 
 	/**
