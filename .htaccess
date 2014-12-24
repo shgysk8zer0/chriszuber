@@ -1,15 +1,12 @@
-<FilesMatch "\.(class)\.php$">
-	deny from all
-</FilesMatch>
-<IfModule mod_include>
+<IfModule mod_includeinclude_module>
 	 <FilesMatch "\.?(combined|polyfills)\.js$">
 		Options +Includes
 		AddOutputFilterByType INCLUDES application/javascript application/json
 		SetOutputFilter INCLUDES
 	</FilesMatch>
  </IfModule>
-<IfModule mod_rewrite>
-	# Redirect all none-existing to index.php
+<IfModule rewrite_module>
+	# Redirect all non-existing to index.php
 	RewriteEngine on
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
