@@ -61,7 +61,7 @@
 					<a href="<?=$issue->URL;?>" target=\"_blank\"><?=$issue->Number;?></a>
 				</td>
 				<td>
-					<a href="<?=$issue->repo_url?>" target="_blank"><?=end(explode('/', $issue->repo));?></a>
+					<a href="<?=$issue->repo_url?>" target="_blank"><?=$issue->repo;?></a>
 				</td>
 				<td>
 					<details>
