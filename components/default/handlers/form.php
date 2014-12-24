@@ -748,18 +748,6 @@
 											'g_plus' => (isset($head->author_g_plus)) ? $head->author_g_plus : null,
 											'name' => $head->author
 										]);
-										/*$DB->prepare("
-											UPDATE `users`
-											SET
-												`role` = 'admin',
-												`g_plus` = :g_plus,
-												`name` = :name
-											WHERE `user` = :user
-										")->bind([
-											'user' => $site->user,
-											'g_plus' => $head->author_g_plus,
-											'name' => $head->author
-										])->execute();*/
 
 										$resp->notify(
 											'All done! Congratulations!',
