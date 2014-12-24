@@ -8,6 +8,7 @@ DirectoryIndex index.php index.html
 	Header set X-XSS-Protection "1; mode=block"
 	Header set Cache-Control "public, must-revalidate, proxy-revalidate, no-transform"
 	Header set X-UA-Compatible "IE=edge,chrome=1"
+	Header set Connection Keep-Alive
 	# `mod_headers` can't match based on the content-type, however, we only
 	# want to send this header for HTML pages and not for the other resources
 	<FilesMatch "\.(appcache|crx|css|eot|gif|htc|ico|jpe?g|js|m4a|m4v|manifest|mp4|oex|oga|ogg|ogv|otf|pdf|png|safariextz|svg|svgz|ttf|vcf|webapp|webm|webp|woff|xml|xpi)$">
@@ -27,10 +28,17 @@ DirectoryIndex index.php index.html
 </IfModule>
 
 # ------------------------------------------------------------------------------
-# | Proper MIME types for all files											|
+# | UTF-8 encoding															 |
 # ------------------------------------------------------------------------------
 
+# Use UTF-8 encoding for anything served as `text/html` or `text/plain`.
+AddDefaultCharset utf-8
+
+# ------------------------------------------------------------------------------
+# | Proper MIME types for all files											|
+# ------------------------------------------------------------------------------
 <IfModule mime_module>
+	AddCharset utf-8 .atom .css .js .json .rss .vtt .webapp .xml
 	# Audio
 	AddType audio/mp4									.m4a .f4a .f4b
 	AddType audio/ogg									.oga .ogg
@@ -78,17 +86,6 @@ DirectoryIndex index.php index.html
 	AddType text/x-vcard								.vcf
 </IfModule>
 
-# ------------------------------------------------------------------------------
-# | UTF-8 encoding															 |
-# ------------------------------------------------------------------------------
-
-# Use UTF-8 encoding for anything served as `text/html` or `text/plain`.
-AddDefaultCharset utf-8
-
-# Force UTF-8 for certain file formats.
-<IfModule mime_module>
-	AddCharset utf-8 .atom .css .js .json .rss .vtt .webapp .xml
-</IfModule>
 # Block access to backup and source files.
 # These files may be left by some text editors and can pose a great security
 # danger when anyone has access to them.
@@ -114,25 +111,23 @@ AddDefaultCharset utf-8
 	#  and can remove the `<IfModule filter_module>` and `</IfModule>` lines
 	#  as `AddOutputFilterByType` is still in the core directives).
 	<IfModule filter_module>
-		<IfModule deflate_module>
-			AddOutputFilterByType DEFLATE application/atom+xml \
-			application/javascript \
-			application/json \
-			application/rss+xml \
-			application/vnd.ms-fontobject \
-			application/x-font-ttf \
-			application/x-web-app-manifest+json \
-			application/xhtml+xml \
-			application/xml \
-			font/opentype \
-			image/svg+xml \
-			image/x-icon \
-			text/css \
-			text/html \
-			text/plain \
-			text/x-component \
-			text/xml
-		</IfModule>
+		AddOutputFilterByType DEFLATE application/atom+xml \
+		application/javascript \
+		application/json \
+		application/rss+xml \
+		application/vnd.ms-fontobject \
+		application/x-font-ttf \
+		application/x-web-app-manifest+json \
+		application/xhtml+xml \
+		application/xml \
+		font/opentype \
+		image/svg+xml \
+		image/x-icon \
+		text/css \
+		text/html \
+		text/plain \
+		text/x-component \
+		text/xml
 	</IfModule>
 </IfModule>
 
@@ -245,41 +240,20 @@ FileETag None
 		Options +Includes
 		AddOutputFilterByType INCLUDES application/javascript application/json
 		SetOutputFilter INCLUDES
-</FilesMatch>
+	</FilesMatch>
 </IfModule>
 
-# ------------------------------------------------------------------------------
-# | Persistent connections													 |
-# ------------------------------------------------------------------------------
-
-# Allow multiple requests to be sent over the same TCP connection:
-# http://httpd.apache.org/docs/current/en/mod/core.html#keepalive.
-
-# Enable if you serve a lot of static content but, be aware of the
-# possible disadvantages!
-
-<IfModule headers_module>
-	Header set Connection Keep-Alive
-</IfModule>
-
-<IfModule rewrite_module>
-	# Redirect all none-existing to index.php
-	RewriteEngine on
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule . index.php [L]
-#<IfModule ssl_module>
-#	# Force HTTPS
-#	RewriteCond %{HTTPS} !=on
-#	RewriteRule .* https://%{SERVER_NAME}%{REQUEST_URI} [R=301,L]
-#</IfModule>
-</IfModule>
 <IfModule rewrite_module>
 	# Redirect all non-existing to index.php
 	RewriteEngine on
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteRule . index.php [L]
+#	<IfModule ssl_module>
+#		# Force HTTPS
+#		RewriteCond %{HTTPS} !=on
+#		RewriteRule .* https://%{SERVER_NAME}%{REQUEST_URI} [R=301,L]
+#	</IfModule>
 </IfModule>
 
 # ------------------------------------------------------------------------------
