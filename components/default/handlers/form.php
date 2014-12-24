@@ -192,6 +192,7 @@
 				$author = $user->name;
 				$url = urlencode(strtolower(preg_replace('/\W+/', ' ', $title)));
 				$time = new \core\simple_date();
+				$template = new \core\template('posts');
 
 				foreach(explode(',', $keywords) as $tag) {
 					$template->tags .= '<a href="tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
@@ -235,7 +236,7 @@
 					)->content(
 						$content
 					)->author(
-						$user->author
+						$user->name
 					)->author_url(
 						$user->g_plus
 					)->date(
@@ -679,17 +680,16 @@
 							)
 						)
 					) {
-						$pdo = new PDO($root);
+						$pdo = new \core\PDO($root);
 						if($pdo->connected) {
 							if(is_object($con)) {
-								$ini = fopen(BASE . '/config/connect.ini', 'w');
-								if($ini) {
-									fwrite($ini, 'user = "' . $con->user . '"' . PHP_EOL);
-									fwrite($ini, 'password = "' . $con->password . '"' . PHP_EOL);
-									fwrite($ini, 'database = "' . $con->user . '"' . PHP_EOL);
-									fclose($ini);
-									unset($con);
-									$created_con = true;
+								$config_dir = BASE . DIRECTORY_SEPARATOR . 'config';
+								if(is_writable($config_dir)) {
+									file_put_contents($config_dir . DIRECTORY_SEPARATOR . 'connect.json', json_encode([
+										'user' => $con->user,
+										'password' => $con->password,
+										'database' => $con->user
+									], JSON_PRETTY_PRINT));
 								}
 								else {
 									$resp->notify(
@@ -699,20 +699,21 @@
 									exit();
 								}
 							}
-							$con_ini = \core\resources\Parser::parse('connect.json');
-							$database = "`{$pdo->escape($con_ini->database)}`";
+							$con_json = \core\resources\Parser::parse('connect.json');
+							$database = "`{$pdo->escape($con_json->database)}`";
 							$pdo->query("CREATE DATABASE IF NOT EXISTS {$database}");
-							$pdo->prepare("
+							$created = $pdo->prepare("
 								GRANT ALL ON {$database}.*
 								TO :user@'localhost'
 								IDENTIFIED BY :password
 							")->bind([
-								'user' => $con_ini->user,
-								'password' => $con_ini->password
+								'user' => $con_json->user,
+								'password' => $con_json->password
 							])->execute();
 							unset($DB);
-							$DB = new PDO($con_ini);
-							if($DB->connected) {
+
+							$DB = new \core\PDO('connect.json');
+							if($DB->connected and $created) {
 								if(file_exists(BASE . '/default.sql')) {
 									if($DB->restore('default')) {
 										$DB->prepare("
@@ -739,12 +740,15 @@
 												])->execute();
 											}
 										}
-										$login = new \core\login($con_ini);
+										$login = new \core\login($con_json);
 										$login->create_from([
 											'user' => $site->user,
-											'password' => $site->password
+											'password' => $site->password,
+											'role' => 'admin',
+											'g_plus' => (isset($head->author_g_plus)) ? $head->author_g_plus : null,
+											'name' => $head->author
 										]);
-										$DB->prepare("
+										/*$DB->prepare("
 											UPDATE `users`
 											SET
 												`role` = 'admin',
@@ -755,7 +759,7 @@
 											'user' => $site->user,
 											'g_plus' => $head->author_g_plus,
 											'name' => $head->author
-										])->execute();
+										])->execute();*/
 
 										$resp->notify(
 											'All done! Congratulations!',
@@ -778,6 +782,12 @@
 										'Database & user setup, but there is no database file to create from'
 									);
 								}
+							}
+							elseif(!$created) {
+								$resp->notify(
+									'Something went wrong :(',
+									'Unable to create database.'
+								);
 							}
 							else {
 								$resp->notify(
