@@ -63,7 +63,11 @@
 
 		if(!defined('BASE')) define('BASE', __DIR__);
 		if(PHP_SAPI == 'cli' and !defined('URL')) define('URL', 'http://localhost');
-		else if(!defined('URL')) ($_SERVER['DOCUMENT_ROOT'] === __DIR__ . DIRECTORY_SEPARATOR or $_SERVER['DOCUMENT_ROOT'] === __DIR__) ? define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}") : define('URL', "${_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/" . end(explode('/', BASE)));
+		else if(!defined('URL')) {
+			(str_replace('/', DIRECTORY_SEPARATOR, rtrim($_SERVER['DOCUMENT_ROOT'], '/')) === BASE)
+				? define('URL', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}")
+				: define('URL', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/" . end(explode(DIRECTORY_SEPARATOR, BASE)));
+		}
 		if($session) {
 			\core\session::load();
 			nonce(50);									// Set a nonce of n random characters
