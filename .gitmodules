@@ -10,3 +10,6 @@
 [submodule "classes/phpqr"]
 	path = classes/phpqr
 	url = git@github.com:shgysk8zer0/phpqr.git
+[submodule "classes/shgysk8zer0/core"]
+	path = classes/shgysk8zer0/core
+	url = git@github.com:shgysk8zer0/core.git

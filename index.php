@@ -28,10 +28,10 @@
 		exit();
 	}
 
-	$DB = \core\PDO::load('connect');
-	$login = \core\login::load('connect');
-	$session = \core\session::load();
-	$settings = \core\ini::load('settings');
+	$DB = \shgysk8zer0\core\PDO::load('connect');
+	$login = \shgysk8zer0\core\login::load('connect');
+	$session = \shgysk8zer0\core\session::load();
+	$settings = \shgysk8zer0\core\ini::load('settings');
 
 	if(!defined('THEME')) {
 		define('THEME', 'default');
@@ -43,7 +43,7 @@
 	if(is_ajax()) { // If this is an ajax request, let ajax.php handle it.
 		require_once('./ajax.php');
 	}
-	$pages = \core\pages::load();
+	$pages = \shgysk8zer0\core\pages::load();
 	CSP();		//Do this here to avoid CSP being set on ajax requests.
 ?>
 <!DOCTYPE HTML>

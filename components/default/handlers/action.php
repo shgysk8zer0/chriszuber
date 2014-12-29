@@ -1,10 +1,10 @@
 <?php
-	$resp = \core\json_response::load();
+	$resp = \shgysk8zer0\core\json_response::load();
 	switch($_POST['action']) {
 		case 'logout': {
 			$login->logout();
 			$session->destroy();
-			$session = new \core\session();
+			$session = new \shgysk8zer0\core\session();
 			nonce();
 
 			$resp->enable(
@@ -27,7 +27,7 @@
 
 		case 'Clear PHP_errors': {
 			require_login('admin');
-			$pdo =\core\PDO::load('connect');
+			$pdo =\shgysk8zer0\core\PDO::load('connect');
 
 			$pdo->reset_table('PHP_errors');
 			file_put_contents(BASE . '/errors.log', null, LOCK_EX);
@@ -43,7 +43,7 @@
 		case 'restore database': {
 			require_login('admin');
 
-			$connect = \core\resources\Parser::parse('connect.json');
+			$connect = \shgysk8zer0\core\resources\Parser::parse('connect.json');
 			($DB->restore($connect->database)) ? $resp->notify(
 				'Success',
 				"The database has been restored from {$connect->database}.sql",
@@ -58,7 +58,7 @@
 		case 'backup database': {
 			require_login('admin');
 
-			$connect = \core\resources\Parser::parse('connect.json');
+			$connect = \shgysk8zer0\core\resources\Parser::parse('connect.json');
 			($DB->dump()) ? $resp->notify(
 				'Success',
 				"The database has been backed up to {$connect->database}.sql",
@@ -165,7 +165,7 @@
 
 		case 'update_icons': {
 			require_login('admin');
-			$icons = \core\resources\Parser::parse('icons.json');
+			$icons = \shgysk8zer0\core\resources\Parser::parse('icons.json');
 			$found = array_filter($icons->icons, 'file_exists');
 			if(count($found) === count($icons->icons)) {
 				SVG_symbols($icons->icons, $icons->output);
