@@ -20,7 +20,7 @@
 	* and Mutation Observers handle applying the listeners for ajax requests.
 	*/
 
-	$connect = \core\resources\parser::parse('connect.json');
+	$connect = \shgysk8zer0\core\resources\parser::parse('connect.json');
 
 	$tables = $DB->show_tables();
 ?>

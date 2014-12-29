@@ -3,10 +3,10 @@
 	header('Content-Type: text/plain');
 	require_once __DIR__ . DIRECTORY_SEPARATOR . 'functions.php';
 
-	$webhook = new \core\GitHubWebhook('config/github.json');
+	$webhook = new \shgysk8zer0\core\GitHubWebhook('config/github.json');
 	try {
 		if($webhook->validate()) {
-			$PDO = new \core\PDO($webhook->config);
+			$PDO = new \shgysk8zer0\core\PDO($webhook->config);
 			switch(trim(strtolower($webhook->event))) {
 				case 'push': {
 					if($PDO->connected) {

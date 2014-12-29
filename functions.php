@@ -53,7 +53,7 @@
 	/**
 	 * Initial configuration. Setup include_path, gather database
 	 * connection information, set undefined properties to
-	 * default values, start a new \core\session, and set nonce
+	 * default values, start a new \shgysk8zer0\core\session, and set nonce
 	 *
 	 * @param bool $session
 	 * @return array $info
@@ -78,7 +78,7 @@
 				: define('URL', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/" . end(explode(DIRECTORY_SEPARATOR, BASE)));
 		}
 		if($session) {
-			\core\session::load();
+			\shgysk8zer0\core\session::load();
 			nonce(50);									// Set a nonce of n random characters
 		}
 	}
@@ -94,7 +94,7 @@
 
 	function config($settings_file = 'settings') {
 		if(!first_run(__FUNCTION__)) return;
-		$settings = \core\ini::load((string)$settings_file);
+		$settings = \shgysk8zer0\core\ini::load((string)$settings_file);
 		if(isset($settings->path)) {
 			set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
 		}
@@ -107,10 +107,10 @@
 		}
 
 		if(isset($settings->credentials_extension)) {
-			\core\resources\pdo_connect::$ext = $settings->credentials_extension;
+			\shgysk8zer0\core\resources\pdo_connect::$ext = $settings->credentials_extension;
 		}
 		else {
-			\core\resources\pdo_connect::$ext = 'ini';
+			\shgysk8zer0\core\resources\pdo_connect::$ext = 'ini';
 		}
 
 		if(isset($settings->requires)) {
@@ -200,8 +200,8 @@
 		static $reporter = null;
 
 		if(is_null($reporter)) {
-			$settings = \core\ini::load('settings');
-			$reporter = \core\error_reporter::load(
+			$settings = \shgysk8zer0\core\ini::load('settings');
+			$reporter = \shgysk8zer0\core\error_reporter::load(
 				(isset($settings->error_method)) ? $settings->error_method : 'log'
 			);
 			if(is_null($settings->error_method or $settings->error_method === 'log')) {
@@ -234,11 +234,11 @@
 	function load() {
 		static $DB, $settings, $session, $login, $cookie, $path = null;
 		if(is_null($path)) {
-			$DB = \core\PDO::load('connect');
-			$settings = \core\resources\Parser::parse('settings.ini');
-			$session = \core\session::load();
-			$login = \core\login::load();
-			$cookie = \core\cookies::load();
+			$DB = \shgysk8zer0\core\PDO::load('connect');
+			$settings = \shgysk8zer0\core\resources\Parser::parse('settings.ini');
+			$session = \shgysk8zer0\core\session::load();
+			$login = \shgysk8zer0\core\login::load();
+			$cookie = \shgysk8zer0\core\cookies::load();
 
 			if(defined('THEME')) {
 				$path = BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . THEME . DIRECTORY_SEPARATOR;
@@ -509,12 +509,12 @@
 	 */
 
 	function require_login($role = null, $exit = 'notify') {
-		$login = \core\login::load();
+		$login = \shgysk8zer0\core\login::load();
 
 		if(!$login->logged_in) {
 			switch((string)$exit) {
 				case 'notify': {
-					$resp = new \core\json_response();
+					$resp = new \shgysk8zer0\core\json_response();
 					$resp->notify(
 						'We have a problem :(',
 						'You must be logged in for that'
@@ -541,7 +541,7 @@
 
 		elseif(isset($role)) {
 			$role = strtolower((string)$role);
-			$resp = new \core\json_response();
+			$resp = new \shgysk8zer0\core\json_response();
 			$roles = ['new', 'user', 'admin'];
 
 			$user_level = array_search($login->role, $roles);
@@ -594,7 +594,7 @@
 			)
 			or $_POST['nonce'] !== $_SESSION['nonce']
 		) {
-			$resp = new \core\json_response();
+			$resp = new \shgysk8zer0\core\json_response();
 			$resp->notify(
 				'Something went wrong :(',
 				'Your session has expired. Try again',
@@ -629,7 +629,7 @@
 
 	function CSP() {
 		$CSP = '';
-		$CSP_Policy = \core\resources\Parser::parse('csp.json');
+		$CSP_Policy = \shgysk8zer0\core\resources\Parser::parse('csp.json');
 
 		if(!is_object($CSP_Policy)) return;
 
@@ -1732,7 +1732,7 @@
 	 */
 
 	function module_test() {
-		$settings = \core\ini::load('settings');
+		$settings = \shgysk8zer0\core\ini::load('settings');
 
 		/**
 		 * First, check if the directives are set in settings.ini

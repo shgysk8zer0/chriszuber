@@ -1,5 +1,5 @@
 <?php
-	$resp = \core\json_response::load();
+	$resp = \shgysk8zer0\core\json_response::load();
 	switch($_POST['load_form']) {
 		case 'login': {
 			$resp->remove(
@@ -13,8 +13,8 @@
 		case 'new_post': {
 			require_login('user');
 
-			$form = \core\template::load('form');
-			$post = \core\template::load('posts');
+			$form = \shgysk8zer0\core\template::load('form');
+			$post = \shgysk8zer0\core\template::load('posts');
 
 			$post->title(
 				'Title'

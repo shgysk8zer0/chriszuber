@@ -1,5 +1,5 @@
 <?php
-	$resp = \core\json_response::load();
+	$resp = \shgysk8zer0\core\json_response::load();
 	check_nonce();
 	require_login('admin');
 
