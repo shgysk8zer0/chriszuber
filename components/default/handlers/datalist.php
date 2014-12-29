@@ -1,5 +1,5 @@
 <?php
-	$resp = \shgysk8zer0\core\json_response::load();
+	$resp = \shgysk8zer0\Core\json_response::load();
 	switch($_REQUEST['datalist']) {
 		case 'tags': {
 			$datalist = get_datalist('tags');

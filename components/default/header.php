@@ -1,5 +1,5 @@
 <?php
-	$storage = \shgysk8zer0\core\storage::load();
+	$storage = \shgysk8zer0\Core\storage::load();
 ?>
 	<header role="banner">
 		<h1>

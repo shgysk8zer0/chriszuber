@@ -1,7 +1,7 @@
 <?php
 	$filename = filename(__FILE__);
-	$github = \shgysk8zer0\core\resources\Parser::parse('github.json');
-	$PDO = new \shgysk8zer0\core\PDO($github);
+	$github = \shgysk8zer0\Core\resources\Parser::parse('github.json');
+	$PDO = new \shgysk8zer0\Core\PDO($github);
 	$start = (
 		array_key_exists('commit_start', $_REQUEST)
 		and is_numeric($_REQUEST['commit_start'])

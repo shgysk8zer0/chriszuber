@@ -1,5 +1,5 @@
 <?php
-	$resp = \shgysk8zer0\core\json_response::load();
+	$resp = \shgysk8zer0\Core\json_response::load();
 	check_nonce();
 	switch(trim($_POST['form'])) {
 		case 'login': {
@@ -51,7 +51,7 @@
 
 		case 'compose_email': {
 			require_login('admin');
-			$email = new \shgysk8zer0\core\email(
+			$email = new \shgysk8zer0\Core\email(
 				array_map('trim', explode(',', $_POST['compose_email']['to'])),
 				trim($_POST['compose_email']['subject']),
 				$_POST['compose_email']['message']
@@ -77,7 +77,7 @@
 
 		case 'email_admin': {
 			if(is_email($_POST['email_admin']['from'])) {
-				$email = new \shgysk8zer0\core\email(
+				$email = new \shgysk8zer0\Core\email(
 					$_SERVER['SERVER_ADMIN'],
 					$_POST['email_admin']['subject'],
 					strip_tags($_POST['email_admin']['message'])
@@ -118,10 +118,10 @@
 				if($posts) {
 					$content = '<div class="tags">';
 
-					$template = \shgysk8zer0\core\template::load('tags');
+					$template = \shgysk8zer0\Core\template::load('tags');
 
 					foreach($posts as $post) {
-						$datetime = new \shgysk8zer0\core\simple_date($post->created);
+						$datetime = new \shgysk8zer0\Core\simple_date($post->created);
 						$content .= $template->title(
 							$post->title
 						)->description(
@@ -191,8 +191,8 @@
 				$content = trim($_POST['content']);*/
 				$author = $user->name;
 				$url = urlencode(strtolower(preg_replace('/\W+/', ' ', $title)));
-				$time = new \shgysk8zer0\core\simple_date();
-				$template = new \shgysk8zer0\core\template('posts');
+				$time = new \shgysk8zer0\Core\simple_date();
+				$template = new \shgysk8zer0\Core\template('posts');
 
 				foreach(explode(',', $keywords) as $tag) {
 					$template->tags .= '<a href="tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
@@ -230,7 +230,7 @@
 				]);
 
 				if($DB->execute()) {
-					$template = \shgysk8zer0\core\template::load('posts');
+					$template = \shgysk8zer0\Core\template::load('posts');
 					$template->title(
 						$title
 					)->content(
@@ -546,16 +546,16 @@
 				);
 
 				$post = $_POST['for_post'];
-				$template = \shgysk8zer0\core\template::load('comments');
+				$template = \shgysk8zer0\Core\template::load('comments');
 				$author = $_POST['comment_author'];
 				$author_url = (array_key_exists('comment_url', $_POST) and is_url($_POST['comment_url'])) ? $_POST['comment_url'] : '';
 				$author_email = $_POST['comment_email'];
 				$time = date('Y-m-d H:i:s');
 				$post_title = ucwords(urldecode($post));
-				$email = new \shgysk8zer0\core\email(
+				$email = new \shgysk8zer0\Core\email(
 					$_SERVER['SERVER_ADMIN'],
 					"New comment on {$post_title} by {$author}",
-					\shgysk8zer0\core\template::load(
+					\shgysk8zer0\Core\template::load(
 						'comment_created_notification'
 					)->author(
 						$author
@@ -680,7 +680,7 @@
 							)
 						)
 					) {
-						$pdo = new \shgysk8zer0\core\PDO($root);
+						$pdo = new \shgysk8zer0\Core\PDO($root);
 						if($pdo->connected) {
 							if(is_object($con)) {
 								$config_dir = BASE . DIRECTORY_SEPARATOR . 'config';
@@ -699,7 +699,7 @@
 									exit();
 								}
 							}
-							$con_json = \shgysk8zer0\core\resources\Parser::parse('connect.json');
+							$con_json = \shgysk8zer0\Core\resources\Parser::parse('connect.json');
 							$database = "`{$pdo->escape($con_json->database)}`";
 							$pdo->query("CREATE DATABASE IF NOT EXISTS {$database}");
 							$created = $pdo->prepare("
@@ -712,7 +712,7 @@
 							])->execute();
 							unset($DB);
 
-							$DB = new \shgysk8zer0\core\PDO('connect.json');
+							$DB = new \shgysk8zer0\Core\PDO('connect.json');
 							if($DB->connected and $created) {
 								if(file_exists(BASE . '/default.sql')) {
 									if($DB->restore('default')) {
@@ -740,7 +740,7 @@
 												])->execute();
 											}
 										}
-										$login = new \shgysk8zer0\core\login($con_json);
+										$login = new \shgysk8zer0\Core\login($con_json);
 										$login->create_from([
 											'user' => $site->user,
 											'password' => $site->password,

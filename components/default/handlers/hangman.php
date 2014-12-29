@@ -1,5 +1,5 @@
 <?php
-	$resp = \shgysk8zer0\core\json_response::load();
+	$resp = \shgysk8zer0\Core\json_response::load();
 	if(preg_match('/^[A-z]$/', $_REQUEST['hangman'])) {
 		if(preg_match("/{$_REQUEST['hangman']}/", $session->hangman_phrase)) {
 			$session->hangman_matches++;

@@ -1,7 +1,7 @@
 <?php
 	$file = filename(__FILE__);
-	$github = \shgysk8zer0\core\resources\Parser::parse('github.json');
-	$PDO = new \shgysk8zer0\core\PDO($github);
+	$github = \shgysk8zer0\Core\resources\Parser::parse('github.json');
+	$PDO = new \shgysk8zer0\Core\PDO($github);
 	if(!$PDO->connected) exit();
 	$issues = $PDO->prepare("SELECT `Number`,
 			`Repository` AS `repo`,

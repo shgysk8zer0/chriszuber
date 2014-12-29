@@ -1,5 +1,5 @@
 <?php
-	$storage = \shgysk8zer0\core\storage::load();
+	$storage = \shgysk8zer0\Core\storage::load();
 
 	if($DB->connected) {
 		$head = $DB->name_value('head');
@@ -20,7 +20,7 @@
 	$storage->site_info = $head;
 
 	if($DB->connected) {
-		$pages = \shgysk8zer0\core\pages::load();
+		$pages = \shgysk8zer0\Core\pages::load();
 	}
 	else {
 		$pages = new \stdClass();
