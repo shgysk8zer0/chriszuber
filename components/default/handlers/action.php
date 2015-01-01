@@ -157,7 +157,7 @@
 				'body',
 				'<dialog id="README_dialog">
 				<button data-delete="#README_dialog">
-				</button><br />' . load_results('README') . '</dialog>'
+				</button><br />' . `markdown README.md` . '</dialog>'
 			)->showModal(
 				'#README_dialog'
 			);
