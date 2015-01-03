@@ -19,7 +19,7 @@
 	}
 
 	spl_autoload_extensions('.class.php');
-	spl_autoload_register();				 //Load class by naming it
+	spl_autoload_register('spl_autoload');				 //Load class by naming it
 
 	if(!function_exists('mb_strimwidth')) {
 		function mb_strimwidth($str, $start, $width, $trimmarker = '', $encoding = '') {
@@ -59,7 +59,8 @@
 	 * @return array $info
 	 */
 
-	function init($session = true) {
+	function init($session = true)
+	{
 		if(!first_run(__FUNCTION__)) return;
 		//Include current directory, config/, and classes/ directories in include path
 		set_include_path(__DIR__ . DIRECTORY_SEPARATOR . 'classes' . PATH_SEPARATOR . get_include_path() . PATH_SEPARATOR . __DIR__ . PATH_SEPARATOR . __DIR__  . DIRECTORY_SEPARATOR . 'config');
@@ -92,7 +93,8 @@
 	 * @return void
 	 */
 
-	function config($settings_file = 'settings') {
+	function config($settings_file = 'settings')
+	{
 		if(!first_run(__FUNCTION__)) return;
 		$settings = \shgysk8zer0\Core\ini::load((string)$settings_file);
 		if(isset($settings->path)) {
@@ -196,7 +198,8 @@
 		$file = null,
 		$line = null,
 		$scope = null
-	) {
+	)
+	{
 		static $reporter = null;
 
 		if(is_null($reporter)) {
@@ -231,7 +234,8 @@
 	 * @example load(string | array[string | array[, ...]]*)
 	 */
 
-	function load() {
+	function load()
+	{
 		static $DB, $settings, $session, $login, $cookie, $path = null;
 		if(is_null($path)) {
 			$DB = \shgysk8zer0\Core\PDO::load('connect');
@@ -268,7 +272,8 @@
 	 * @return string (results echoed from load())
 	 */
 
-	function load_results() {
+	function load_results()
+	{
 		ob_start();
 		load(func_get_args());
 		return ob_get_clean();
@@ -293,7 +298,8 @@
 		array $sandbox = null,
 		array $attributes = null,
 		$print = true
-	) {
+	)
+	{
 		$iframe = '';
 		if(is_url($src)) {
 			$iframe .= ' src="'. $src . '"';
@@ -358,7 +364,8 @@
 		$assoc = false,
 		$depth = 512,
 		$options = 0
-	) {
+	)
+	{
 		return json_decode(
 			file_get_contents(
 				(string)$filename  . '.json',
@@ -395,7 +402,8 @@
 		$delimiter = ',',
 		$enclosure = '"',
 		$escape = '\\'
-	) {
+	)
+	{
 		if(is_null($fname)) return [];
 		$rows = [];
 		$fname = realpath($fname);
@@ -429,7 +437,8 @@
 	 * @example strip_enclosing_tags('<div id="some_div" ...><p>Some Content</p></div>')
 	 */
 
-	function strip_enclosing_tag($html = null) {
+	function strip_enclosing_tag($html = null)
+	{
 		return preg_replace('/^\n*\t*\<.+\>|\<\/.+\>$/', '', (string)$html);
 	}
 
@@ -447,7 +456,8 @@
 		$tag,
 		array $content = null,
 		array $attributes = null
-	) {
+	)
+	{
 		$tag = preg_replace('/[^a-z]/', null, strtolower((string)$tag));
 		$attributes = array_to_attributes($attributes);
 		return "<{$tag} {$attributes}>" . join("</{$tag}><{$tag}>", $content) . "</{$tag}>";
@@ -460,7 +470,8 @@
 	 * @return string
 	 */
 
-	function array_to_attributes(array $attributes = null) {
+	function array_to_attributes(array $attributes = null)
+	{
 		/**
 		 * Converts an array of attributes into a string
 		 *
@@ -486,7 +497,8 @@
 	 * @return void
 	 */
 
-	function debug($data = null, $comment = false) {
+	function debug($data = null, $comment = false)
+	{
 		if(isset($comment)) {
 			echo '<!--';
 			print_r($data, is_ajax());
@@ -508,7 +520,8 @@
 	 * @return void
 	 */
 
-	function require_login($role = null, $exit = 'notify') {
+	function require_login($role = null, $exit = 'notify')
+	{
 		$login = \shgysk8zer0\Core\login::load();
 
 		if(!$login->logged_in) {
@@ -586,7 +599,8 @@
 	 * @return void
 	 */
 
-	function check_nonce() {
+	function check_nonce()
+	{
 		if(
 			!(
 				array_key_exists('nonce', $_POST) and
@@ -627,7 +641,8 @@
 	 * @todo Use UA sniffing to only set correct header
 	 */
 
-	function CSP() {
+	function CSP()
+	{
 		$CSP = '';
 		$CSP_Policy = \shgysk8zer0\Core\resources\Parser::parse('csp.json');
 
@@ -660,7 +675,8 @@
 	 * @return boolean
 	 */
 
-	function localhost() {
+	function localhost()
+	{
 		return ($_SERVER['REMOTE_ADDR'] === $_SERVER['SERVER_ADDR']);
 	}
 
@@ -671,7 +687,8 @@
 	 * @return boolean
 	 */
 
-	function https() {
+	function https()
+	{
 		return (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS']);
 	}
 
@@ -683,7 +700,8 @@
 	 * @return boolean
 	 */
 
-	function DNT() {
+	function DNT()
+	{
 		return (isset($_SERVER['HTTP_DNT']) and $_SERVER['HTTP_DNT']);
 	}
 
@@ -695,7 +713,8 @@
 	* @return [stdClass]          [{"lat": $latitude, "lng": $longitude}]
 	*/
 
-	function address_to_gps($Address = null) {
+	function address_to_gps($Address = null)
+	{
 		if(!is_string($Address)) return false;
 		$request_url = "http://maps.googleapis.com/maps/api/geocode/xml?address=".urlencode($Address)."&sensor=true";
 		$xml = simplexml_load_file($request_url);
@@ -715,7 +734,8 @@
 	 * @return boolean
 	 */
 
-	function is_ajax() {
+	function is_ajax()
+	{
 		return (
 			isset($_SERVER['HTTP_REQUEST_TYPE'])
 			and $_SERVER['HTTP_REQUEST_TYPE'] === 'AJAX'
@@ -728,7 +748,8 @@
 	 * @return void
 	 */
 
-	function header_type($type = null) {
+	function header_type($type = null)
+	{
 		header('Content-Type: ' . (string)$type . PHP_EOL);
 	}
 
@@ -740,7 +761,8 @@
 	 * @return void
 	 */
 
-	function define_UA() {
+	function define_UA()
+	{
 		if(!defined('UA')){
 			if(isset($_SERVER['HTTP_USER_AGENT'])) {
 				define('UA', $_SERVER['HTTP_USER_AGENT']);
@@ -750,6 +772,7 @@
 				elseif(preg_match("/(Safari)||(AppleWebKit)/i", UA)) define('BROWSER', 'Webkit');
 				elseif(preg_match("/Opera/i", UA)) define('BROWSER', 'Opera');
 				else define('BROWSER', 'Unknown');
+
 				if(preg_match("/Windows/i", UA)) define('OS', 'Windows');
 				elseif(preg_match("/Ubuntu/i", UA)) define('OS', 'Ubuntu');
 				elseif(preg_match("/Android/i", UA)) define('OS', 'Android');
@@ -772,7 +795,8 @@
 	 * @return string
 	 */
 
-	function nonce($length = 50) {
+	function nonce($length = 50)
+	{
 		$length = (int)$length;
 		if(array_key_exists('nonce', $_SESSION)) {
 			return $_SESSION['nonce'];
@@ -794,7 +818,8 @@
 	 * @return boolean
 	 */
 
-	function same_origin() {
+	function same_origin()
+	{
 		if(isset($_SERVER['HTTP_ORIGIN'])) {
 			$origin = $_SERVER['HTTP_ORIGIN'];
 		}
@@ -811,7 +836,8 @@
 	 * @return string (Directory one level below DOCUMENT_ROOT)
 	 */
 
-	function sub_root() {
+	function sub_root()
+	{
 		$root = trim($_SERVER['DOCUMENT_ROOT'], '/');
 		$sub = preg_replace('/' . preg_quote(end(explode('/', $root))) . '/', '', $root);
 		return $sub;
@@ -824,7 +850,8 @@
 	 * @return array | null
 	 */
 
-	function array_remove($key = null, array &$array) {
+	function array_remove($key = null, array &$array)
+	{
 		$key = (string)$key;
 		if(array_key_exists($key, $array)) {
 			$val = $array[$key];
@@ -865,7 +892,8 @@
 	 *          ) // true
 	 */
 
-	function array_keys_exist() {
+	function array_keys_exist()
+	{
 		$keys = func_get_args();
 		$arr = array_pop($keys);
 		$arr = array_keys($arr);
@@ -882,7 +910,8 @@
 	 * @return bool        [all array values are true]
 	 */
 
-	function array_all_true(array $arr) {
+	function array_all_true(array $arr)
+	{
 		$arr = array_unique($arr);
 		return (count($arr) === 1 and $arr[0] === true);
 	}
@@ -897,9 +926,10 @@
 	 * @return array
 	 */
 
-	function flatten() {
-		return iterator_to_array(new RecursiveIteratorIterator(
-			new RecursiveArrayIterator(func_get_args())),FALSE);
+	function flatten()
+	{
+		return iterator_to_array(new \RecursiveIteratorIterator(
+			new \RecursiveArrayIterator(func_get_args())),FALSE);
 	}
 
 	/**
@@ -908,7 +938,8 @@
 	 * @return void
 	 */
 
-	function list_array(array $array) {
+	function list_array(array $array)
+	{
 		$list = "<ul>";
 		foreach($array as $key => $entry) {
 			if(is_array($entry)) {
@@ -932,7 +963,8 @@
 	 * @return bool
 	 */
 
-	function is_assoc(array $array) {
+	function is_assoc(array $array)
+	{
 		return (bool)count(array_filter(array_keys($array), 'is_string'));
 	}
 
@@ -943,7 +975,8 @@
 	 * @return bool
 	 */
 
-	function is_indexed(array $array) {
+	function is_indexed(array $array)
+	{
 		return (bool)count(array_filter(array_keys($array), 'is_int'));
 	}
 
@@ -954,7 +987,8 @@
 	 * @return boolean
 	 */
 
-	function is_a_number($n = null) {
+	function is_a_number($n = null)
+	{
 		return preg_match('/^\d+$/', $n);
 	}
 
@@ -965,7 +999,8 @@
 	 * @return boolean
 	 */
 
-	function is_not_a_number($n = null) {
+	function is_not_a_number($n = null)
+	{
 		return !is_a_number($n);
 	}
 
@@ -977,7 +1012,8 @@
 	 * @link http://php.net/manual/en/filter.filters.validate.php
 	 */
 
-	function is_email($str = null) {
+	function is_email($str = null)
+	{
 		return filter_var($str, FILTER_VALIDATE_EMAIL);
 	}
 
@@ -989,7 +1025,8 @@
 	 * @link http://php.net/manual/en/filter.filters.validate.php
 	 */
 
-	function is_url($str = null) {
+	function is_url($str = null)
+	{
 		return filter_var($str, FILTER_VALIDATE_URL);
 	}
 
@@ -1000,7 +1037,8 @@
 	 * @return boolean
 	 */
 
-	function is_datetime($str) {
+	function is_datetime($str)
+	{
 		return pattern_check('datetime', $str);
 	}
 
@@ -1011,7 +1049,8 @@
 	 * @return boolean
 	 */
 
-	function is_date($date) {
+	function is_date($date)
+	{
 		return pattern_check('date', $str);
 	}
 
@@ -1022,7 +1061,8 @@
 	 * @return boolean
 	 */
 
-	function is_week($str) {
+	function is_week($str)
+	{
 		return pattern_check('week', $str);
 	}
 
@@ -1033,7 +1073,8 @@
 	 * @return boolean
 	 */
 
-	function is_time($str) {
+	function is_time($str)
+	{
 		return pattern_check('time', $str);
 	}
 
@@ -1044,7 +1085,8 @@
 	 * @return boolean
 	 */
 
-	function is_color($str) {
+	function is_color($str)
+	{
 		return pattern_check('color', $str);
 	}
 
@@ -1056,7 +1098,8 @@
 	 * @return boolean
 	 */
 
-	function pattern_check($type, $str) {
+	function pattern_check($type, $str)
+	{
 		return preg_match('/^' . pattern($type) . '$/', (string)$str);
 	}
 
@@ -1073,7 +1116,8 @@
 	 * @example pattern_check(['num' => '\d', 'user' => is_email($source['user])], $source)
 	 */
 
-	function check_inputs(array $inputs, array $source = null) {
+	function check_inputs(array $inputs, array $source = null)
+	{
 		if(is_null($source)) $source = $_REQUEST;
 
 		foreach($inputs as $key => $test) {
@@ -1096,7 +1140,8 @@
 	 * @return string (regexp)
 	 */
 
-	function pattern($type = null) {
+	function pattern($type = null)
+	{
 		if(isset($type)) $type = (string)$type;
 		switch($type) {
 			case "text": {
@@ -1166,7 +1211,8 @@
 	 * @example utf('This & that') //Returns 'This &amp; that'
 	 */
 
-	function utf($string = null) {
+	function utf($string = null)
+	{
 		return htmlentities((string)$string, ENT_QUOTES | ENT_HTML5,"UTF-8");
 	}
 
@@ -1177,7 +1223,8 @@
 	 * @return array
 	 */
 
-	function ls($path = null, $ext = null, $strip_ext = null) {
+	function ls($path = null, $ext = null, $strip_ext = null)
+	{
 		if(is_null($path)) $path = BASE;
 		else $path = (string)$path;
 		$files = array_diff(scandir($path), array('.', '..'));				// Get array of files. Remove current and previous directory (. & ..)
@@ -1207,7 +1254,8 @@
 	 * @return string (base_64 encoded)
 	 */
 
-	function encode($file = null) {
+	function encode($file = null)
+	{
 		$file = (string)$file;
 		if(file_exists($file)) return base64_encode(file_get_contents($file));
 	}
@@ -1221,7 +1269,8 @@
 	 * @example mime_type(path/to/file.txt) //Returns text/plain
 	 */
 
-	function mime_type($file = null) {
+	function mime_type($file = null)
+	{
 		//Make an absolute path if given a relative path in $file
 
 		$file = realpath($file);
@@ -1306,7 +1355,8 @@
 	 * @return string (base64 encoded data-uri)
 	 */
 
-	function data_uri($file = null) {
+	function data_uri($file = null)
+	{
 		$file = realpath((string)$file);
 		return 'data:' . mime_type($file) . ';base64,' . encode($file);
 	}
@@ -1323,7 +1373,8 @@
 	 * @example extension('path/to/file.ext') //returns '.ext'
 	 */
 
-	function extension($file = null) {
+	function extension($file = null)
+	{
 		return '.' . pathinfo((string)$file, PATHINFO_EXTENSION);
 	}
 
@@ -1338,7 +1389,8 @@
 	 * @example filename('/path/to/file.ext') //returns 'file'
 	 */
 
-	function filename($file = null) {
+	function filename($file = null)
+	{
 		return pathinfo((string)$file, PATHINFO_FILENAME);
 	}
 
@@ -1353,7 +1405,8 @@
 	* @link http://css-tricks.com/svg-symbol-good-choice-icons/
 	*/
 
-	function SVG_symbols(array $svgs, $output = null) {
+	function SVG_symbols(array $svgs, $output = null)
+	{
 		$dom = new \DOMDocument('1.0');
 		$svg = $dom->appendChild(new \DOMElement('svg', null, 'http://www.w3.org/2000/svg'));
 
@@ -1365,8 +1418,20 @@
 				$svg = preg_replace('/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/', null, $svg);
 				$svg = preg_replace(['/^\<svg/', '/\<\/svg\>/'], ['<symbol', '</symbol>'], $svg);
 				$tmp->loadXML($svg);
-				$tmp->getElementsByTagName('symbol')->item(0)->setAttribute('id', pathinfo($file, PATHINFO_FILENAME));
-				$symbol = $dom->importNode($tmp->getElementsByTagName('symbol')->item(0), true);
+				$tmp->getElementsByTagName(
+					'symbol'
+				)->item(
+					0
+				)->setAttribute(
+					'id',
+					pathinfo($file, PATHINFO_FILENAME)
+				);
+
+				$symbol = $dom->importNode(
+					$tmp->getElementsByTagName('symbol')->item(0),
+					true
+				);
+
 				$dom->documentElement->appendChild($symbol);
 			}
 		}, $svgs);
@@ -1391,7 +1456,12 @@
 	 * @uses DOMDocument, DOMElement
 	 */
 
-	function SVG_use($icon, array $attributes = null, $src = 'images/icons/combined.svg') {
+	function SVG_use(
+		$icon,
+		array $attributes = null,
+		$src = 'images/icons/combined.svg'
+	)
+	{
 		if(is_string($src) and !is_url($src)) {
 			$src = URL . '/' . $src;
 		}
@@ -1421,7 +1491,12 @@
 	 * @uses DOMDocument, DOMElement
 	 */
 
-	function SVG_use_URI($icon, array $attributes = null, $src = 'images/icons/combined.svg') {
+	function SVG_use_URI(
+		$icon,
+		array $attributes = null,
+		$src = 'images/icons/combined.svg'
+	)
+	{
 		return 'data:image/svg+xml;utf8,' . rawurlencode(SVG_use($icon, $attributes, $src));
 	}
 
@@ -1434,13 +1509,15 @@
 	 * @return string             the first $max_words of $text
 	 */
 
-	function trim_words($text, $max_words = 0) {
+	function trim_words($text, $max_words = 0)
+	{
 		$words = explode(' ', $text);
 		if(count($words) > $max_words) {
 			$text = join(' ', array_splice($words, 0, $max_words));
 		}
 		return $text;
 	}
+
 	/**
 	 * Download a file by settings headers and exiting with file content
 	 *
@@ -1450,7 +1527,8 @@
 	 * @return void
 	 */
 
-	function download($file = null, $name = null) {
+	function download($file = null, $name = null)
+	{
 		if(isset($file) and file_exists($file)) {
 			if(is_null($name)) {
 				$name = filename($file) . '.' . extension($file);
@@ -1484,7 +1562,8 @@
 	 * @return string
 	 */
 
-	function json_escape($data) {
+	function json_escape($data)
+	{
 		return htmlspecialchars(json_encode($data));
 	}
 
@@ -1495,7 +1574,8 @@
 	 * @return string
 	 */
 
-	function unquote($str = null) {
+	function unquote($str = null)
+	{
 		return preg_replace("/^\'|\'$/", '', (string)$str);
 	}
 
@@ -1506,7 +1586,8 @@
 	 * @return string
 	 */
 
-	function caps($str = null) {
+	function caps($str = null)
+	{
 		return ucwords(strtolower((string)$str));
 	}
 
@@ -1519,7 +1600,8 @@
 	 * @example average([1.5, 1.6]) //Returns 1.55
 	 */
 
-	function average() {
+	function average()
+	{
 		$args = flatten(func_get_args());
 		return array_sum($args) / count($args);
 	}
@@ -1531,7 +1613,8 @@
 	 * @return boolean
 	 */
 
-	function even($n) {
+	function even($n)
+	{
 		return ((int)$n % 2) === 0;
 	}
 
@@ -1543,7 +1626,8 @@
 	 * @return boolean
 	 */
 
-	function odd($n) {
+	function odd($n)
+	{
 		return !even($n);
 	}
 
@@ -1554,7 +1638,8 @@
 	 * @return numeric [sum]
 	 */
 
-	function sum() {
+	function sum()
+	{
 		return array_sum(func_get_args());
 	}
 
@@ -1565,7 +1650,8 @@
 	 * @return numeric     [$n squared]
 	 */
 
-	function sqr($n = 0) {
+	function sqr($n = 0)
+	{
 		return (is_numeric($n)) ? pow($n, 2) : 0;
 	}
 
@@ -1580,7 +1666,8 @@
 	 * @return numeric    [magnitude of hypotenuse]
 	 */
 
-	function magnitude() {
+	function magnitude()
+	{
 		return sqrt(array_sum(array_map('sqr', func_get_args())));
 	}
 
@@ -1591,7 +1678,8 @@
 	 * @return numeric    [magnitude of hypotenuse]
 	 */
 
-	function distance(){
+	function distance()
+	{
 		return call_user_func_array('magnitude', func_get_args());
 	}
 
@@ -1605,7 +1693,8 @@
 	 * @example minify("<!--Test-->\n<!--[if IE]>...<[endif]-->\n<p>...</p>") /Leaves only "<p>...</p>"
 	 */
 
-	function minify(&$string = null) {
+	function minify(&$string = null)
+	{
 		$string = str_replace(["\r", "\n", "\t"], [], trim((string)$string));
 		$string = preg_replace('/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/', null, $string);
 		return $string;
@@ -1622,7 +1711,8 @@
 	 * @example convert_date('Now', 'r', '+2 weeks')
 	 */
 
-	function convert_date($from = null, $format = 'U', $offset = 'Now') {
+	function convert_date($from = null, $format = 'U', $offset = 'Now')
+	{
 		if(is_string($from)) $from = strtotime($from);
 		elseif(isset($from) and !is_int($from)) $from = time();
 		if($format === 'U') {
@@ -1645,7 +1735,8 @@
 	 * @example get_time_offset('1 week +1 second'); //returns 604801
 	 */
 
-	function get_time_offset($time) {
+	function get_time_offset($time)
+	{
 		return strtotime('+' . $time, 0);
 	}
 
@@ -1658,7 +1749,8 @@
 	 * @todo Handle both GET and POST methods
 	 */
 
-	function curl($request = null, $method = 'get') {
+	function curl($request = null, $method = 'get')
+	{
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, (string)$request);
 		curl_setopt($ch, CURLOPT_FRESH_CONNECT, TRUE);
@@ -1680,7 +1772,8 @@
 	 * @return string
 	 */
 
-	function curl_post($url = null, $request = null) {
+	function curl_post($url = null, $request = null)
+	{
 		$requestBody = http_build_query($request);
 		$connection = curl_init();
 		curl_setopt($connection, CURLOPT_URL, (string)$url);
@@ -1704,7 +1797,8 @@
 	 * @return string             [Final path]
 	 */
 
-	function array_to_path(array &$path_array) {
+	function array_to_path(array &$path_array)
+	{
 		return DIRECTORY_SEPARATOR . trim(join(DIRECTORY_SEPARATOR, $path_array), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 	}
 
@@ -1715,7 +1809,8 @@
 	 * @return string [Final path]
 	 */
 
-	function build_path() {
+	function build_path()
+	{
 		return array_to_path(func_get_args());
 	}
 
@@ -1731,7 +1826,8 @@
 	 * else ...
 	 */
 
-	function module_test() {
+	function module_test()
+	{
 		$settings = \shgysk8zer0\Core\ini::load('settings');
 
 		/**
@@ -1778,7 +1874,8 @@
 	 * @return array                [Array of requested days]
 	 */
 
-	function weekdays($full = true) {
+	function weekdays($full = true)
+	{
 		if($full) {
 			return [
 				'Sunday',
