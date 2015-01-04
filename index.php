@@ -19,7 +19,7 @@
 	 * You should have received a copy of the GNU General Public License
 	 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
-	require_once('./functions.php');
+	require_once __DIR__ . DIRECTORY_SEPARATOR . 'functions.php';
 	config();
 	define_UA();
 
@@ -41,7 +41,7 @@
 		$login->setUser($session->user)->setPassword($session->password)->setRole($session->role)->setLogged_In($session->logged_in);
 	}
 	if(is_ajax()) { // If this is an ajax request, let ajax.php handle it.
-		require_once('./ajax.php');
+		require_once __DIR__ . DIRECTORY_SEPARATOR . 'ajax.php';
 	}
 	$pages = \shgysk8zer0\Core\pages::load();
 	CSP();		//Do this here to avoid CSP being set on ajax requests.
