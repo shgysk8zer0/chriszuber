@@ -21,9 +21,9 @@
 	//spl_autoload_extensions('.class.php');
 	//spl_autoload_register('spl_autoload');				 //Load class by naming it
 
-	if(!function_exists('mb_strimwidth')) {
+	if (!function_exists('mb_strimwidth')) {
 		function mb_strimwidth($str, $start, $width, $trimmarker = '', $encoding = '') {
-			if(strlen($str) > $start - $width) {
+			if (strlen($str) > $start - $width) {
 				return substr($str, $start, $width) . $trimmarker;
 			}
 			return substr($str, $start, $width);
@@ -35,14 +35,15 @@
 	 *
 	 * @param   Callable $function [Register with __FUNCTION__ magic constant]
 	 * @return  boolean            [Whether or not it has been executed already]
-	 * @example if(first_run(__FUNCTION__)) {...}
-	 * @example if(!first_run(__FUNCTION__)) return;
+	 * @example if (first_run(__FUNCTION__)) {...}
+	 * @example if (!first_run(__FUNCTION__)) return;
 	 */
 
 	function first_run(Callable $function = null) {
 		static $ran = [];
-		if(array_key_exists($function, $ran)) return false;
-		else {
+		if (array_key_exists($function, $ran)) {
+			return false;
+		} else {
 			$ran[$function] = true;
 			return true;
 		}
@@ -58,118 +59,128 @@
 	 */
 	function init($session = true, $settings_file = 'settings.json')
 	{
-		if(!first_run(__FUNCTION__)) return;
+		if (!first_run(__FUNCTION__)) {
+			return;
+		}
+
 		set_include_path(__DIR__. DIRECTORY_SEPARATOR . 'config' . PATH_SEPARATOR . get_include_path());
 		$settings_file = stream_resolve_include_path($settings_file);
 
-		if(@file_exists($settings_file)) {
-			if($settings = json_decode(file_get_contents($settings_file))) {
-				if(isset($settings->requires)) {
-					foreach($settings->requires as $required) {
+		if (@file_exists($settings_file)) {
+			if ($settings = json_decode(file_get_contents($settings_file))) {
+				if (isset($settings->requires)) {
+					foreach ($settings->requires as $required) {
 						require_once $required;
 					}
 				}
 
-				if(is_object($settings->autoloader)) {
+				if (is_object($settings->autoloader)) {
 					set_include_path(
 						join(PATH_SEPARATOR, array_map('realpath', $settings->autoloader->paths))
 						. PATH_SEPARATOR . get_include_path()
 					);
-					if(is_array($settings->autoloader->extensions)) {
+
+					if (is_array($settings->autoloader->extensions)) {
 						spl_autoload_extensions(join(',', $settings->autoloader->extensions));
 					}
-					if(is_array($settings->autoloader->functions)) {
-						foreach($settings->autoloader->functions as $function) {
+
+					if (is_array($settings->autoloader->functions)) {
+						foreach ($settings->autoloader->functions as $function) {
 							spl_autoload_register($function);
 						}
 					}
 				}
 
-				if(isset($settings->time_zone)) {
+				if (isset($settings->time_zone)) {
 					date_default_timezone_set($settings->time_zone);
 				}
 
-				if(isset($settings->path)) {
+				if (isset($settings->path)) {
 					set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
 				}
 
-				if(isset($settings->charset) and is_string($settings->charset)) {
+				if (isset($settings->charset) and is_string($settings->charset)) {
 					ini_set('default_charset', strtoupper($settings->charset));
-				}
-				else {
+				} else {
 					ini_set('default_charset', 'UTF-8');
 				}
 
-				if(is_object($settings->define)) {
-					foreach(get_object_vars($settings->define) as $k => $v) {
+				if (is_object($settings->define)) {
+					foreach (get_object_vars($settings->define) as $k => $v) {
 						define(strtoupper($k), $v);
 					}
 				}
 
-				if(@is_string($settings->credentials_extension)) {
+				if (@is_string($settings->credentials_extension)) {
 					\shgysk8zer0\Core\resources\pdo_connect::$ext = $settings->credentials_extension;
-				}
-				else {
+				} else {
 					\shgysk8zer0\Core\resources\pdo_connect::$ext = 'ini';
 				}
 
-				if(isset($settings->error_handler) and isset($settings->debug)) {
+				if (isset($settings->error_handler) and isset($settings->debug)) {
 					$error_handler = $settings->error_handler;
-					if(is_string($settings->debug)) $settings->debug = strtolower($settings->debug);
+					if (is_string($settings->debug)) {
+						$settings->debug = strtolower($settings->debug);
+					}
 					error_reporting(0);
 					switch($settings->debug) {
-						case 'true': case 'all': case 'on': {
+						case 'true':
+						case 'all':
+						case 'on':
 							set_error_handler($error_handler, E_ALL);
-						} break;
+							break;
 
-						case 'false': case 'off': {
+						case 'false':
+						case 'off':
 							set_error_handler($error_handler, 0);
-						} break;
+							break;
 
-						case 'core': {
+						case 'core':
 							set_error_handler($error_handler, E_CORE_ERROR | E_CORE_WARNING);
-						} break;
+							break;
 
-						case 'strict': {
+						case 'strict':
 							set_error_handler($error_handler, E_ALL^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
-						} break;
+							break;
 
-						case 'warning': {
+						case 'warning':
 							set_error_handler($error_handler, E_ALL^E_STRICT^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
-						} break;
+							break;
 
-						case 'notice': {
+						case 'notice':
 							set_error_handler($error_handler, E_ALL^E_STRICT^E_WARNING^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
-						} break;
+							break;
 
-						case 'developement': {
+						case 'developement':
 							set_error_handler($error_handler, E_ALL^E_NOTICE^E_WARNING^E_STRICT^E_DEPRECATED);
-						} break;
+							break;
 
-						case 'production': {
+						case 'production':
 							set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
-						} break;
+							break;
 
-						default: {
+						default:
 							set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
-						}
 					}
-				}
-
-				else {
+				} else {
 					error_reporting(E_ALL);
 				}
 			}
 		}
 
-		if(!defined('BASE')) define('BASE', __DIR__);
-		if(PHP_SAPI == 'cli' and !defined('URL')) define('URL', 'http://localhost');
-		else if(!defined('URL')) {
+		if (!defined('BASE')) {
+			define('BASE', __DIR__);
+		}
+
+		if (PHP_SAPI == 'cli' and !defined('URL')) {
+			define('URL', 'http://localhost');
+		} elseif (!defined('URL')) {
 			(str_replace('/', DIRECTORY_SEPARATOR, rtrim($_SERVER['DOCUMENT_ROOT'], '/')) === BASE)
 				? define('URL', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}")
 				: define('URL', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/" . end(explode(DIRECTORY_SEPARATOR, BASE)));
 		}
-		if($session) {
+
+		if ($session) {
 			\shgysk8zer0\Core\session::load();
 			nonce(50);									// Set a nonce of n random characters
 		}
@@ -187,85 +198,86 @@
 	 */
 	function config($settings_file = 'settings')
 	{
-		if(!first_run(__FUNCTION__)) return;
+		if (!first_run(__FUNCTION__)) return;
 		$settings = \shgysk8zer0\Core\resources\Parser::parse((string)$settings_file);
-		if(isset($settings->path)) {
+		if (isset($settings->path)) {
 			set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
 		}
 
-		if(isset($settings->charset) and is_string($settings->charset)) {
+		if (isset($settings->charset) and is_string($settings->charset)) {
 			ini_set('default_charset', strtoupper($settings->charset));
-		}
-		else {
+		} else {
 			ini_set('default_charset', 'UTF-8');
 		}
 
-		if(isset($settings->credentials_extension)) {
+		if (isset($settings->credentials_extension)) {
 			\shgysk8zer0\Core\resources\pdo_connect::$ext = $settings->credentials_extension;
-		}
-		else {
+		} else {
 			\shgysk8zer0\Core\resources\pdo_connect::$ext = 'ini';
 		}
 
-		if(isset($settings->requires)) {
-			foreach(explode(',', $settings->requires) as $file) {
+		if (isset($settings->requires)) {
+			foreach (explode(',', $settings->requires) as $file) {
 				require_once(__DIR__ . DIRECTORY_SEPARATOR . trim($file));
 			}
 		}
 
-		if(isset($settings->time_zone)) {
+		if (isset($settings->time_zone)) {
 			date_default_timezone_set($settings->time_zone);
 		}
 
-		if(isset($settings->autoloader)) {
+		if (isset($settings->autoloader)) {
 			spl_autoload_register($settings->autoloader);
 		}
 
 		//Error Reporting Levels: http://us3.php.net/manual/en/errorfunc.constants.php
-		if(isset($settings->error_handler) and isset($settings->debug)) {
+		if (isset($settings->error_handler) and isset($settings->debug)) {
 			$error_handler = $settings->error_handler;
-			if(is_string($settings->debug)) $settings->debug = strtolower($settings->debug);
+			if (is_string($settings->debug)) {
+				$settings->debug = strtolower($settings->debug);
+			}
+
 			error_reporting(0);
 			switch($settings->debug) {
-				case 'true': case 'all': case 'on': {
+				case 'true':
+				case 'all':
+				case 'on':
 					set_error_handler($error_handler, E_ALL);
-				} break;
+					break;
 
-				case 'false': case 'off': {
+				case 'false':
+				case 'off':
 					set_error_handler($error_handler, 0);
-				} break;
+					break;
 
-				case 'core': {
+				case 'core':
 					set_error_handler($error_handler, E_CORE_ERROR | E_CORE_WARNING);
-				} break;
+					break;
 
-				case 'strict': {
+				case 'strict':
 					set_error_handler($error_handler, E_ALL^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
-				} break;
+					break;
 
-				case 'warning': {
+				case 'warning':
 					set_error_handler($error_handler, E_ALL^E_STRICT^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
-				} break;
+					break;
 
-				case 'notice': {
+				case 'notice':
 					set_error_handler($error_handler, E_ALL^E_STRICT^E_WARNING^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
-				} break;
+					break;
 
-				case 'developement': {
+				case 'developement':
 					set_error_handler($error_handler, E_ALL^E_NOTICE^E_WARNING^E_STRICT^E_DEPRECATED);
-				} break;
+					break;
 
-				case 'production': {
+				case 'production':
 					set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
-				} break;
+					break;
 
-				default: {
+				default:
 					set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
-				}
 			}
-		}
-
-		else {
+		} else {
 			error_reporting(E_ALL);
 		}
 	}
@@ -294,12 +306,12 @@
 	{
 		static $reporter = null;
 
-		if(is_null($reporter)) {
+		if (is_null($reporter)) {
 			$settings = \shgysk8zer0\Core\resources\Parser::parse('settings');
 			$reporter = \shgysk8zer0\Core\error_reporter::load(
 				(isset($settings->error_method)) ? $settings->error_method : 'log'
 			);
-			if(is_null($settings->error_method or $settings->error_method === 'log')) {
+			if (is_null($settings->error_method or $settings->error_method === 'log')) {
 				$reporter->log = (isset($settings->error_log)) ? $settings->error_log : 'errors.log';
 			}
 		}
@@ -329,17 +341,16 @@
 	function load()
 	{
 		static $DB, $settings, $session, $login, $cookie, $path = null;
-		if(is_null($path)) {
+		if (is_null($path)) {
 			$DB = \shgysk8zer0\Core\PDO::load('connect');
-			$settings = \shgysk8zer0\Core\resources\Parser::parse('settings.ini');
+			$settings = \shgysk8zer0\Core\resources\Parser::parse('settings.json');
 			$session = \shgysk8zer0\Core\session::load();
 			$login = \shgysk8zer0\Core\login::load();
 			$cookie = \shgysk8zer0\Core\cookies::load();
 
-			if(defined('THEME')) {
+			if (defined('THEME')) {
 				$path = BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . THEME . DIRECTORY_SEPARATOR;
-			}
-			else {
+			} else {
 				$path = BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR;
 			}
 		}
@@ -393,11 +404,10 @@
 	)
 	{
 		$iframe = '';
-		if(is_url($src)) {
+		if (is_url($src)) {
 			$iframe .= ' src="'. $src . '"';
-		}
-		elseif(@file_exists($src) and is_readable($src)) {
-			if(in_array(mime_type($src), ['application/x-php'])) {
+		} elseif (@file_exists($src) and is_readable($src)) {
+			if (in_array(mime_type($src), ['application/x-php'])) {
 				ob_start();
 				include $src;
 				$iframe .=' srcdoc="' . str_replace(
@@ -407,28 +417,39 @@
 				) . '"';
 
 				$iframe .= ' src=""';
-			}
-			else {
+			} else {
 				$iframe .= ' src="'. data_uri($src) . '"';
 			}
+		} else {
+			return;
 		}
-		else return;
 
-		if(is_array($sandbox)) {
+		if (is_array($sandbox)) {
 			$iframe .= ' sandbox="';
-			if(in_array('same-origin', $sandbox)) $iframe .= 'allow-same-origin';
-			if(in_array('top-navigation', $sandbox)) $iframe .= ' allow-top-navigation';
-			if(in_array('forms', $sandbox)) $iframe .= ' allow-forms';
-			if(in_array('scripts', $sandbox)) $iframe .= ' allow-scripts';
+			if (in_array('same-origin', $sandbox)) {
+				$iframe .= 'allow-same-origin';
+			}
+
+			if (in_array('top-navigation', $sandbox)) {
+				$iframe .= ' allow-top-navigation';
+			}
+
+			if (in_array('forms', $sandbox)) {
+				$iframe .= ' allow-forms';
+			}
+
+			if (in_array('scripts', $sandbox)) {
+				$iframe .= ' allow-scripts';
+			}
+
 			$iframe .='"';
 		}
 
-		if(is_array($attributes)) {
-			foreach($attributes as $key => &$value) {
-				if(is_int($key)) {
+		if (is_array($attributes)) {
+			foreach ($attributes as $key => &$value) {
+				if (is_int($key)) {
 					$value = htmlspecialchars($value);
-				}
-				else {
+				} else {
 					$value = htmlspecialchars($key) . '="' . htmlspecialchars($value) .'"';
 				}
 			}
@@ -436,8 +457,11 @@
 		}
 
 		$iframe = '<iframe' . $iframe . '></iframe>';
-		if($print) echo $iframe;
-		else return $iframe;
+		if ($print) {
+			echo $iframe;
+		} else {
+			return $iframe;
+		}
 	}
 
 	/**
@@ -496,21 +520,23 @@
 		$escape = '\\'
 	)
 	{
-		if(is_null($fname)) return [];
+		if (is_null($fname)) {
+			return [];
+		}
+
 		$rows = [];
 		$fname = realpath($fname);
 
-		if(@is_readable($fname)) {
+		if (@is_readable($fname)) {
 			$handle = fopen($fname, 'r');
-			if(isset($handle)) {
-				if($headers) {
+			if (isset($handle)) {
+				if ($headers) {
 					$cols = fgetcsv($handle);
-					while(($row = fgetcsv($handle, $length, $delimiter, $enclosure, $escape)) !== false) {
+					while (($row = fgetcsv($handle, $length, $delimiter, $enclosure, $escape)) !== false) {
 						array_push($rows, array_combine($cols, $row));
 					}
-				}
-				else {
-					while(($row = fgetcsv($$handle, $length, $delimiter, $enclosure, $escape)) !== false) {
+				} else {
+					while (($row = fgetcsv($$handle, $length, $delimiter, $enclosure, $escape)) !== false) {
 						array_push($rows, $row);
 					}
 				}
@@ -573,11 +599,16 @@
 		 * array_to_attributes(['class' => 'myClass]) //returns 'class="myClass"'
 		 */
 
-		if(is_null($attributes)) return null;
+		if (is_null($attributes)) {
+			return null;
+		}
+
 		$str = '';
-		foreach($attributes as $name => $value) {
+
+		foreach ($attributes as $name => $value) {
 			$str .= $name . '=' . htmlspecialchars($value);
 		}
+
 		return trim($str);
 	}
 
@@ -591,12 +622,11 @@
 
 	function debug($data = null, $comment = false)
 	{
-		if(isset($comment)) {
+		if (isset($comment)) {
 			echo '<!--';
 			print_r($data, is_ajax());
 			echo '-->';
-		}
-		else {
+		} else {
 			echo '<pre><code>';
 			print_r($data, is_ajax());
 			echo '</code></pre>';
@@ -616,35 +646,30 @@
 	{
 		$login = \shgysk8zer0\Core\login::load();
 
-		if(!$login->logged_in) {
+		if (!$login->logged_in) {
 			switch((string)$exit) {
-				case 'notify': {
+				case 'notify':
 					$resp = new \shgysk8zer0\Core\json_response();
 					$resp->notify(
 						'We have a problem :(',
 						'You must be logged in for that'
 					)->send();
 					return false;
-					exit();
-				}
 
-				case 403: case '403': case 'exit': {
+				case 403:
+				case '403':
+				case 'exit':
 					http_response_code(403);
 					exit();
-				}
 
-				case 'return' : {
+				case 'return' :
 					return false;
-				}
 
-				default: {
+				default:
 					http_response_code(403);
 					exit();
-				}
 			}
-		}
-
-		elseif(isset($role)) {
+		} elseif (isset($role)) {
 			$role = strtolower((string)$role);
 			$resp = new \shgysk8zer0\Core\json_response();
 			$roles = ['new', 'user', 'admin'];
@@ -652,7 +677,7 @@
 			$user_level = array_search($login->role, $roles);
 			$required_level = array_search($role, $roles);
 
-			if(!$user_level or !$required_level) {
+			if (!$user_level or !$required_level) {
 				$resp->notify(
 					'We have a problem',
 					'Either your user\'s role or the required role are invalid',
@@ -660,9 +685,7 @@
 				)->send();
 				return false;
 				exit();
-			}
-
-			elseif($required_level > $user_level) {
+			} elseif ($required_level > $user_level) {
 				$resp->notify(
 					'We have a problem :(',
 					"You are logged in as {$login->role} but this action requires {$role}",
@@ -670,13 +693,10 @@
 				)->send();
 				return false;
 				exit();
-			}
-
-			else {
+			} else {
 				return true;
 			}
-		}
-		else {
+		} else {
 			return true;
 		}
 	}
@@ -693,7 +713,7 @@
 
 	function check_nonce()
 	{
-		if(
+		if (
 			!(
 				array_key_exists('nonce', $_POST) and
 				array_key_exists('nonce', $_SESSION)
@@ -738,17 +758,18 @@
 		$CSP = '';
 		$CSP_Policy = \shgysk8zer0\Core\resources\Parser::parse('settings.json')->csp;
 
-		if(!is_object($CSP_Policy)) return;
+		if (!is_object($CSP_Policy)) {
+			return;
+		}
 
-		if(isset($CSP_Policy->enforce)) {
+		if (isset($CSP_Policy->enforce)) {
 			$enforce = $CSP_Policy->enforce;
 			unset($CSP_Policy->enforce);
-		}
-		else {
+		} else {
 			$enforce = true;
 		}
 
-		foreach($CSP_Policy as $type => $src) {
+		foreach ($CSP_Policy as $type => $src) {
 			$CSP .= (is_array($src)) ? $type . ' ' . join(' ', $src) . ';' : "{$type} {$src};";
 		}
 
@@ -807,14 +828,16 @@
 
 	function address_to_gps($Address = null)
 	{
-		if(!is_string($Address)) return false;
+		if (!is_string($Address)) {
+			return false;
+		}
+
 		$request_url = "http://maps.googleapis.com/maps/api/geocode/xml?address=".urlencode($Address)."&sensor=true";
 		$xml = simplexml_load_file($request_url);
 
 		if (!empty($xml) and $xml->status == "OK") {
 			return $xml->result->geometry->location;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -855,24 +878,37 @@
 
 	function define_UA()
 	{
-		if(!defined('UA')){
-			if(isset($_SERVER['HTTP_USER_AGENT'])) {
+		if (!defined('UA')){
+			if (isset($_SERVER['HTTP_USER_AGENT'])) {
 				define('UA', $_SERVER['HTTP_USER_AGENT']);
-				if(preg_match("/Firefox/i", UA)) define('BROWSER', 'Firefox');
-				elseif(preg_match("/Chrome/i", UA)) define('BROWSER', 'Chrome');
-				elseif(preg_match("/MSIE/i", UA)) define('BROWSER', 'IE');
-				elseif(preg_match("/(Safari)||(AppleWebKit)/i", UA)) define('BROWSER', 'Webkit');
-				elseif(preg_match("/Opera/i", UA)) define('BROWSER', 'Opera');
-				else define('BROWSER', 'Unknown');
+				if (preg_match("/Firefox/i", UA)) {
+					define('BROWSER', 'Firefox');
+				} elseif (preg_match("/Chrome/i", UA)) {
+					define('BROWSER', 'Chrome');
+				} elseif (preg_match("/MSIE/i", UA)) {
+					define('BROWSER', 'IE');
+				} elseif (preg_match("/(Safari)||(AppleWebKit)/i", UA)) {
+					define('BROWSER', 'Webkit');
+				} elseif (preg_match("/Opera/i", UA)) {
+					define('BROWSER', 'Opera');
+				} else {
+					define('BROWSER', 'Unknown');
+				}
 
-				if(preg_match("/Windows/i", UA)) define('OS', 'Windows');
-				elseif(preg_match("/Ubuntu/i", UA)) define('OS', 'Ubuntu');
-				elseif(preg_match("/Android/i", UA)) define('OS', 'Android');
-				elseif(preg_match("/(IPhone)|(Macintosh)/i", UA)) define('OS', 'Apple');
-				elseif(preg_match("/Linux/i", UA)) define('OS', 'Linux');
-				else define('OS', 'Unknown');
-			}
-			else{
+				if (preg_match("/Windows/i", UA)) {
+					define('OS', 'Windows');
+				} elseif (preg_match("/Ubuntu/i", UA)) {
+					define('OS', 'Ubuntu');
+				} elseif (preg_match("/Android/i", UA)) {
+					define('OS', 'Android');
+				} elseif (preg_match("/(IPhone)|(Macintosh)/i", UA)) {
+					define('OS', 'Apple');
+				} elseif (preg_match("/Linux/i", UA)) {
+					define('OS', 'Linux');
+				} else {
+					define('OS', 'Unknown');
+				}
+			} else {
 				define('BROWSER', 'Unknown');
 				define('OS', 'Unknown');
 			};
@@ -890,14 +926,16 @@
 	function nonce($length = 50)
 	{
 		$length = (int)$length;
-		if(array_key_exists('nonce', $_SESSION)) {
+		if (array_key_exists('nonce', $_SESSION)) {
 			return $_SESSION['nonce'];
 		}
 		//We are going to shuffle an alpha-numeric string to get random characters
 		$str = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
-		if(strlen($str) < $length) {
+
+		if (strlen($str) < $length) {
 			$str .= nonce($length - strlen($str));
 		}
+
 		$_SESSION['nonce'] = $str;
 		return $str;
 	}
@@ -912,10 +950,9 @@
 
 	function same_origin()
 	{
-		if(isset($_SERVER['HTTP_ORIGIN'])) {
+		if (isset($_SERVER['HTTP_ORIGIN'])) {
 			$origin = $_SERVER['HTTP_ORIGIN'];
-		}
-		elseif(isset($_SERVER['HTTP_REFERER'])) {
+		} elseif (isset($_SERVER['HTTP_REFERER'])) {
 			$origin = $_SERVER['HTTP_REFERER'];
 		}
 
@@ -945,12 +982,13 @@
 	function array_remove($key = null, array &$array)
 	{
 		$key = (string)$key;
-		if(array_key_exists($key, $array)) {
+		if (array_key_exists($key, $array)) {
 			$val = $array[$key];
 			unset($array[$key]);
 			return $val;
+		} else {
+			return null;
 		}
-		else return null;
 	}
 
 	/**
@@ -990,8 +1028,10 @@
 		$arr = array_pop($keys);
 		$arr = array_keys($arr);
 
-		foreach($keys as $key) {
-			if(!in_array($key, $arr, true)) return false;
+		foreach ($keys as $key) {
+			if (!in_array($key, $arr, true)) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -1021,7 +1061,7 @@
 	function flatten()
 	{
 		return iterator_to_array(new \RecursiveIteratorIterator(
-			new \RecursiveArrayIterator(func_get_args())),FALSE);
+			new \RecursiveArrayIterator(func_get_args())), false);
 	}
 
 	/**
@@ -1033,11 +1073,10 @@
 	function list_array(array $array)
 	{
 		$list = "<ul>";
-		foreach($array as $key => $entry) {
-			if(is_array($entry)) {
+		foreach ($array as $key => $entry) {
+			if (is_array($entry)) {
 				$list .= list_array($value);
-			}
-			else {
+			} else {
 				$entry = (string)$entry;
 				$list .= "<li>{$key}: {$entry}</li>";
 			}
@@ -1210,10 +1249,10 @@
 
 	function check_inputs(array $inputs, array $source = null)
 	{
-		if(is_null($source)) $source = $_REQUEST;
+		if (is_null($source)) $source = $_REQUEST;
 
-		foreach($inputs as $key => $test) {
-			if(
+		foreach ($inputs as $key => $test) {
+			if (
 				!array_key_exists($key, $source)
 				or (is_bool($test) and !$test)
 				or (is_string($test) and !preg_match('/^' . $test . '$/', $source[$key]))
@@ -1234,63 +1273,62 @@
 
 	function pattern($type = null)
 	{
-		if(isset($type)) $type = (string)$type;
+		if (isset($type)) $type = (string)$type;
 		switch($type) {
-			case "text": {
+			case "text":
 				$pattern = "(\w+(\ )?)+";
-			} break;
+				break;
 
-			case "name": {
+			case "name":
 				$pattern = "[A-Za-z]{3,30}";
-			} break;
+				break;
 
-			case "password": {
+			case "password":
 				$pattern = "(?=^.{8,35}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$";
-			} break;
+				break;
 
-			case "email": {
+			case "email":
 				$pattern = ".+@.+\.+[\w]+";
-			} break;
+				break;
 
-			case "url": {
+			case "url":
 				$pattern = "(http[s]?://)?[\S]+\.[\S]+";
-			} break;
+				break;
 
-			case "tel": {
+			case "tel":
 				$pattern = "([+]?[1-9][-]?)?((\([\d]{3}\))|(\d{3}[-]?))\d{3}[-]?\d{4}";
-			} break;
+				break;
 
-			case "number": {
+			case "number":
 				$pattern = "\d+(\.\d{1,})?";
-			} break;
+				break;
 
-			case "color": {
+			case "color":
 				$pattern = "#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})";
-			} break;
+				break;
 
-			case "date": {
+			case "date":
 				$pattern = "((((0?)[1-9])|(1[0-2]))(-|/)(((0?)[1-9])|([1-2][\d])|3[0-1])(-|/)\d{4})|(\d{4}-(((0?)[1-9])|(1[0-2]))-(((0?)[1-9])|([1-2][\d])|3[0-1]))";
-			} break;
+				break;
 
-			case "time": {
+			case "time":
 				$pattern = "(([0-1]?\d)|(2[0-3])):[0-5]\d";
-			} break;
+				break;
 
-			case 'datetime': {
+			case 'datetime':
 				$pattern = '(19|20)\d{2}-(0?[1-9]|1[0-2])-(0?[1-9]|[12]\d?|3[01])T([01]\d|2[0-3])(:[0-5]\d)+';
-			} break;
+				break;
 
-			case 'week': {
+			case 'week':
 				$pattern = '\d{4}-W\d{2}';
-			} break;
+				break;
 
-			case "credit": {
+			case "credit":
 				$pattern = "\d{13,16}";
-				} break;
+				break;
 
-			default: {
+			default:
 				$pattern = null;
-			}
 		}
 		return $pattern;
 	}
@@ -1317,27 +1355,31 @@
 
 	function ls($path = null, $ext = null, $strip_ext = null)
 	{
-		if(is_null($path)) $path = BASE;
-		else $path = (string)$path;
+		if (is_null($path)) {
+			$path = BASE;
+		} else {
+			$path = (string)$path;
+		}
+
 		$files = array_diff(scandir($path), array('.', '..'));				// Get array of files. Remove current and previous directory (. & ..)
 		$results = [];
-		if(isset($ext)) {													//$ext has been passed, so let's work with it
+		if (isset($ext)) {													//$ext has been passed, so let's work with it
 			//$ext = (string)$ext;
 			//Convert $ext into regexp
 			$ext = '/' . preg_quote('.' . (string)$ext, '/') .'$/';					// Convert for use in regular expression
-			if(isset($strip_ext)) {
-				foreach($files as $file) {
+			if (isset($strip_ext)) {
+				foreach ($files as $file) {
 					(preg_match($ext, $file)) ? array_push($results, preg_replace($ext, '', $file)) : null;
 				}
-			}
-			else{
-				foreach($files as $file) {
+			} else {
+				foreach ($files as $file) {
 					(preg_match($ext, $file)) ? array_push($results, $file) : null;
 				}
 			}
 			return $results;
+		} else {
+			return $files;
 		}
-		else return $files;
 	}
 
 	/**
@@ -1349,7 +1391,9 @@
 	function encode($file = null)
 	{
 		$file = (string)$file;
-		if(file_exists($file)) return base64_encode(file_get_contents($file));
+		if (file_exists($file)) {
+			return base64_encode(file_get_contents($file));
+		}
 	}
 
 	/**
@@ -1366,72 +1410,71 @@
 		//Make an absolute path if given a relative path in $file
 
 		$file = realpath($file);
-		switch(str_replace('.', null, extension($file))){ //Start by matching file extensions
+		switch(str_replace('.', null, extension($file))) { //Start by matching file extensions
 			case 'svg':
-			case 'svgz': {
+			case 'svgz':
 				$type = 'image/svg+xml';
-			} break;
+				break;
 
-			case 'woff': {
+			case 'woff':
 				$type = 'application/font-woff';
-			} break;
+				break;
 
-			case 'otf': {
+			case 'otf':
 				$type = 'application/x-font-opentype';
-			} break;
+				break;
 
-			case 'sql': {
+			case 'sql':
 				$type = 'text/x-sql';
-			} break;
+				break;
 
-			case 'appcache': {
+			case 'appcache':
 				$type = 'text/cache-manifest';
-			} break;
+				break;
 
-			case 'mml': {
+			case 'mml':
 				$type = 'application/xhtml+xml';
-			} break;
+				break;
 
-			case 'ogv': {
+			case 'ogv':
 				$type = 'video/ogg';
-			} break;
+				break;
 
-			case 'webm': {
+			case 'webm':
 				$type = 'video/webm';
-			} break;
+				break;
 
-			case 'php': {
+			case 'php':
 				$type = 'application/x-php';
-			} break;
+				break;
 
 			case 'ogg':
 			case 'oga':
-			case 'opus': {
+			case 'opus':
 				$type = 'audio/ogg';
-			} break;
+				break;
 
-			case 'flac': {
+			case 'flac':
 				$type = 'audio/flac';
-			} break;
+				break;
 
-			case 'm4a': {
+			case 'm4a':
 				$type = 'audio/mp4';
-			} break;
+				break;
 
 			case 'css':
-			case 'cssz': {
+			case 'cssz':
 				$type = 'text/css';
-			} break;
+				break;
 
 			case 'js':
-			case 'jsz': {
+			case 'jsz':
 				$type = 'text/javascript';
-			} break;
+				break;
 
-			default: {		//If not found, try the file's default
+			default:		//If not found, try the file's default
 				$finfo = new \finfo(FILEINFO_MIME);
 				$type = preg_replace('/\;.*$/', null, (string)$finfo->file($file));
-			}
 		}
 		return $type;
 	}
@@ -1500,12 +1543,16 @@
 	function SVG_symbols(array $svgs, $output = null)
 	{
 		$dom = new \DOMDocument('1.0');
-		$svg = $dom->appendChild(new \DOMElement('svg', null, 'http://www.w3.org/2000/svg'));
+		$svg = $dom->appendChild(new \DOMElement(
+			'svg',
+			null,
+			'http://www.w3.org/2000/svg'
+		));
 
 		array_map(function($file) use (&$dom){
 			$tmp = new \DOMDocument('1.0');
 			$svg = file_get_contents($file);
-			if(is_string($svg) and @file_exists($file)) {
+			if (is_string($svg) and @file_exists($file)) {
 				$svg = str_replace(["\r", "\n", "\t"], [], $svg);
 				$svg = preg_replace('/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/', null, $svg);
 				$svg = preg_replace(['/^\<svg/', '/\<\/svg\>/'], ['<symbol', '</symbol>'], $svg);
@@ -1529,10 +1576,9 @@
 		}, $svgs);
 
 		$results = $dom->saveXML($dom->getElementsByTagName('svg')->item(0));
-		if(is_string($output)) {
+		if (is_string($output)) {
 			file_put_contents($output, $results);
-		}
-		else {
+		} else {
 			return $results;
 		}
 	}
@@ -1554,9 +1600,10 @@
 		$src = 'images/icons/combined.svg'
 	)
 	{
-		if(is_string($src) and !is_url($src)) {
+		if (is_string($src) and !is_url($src)) {
 			$src = URL . '/' . $src;
 		}
+
 		$dom = new \DOMDocument('1.0');
 		$svg = $dom->appendChild(new \DOMElement('svg', null, 'http://www.w3.org/2000/svg'));
 		$svg->setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
@@ -1564,8 +1611,8 @@
 		$use = $svg->appendChild(new \DOMElement('use'));
 		$use->setAttribute('xlink:href', "{$src}#{$icon}");
 
-		if(is_array($attributes)) {
-			foreach($attributes as $attr => $val) {
+		if (is_array($attributes)) {
+			foreach ($attributes as $attr => $val) {
 				$svg->setAttribute($attr, $val);
 			}
 		}
@@ -1604,7 +1651,7 @@
 	function trim_words($text, $max_words = 0)
 	{
 		$words = explode(' ', $text);
-		if(count($words) > $max_words) {
+		if (count($words) > $max_words) {
 			$text = join(' ', array_splice($words, 0, $max_words));
 		}
 		return $text;
@@ -1621,8 +1668,8 @@
 
 	function download($file = null, $name = null)
 	{
-		if(isset($file) and file_exists($file)) {
-			if(is_null($name)) {
+		if (isset($file) and file_exists($file)) {
+			if (is_null($name)) {
 				$name = filename($file) . '.' . extension($file);
 			}
 			http_response_code(200);
@@ -1634,8 +1681,7 @@
 			header("Content-Transfer-Encoding: binary");
 			header("Content-Length: " . filesize($file));
 			exit(file_get_contents($file));
-		}
-		else {
+		} else {
 			http_response_code(404);
 			exit();
 		}
@@ -1788,7 +1834,13 @@
 	function minify(&$string = null)
 	{
 		$string = str_replace(["\r", "\n", "\t"], [], trim((string)$string));
-		$string = preg_replace('/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/', null, $string);
+
+		$string = preg_replace(
+			'/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/',
+			null,
+			$string
+		);
+
 		return $string;
 	}
 
@@ -1805,12 +1857,15 @@
 
 	function convert_date($from = null, $format = 'U', $offset = 'Now')
 	{
-		if(is_string($from)) $from = strtotime($from);
-		elseif(isset($from) and !is_int($from)) $from = time();
-		if($format === 'U') {
-			return (int)date($format, strtotime($offset, $from));
+		if (is_string($from)) {
+			$from = strtotime($from);
+		} elseif (isset($from) and !is_int($from)) {
+			$from = time();
 		}
-		else {
+
+		if ($format === 'U') {
+			return (int)date($format, strtotime($offset, $from));
+		} else {
 			return date($format, strtotime($offset, $from));
 		}
 	}
@@ -1845,9 +1900,9 @@
 	{
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, (string)$request);
-		curl_setopt($ch, CURLOPT_FRESH_CONNECT, TRUE);
+		curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($ch, CURLOPT_TIMEOUT,30);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true );
@@ -1914,7 +1969,7 @@
 	 * @return mixed (null if all loaded, otherwise object of two arrays)
 	 * @example
 	 * $missing = module_test()
-	 * if(is_null($missing))...
+	 * if (is_null($missing))...
 	 * else ...
 	 */
 
@@ -1927,7 +1982,7 @@
 		 * If not, return null
 		 */
 
-		if(
+		if (
 			!isset($settings->php_modules)
 			or !isset($settings->apache_modules)
 		) {
@@ -1950,10 +2005,9 @@
 			apache_get_modules()							//Get array of loaded Apache modules
 		);
 
-		if(count($missing->php) or count($missing->apache)) {//If either is not empty, return $missing
+		if (count($missing->php) or count($missing->apache)) {//If either is not empty, return $missing
 			return $missing;
-		}
-		else {												//Otherwise return null
+		} else {												//Otherwise return null
 			return null;
 		}
 	}
@@ -1968,7 +2022,7 @@
 
 	function weekdays($full = true)
 	{
-		if($full) {
+		if ($full) {
 			return [
 				'Sunday',
 				'Monday',
@@ -1987,4 +2041,3 @@
 			'Friday'
 		];
 	}
-?>
