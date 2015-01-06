@@ -1,10 +1,10 @@
 <?php
-	$settings = \shgysk8zer0\Core\ini::load('settings');
+	$settings = \shgysk8zer0\Core\resources\Parser::parse('settings.json');
 	if(
 		isset($settings->module_test)
 		and $settings->module_test
 	) {
-		$missing = module_test();
+		$missing = module_test($settings);
 	}
 	if($DB->connected) {
 		$pages = \shgysk8zer0\Core\pages::load();

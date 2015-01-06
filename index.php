@@ -20,7 +20,7 @@
 	 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 	require_once __DIR__ . DIRECTORY_SEPARATOR . 'functions.php';
-	config();
+	init();
 	define_UA();
 
 	if(BROWSER === 'Chrome' and $_SERVER['HTTP_HOST'] === 'localhost') {
@@ -31,7 +31,7 @@
 	$DB = \shgysk8zer0\Core\PDO::load('connect');
 	$login = \shgysk8zer0\Core\login::load('connect');
 	$session = \shgysk8zer0\Core\session::load();
-	$settings = \shgysk8zer0\Core\ini::load('settings');
+	$settings = \shgysk8zer0\Core\resources\Parser::parse('settings');
 
 	if(!defined('THEME')) {
 		define('THEME', 'default');

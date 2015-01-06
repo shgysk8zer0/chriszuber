@@ -18,8 +18,8 @@
 		}
 	}
 
-	spl_autoload_extensions('.class.php');
-	spl_autoload_register('spl_autoload');				 //Load class by naming it
+	//spl_autoload_extensions('.class.php');
+	//spl_autoload_register('spl_autoload');				 //Load class by naming it
 
 	if(!function_exists('mb_strimwidth')) {
 		function mb_strimwidth($str, $start, $width, $trimmarker = '', $encoding = '') {
@@ -29,8 +29,6 @@
 			return substr($str, $start, $width);
 		}
 	}
-
-	init();
 
 	/**
 	 * Prevents functions registering from executing multiple times {Opt-in}.
@@ -58,16 +56,109 @@
 	 * @param bool $session
 	 * @return array $info
 	 */
-
-	function init($session = true)
+	function init($session = true, $settings_file = 'settings.json')
 	{
 		if(!first_run(__FUNCTION__)) return;
-		//Include current directory, config/, and classes/ directories in include path
-		set_include_path(__DIR__ . DIRECTORY_SEPARATOR . 'classes' . PATH_SEPARATOR . get_include_path() . PATH_SEPARATOR . __DIR__ . PATH_SEPARATOR . __DIR__  . DIRECTORY_SEPARATOR . 'config');
+		set_include_path(__DIR__. DIRECTORY_SEPARATOR . 'config' . PATH_SEPARATOR . get_include_path());
+		$settings_file = stream_resolve_include_path($settings_file);
 
-		if(@file_exists('./config/define.ini')) {
-			foreach(parse_ini_file('./config/define.ini') as $key => $value) {
-				define(strtoupper(preg_replace('/\s|-/', '_', $key)), $value);
+		if(@file_exists($settings_file)) {
+			if($settings = json_decode(file_get_contents($settings_file))) {
+				if(isset($settings->requires)) {
+					foreach($settings->requires as $required) {
+						require_once $required;
+					}
+				}
+
+				if(is_object($settings->autoloader)) {
+					set_include_path(
+						join(PATH_SEPARATOR, array_map('realpath', $settings->autoloader->paths))
+						. PATH_SEPARATOR . get_include_path()
+					);
+					if(is_array($settings->autoloader->extensions)) {
+						spl_autoload_extensions(join(',', $settings->autoloader->extensions));
+					}
+					if(is_array($settings->autoloader->functions)) {
+						foreach($settings->autoloader->functions as $function) {
+							spl_autoload_register($function);
+						}
+					}
+				}
+
+				if(isset($settings->time_zone)) {
+					date_default_timezone_set($settings->time_zone);
+				}
+
+				if(isset($settings->path)) {
+					set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
+				}
+
+				if(isset($settings->charset) and is_string($settings->charset)) {
+					ini_set('default_charset', strtoupper($settings->charset));
+				}
+				else {
+					ini_set('default_charset', 'UTF-8');
+				}
+
+				if(is_object($settings->define)) {
+					foreach(get_object_vars($settings->define) as $k => $v) {
+						define(strtoupper($k), $v);
+					}
+				}
+
+				if(@is_string($settings->credentials_extension)) {
+					\shgysk8zer0\Core\resources\pdo_connect::$ext = $settings->credentials_extension;
+				}
+				else {
+					\shgysk8zer0\Core\resources\pdo_connect::$ext = 'ini';
+				}
+
+				if(isset($settings->error_handler) and isset($settings->debug)) {
+					$error_handler = $settings->error_handler;
+					if(is_string($settings->debug)) $settings->debug = strtolower($settings->debug);
+					error_reporting(0);
+					switch($settings->debug) {
+						case 'true': case 'all': case 'on': {
+							set_error_handler($error_handler, E_ALL);
+						} break;
+
+						case 'false': case 'off': {
+							set_error_handler($error_handler, 0);
+						} break;
+
+						case 'core': {
+							set_error_handler($error_handler, E_CORE_ERROR | E_CORE_WARNING);
+						} break;
+
+						case 'strict': {
+							set_error_handler($error_handler, E_ALL^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
+						} break;
+
+						case 'warning': {
+							set_error_handler($error_handler, E_ALL^E_STRICT^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
+						} break;
+
+						case 'notice': {
+							set_error_handler($error_handler, E_ALL^E_STRICT^E_WARNING^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
+						} break;
+
+						case 'developement': {
+							set_error_handler($error_handler, E_ALL^E_NOTICE^E_WARNING^E_STRICT^E_DEPRECATED);
+						} break;
+
+						case 'production': {
+							set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
+						} break;
+
+						default: {
+							set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
+						}
+					}
+				}
+
+				else {
+					error_reporting(E_ALL);
+				}
 			}
 		}
 
@@ -91,12 +182,13 @@
 	 *
 	 * @parmam void
 	 * @return void
+	 *
+	 * @depreciated
 	 */
-
 	function config($settings_file = 'settings')
 	{
 		if(!first_run(__FUNCTION__)) return;
-		$settings = \shgysk8zer0\Core\ini::load((string)$settings_file);
+		$settings = \shgysk8zer0\Core\resources\Parser::parse((string)$settings_file);
 		if(isset($settings->path)) {
 			set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
 		}
@@ -203,7 +295,7 @@
 		static $reporter = null;
 
 		if(is_null($reporter)) {
-			$settings = \shgysk8zer0\Core\ini::load('settings');
+			$settings = \shgysk8zer0\Core\resources\Parser::parse('settings');
 			$reporter = \shgysk8zer0\Core\error_reporter::load(
 				(isset($settings->error_method)) ? $settings->error_method : 'log'
 			);
@@ -644,7 +736,7 @@
 	function CSP()
 	{
 		$CSP = '';
-		$CSP_Policy = \shgysk8zer0\Core\resources\Parser::parse('csp.json');
+		$CSP_Policy = \shgysk8zer0\Core\resources\Parser::parse('settings.json')->csp;
 
 		if(!is_object($CSP_Policy)) return;
 
@@ -1826,9 +1918,9 @@
 	 * else ...
 	 */
 
-	function module_test()
+	function module_test($settings)
 	{
-		$settings = \shgysk8zer0\Core\ini::load('settings');
+		//$settings = \shgysk8zer0\Core\resources\Parser::parse('settings.json');
 
 		/**
 		 * First, check if the directives are set in settings.ini
@@ -1850,18 +1942,18 @@
 		 */
 
 		$missing->php = array_diff(
-			explode(',', str_replace(' ', null, $settings->php_modules)),		//Convert the list in settings.ini to an array
-			get_loaded_extensions()												//Get array of loaded PHP modules
+			$settings->php_modules,		//Convert the list in settings.ini to an array
+			get_loaded_extensions()		//Get array of loaded PHP modules
 		);
 		$missing->apache = array_diff(
-			explode(',', str_replace(' ', null, $settings->apache_modules)),	//Convert the list in settings.ini to an array
-			apache_get_modules()												//Get array of loaded Apache modules
+			$settings->apache_modules,	//Convert the list in settings.ini to an array
+			apache_get_modules()							//Get array of loaded Apache modules
 		);
 
-		if(count($missing->php) or count($missing->apache)) {					//If either is not empty, return $missing
+		if(count($missing->php) or count($missing->apache)) {//If either is not empty, return $missing
 			return $missing;
 		}
-		else {																	//Otherwise return null
+		else {												//Otherwise return null
 			return null;
 		}
 	}

@@ -1,0 +1,84 @@
+{
+    "requires": [
+        "custom.php"
+    ],
+    "time-zone": "America\/Los_Angeles",
+    "credentials_extension": "json",
+    "debug": "notice",
+    "error_log": "errors.log",
+    "error_method": "database",
+    "module_test": true,
+    "apache_modules": [
+        "mod_headers",
+        "mod_mime",
+        "mod_include",
+        "mod_rewrite",
+        "mod_include"
+    ],
+    "php_modules": [
+        "PDO",
+        "date",
+        "mcrypt",
+        "pdo_mysql"
+    ],
+    "autoloader": {
+        "paths": [
+            "classes"
+        ],
+        "extensions": [
+            ".class.php"
+        ],
+        "functions": [
+            "spl_autoload"
+        ]
+    },
+    "define": {
+        "theme": "default"
+    },
+    "csp": {
+        "default-src": "'self'",
+        "script-src": [
+            "'self'",
+            "*.google-analytics.com",
+            "https:\/\/apis.google.com",
+            "https:\/\/platform.twitter.com",
+            "https:\/\/gist.github.com"
+        ],
+        "style-src": [
+            "'self'",
+            "https:\/\/gist-assets.github.com"
+        ],
+        "font-src": [
+            "'self'",
+            "data:",
+            "themes.googleusercontent.com",
+            "openfontlibrary.org"
+        ],
+        "img-src": [
+            "'self'",
+            "data:",
+            "*.google-analytics.com",
+            "*.googleusercontent.com",
+            "chriszuber.com",
+            "https://travis-ci.org",
+            "https://api.travis-ci.org"
+        ],
+        "media-src": [
+            "'self'",
+            "mediastream"
+        ],
+        "connect-src": "'self'",
+        "frame-src": [
+            "'self'",
+            "*.youtube.com",
+            "*.youtube-nocookie.com",
+            "https:\/\/plusone.google.com",
+            "https:\/\/facebook.com",
+            "https:\/\/platform.twitter.com"
+        ],
+        "frame-ancestors": "'self'",
+        "object-src": "'self'",
+        "report-uri": "\/CSP_Errors.php",
+        "enforce": true
+    }
+}
