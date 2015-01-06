@@ -139,6 +139,42 @@ lower case.
 
 ## Images, Fonts, & other Media
 
+All images, fonts, and other forms of media **MUST** use [Creative Commons](<http://creativecommons.org/>)
+or similar license allowing adaption, modification, and redistribution.
+
 ## Minimal Class Structure
+
+Class Doc Comments **MUST** be included after namespace declaration. This is to
+ensure compatibility with `ReflectionClass`.
+
+All method documentation **SHALL** include at minimal
++ Method description
++ `@param`
++ `@return`
+
+```PHP
+namespace {namespace};
+/**
+ * {Class description}
+ *
+ * @author {First} {Last} <{user@example.com}>
+ * @package {similar to namespace}
+ * @version {semantic version, E.G. 1.2.3}
+ * @copyright {YYYY}, {First} {Last}
+ * @license {GPL-3 compatible license}
+ */
+[final|abstract] (class|interface|trait) {classname} [extends {child class}] [implements {interface}]
+{
+    /**
+     * {method description}
+     * @param {type}    [{description}]
+     * @return {type}   [{description}]
+     */
+    [final] {visibility} {method name}([type hint [param[ = {default value}]]])
+    {
+        // Method code
+    }
+}
+```
 
 ## Contributing
