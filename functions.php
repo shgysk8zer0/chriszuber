@@ -1557,14 +1557,20 @@
 				$svg = preg_replace('/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/', null, $svg);
 				$svg = preg_replace(['/^\<svg/', '/\<\/svg\>/'], ['<symbol', '</symbol>'], $svg);
 				$tmp->loadXML($svg);
-				$tmp->getElementsByTagName(
-					'symbol'
-				)->item(
-					0
-				)->setAttribute(
-					'id',
-					pathinfo($file, PATHINFO_FILENAME)
-				);
+				$symbol_el = $tmp->getElementsByTagName('symbol')->item(0);
+				$symbol_el->setAttribute('id',pathinfo($file, PATHINFO_FILENAME));
+				if (
+					!$symbol_el->hasAttribute('viewBox')
+					and $symbol_el->hasAttribute('width')
+					and $symbol_el->hasAttribute('height')
+				) {
+					$symbol_el->setAttribute(
+						'viewBox',
+						"0 0 {$symbol_el->getAttribute('width')} {$symbol_el->getAttribute('height')}"
+					);
+				}
+				$symbol_el->setAttribute('width', '100%');
+				$symbol_el->setAttribute('height', '100%');
 
 				$symbol = $dom->importNode(
 					$tmp->getElementsByTagName('symbol')->item(0),
