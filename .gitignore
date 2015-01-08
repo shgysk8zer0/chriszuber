@@ -7,6 +7,7 @@
 # Allow
 !/manifest.webapp
 !/.travis.yml
+!/composer.json
 !/unit.php
 !/webhook.php
 !/index.php

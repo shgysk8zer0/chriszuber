@@ -1,0 +1,27 @@
+
+{
+	"name": "shgysk8zer0/chriszuber",
+	"description": "Blogging with HTML5",
+	"require": {
+		"php": ">=5.5.0",
+		"shgysk8zer0/core": "*"
+	},
+	"authors": [
+		{
+			"name": "Chris Zuber",
+			"role" : "developer",
+			"email": "shgysk8zer0@gmail.com",
+			"homepage": "http://chriszuber.com"
+		}
+	],
+	"license": "GPL-3.0+",
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "git://github.com/shgysk8zer0/chriszuber.git"
+		}
+	],
+	"autoload": {
+		"psr-4": {}
+	}
+}
