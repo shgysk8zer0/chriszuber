@@ -7,7 +7,7 @@
     "debug": "notice",
     "error_log": "errors.log",
     "error_method": "database",
-    "module_test": true,
+    "module_test": false,
     "apache_modules": [
         "mod_headers",
         "mod_mime",
