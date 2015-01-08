@@ -2,6 +2,7 @@
 	error_reporting(0);
 	header('Content-Type: text/plain');
 	require_once __DIR__ . DIRECTORY_SEPARATOR . 'functions.php';
+	init();
 
 	$webhook = new \shgysk8zer0\Core\GitHubWebhook('config/github.json');
 	try {
