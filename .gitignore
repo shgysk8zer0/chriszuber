@@ -19,6 +19,7 @@
 !/**.htaccess
 !/.gitignore
 !/.gitattributes
+!/.gitmodules
 !/LICENSE.txt
 !/robots.txt
 !/README.md
@@ -26,10 +27,6 @@
 !/favicon.*
 !/super-user.*
 !/manifest.appcache
-!/classes/**
-!/classes/*
-!/classes/magic_methods.php
-!/classes/
 !/stylesheets/
 !/components/
 !/scripts/
