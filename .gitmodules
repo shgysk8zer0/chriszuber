@@ -1,3 +1,6 @@
 [submodule "classes/shgysk8zer0/core"]
 	path = classes/shgysk8zer0/core
 	url = git://github.com/shgysk8zer0/core.git
+[submodule "images/octicons"]
+	path = images/octicons
+	url = git://github.com/github/octicons.git
