@@ -62,7 +62,7 @@
 <link rel="icon" type="image/svg" sizes="any" href="favicon.svgz?t=<?=time()?>"/>
 <link rel="alternate icon" type="image/png" sizes="16x16" href="favicon.png"/>
 <?php if(localhost() and BROWSER === 'Firefox'):?>
-	<link rel="stylesheet" type="text/css" href="stylesheets/<?=THEME?>/combined.css" media="all"/>
+	<link rel="stylesheet" type="text/css" href="stylesheets/<?=THEME?>/import.css" media="all"/>
 <?php else:?>
 	<link rel="stylesheet" type="text/css" href="stylesheets/<?=THEME?>/output.css" media="all"/>
 <?php endif?>
