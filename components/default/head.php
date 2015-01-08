@@ -61,17 +61,10 @@
 <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
 <link rel="icon" type="image/svg" sizes="any" href="favicon.svgz?t=<?=time()?>"/>
 <link rel="alternate icon" type="image/png" sizes="16x16" href="favicon.png"/>
-<?php if(localhost()):?>
-	<link rel="stylesheet" type="text/css" href="stylesheets/<?=THEME?>/normalize.css" media="all"/>
-	<?php if(BROWSER === 'Firefox'):?>
-	<link rel="stylesheet" type="text/css" href="stylesheets/<?=THEME?>/style.css" media="all"/>
-	<?php else:?>
-	<link rel="stylesheet" type="text/css" href="stylesheets/<?=THEME?>/style.out.css" media="all"/>
-	<?php endif?>
-	<link rel="stylesheet" type="text/css" href="stylesheets/<?=THEME?>/fonts.css" media="all"/>
-	<link rel="stylesheet" type="text/css" href="stylesheets/<?=THEME?>/animations.css" media="screen"/>
+<?php if(localhost() and BROWSER === 'Firefox'):?>
+	<link rel="stylesheet" type="text/css" href="stylesheets/<?=THEME?>/combined.css" media="all"/>
 <?php else:?>
-	<link rel="stylesheet" type="text/css" href="stylesheets/<?=THEME?>/combined.out.css" media="all"/>
+	<link rel="stylesheet" type="text/css" href="stylesheets/<?=THEME?>/output.css" media="all"/>
 <?php endif?>
 <?php if(isset($head->rss)):?>
 <link href="<?=$head->rss?>" rel="alternate" type="application/rss+xml" title="<?=$head->title?> RSS Feed" />

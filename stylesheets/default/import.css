@@ -1,0 +1,30 @@
+@charset 'UTF-8';
+@import 'normalize.css';
+@import 'style.css';
+@import 'fonts.css';
+@import 'animations.css' screen;
+:root {
+	--default-color: rgba(252, 252, 252, 1);
+	--alt-color: rgba(41, 41, 41, 1);
+	--primary-color: rgba(237, 24, 24, 1);
+	--highlight-color: rgba(129, 23, 23, 1);
+	--link-color: hsl(209, 62%, 45%);
+	--border-color: rgba(45, 45, 45, 1);
+	--glass-grad: linear-gradient(to top left, rgba(80, 80, 80, 0.7), rgba(140, 140, 140, 0.9), rgba(40, 40, 40, 0.7));
+	--shadow: rgba(20, 20, 20, 0.9);
+	--tint-glass: linear-gradient(rgba(40, 40, 40, 0.8), rgba(80, 80, 80, 0.7));
+	--header-bg: linear-gradient(rgba(40, 40, 40, 1), rgba(80, 80, 80, 0.97));
+	--progress-grad: linear-gradient(var(--highlight-color), var(--primary-color), var(--highlight-color));
+	--icon-font: 'Web Symbols';
+	--default-cursor: url(../../images/cursors/Arch-black.svgz), auto;
+	--pointer: url('../../images/cursors/3D_hand_cursor.svgz'), pointer;
+	background-color: rgb(19, 0, 0);
+	background-image: url(../../images/backgrounds/red-curls.svgz);
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	color: var(--default-color);
+	text-shadow: var(--shadow);
+	cursor: var(--default-cursor);
+}
