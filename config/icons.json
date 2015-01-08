@@ -32,7 +32,8 @@
 		"images/icons/telephone.svg",
 		"images/icons/mobile_icon.svg",
 		"images/icons/settings.svg",
-		"images/icons/search.svg"
+		"images/icons/search.svg",
+		"images/octicons/svg/alert.svg"
 	],
 	"output": "images/icons/combined.svg"
 }
