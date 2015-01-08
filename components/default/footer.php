@@ -15,17 +15,17 @@
 		endif;
 
 		foreach([
-			'git' => [
+			'git-commit' => [
 				'title' => 'Recent Commits',
 				'class' => 'logo',
 				'data-request' => "action=recent_commits"
 			],
-			'issues-open' => [
+			'issue-opened' => [
 				'title' => 'GitHub Issues',
 				'class' => 'logo',
 				'data-request' => 'action=github_issues'
 			],
-			'envelope' => [
+			'mail' => [
 				'title' => 'Email Me',
 				'class' => 'logo',
 				'data-show-modal' => '#email_admin_dialog'
@@ -35,7 +35,7 @@
 				'class' => 'logo',
 				'data-show-modal' => '#contactDialog'
 			],
-			'info' => [
+			'question' => [
 				'title' => 'Show README',
 				'class' => 'logo',
 				'data-request' => 'action=README'
