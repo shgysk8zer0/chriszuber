@@ -6,6 +6,7 @@
 
 # Allow
 !/manifest.webapp
+!/.travis.yml
 !/webhook.php
 !/index.php
 !/ajax.php
