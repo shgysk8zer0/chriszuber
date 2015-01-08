@@ -18,7 +18,6 @@
     "php_modules": [
         "PDO",
         "date",
-        "mcrypt",
         "pdo_mysql"
     ],
     "autoloader": {
