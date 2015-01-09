@@ -611,7 +611,8 @@ img[src$="CreativeCommons.svgz"], article footer svg {
 footer .logo{
 	color: #333;
 }
-svg.icon * {
+.icon svg {
+	color: inherit;
 	fill: currentColor;
 }
 .logo:hover {
@@ -631,10 +632,6 @@ body > progress {
 	font-stretch: none;
 	content: ' 'attr(data-icon)' ';
 	vertical-align: baseline;
-}
-.resizeable {
-	resize: both;
-	overflow: auto;
 }
 .copyleft {
 	color: var(--alt-color);

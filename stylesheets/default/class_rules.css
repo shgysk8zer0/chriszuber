@@ -1,0 +1,19 @@
+.resizeable {
+	resize: both;
+	overflow: auto;
+}
+.blur {
+	filter: blur(1px);
+}
+.grayscale {
+	filter: grayscale(1);
+}
+.blur.grayscale {
+	filter: blur(1px) grayscale(1)
+}
+.flex {
+	display: flex;
+}
+.currentColor {
+	fill: currentColor;
+}
