@@ -22,7 +22,7 @@ the power and control that developers want.
 * _Most_ class methods are chainable - faster and easier coding
 * Updating design made easy thanks to [CSS variables](<https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables>). Use [Myth](<http://myth.io>) (__not included__) when unsupported or in production
 * Developer friendly - Things like backing up and restoring a database are as easy as clicking a button in the developer menu, which is available to admin users everywhere via contextmenu (no navigation required, Firefox only at this point). Also provides easy access to debugging info, and the ability to print out debugging info to the browser's console makes tracking down bugs relatively easy. Lastly, PHP errors are saved to a database with file, line, and error message included, and can be searched, filtered, and even fixed from the browser!
-* Free/Libre/Open/Creative Commons/Public Domain… whatever applies to what you're refering to. All artwork, icons, and code are free to use for personal use. Special thanks to [OpenClipart](<https://openclipart.org/>) and [Open Font Library](<http://openfontlibrary.org/>). All posts are automatically licensed under a [Creative Commons 4.0 license](<http://creativecommons.org/licenses/by-sa/4.0/>).
+* Free/Libre/Open/Creative Commons/Public Domain… whatever applies to what you're referring to. All artwork, icons, and code are free to use for personal use. Special thanks to [OpenClipart](<https://openclipart.org/>) and [Open Font Library](<http://openfontlibrary.org/>). All posts are automatically licensed under a [Creative Commons 4.0 license](<http://creativecommons.org/licenses/by-sa/4.0/>).
 
 ## Contact
 * [Email Developer](mailto:shgysk8zer0@gmail.com> "Email Developer")
@@ -33,11 +33,15 @@ the power and control that developers want.
 
 ## Install
 
-	git clone git://github.com/shgysk8zer0/chriszuber.git
+	git clone git://github.com/shgysk8zer0/chriszuber.git {path}
+	cd {path}
+	git submodule init
+	git submodule update
 
 ## Update
 
 	git pull
+	git submodule update
 
 ## In case of update conflicts
 
@@ -53,11 +57,12 @@ Copy your "clone URL"
 *Install*
 
 	git clone {clone URL}
-	git remote add project_manager git://github.com/shgysk8zer0/chriszuber.git
+	git remote add upstream git://github.com/shgysk8zer0/chriszuber.git
 
 *Update*
 
-	git pull project_manager master
+	git pull upstream master
+	git submodule update
 
 
 ## Other Info
@@ -94,8 +99,7 @@ while still allowing the original to be used as CSS where supported
 	sudo npm install -g myth
 Then to generate...
 
-	myth stylesheets/style.css stylesheets/style.out.css
-	myth -c stylesheets/combined.css stylesheets/combined.out.css
+	myth -c stylesheets/default/combined.css stylesheets/default/output.css
 
 ### Required Browser Features:
 
