@@ -19,10 +19,9 @@
 		"images/icons/cart.svg",
 		"images/icons/map.svg",
 		"images/icons/photo.svg",
-		"images/icons/video.svg",
 		"images/icons/music.svg",
+		"images/icons/video.svg",
 		"images/icons/telephone.svg",
-		"images/icons/mobile_icon.svg",
 		"images/icons/settings.svg",
 		"images/octicons/svg/mark-github.svg",
 		"images/octicons/svg/alert.svg",
@@ -37,7 +36,18 @@
 		"images/octicons/svg/sign-out.svg",
 		"images/octicons/svg/x.svg",
 		"images/octicons/svg/check.svg",
-		"images/octicons/svg/home.svg"
+		"images/octicons/svg/home.svg",
+		"images/octicons/svg/history.svg",
+		"images/octicons/svg/code.svg",
+		"images/octicons/svg/device-mobile.svg",
+		"images/octicons/svg/device-desktop.svg",
+		"images/octicons/svg/list-ordered.svg",
+		"images/octicons/svg/list-unordered.svg",
+		"images/octicons/svg/location.svg",
+		"images/octicons/svg/tag.svg",
+		"images/octicons/svg/sync.svg",
+		"images/octicons/svg/terminal.svg",
+		"images/octicons/svg/screen-full.svg"
 	],
 	"output": "images/icons/combined.svg"
 }
