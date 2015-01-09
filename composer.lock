@@ -1,0 +1,58 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "e098e07ca95a2cd47602538adaa51547",
+    "packages": [
+        {
+            "name": "shgysk8zer0/core",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/shgysk8zer0/core.git",
+                "reference": "b64398f1185a8a5ee08458173f7f98c22b102850"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/shgysk8zer0/core/zipball/b64398f1185a8a5ee08458173f7f98c22b102850",
+                "reference": "b64398f1185a8a5ee08458173f7f98c22b102850",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": []
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Zuber",
+                    "email": "shgysk8zer0@gmail.com",
+                    "homepage": "http://chriszuber.com",
+                    "role": "developer"
+                }
+            ],
+            "description": "Core Super User classes",
+            "time": "2015-01-08 22:37:22"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "shgysk8zer0/core": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.5.0"
+    },
+    "platform-dev": []
+}

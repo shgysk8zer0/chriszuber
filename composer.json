@@ -4,7 +4,7 @@
 	"description": "Blogging with HTML5",
 	"require": {
 		"php": ">=5.5.0",
-		"shgysk8zer0/core": "*"
+		"shgysk8zer0/core": "dev-master"
 	},
 	"authors": [
 		{
