@@ -18,9 +18,6 @@
 		}
 	}
 
-	//spl_autoload_extensions('.class.php');
-	//spl_autoload_register('spl_autoload');				 //Load class by naming it
-
 	if (!function_exists('mb_strimwidth')) {
 		function mb_strimwidth($str, $start, $width, $trimmarker = '', $encoding = '') {
 			if (strlen($str) > $start - $width) {
@@ -56,178 +53,97 @@
 	 *
 	 * @param bool $session
 	 * @return array $info
+	 * @deprecated
 	 */
-	function init($session = true, $settings_file = 'settings.json')
+	function config()
+	{
+		return;
+	}
+
+	/**
+	 * Sets autoloader, include_path, error_handler, etc
+	 *
+	 * @param  bool $session         Whether or not to start PHP session
+	 * @param  string $settings_file File to parse for site settings
+	 * @param  string $config_dir    Config file directory (added to include_path)
+	 * @return void
+	 */
+	function init(
+		$session = true,
+		$settings_file = 'settings.json',
+		$config_dir = 'config'
+	)
 	{
 		if (!first_run(__FUNCTION__)) {
 			return;
 		}
-
-		set_include_path(__DIR__. DIRECTORY_SEPARATOR . 'config' . PATH_SEPARATOR . get_include_path());
-		$settings_file = stream_resolve_include_path($settings_file);
-
-		if (@file_exists($settings_file)) {
-			if ($settings = json_decode(file_get_contents($settings_file))) {
-				if (isset($settings->requires)) {
-					foreach ($settings->requires as $required) {
-						require_once $required;
-					}
-				}
-
-				if (is_object($settings->autoloader)) {
-					set_include_path(
-						join(PATH_SEPARATOR, array_map('realpath', $settings->autoloader->paths))
-						. PATH_SEPARATOR . get_include_path()
-					);
-
-					if (is_array($settings->autoloader->extensions)) {
-						spl_autoload_extensions(join(',', $settings->autoloader->extensions));
-					}
-
-					if (is_array($settings->autoloader->functions)) {
-						foreach ($settings->autoloader->functions as $function) {
-							spl_autoload_register($function);
-						}
-					}
-				}
-
-				if (isset($settings->time_zone)) {
-					date_default_timezone_set($settings->time_zone);
-				}
-
-				if (isset($settings->path)) {
-					set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
-				}
-
-				if (isset($settings->charset) and is_string($settings->charset)) {
-					ini_set('default_charset', strtoupper($settings->charset));
-				} else {
-					ini_set('default_charset', 'UTF-8');
-				}
-
-				if (is_object($settings->define)) {
-					foreach (get_object_vars($settings->define) as $k => $v) {
-						define(strtoupper($k), $v);
-					}
-				}
-
-				if (@is_string($settings->credentials_extension)) {
-					\shgysk8zer0\Core\resources\pdo_connect::$ext = $settings->credentials_extension;
-				} else {
-					\shgysk8zer0\Core\resources\pdo_connect::$ext = 'ini';
-				}
-
-				if (isset($settings->error_handler) and isset($settings->debug)) {
-					$error_handler = $settings->error_handler;
-					if (is_string($settings->debug)) {
-						$settings->debug = strtolower($settings->debug);
-					}
-					error_reporting(0);
-					switch($settings->debug) {
-						case 'true':
-						case 'all':
-						case 'on':
-							set_error_handler($error_handler, E_ALL);
-							break;
-
-						case 'false':
-						case 'off':
-							set_error_handler($error_handler, 0);
-							break;
-
-						case 'core':
-							set_error_handler($error_handler, E_CORE_ERROR | E_CORE_WARNING);
-							break;
-
-						case 'strict':
-							set_error_handler($error_handler, E_ALL^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
-							break;
-
-						case 'warning':
-							set_error_handler($error_handler, E_ALL^E_STRICT^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
-							break;
-
-						case 'notice':
-							set_error_handler($error_handler, E_ALL^E_STRICT^E_WARNING^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
-							break;
-
-						case 'developement':
-							set_error_handler($error_handler, E_ALL^E_NOTICE^E_WARNING^E_STRICT^E_DEPRECATED);
-							break;
-
-						case 'production':
-							set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
-							break;
-
-						default:
-							set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
-					}
-				} else {
-					error_reporting(E_ALL);
-				}
-			}
-		}
-
 		if (!defined('BASE')) {
 			define('BASE', __DIR__);
 		}
-
-		if (PHP_SAPI == 'cli' and !defined('URL')) {
-			define('URL', 'http://localhost');
-		} elseif (!defined('URL')) {
-			(str_replace('/', DIRECTORY_SEPARATOR, rtrim($_SERVER['DOCUMENT_ROOT'], '/')) === BASE)
-				? define('URL', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}")
-				: define('URL', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/" . end(explode(DIRECTORY_SEPARATOR, BASE)));
+		set_include_path(realpath($config_dir) . PATH_SEPARATOR . get_include_path());
+		$settings_file = stream_resolve_include_path($settings_file);
+		$settings = json_decode(file_get_contents($settings_file));
+		if (@is_string($settings->path)) {
+			set_include_path(realpath($settings->path . PATH_SEPARATOR . get_include_path()));
 		}
 
-		if ($session) {
-			\shgysk8zer0\Core\session::load();
-			nonce(50);									// Set a nonce of n random characters
-		}
-	}
-
-	/**
-	 * Load and configure site settings
-	 * Loads all files in requires directive
-	 * Setup custom error handler
-	 *
-	 * @parmam void
-	 * @return void
-	 *
-	 * @depreciated
-	 */
-	function config($settings_file = 'settings')
-	{
-		if (!first_run(__FUNCTION__)) return;
-		$settings = \shgysk8zer0\Core\resources\Parser::parse((string)$settings_file);
-		if (isset($settings->path)) {
-			set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
-		}
-
-		if (isset($settings->charset) and is_string($settings->charset)) {
+		if (@is_string($settings->charset)) {
 			ini_set('default_charset', strtoupper($settings->charset));
 		} else {
 			ini_set('default_charset', 'UTF-8');
 		}
 
-		if (isset($settings->credentials_extension)) {
-			\shgysk8zer0\Core\resources\pdo_connect::$ext = $settings->credentials_extension;
-		} else {
-			\shgysk8zer0\Core\resources\pdo_connect::$ext = 'ini';
+		if (@is_array($settings->define)) {
+			array_map(
+				'define',
+				array_map('strtoupper', array_keys($settings->define)),
+				array_values($settings->define)
+			);
 		}
 
-		if (isset($settings->requires)) {
-			foreach (explode(',', $settings->requires) as $file) {
-				require_once(__DIR__ . DIRECTORY_SEPARATOR . trim($file));
-			}
+		if (@is_array($settings->requires)) {
+			array_map(function($path)
+			{
+				require_once $path;
+			}, $settings->requires);
 		}
 
-		if (isset($settings->time_zone)) {
+		if (@is_string($settings->time_zone)) {
 			date_default_timezone_set($settings->time_zone);
 		}
 
-		if (isset($settings->autoloader)) {
+		if (@is_string($settings->autoloader)) {
 			spl_autoload_register($settings->autoloader);
+		} elseif (@is_object($settings->autoloader)) {
+			if (@is_array($settings->autoloader->paths)) {
+				set_include_path(
+					join(PATH_SEPARATOR, array_map('realpath', $settings->autoloader->paths))
+					. PATH_SEPARATOR . get_include_path()
+				);
+			}
+			if (@is_array($settings->autoloader->extensions)) {
+				spl_autoload_extensions(join(',', $settings->autoloader->extensions));
+			} else {
+				spl_autoload_extensions('.php');
+			}
+			if (@is_array($settings->autoloader->functions)) {
+				array_map(
+					'spl_autoload_register',
+					array_filter($settings->autoloader->functions, 'is_callable')
+				);
+			} else {
+				spl_autoload_register('spl_autoload');
+			}
+		} else {
+			spl_autoload_register('spl_autoload');
+			spl_autoload_extensions('.php');
+		}
+		if (PHP_SAPI == 'cli' and !defined('URL')) {
+			define('URL', 'http://localhost');
+		} elseif (!defined('URL')) {
+			(str_replace('/', DIRECTORY_SEPARATOR, rtrim($_SERVER['DOCUMENT_ROOT'], '/')) === BASE)
+				? define('URL', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}")
+				: define('URL', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/" . end(@explode(DIRECTORY_SEPARATOR, BASE)));
 		}
 
 		//Error Reporting Levels: http://us3.php.net/manual/en/errorfunc.constants.php
@@ -280,6 +196,11 @@
 		} else {
 			error_reporting(E_ALL);
 		}
+
+		if ($session) {
+			\shgysk8zer0\Core\session::load();
+			nonce(50);						// Set a nonce of n random characters
+		}
 	}
 
 	/**
@@ -294,6 +215,7 @@
 	 * @param int $line (The line number on which the error occured)
 	 * @param mixed $scope (All variables set in the current scope when error occured)
 	 * @return mixed (boolen false will result in PHP default error handling)
+	 * @deprecated
 	 */
 
 	function error_reporter_class(
@@ -342,7 +264,7 @@
 	{
 		static $DB, $settings, $session, $login, $cookie, $path = null;
 		if (is_null($path)) {
-			$DB = \shgysk8zer0\Core\PDO::load('connect');
+			$DB = \shgysk8zer0\Core\PDO::load('connect.json');
 			$settings = \shgysk8zer0\Core\resources\Parser::parse('settings.json');
 			$session = \shgysk8zer0\Core\session::load();
 			$login = \shgysk8zer0\Core\login::load();
