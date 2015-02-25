@@ -1,5 +1,5 @@
 <?php
-	$settings = \shgysk8zer0\Core\resources\Parser::parse('settings.json');
+	$settings = \shgysk8zer0\Core\resources\Parser::parseFile('settings.json');
 	if(
 		isset($settings->module_test)
 		and $settings->module_test

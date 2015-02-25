@@ -1,9 +1,12 @@
 <?php
 	$file = filename(__FILE__);
-	$github = \shgysk8zer0\Core\resources\Parser::parse('github.json');
+	$github = \shgysk8zer0\Core\Resources\Parser::parseFile('github.json');
 	$PDO = new \shgysk8zer0\Core\PDO($github);
-	if(!$PDO->connected) exit();
-	$issues = $PDO->prepare("SELECT `Number`,
+	if(!$PDO->connected) {
+		return;
+	}
+	$issues = $PDO->prepare(
+		"SELECT `Number`,
 			`Repository` AS `repo`,
 			`Repository_URL` AS `repo_url`,
 			`Title`,
@@ -17,10 +20,10 @@
 			`Updated_At` AS `Updated`
 		FROM `Issues`
 		WHERE `State` = :state
-		ORDER BY `Created` ASC
-	")->bind([
+		ORDER BY `Created` ASC;"
+	)->execute([
 		'state' => 'open'
-	])->execute()->get_results();
+	])->getResults();
 
 	$new_issue = "<a href=\"https://github.com/{$github->repository->full_name}/issues/new\" target=\"_blank\" title=\"New\" role=\"button\" data-icon=\"+\"></a>";
 ?>
