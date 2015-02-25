@@ -1,5 +1,5 @@
 <?php
-	$resp = \shgysk8zer0\Core\json_response::load();
+	$resp = \shgysk8zer0\Core\JSON_Response::load();
 	switch($_POST['action']) {
 		case 'logout': {
 			$login->logout();
@@ -27,9 +27,9 @@
 
 		case 'Clear PHP_errors': {
 			require_login('admin');
-			$pdo =\shgysk8zer0\Core\PDO::load('connect');
+			$pdo =\shgysk8zer0\Core\PDO::load('connect.json');
 
-			$pdo->reset_table('PHP_errors');
+			$pdo->resetTable('PHP_errors');
 			file_put_contents(BASE . '/errors.log', null, LOCK_EX);
 			$resp->notify(
 				'Success!',
