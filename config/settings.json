@@ -1,12 +1,30 @@
 {
+    "time-zone": "America\/Los_Angeles",
+    "define": {
+        "theme": "default"
+    },
     "requires": [
         "custom.php"
     ],
-    "time-zone": "America\/Los_Angeles",
-    "credentials_extension": "json",
-    "debug": "notice",
-    "error_log": "errors.log",
-    "error_method": "database",
+    "exception_handler": [],
+    "error_handler": [],
+    "error_reporting": {
+        "E_ERROR": true,
+        "E_WARNING": true,
+        "E_PARSE": true,
+        "E_NOTICE": true,
+        "E_CORE_ERROR": true,
+        "E_CORE_WARNING": true,
+        "E_COMPILE_ERROR": true,
+        "E_COMPILE_WARNING": true,
+        "E_USER_ERROR": true,
+        "E_USER_WARNING": true,
+        "E_USER_NOTICE": true,
+        "E_STRICT": true,
+        "E_RECOVERABLE_ERROR": true,
+        "E_DEPRECATED": true,
+        "E_USER_DEPRECATED": true
+    },
     "module_test": false,
     "apache_modules": [
         "mod_headers",
@@ -30,9 +48,6 @@
         "functions": [
             "spl_autoload"
         ]
-    },
-    "define": {
-        "theme": "default"
     },
     "csp": {
         "default-src": "'self'",
