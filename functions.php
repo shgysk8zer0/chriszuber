@@ -146,55 +146,34 @@
 				: define('URL', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/" . end(@explode(DIRECTORY_SEPARATOR, BASE)));
 		}
 
-		//Error Reporting Levels: http://us3.php.net/manual/en/errorfunc.constants.php
-		if (isset($settings->error_handler) and isset($settings->debug)) {
-			$error_handler = $settings->error_handler;
-			if (is_string($settings->debug)) {
-				$settings->debug = strtolower($settings->debug);
+		if (@is_object($settings->error_reporting)) {
+			error_reporting(array_reduce(
+				array_keys(array_filter(get_object_vars($settings->error_reporting))),
+				function(&$level, $item)
+				{
+					$level |= constant($item);
+					return $level;
+				},
+				0
+			));
+		} elseif (@is_string($settings->error_reporting)) {
+			error_reporting(constant(strtoupper($settings->error_reporting)));
+		} elseif (@is_int($settings->error_reporting)) {
+			error_reporting($settings->error_reporting);
+		}
+
+		if (@is_callable($settings->error_handler)) {
+			set_error_handler($settings->error_handler, error_reporting());
+		}
+
+		if (@is_callable($settings->exception_handler)) {
+			set_exception_handler($settings->exception_handler);
+		}
+
+		if (@is_object($settings->header)) {
+			foreach ($settings->header as $name => $value) {
+				header("{$name}: {$value}");
 			}
-
-			error_reporting(0);
-			switch($settings->debug) {
-				case 'true':
-				case 'all':
-				case 'on':
-					set_error_handler($error_handler, E_ALL);
-					break;
-
-				case 'false':
-				case 'off':
-					set_error_handler($error_handler, 0);
-					break;
-
-				case 'core':
-					set_error_handler($error_handler, E_CORE_ERROR | E_CORE_WARNING);
-					break;
-
-				case 'strict':
-					set_error_handler($error_handler, E_ALL^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
-					break;
-
-				case 'warning':
-					set_error_handler($error_handler, E_ALL^E_STRICT^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
-					break;
-
-				case 'notice':
-					set_error_handler($error_handler, E_ALL^E_STRICT^E_WARNING^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
-					break;
-
-				case 'developement':
-					set_error_handler($error_handler, E_ALL^E_NOTICE^E_WARNING^E_STRICT^E_DEPRECATED);
-					break;
-
-				case 'production':
-					set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
-					break;
-
-				default:
-					set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
-			}
-		} else {
-			error_reporting(E_ALL);
 		}
 
 		if ($session) {
@@ -229,7 +208,7 @@
 		static $reporter = null;
 
 		if (is_null($reporter)) {
-			$settings = \shgysk8zer0\Core\resources\Parser::parse('settings');
+			$settings = \shgysk8zer0\Core\resources\Parser::parseFile('settings');
 			$reporter = \shgysk8zer0\Core\error_reporter::load(
 				(isset($settings->error_method)) ? $settings->error_method : 'log'
 			);
@@ -265,10 +244,10 @@
 		static $DB, $settings, $session, $login, $cookie, $path = null;
 		if (is_null($path)) {
 			$DB = \shgysk8zer0\Core\PDO::load('connect.json');
-			$settings = \shgysk8zer0\Core\resources\Parser::parse('settings.json');
-			$session = \shgysk8zer0\Core\session::load();
-			$login = \shgysk8zer0\Core\login::load();
-			$cookie = \shgysk8zer0\Core\cookies::load();
+			$settings = \shgysk8zer0\Core\resources\Parser::parseFile('settings.json');
+			$session = \shgysk8zer0\Core\Session::load();
+			$login = \shgysk8zer0\Core\Login::load();
+			$cookie = \shgysk8zer0\Core\Cookies::load();
 
 			if (defined('THEME')) {
 				$path = BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . THEME . DIRECTORY_SEPARATOR;
@@ -316,6 +295,7 @@
 	 * @param  array  $attributes [$name => $value | $value attributes set]
 	 * @param boolean $print      [echoes if true, returns if false]
 	 * @return string             [an iframe element]
+	 * @deprecated
 	 */
 
 	function load_widget(
@@ -395,6 +375,7 @@
 	 * @param int $depth
 	 * @param int $options
 	 * @return \stdClass Object
+	 * @deprecated
 	 */
 
 	function parse_json_file(
@@ -431,6 +412,7 @@
 	 * @param  string   $enclosure [Set the field enclosure character (one character only). ]
 	 * @param  string   $escape    [Set the escape character (one character only). Defaults as a backslash. ]
 	 * @return array               [CSV file parsed as an array (will be empty if file cannot be read)]
+	 * @deprecated
 	 */
 
 	function parse_csv_file(
@@ -475,6 +457,7 @@
 	 * @param $html (html content to be stripping tags from)
 	 * @return string (html content with leading and trailing tags removed)
 	 * @example strip_enclosing_tags('<div id="some_div" ...><p>Some Content</p></div>')
+	 * @deprecated
 	 */
 
 	function strip_enclosing_tag($html = null)
@@ -490,6 +473,7 @@
 	 * @param array $content
 	 * @param array $attributes
 	 * @return string
+	 * @deprecated
 	 */
 
 	function html_join(
@@ -508,6 +492,7 @@
 	 *
 	 * @param  array $attributes  [Key => value pairing of attributes]
 	 * @return string
+	 * @deprecated
 	 */
 
 	function array_to_attributes(array $attributes = null)
@@ -540,6 +525,7 @@
 	 *
 	 * @param mixed $data[, boolean $comment]
 	 * @return void
+	 * @deprecated
 	 */
 
 	function debug($data = null, $comment = false)
@@ -669,37 +655,46 @@
 	 * in CSP, it is blocked. This prevents such things as key-loggers,
 	 * adware, and other forms of malware from having any effect.
 	 *
-	 * @link http://www.html5rocks.com/en/tutorials/security/content-security-policy/
+	 * @see http://www.html5rocks.com/en/tutorials/security/content-security-policy/
 	 * @param void
 	 * @return void
-	 * @todo Use UA sniffing to only set correct header
 	 */
 
 	function CSP()
 	{
-		$CSP = '';
-		$CSP_Policy = \shgysk8zer0\Core\resources\Parser::parse('settings.json')->csp;
+		$policy = \shgysk8zer0\Core\Resources\Parser::parseFile('settings.json');
 
-		if (!is_object($CSP_Policy)) {
+		if (! is_object($policy)) {
 			return;
+		} else {
+			$policy = $policy->csp;
 		}
 
-		if (isset($CSP_Policy->enforce)) {
-			$enforce = $CSP_Policy->enforce;
-			unset($CSP_Policy->enforce);
+		if (isset($policy->enforce)) {
+			$enforce = $policy->enforce;
+			unset($policy->enforce);
 		} else {
 			$enforce = true;
 		}
 
-		foreach ($CSP_Policy as $type => $src) {
-			$CSP .= (is_array($src)) ? $type . ' ' . join(' ', $src) . ';' : "{$type} {$src};";
-		}
+		$policy = get_object_vars($policy);
 
-		$CSP = str_replace('%NONCE%', $_SESSION['nonce'], $CSP);
+		$csp = array_reduce(
+			array_keys($policy),
+			function($carry, $item) use ($policy)
+			{
+				$src = $policy[$item];
+				$carry .= (is_array($src)) ? $item . ' ' . join(' ', $src) . ';' : "{$item} {$src};";
+				return $carry;
+			},
+			''
+		);
+
+		$csp = str_replace('%NONCE%', $_SESSION['nonce'], $csp);
 
 		header(($enforce)
-			? "Content-Security-Policy: {$CSP}"
-			: "Content-Security-Policy-Report-Only: {$CSP}"
+			? "Content-Security-Policy: {$csp}"
+			: "Content-Security-Policy-Report-Only: {$csp}"
 		);
 	}
 
@@ -840,7 +835,6 @@
 	/**
 	 * Generates a random string to be used for form validation
 	 *
-	 * @link http://www.html5rocks.com/en/tutorials/security/content-security-policy/
 	 * @param integer $length
 	 * @return string
 	 */
@@ -1265,7 +1259,7 @@
 
 	function utf($string = null)
 	{
-		return htmlentities((string)$string, ENT_QUOTES | ENT_HTML5,"UTF-8");
+		return htmlentities((string)$string, ENT_QUOTES | ENT_HTML5, "UTF-8");
 	}
 
 	/**
@@ -1626,6 +1620,7 @@
 	 *
 	 * @param mixed $data
 	 * @return string
+	 * @deprecated
 	 */
 
 	function json_escape($data)
@@ -1638,6 +1633,7 @@
 	 *
 	 * @param string $str
 	 * @return string
+	 * @deprecated
 	 */
 
 	function unquote($str = null)
@@ -1650,6 +1646,7 @@
 	 *
 	 * @param string $str
 	 * @return string
+	 * @deprecated
 	 */
 
 	function caps($str = null)
@@ -1694,7 +1691,7 @@
 
 	function odd($n)
 	{
-		return !even($n);
+		return (is_int($n) and !even($n));
 	}
 
 	/**
@@ -1757,6 +1754,7 @@
 	 * @param string $string (Pointer to string to minify)
 	 * @return string
 	 * @example minify("<!--Test-->\n<!--[if IE]>...<[endif]-->\n<p>...</p>") /Leaves only "<p>...</p>"
+	 * @deprecated
 	 */
 
 	function minify(&$string = null)
@@ -1822,6 +1820,7 @@
 	 * @param string $request[, string $method]
 	 * @return string
 	 * @todo Handle both GET and POST methods
+	 * @deprecated
 	 */
 
 	function curl($request = null, $method = 'get')
@@ -1845,6 +1844,7 @@
 	 * @param string $url,
 	 * @param mixed $request
 	 * @return string
+	 * @deprecated
 	 */
 
 	function curl_post($url = null, $request = null)
@@ -1903,7 +1903,7 @@
 
 	function module_test($settings)
 	{
-		//$settings = \shgysk8zer0\Core\resources\Parser::parse('settings.json');
+		//$settings = \shgysk8zer0\Core\resources\Parser::parseFile('settings.json');
 
 		/**
 		 * First, check if the directives are set in settings.ini
