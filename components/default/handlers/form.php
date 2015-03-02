@@ -699,7 +699,7 @@
 									exit();
 								}
 							}
-							$con_json = \shgysk8zer0\Core\resources\Parser::parse('connect.json');
+							$con_json = \shgysk8zer0\Core\resources\Parser::parseFile('connect.json');
 							$database = "`{$pdo->escape($con_json->database)}`";
 							$pdo->query("CREATE DATABASE IF NOT EXISTS {$database}");
 							$created = $pdo->prepare("

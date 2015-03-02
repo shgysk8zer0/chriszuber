@@ -1,6 +1,6 @@
 <?php
 	$filename = filename(__FILE__);
-	$github = \shgysk8zer0\Core\resources\Parser::parse('github.json');
+	$github = \shgysk8zer0\Core\resources\Parser::parseFile('github.json');
 	$PDO = new \shgysk8zer0\Core\PDO($github);
 	$start = (
 		array_key_exists('commit_start', $_REQUEST)
@@ -9,7 +9,8 @@
 
 	$end = $start + 10;
 
-	$commits = $PDO->prepare("SELECT
+	$commits = $PDO->prepare(
+		"SELECT
 			`SHA`,
 			`Branch`,
 			`Commit_URL` AS `URL`,
@@ -21,8 +22,8 @@
 		WHERE `Branch` = 'refs/heads/master'
 		ORDER BY `Timestamp`
 		DESC
-		LIMIT {$start}, 10;
-	")->execute()->get_results();
+		LIMIT {$start}, 10;"
+	)->execute()->getResults();
 
 	array_walk($commits, function(&$commit) {
 		$commit->Message = nl2br($commit->Message, false);

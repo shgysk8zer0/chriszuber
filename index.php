@@ -28,22 +28,26 @@
 		exit();
 	}
 
-	$DB = \shgysk8zer0\Core\PDO::load('connect');
-	$login = \shgysk8zer0\Core\login::load('connect');
-	$session = \shgysk8zer0\Core\session::load();
-	$settings = \shgysk8zer0\Core\resources\Parser::parse('settings');
+	$DB = \shgysk8zer0\Core\PDO::load('connect.json');
+	$login = \shgysk8zer0\Core\Login::load('connect.json');
+	$session = \shgysk8zer0\Core\Session::load();
+	$settings = \shgysk8zer0\Core\Resources\Parser::parseFile('settings.json');
 
-	if(!defined('THEME')) {
+	if (! defined('THEME')) {
 		define('THEME', 'default');
 	}
 
-	if(isset($session->logged_in) and $session->logged_in) { //Check login if session
-		$login->setUser($session->user)->setPassword($session->password)->setRole($session->role)->setLogged_In($session->logged_in);
+	if (isset($session->logged_in) and $session->logged_in) { //Check login if session
+		$login
+			->setUser($session->user)
+			->setPassword($session->password)
+			->setRole($session->role)
+			->setLogged_In($session->logged_in);
 	}
-	if(is_ajax()) { // If this is an ajax request, let ajax.php handle it.
+	if (is_ajax()) { // If this is an ajax request, let ajax.php handle it.
 		require_once __DIR__ . DIRECTORY_SEPARATOR . 'ajax.php';
 	}
-	$pages = \shgysk8zer0\Core\pages::load();
+	$pages = \shgysk8zer0\Core\Pages::load();
 	CSP();		//Do this here to avoid CSP being set on ajax requests.
 ?>
 <!DOCTYPE HTML>

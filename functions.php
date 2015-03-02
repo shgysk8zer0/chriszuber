@@ -18,9 +18,6 @@
 		}
 	}
 
-	//spl_autoload_extensions('.class.php');
-	//spl_autoload_register('spl_autoload');				 //Load class by naming it
-
 	if (!function_exists('mb_strimwidth')) {
 		function mb_strimwidth($str, $start, $width, $trimmarker = '', $encoding = '') {
 			if (strlen($str) > $start - $width) {
@@ -56,229 +53,132 @@
 	 *
 	 * @param bool $session
 	 * @return array $info
+	 * @deprecated
 	 */
-	function init($session = true, $settings_file = 'settings.json')
+	function config()
+	{
+		return;
+	}
+
+	/**
+	 * Sets autoloader, include_path, error_handler, etc
+	 *
+	 * @param  bool $session         Whether or not to start PHP session
+	 * @param  string $settings_file File to parse for site settings
+	 * @param  string $config_dir    Config file directory (added to include_path)
+	 * @return void
+	 */
+	function init(
+		$session = true,
+		$settings_file = 'settings.json',
+		$config_dir = 'config'
+	)
 	{
 		if (!first_run(__FUNCTION__)) {
 			return;
 		}
-
-		set_include_path(__DIR__. DIRECTORY_SEPARATOR . 'config' . PATH_SEPARATOR . get_include_path());
-		$settings_file = stream_resolve_include_path($settings_file);
-
-		if (@file_exists($settings_file)) {
-			if ($settings = json_decode(file_get_contents($settings_file))) {
-				if (isset($settings->requires)) {
-					foreach ($settings->requires as $required) {
-						require_once $required;
-					}
-				}
-
-				if (is_object($settings->autoloader)) {
-					set_include_path(
-						join(PATH_SEPARATOR, array_map('realpath', $settings->autoloader->paths))
-						. PATH_SEPARATOR . get_include_path()
-					);
-
-					if (is_array($settings->autoloader->extensions)) {
-						spl_autoload_extensions(join(',', $settings->autoloader->extensions));
-					}
-
-					if (is_array($settings->autoloader->functions)) {
-						foreach ($settings->autoloader->functions as $function) {
-							spl_autoload_register($function);
-						}
-					}
-				}
-
-				if (isset($settings->time_zone)) {
-					date_default_timezone_set($settings->time_zone);
-				}
-
-				if (isset($settings->path)) {
-					set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
-				}
-
-				if (isset($settings->charset) and is_string($settings->charset)) {
-					ini_set('default_charset', strtoupper($settings->charset));
-				} else {
-					ini_set('default_charset', 'UTF-8');
-				}
-
-				if (is_object($settings->define)) {
-					foreach (get_object_vars($settings->define) as $k => $v) {
-						define(strtoupper($k), $v);
-					}
-				}
-
-				if (@is_string($settings->credentials_extension)) {
-					\shgysk8zer0\Core\resources\pdo_connect::$ext = $settings->credentials_extension;
-				} else {
-					\shgysk8zer0\Core\resources\pdo_connect::$ext = 'ini';
-				}
-
-				if (isset($settings->error_handler) and isset($settings->debug)) {
-					$error_handler = $settings->error_handler;
-					if (is_string($settings->debug)) {
-						$settings->debug = strtolower($settings->debug);
-					}
-					error_reporting(0);
-					switch($settings->debug) {
-						case 'true':
-						case 'all':
-						case 'on':
-							set_error_handler($error_handler, E_ALL);
-							break;
-
-						case 'false':
-						case 'off':
-							set_error_handler($error_handler, 0);
-							break;
-
-						case 'core':
-							set_error_handler($error_handler, E_CORE_ERROR | E_CORE_WARNING);
-							break;
-
-						case 'strict':
-							set_error_handler($error_handler, E_ALL^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
-							break;
-
-						case 'warning':
-							set_error_handler($error_handler, E_ALL^E_STRICT^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
-							break;
-
-						case 'notice':
-							set_error_handler($error_handler, E_ALL^E_STRICT^E_WARNING^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
-							break;
-
-						case 'developement':
-							set_error_handler($error_handler, E_ALL^E_NOTICE^E_WARNING^E_STRICT^E_DEPRECATED);
-							break;
-
-						case 'production':
-							set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
-							break;
-
-						default:
-							set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
-					}
-				} else {
-					error_reporting(E_ALL);
-				}
-			}
-		}
-
 		if (!defined('BASE')) {
 			define('BASE', __DIR__);
 		}
-
-		if (PHP_SAPI == 'cli' and !defined('URL')) {
-			define('URL', 'http://localhost');
-		} elseif (!defined('URL')) {
-			(str_replace('/', DIRECTORY_SEPARATOR, rtrim($_SERVER['DOCUMENT_ROOT'], '/')) === BASE)
-				? define('URL', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}")
-				: define('URL', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/" . end(explode(DIRECTORY_SEPARATOR, BASE)));
+		set_include_path(realpath($config_dir) . PATH_SEPARATOR . get_include_path());
+		$settings_file = stream_resolve_include_path($settings_file);
+		$settings = json_decode(file_get_contents($settings_file));
+		if (@is_string($settings->path)) {
+			set_include_path(realpath($settings->path . PATH_SEPARATOR . get_include_path()));
 		}
 
-		if ($session) {
-			\shgysk8zer0\Core\session::load();
-			nonce(50);									// Set a nonce of n random characters
-		}
-	}
-
-	/**
-	 * Load and configure site settings
-	 * Loads all files in requires directive
-	 * Setup custom error handler
-	 *
-	 * @parmam void
-	 * @return void
-	 *
-	 * @depreciated
-	 */
-	function config($settings_file = 'settings')
-	{
-		if (!first_run(__FUNCTION__)) return;
-		$settings = \shgysk8zer0\Core\resources\Parser::parse((string)$settings_file);
-		if (isset($settings->path)) {
-			set_include_path(get_include_path() . PATH_SEPARATOR . preg_replace('/(\w)?,(\w)?/', PATH_SEPARATOR, $settings->path));
-		}
-
-		if (isset($settings->charset) and is_string($settings->charset)) {
+		if (@is_string($settings->charset)) {
 			ini_set('default_charset', strtoupper($settings->charset));
 		} else {
 			ini_set('default_charset', 'UTF-8');
 		}
 
-		if (isset($settings->credentials_extension)) {
-			\shgysk8zer0\Core\resources\pdo_connect::$ext = $settings->credentials_extension;
-		} else {
-			\shgysk8zer0\Core\resources\pdo_connect::$ext = 'ini';
+		if (@is_array($settings->define)) {
+			array_map(
+				'define',
+				array_map('strtoupper', array_keys($settings->define)),
+				array_values($settings->define)
+			);
 		}
 
-		if (isset($settings->requires)) {
-			foreach (explode(',', $settings->requires) as $file) {
-				require_once(__DIR__ . DIRECTORY_SEPARATOR . trim($file));
-			}
+		if (@is_array($settings->requires)) {
+			array_map(function($path)
+			{
+				require_once $path;
+			}, $settings->requires);
 		}
 
-		if (isset($settings->time_zone)) {
+		if (@is_string($settings->time_zone)) {
 			date_default_timezone_set($settings->time_zone);
 		}
 
-		if (isset($settings->autoloader)) {
+		if (@is_string($settings->autoloader)) {
 			spl_autoload_register($settings->autoloader);
-		}
-
-		//Error Reporting Levels: http://us3.php.net/manual/en/errorfunc.constants.php
-		if (isset($settings->error_handler) and isset($settings->debug)) {
-			$error_handler = $settings->error_handler;
-			if (is_string($settings->debug)) {
-				$settings->debug = strtolower($settings->debug);
+		} elseif (@is_object($settings->autoloader)) {
+			if (@is_array($settings->autoloader->paths)) {
+				set_include_path(
+					join(PATH_SEPARATOR, array_map('realpath', $settings->autoloader->paths))
+					. PATH_SEPARATOR . get_include_path()
+				);
 			}
-
-			error_reporting(0);
-			switch($settings->debug) {
-				case 'true':
-				case 'all':
-				case 'on':
-					set_error_handler($error_handler, E_ALL);
-					break;
-
-				case 'false':
-				case 'off':
-					set_error_handler($error_handler, 0);
-					break;
-
-				case 'core':
-					set_error_handler($error_handler, E_CORE_ERROR | E_CORE_WARNING);
-					break;
-
-				case 'strict':
-					set_error_handler($error_handler, E_ALL^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
-					break;
-
-				case 'warning':
-					set_error_handler($error_handler, E_ALL^E_STRICT^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
-					break;
-
-				case 'notice':
-					set_error_handler($error_handler, E_ALL^E_STRICT^E_WARNING^E_USER_ERROR^E_USER_WARNING^E_USER_NOTICE);
-					break;
-
-				case 'developement':
-					set_error_handler($error_handler, E_ALL^E_NOTICE^E_WARNING^E_STRICT^E_DEPRECATED);
-					break;
-
-				case 'production':
-					set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
-					break;
-
-				default:
-					set_error_handler($error_handler, E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR);
+			if (@is_array($settings->autoloader->extensions)) {
+				spl_autoload_extensions(join(',', $settings->autoloader->extensions));
+			} else {
+				spl_autoload_extensions('.php');
+			}
+			if (@is_array($settings->autoloader->functions)) {
+				array_map(
+					'spl_autoload_register',
+					array_filter($settings->autoloader->functions, 'is_callable')
+				);
+			} else {
+				spl_autoload_register('spl_autoload');
 			}
 		} else {
-			error_reporting(E_ALL);
+			spl_autoload_register('spl_autoload');
+			spl_autoload_extensions('.php');
+		}
+		if (PHP_SAPI == 'cli' and !defined('URL')) {
+			define('URL', 'http://localhost');
+		} elseif (!defined('URL')) {
+			(str_replace('/', DIRECTORY_SEPARATOR, rtrim($_SERVER['DOCUMENT_ROOT'], '/')) === BASE)
+				? define('URL', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}")
+				: define('URL', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/" . end(@explode(DIRECTORY_SEPARATOR, BASE)));
+		}
+
+		if (@is_object($settings->error_reporting)) {
+			error_reporting(array_reduce(
+				array_keys(array_filter(get_object_vars($settings->error_reporting))),
+				function(&$level, $item)
+				{
+					$level |= constant($item);
+					return $level;
+				},
+				0
+			));
+		} elseif (@is_string($settings->error_reporting)) {
+			error_reporting(constant(strtoupper($settings->error_reporting)));
+		} elseif (@is_int($settings->error_reporting)) {
+			error_reporting($settings->error_reporting);
+		}
+
+		if (@is_callable($settings->error_handler)) {
+			set_error_handler($settings->error_handler, error_reporting());
+		}
+
+		if (@is_callable($settings->exception_handler)) {
+			set_exception_handler($settings->exception_handler);
+		}
+
+		if (@is_object($settings->header)) {
+			foreach ($settings->header as $name => $value) {
+				header("{$name}: {$value}");
+			}
+		}
+
+		if ($session) {
+			\shgysk8zer0\Core\session::load();
+			nonce(50);						// Set a nonce of n random characters
 		}
 	}
 
@@ -294,6 +194,7 @@
 	 * @param int $line (The line number on which the error occured)
 	 * @param mixed $scope (All variables set in the current scope when error occured)
 	 * @return mixed (boolen false will result in PHP default error handling)
+	 * @deprecated
 	 */
 
 	function error_reporter_class(
@@ -307,7 +208,7 @@
 		static $reporter = null;
 
 		if (is_null($reporter)) {
-			$settings = \shgysk8zer0\Core\resources\Parser::parse('settings');
+			$settings = \shgysk8zer0\Core\resources\Parser::parseFile('settings');
 			$reporter = \shgysk8zer0\Core\error_reporter::load(
 				(isset($settings->error_method)) ? $settings->error_method : 'log'
 			);
@@ -342,11 +243,11 @@
 	{
 		static $DB, $settings, $session, $login, $cookie, $path = null;
 		if (is_null($path)) {
-			$DB = \shgysk8zer0\Core\PDO::load('connect');
-			$settings = \shgysk8zer0\Core\resources\Parser::parse('settings.json');
-			$session = \shgysk8zer0\Core\session::load();
-			$login = \shgysk8zer0\Core\login::load();
-			$cookie = \shgysk8zer0\Core\cookies::load();
+			$DB = \shgysk8zer0\Core\PDO::load('connect.json');
+			$settings = \shgysk8zer0\Core\resources\Parser::parseFile('settings.json');
+			$session = \shgysk8zer0\Core\Session::load();
+			$login = \shgysk8zer0\Core\Login::load();
+			$cookie = \shgysk8zer0\Core\Cookies::load();
 
 			if (defined('THEME')) {
 				$path = BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . THEME . DIRECTORY_SEPARATOR;
@@ -394,6 +295,7 @@
 	 * @param  array  $attributes [$name => $value | $value attributes set]
 	 * @param boolean $print      [echoes if true, returns if false]
 	 * @return string             [an iframe element]
+	 * @deprecated
 	 */
 
 	function load_widget(
@@ -473,6 +375,7 @@
 	 * @param int $depth
 	 * @param int $options
 	 * @return \stdClass Object
+	 * @deprecated
 	 */
 
 	function parse_json_file(
@@ -509,6 +412,7 @@
 	 * @param  string   $enclosure [Set the field enclosure character (one character only). ]
 	 * @param  string   $escape    [Set the escape character (one character only). Defaults as a backslash. ]
 	 * @return array               [CSV file parsed as an array (will be empty if file cannot be read)]
+	 * @deprecated
 	 */
 
 	function parse_csv_file(
@@ -553,6 +457,7 @@
 	 * @param $html (html content to be stripping tags from)
 	 * @return string (html content with leading and trailing tags removed)
 	 * @example strip_enclosing_tags('<div id="some_div" ...><p>Some Content</p></div>')
+	 * @deprecated
 	 */
 
 	function strip_enclosing_tag($html = null)
@@ -568,6 +473,7 @@
 	 * @param array $content
 	 * @param array $attributes
 	 * @return string
+	 * @deprecated
 	 */
 
 	function html_join(
@@ -586,6 +492,7 @@
 	 *
 	 * @param  array $attributes  [Key => value pairing of attributes]
 	 * @return string
+	 * @deprecated
 	 */
 
 	function array_to_attributes(array $attributes = null)
@@ -618,6 +525,7 @@
 	 *
 	 * @param mixed $data[, boolean $comment]
 	 * @return void
+	 * @deprecated
 	 */
 
 	function debug($data = null, $comment = false)
@@ -747,37 +655,46 @@
 	 * in CSP, it is blocked. This prevents such things as key-loggers,
 	 * adware, and other forms of malware from having any effect.
 	 *
-	 * @link http://www.html5rocks.com/en/tutorials/security/content-security-policy/
+	 * @see http://www.html5rocks.com/en/tutorials/security/content-security-policy/
 	 * @param void
 	 * @return void
-	 * @todo Use UA sniffing to only set correct header
 	 */
 
 	function CSP()
 	{
-		$CSP = '';
-		$CSP_Policy = \shgysk8zer0\Core\resources\Parser::parse('settings.json')->csp;
+		$policy = \shgysk8zer0\Core\Resources\Parser::parseFile('settings.json');
 
-		if (!is_object($CSP_Policy)) {
+		if (! is_object($policy)) {
 			return;
+		} else {
+			$policy = $policy->csp;
 		}
 
-		if (isset($CSP_Policy->enforce)) {
-			$enforce = $CSP_Policy->enforce;
-			unset($CSP_Policy->enforce);
+		if (isset($policy->enforce)) {
+			$enforce = $policy->enforce;
+			unset($policy->enforce);
 		} else {
 			$enforce = true;
 		}
 
-		foreach ($CSP_Policy as $type => $src) {
-			$CSP .= (is_array($src)) ? $type . ' ' . join(' ', $src) . ';' : "{$type} {$src};";
-		}
+		$policy = get_object_vars($policy);
 
-		$CSP = str_replace('%NONCE%', $_SESSION['nonce'], $CSP);
+		$csp = array_reduce(
+			array_keys($policy),
+			function($carry, $item) use ($policy)
+			{
+				$src = $policy[$item];
+				$carry .= (is_array($src)) ? $item . ' ' . join(' ', $src) . ';' : "{$item} {$src};";
+				return $carry;
+			},
+			''
+		);
+
+		$csp = str_replace('%NONCE%', $_SESSION['nonce'], $csp);
 
 		header(($enforce)
-			? "Content-Security-Policy: {$CSP}"
-			: "Content-Security-Policy-Report-Only: {$CSP}"
+			? "Content-Security-Policy: {$csp}"
+			: "Content-Security-Policy-Report-Only: {$csp}"
 		);
 	}
 
@@ -918,7 +835,6 @@
 	/**
 	 * Generates a random string to be used for form validation
 	 *
-	 * @link http://www.html5rocks.com/en/tutorials/security/content-security-policy/
 	 * @param integer $length
 	 * @return string
 	 */
@@ -1343,7 +1259,7 @@
 
 	function utf($string = null)
 	{
-		return htmlentities((string)$string, ENT_QUOTES | ENT_HTML5,"UTF-8");
+		return htmlentities((string)$string, ENT_QUOTES | ENT_HTML5, "UTF-8");
 	}
 
 	/**
@@ -1704,6 +1620,7 @@
 	 *
 	 * @param mixed $data
 	 * @return string
+	 * @deprecated
 	 */
 
 	function json_escape($data)
@@ -1716,6 +1633,7 @@
 	 *
 	 * @param string $str
 	 * @return string
+	 * @deprecated
 	 */
 
 	function unquote($str = null)
@@ -1728,6 +1646,7 @@
 	 *
 	 * @param string $str
 	 * @return string
+	 * @deprecated
 	 */
 
 	function caps($str = null)
@@ -1772,7 +1691,7 @@
 
 	function odd($n)
 	{
-		return !even($n);
+		return (is_int($n) and !even($n));
 	}
 
 	/**
@@ -1835,6 +1754,7 @@
 	 * @param string $string (Pointer to string to minify)
 	 * @return string
 	 * @example minify("<!--Test-->\n<!--[if IE]>...<[endif]-->\n<p>...</p>") /Leaves only "<p>...</p>"
+	 * @deprecated
 	 */
 
 	function minify(&$string = null)
@@ -1900,6 +1820,7 @@
 	 * @param string $request[, string $method]
 	 * @return string
 	 * @todo Handle both GET and POST methods
+	 * @deprecated
 	 */
 
 	function curl($request = null, $method = 'get')
@@ -1923,6 +1844,7 @@
 	 * @param string $url,
 	 * @param mixed $request
 	 * @return string
+	 * @deprecated
 	 */
 
 	function curl_post($url = null, $request = null)
@@ -1981,7 +1903,7 @@
 
 	function module_test($settings)
 	{
-		//$settings = \shgysk8zer0\Core\resources\Parser::parse('settings.json');
+		//$settings = \shgysk8zer0\Core\resources\Parser::parseFile('settings.json');
 
 		/**
 		 * First, check if the directives are set in settings.ini

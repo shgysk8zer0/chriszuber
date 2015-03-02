@@ -1,5 +1,5 @@
 <?php
-	$connect = \shgysk8zer0\Core\resources\Parser::parse('connect.json');
+	$connect = \shgysk8zer0\Core\resources\Parser::parseFile('connect.json');
 ?>
 <form name="setup_database" action="<?=URL?>/" method="post">
 	<fieldset form="setup_database">

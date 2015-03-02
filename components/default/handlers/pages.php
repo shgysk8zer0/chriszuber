@@ -1,10 +1,10 @@
 <?php
-	$resp = \shgysk8zer0\Core\json_response::load();
-	$page = \shgysk8zer0\Core\pages::load();
-	$head = $DB->fetch_array("
-		SELECT `value` FROM `head`
-		WHERE `name` = 'title'
-	", 0);
+	$resp = \shgysk8zer0\Core\JSON_Response::load();
+	$page = \shgysk8zer0\Core\Pages::load();
+	$head = $DB->fetchArray(
+		"SELECT `value` FROM `head`
+		WHERE `name` = 'title'"
+	, 0);
 
 	$resp->remove(
 		'main > :not(aside)'
