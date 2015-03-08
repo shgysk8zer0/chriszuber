@@ -118,9 +118,9 @@
 				if($posts) {
 					$content = '<div class="tags">';
 
-					$template = \shgysk8zer0\Core\template::load('tags');
+					$template = \shgysk8zer0\Core\Template::load('tags');
 
-					foreach($posts as $post) {
+					foreach ($posts as $post) {
 						$datetime = new \shgysk8zer0\Core\simple_date($post->created);
 						$content .= $template->title(
 							$post->title
@@ -134,7 +134,7 @@
 							($post->url === '')? URL : URL .'/posts/' . $post->url
 						)->date(
 							$datetime->out('D M jS, Y \a\t h:iA')
-						)->out();
+						);
 					}
 					$content .= '</div>';
 
@@ -229,8 +229,8 @@
 					'created' => date('Y-m-d H:i:s')
 				]);
 
-				if($DB->execute()) {
-					$template = \shgysk8zer0\Core\template::load('posts');
+				if ($DB->execute()) {
+					$template = \shgysk8zer0\Core\Template::load('posts');
 					$template->title(
 						$title
 					)->content(
@@ -255,7 +255,7 @@
 						"<a href=\"{$url}\">{$title}</a>"
 					)->prepend(
 						'main',
-						$template->out()
+						"{$template}"
 					)->after(
 						'#main_menu > menu[label="Posts"] > menuitem[label="Home"]',
 						"<menuitem label=\"{$title}\" icon=\"images/icons/coffee.svgz\" data-link=\"{$url}\"></menuitem>"
@@ -263,17 +263,15 @@
 					$resp->remove(
 						'main > :not(aside)'
 					);
-						update_sitemap();
-						update_rss();
-					}
-				else {
+					update_sitemap();
+					update_rss();
+				} else {
 					$resp->notify(
 						'Post failed',
 						'Look into what went wrong. See Developer console'
 					)->log($_POST);
 				}
-			}
-			else {
+			} else {
 				$resp->notify(
 					'Something went wrong...',
 					'There seems to be some missing info.'
@@ -301,15 +299,15 @@
 			], $post);
 
 			if(is_null($invalid)) {
-				$DB->prepare("
-					UPDATE `posts`
+				$DB->prepare(
+					"UPDATE `posts`
 					SET `title` = :title,
-					`keywords` = :keywords,
-					`description` = :description,
-					`content` = :content
+						`keywords` = :keywords,
+						`description` = :description,
+						`content` = :content
 					WHERE `title` = :old_title
-					LIMIT 1
-				")->bind($post);
+					LIMIT 1;"
+				)->bind($post);
 				if($DB->execute()) {
 					$resp->notify(
 						"Post has been updated.",
@@ -318,16 +316,14 @@
 					);
 					update_sitemap();
 					update_rss();
-				}
-				else {
+				} else {
 					$resp->notify(
 						'Something went wrong :(',
 						"There was a problem updating {$_POST['old_title']}",
 						'images/icons/db.png'
 					);
 				}
-			}
-			else {
+			} else {
 				$resp->notify(
 					'Error Updating Post',
 					'It seems some info was missing',
@@ -555,30 +551,21 @@
 				$email = new \shgysk8zer0\Core\email(
 					$_SERVER['SERVER_ADMIN'],
 					"New comment on {$post_title} by {$author}",
-					\shgysk8zer0\Core\template::load(
-						'comment_created_notification'
-					)->author(
-						$author
-					)->author_url(
-						$author_url
-					)->author_email(
-						"{$author} <{$author_email}>"
-					)->time(
-						date('r', strtotime($time))
-					)->comment(
-						$comment
-					)->post(
-						ucwords(urldecode($post))
-					)->post_url(
-						URL . "/posts/{$post}"
-					)->out(),
+					(string) \shgysk8zer0\Core\Template::load('comment_created_notification')
+						->author($author)
+						->author_url($author_url)
+						->author_email("{$author} <{$author_email}>")
+						->time(date('r', strtotime($time)))
+						->comment($comment)
+						->post(ucwords(urldecode($post)))
+						->post_url(URL . "/posts/{$post}"),
 					[
 						'Reply-To' => "{$author} <{$author_email}>"
 					]
 				);
 
-				$DB->prepare("
-					INSERT INTO `comments`(
+				$DB->prepare(
+					"INSERT INTO `comments`(
 						`comment`,
 						`author`,
 						`author_url`,
@@ -590,8 +577,8 @@
 						:author_url,
 						:author_email,
 						:post
-					)
-				")->bind([
+					);"
+				)->bind([
 					'comment' => $comment,
 					'author' => $author,
 					'author_url' => $author_url,
@@ -603,13 +590,9 @@
 					'#new_comment'
 				)->append(
 					'#comments_section',
-					$template->comment(
-						$comment
-					)->time(
-						date('l, F jS Y h:i A')
-					)->author(
-						$author
-					)->out()
+					"{$template->comment($comment)
+						->time(date('l, F jS Y h:i A'))
+						->author($author)}"
 				)->notify(
 					'Comment Submitted',
 					"Your comment has been added to “{$_POST['post_title']}”"

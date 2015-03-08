@@ -13,8 +13,8 @@
 		case 'new_post': {
 			require_login('user');
 
-			$form = \shgysk8zer0\Core\template::load('form');
-			$post = \shgysk8zer0\Core\template::load('posts');
+			$form = \shgysk8zer0\Core\Template::load('form');
+			$post = \shgysk8zer0\Core\Template::load('posts');
 
 			$post->title(
 				'Title'
@@ -35,7 +35,7 @@
 			)->method(
 				'post'
 			)->inputs(
-				$post->out()
+				"{$post}"
 			);
 
 			$form->inputs .= '<textarea name="description" id="description" placeholder="Description will appear in searches. 160 character limit" maxlength="160" required></textarea><br/>';
@@ -44,7 +44,7 @@
 				'main > :not(aside)'
 			)->prepend(
 				'main',
-				$form->out()
+				"{$form}"
 			)->setAttributes([
 				'article header details' => [
 					'open' => true
