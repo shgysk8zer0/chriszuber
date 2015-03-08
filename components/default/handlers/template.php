@@ -1,5 +1,5 @@
 <?php
-	$resp = \shgysk8zer0\Core\json_response::load();
+	$resp = \shgysk8zer0\Core\JSON_Response::load();
 	switch($_REQUEST['template']) {
 		default: {
 			$template = get_template($_REQUEST['template']);
