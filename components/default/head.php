@@ -29,9 +29,10 @@
 	}
 ?>
 <head>
-<meta charset="<?=$head->charset?>"/>
 <title><?=(!(isset($pages) and is_string($pages->title) and strlen($pages->title)) or $pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?></title>
 <base href="<?=URL?>/"/>
+<meta charset="<?=$head->charset?>"/>
+<meta name="referrer" content="origin"/>
 <!--=====================Standard meta tags==================================-->
 <meta name="description" content="<?=isset($pages->description) ? $pages->description : $head->description?>"/>
 <meta name="keywords" content="<?=isset($pages->keywords) ? $pages->keywords : $head->keywords?>"/>
