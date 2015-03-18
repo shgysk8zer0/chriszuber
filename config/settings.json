@@ -38,17 +38,6 @@
         "date",
         "pdo_mysql"
     ],
-    "autoloader": {
-        "paths": [
-            "classes"
-        ],
-        "extensions": [
-            ".php"
-        ],
-        "functions": [
-            "spl_autoload"
-        ]
-    },
     "csp": {
         "default-src": "'self'",
         "script-src": [

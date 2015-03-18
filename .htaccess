@@ -1,5 +1,18 @@
 Options -Indexes +SymLinksIfOwnerMatch
 DirectoryIndex index.php index.html
+
+#Configure PHP's autoloader and set include_path, min PHP version
+<IfModule env_module>
+	SetEnv MIN_PHP_VERSION 5.5
+	SetEnv CONFIG_DIR config
+	SetEnv AUTOLOAD_DIR classes
+	SetEnv AUTOLOAD_EXTS .php
+	SetEnv AUTOLOAD_FUNC spl_autoload
+</IfModule>
+
+#Loads the autoloader script before executing main PHP file
+php_value auto_prepend_file ./autoloader.php
+
 <IfModule headers_module>
 #	Header set Strict-Transport-Security max-age=16070400;
 	Header set X-Frame-Options "SAMEORIGIN"
@@ -259,14 +272,14 @@ FileETag None
 # ------------------------------------------------------------------------------
 # | Error pages		  													 	 |
 # ------------------------------------------------------------------------------
-ErrorDocument 300 /index.php
-ErrorDocument 301 /index.php
-ErrorDocument 302 /index.php
-ErrorDocument 303 /index.php
-ErrorDocument 304 /index.php
-ErrorDocument 400 /index.php
-ErrorDocument 401 /index.php
-ErrorDocument 402 /index.php
-ErrorDocument 403 /index.php
-ErrorDocument 404 /index.php
-ErrorDocument 500 /index.php
+ErrorDocument 300 ./index.php
+ErrorDocument 301 ./index.php
+ErrorDocument 302 ./index.php
+ErrorDocument 303 ./index.php
+ErrorDocument 304 ./index.php
+ErrorDocument 400 ./index.php
+ErrorDocument 401 ./index.php
+ErrorDocument 402 ./index.php
+ErrorDocument 403 ./index.php
+ErrorDocument 404 ./index.php
+ErrorDocument 500 ./index.php

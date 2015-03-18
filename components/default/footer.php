@@ -1,12 +1,13 @@
 <footer>
 	<?php if($DB->connected):
-		foreach($DB->fetch_array("SELECT
-			`url`,
-			`icon`,
-			`alt`
-		FROM `footer_links`
-		ORDER BY `order` ASC;
-	") as $link):?>
+		foreach($DB->fetch_array(
+			"SELECT
+				`url`,
+				`icon`,
+				`alt`
+			FROM `footer_links`
+			ORDER BY `order` ASC;"
+		) as $link):?>
 	<a href="<?=$link->url?>" target="_blank" class="logo currentColor" title="<?=$link->alt?>">
 		<?=SVG_use(filename($link->icon));?>
 	</a>
@@ -14,7 +15,7 @@
 		endforeach;
 		endif;
 
-		foreach([
+		foreach ([
 			'git-commit' => [
 				'title' => 'Recent Commits',
 				'class' => 'logo currentColor',

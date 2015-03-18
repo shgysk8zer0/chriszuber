@@ -1,17 +1,13 @@
 <?php
-	$template = \shgysk8zer0\Core\template::load('recent_posts');
+	$template = \shgysk8zer0\Core\Template::load('recent_posts');
 ?>
 <aside class="sidebar" rel="sidebar">
 	<div class="recent posts">
 		<h3>Recent Posts</h3>
 		<?php foreach(get_recent_posts(15) as $post) {
-			$template->title(
-				$post->title
-			)->description(
-				$post->description
-			)->link(
-				URL . "/posts/{$post->url}"
-			)->out(true);
+			echo $template->title($post->title)
+				->description($post->description)
+				->link(URL . "/posts/{$post->url}");
 		}?>
 	</div>
 	<div class="recent tags">
