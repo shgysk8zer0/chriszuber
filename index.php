@@ -19,6 +19,12 @@
 	 * You should have received a copy of the GNU General Public License
 	 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
+
+	if (version_compare(PHP_VERSION, getenv('MIN_PHP_VERSION'), '<')) {
+		header('Content-Type: text/plain');
+		http_response_code(500);
+		exit('PHP version ' . getenv('MIN_PHP_VERSION') . ' or greater is required');
+	}
 	require_once __DIR__ . DIRECTORY_SEPARATOR . 'functions.php';
 	init();
 	define_UA();
