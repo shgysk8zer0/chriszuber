@@ -9,6 +9,7 @@
 !/.travis.yml
 !/composer.json
 !/composer.lock
+!/autoloader.php
 !/unit.php
 !/webhook.php
 !/index.php
