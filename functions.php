@@ -68,23 +68,25 @@
 	 * @param  string $config_dir    Config file directory (added to include_path)
 	 * @return void
 	 */
-	function init(
-		$session = true,
-		$settings_file = 'settings.json',
-		$config_dir = 'config'
-	)
+	function init($session = true, $settings_file = 'settings.json')
 	{
 		if (!first_run(__FUNCTION__)) {
 			return;
 		}
+
 		if (!defined('BASE')) {
 			define('BASE', __DIR__);
 		}
-		set_include_path(realpath($config_dir) . PATH_SEPARATOR . get_include_path());
-		$settings_file = stream_resolve_include_path($settings_file);
-		$settings = json_decode(file_get_contents($settings_file));
+
+		$settings = \shgysk8zer0\Core\Resources\Parser::load($settings_file);
+
 		if (@is_string($settings->path)) {
-			set_include_path(realpath($settings->path . PATH_SEPARATOR . get_include_path()));
+			set_include_path(get_include_path() . PATH_SEPARATOR . realpath($settings->path));
+		} elseif (@is_array($settings->path)) {
+			set_include_path(
+				get_include_path() . PATH_SEPARATOR
+				. join(PATH_SEPARATOR, array_map('realpath', $settings->path))
+			);
 		}
 
 		if (@is_string($settings->charset)) {
@@ -112,32 +114,6 @@
 			date_default_timezone_set($settings->time_zone);
 		}
 
-		if (@is_string($settings->autoloader)) {
-			spl_autoload_register($settings->autoloader);
-		} elseif (@is_object($settings->autoloader)) {
-			if (@is_array($settings->autoloader->paths)) {
-				set_include_path(
-					join(PATH_SEPARATOR, array_map('realpath', $settings->autoloader->paths))
-					. PATH_SEPARATOR . get_include_path()
-				);
-			}
-			if (@is_array($settings->autoloader->extensions)) {
-				spl_autoload_extensions(join(',', $settings->autoloader->extensions));
-			} else {
-				spl_autoload_extensions('.php');
-			}
-			if (@is_array($settings->autoloader->functions)) {
-				array_map(
-					'spl_autoload_register',
-					array_filter($settings->autoloader->functions, 'is_callable')
-				);
-			} else {
-				spl_autoload_register('spl_autoload');
-			}
-		} else {
-			spl_autoload_register('spl_autoload');
-			spl_autoload_extensions('.php');
-		}
 		if (PHP_SAPI == 'cli' and !defined('URL')) {
 			define('URL', 'http://localhost');
 		} elseif (!defined('URL')) {
@@ -177,7 +153,7 @@
 		}
 
 		if ($session) {
-			\shgysk8zer0\Core\session::load();
+			\shgysk8zer0\Core\Session::load();
 			nonce(50);						// Set a nonce of n random characters
 		}
 	}
