@@ -30,6 +30,7 @@ body {
 	flex-wrap: wrap;
 	justify-content: center;
 	text-rendering: optimizeSpeed;
+	scroll-behavior: smooth;
 }
 body > header, body > footer {
 	flex: 0 1 100%;
