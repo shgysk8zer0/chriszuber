@@ -95,7 +95,7 @@ function update_rss($lim = 10, $name = 'feed.rss') {
 				'guid',
 				"{$url}/posts/{$post->url}"
 			));
-		}, $pdo->fetch_array(
+		}, $pdo->fetchArray(
 			"SELECT `title`, `url`, `description`, `created`
 			FROM `posts`
 			WHERE `url` != ''
@@ -122,7 +122,7 @@ function get_all_tags(){
 				'trim',
 				explode(',', $result->keywords)
 			);
-		}, $pdo->fetch_array(
+		}, $pdo->fetchArray(
 			"SELECT `keywords`
 			FROM `posts`;"
 		))));
@@ -156,7 +156,7 @@ function get_recent_posts($limit = 5, array $selectors = null) {
 		array_walk($selectors, [$pdo, 'escape']);
 		$selectors = '`' . join('`, `', $selectors) . '`';
 
-		return $pdo->fetch_array(
+		return $pdo->fetchArray(
 			"SELECT {$selectors}
 			FROM `posts`
 			WHERE `url` != ''
