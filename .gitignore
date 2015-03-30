@@ -6,6 +6,8 @@
 
 # Allow
 !/manifest.webapp
+!/opensearch.php
+!/searchsuggestions.php
 !/.travis.yml
 !/composer.json
 !/composer.lock
