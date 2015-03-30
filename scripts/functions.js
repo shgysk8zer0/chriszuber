@@ -28,6 +28,19 @@ if(!('showModal' in Element.prototype)) {
 			this.nextElementSibling.parentElement.removeChild(this.nextElementSibling);
 		}
 	};
+	Element.prototype.HTMLimport = function() {
+		if (supports('HTMLimports')) {
+			var imported = document.querySelector(
+				'link[rel=import][name="' + this.dataset.import + '"]'
+			);
+
+			if (this.hasAttribute('data-selector')) {
+				this.appendChild(imported.import.querySelector(this.dataset.selector));
+			} else {
+				this.appendChild(imported.import.body.firstChild);
+			}
+		}
+	};
 }
 if ( !String.prototype.contains ) {
 	String.prototype.contains = function() {
@@ -437,6 +450,9 @@ function supports(type) {
 		} break;
 		case 'dataset': {
 			supports = ('DOMStringMap' in window);
+		} break;
+		case 'htmlimports' : {
+			supports = ('import' in document.createElement('link'));
 		} break;
 		case 'geolocation': {
 			supports = ('geolocation' in navigator);
