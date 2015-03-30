@@ -6,11 +6,11 @@ window.addEventListener('load', function() { /*Cannot rely on $(window).load() t
 		cache = new cache();
 		document.documentElement.classList.swap('no-js', 'js');
 	['svg', 'audio', 'video', 'picture', 'canvas', 'menuitem', 'details',
-	'dialog', 'dataset', 'classList', 'connectivity', 'visibility',
-	'notifications', 'ApplicationCache', 'indexedDB', 'localStorage',
-	'sessionStorage', 'CSSgradients', 'transitions', 'animations',  'CSSvars',
-	'CSSsupports', 'CSSmatches', 'querySelectorAll', 'workers', 'promises',
-	'ajax', 'FormData'].forEach(function(feat){
+	'dialog', 'dataset', 'HTMLimports', 'classList', 'connectivity',
+	'visibility','notifications', 'ApplicationCache', 'indexedDB',
+	'localStorage','sessionStorage', 'CSSgradients', 'transitions',
+	'animations',  'CSSvars','CSSsupports', 'CSSmatches', 'querySelectorAll',
+	'workers', 'promises', 'ajax', 'FormData'].forEach(function(feat){
 		document.documentElement.classList.pick(feat, 'no-' + feat, supports(feat));
 	});
 	document.documentElement.classList.pick('offline', 'online', (supports('connectivity') && !navigator.onLine));
@@ -53,6 +53,11 @@ window.addEventListener('load', function() { /*Cannot rely on $(window).load() t
 						this.target.scrollIntoView();
 					}
 				} break;
+				case 'data-import': {
+					if (this.target.hasAttribute('data-import')) {
+						this.target.HTMLimport();
+					}
+				} break;
 				case 'data-request': {
 					if(this.oldValue !== '') {
 						this.target.addEventListener('click', function() {
@@ -68,7 +73,7 @@ window.addEventListener('load', function() { /*Cannot rely on $(window).load() t
 							}
 					});
 					}
-				}break;
+				} break;
 				case 'data-dropzone': {
 					document.querySelector(this.target.data('dropzone')).DnD(this.target);
 				} break;
@@ -85,7 +90,8 @@ window.addEventListener('load', function() { /*Cannot rely on $(window).load() t
 		'list',
 		'open',
 		'data-request',
-		'data-dropzone'
+		'data-dropzone',
+		'data-import'
 	]);
 	$(window).networkChange(function() {
 		$('html').toggleClass('online', navigator.onLine).toggleClass('offline', !navigator.onLine);
@@ -245,6 +251,9 @@ NodeList.prototype.bootstrap = function() {
 			el.addEventListener('click', function() {
 				document.querySelector(this.data('show-modal')).showModal();
 			});
+		});
+		node.query('[data-import]').forEach(function(el) {
+			el.HTMLimport();
 		});
 		node.query('[data-close]').forEach(function(el) {
 			el.addEventListener('click', function() {
