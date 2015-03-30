@@ -62,6 +62,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
 <link rel="icon" type="image/svg" sizes="any" href="favicon.svgz?t=<?=time()?>"/>
 <link rel="alternate icon" type="image/png" sizes="16x16" href="favicon.png"/>
+<link rel="search" type="application/opensearchdescription+xml" title="<?=TITLE?> Tag Search" href="<?=URL?>/opensearch.php"/>
 <?php if(localhost() and BROWSER === 'Firefox'):?>
 	<link rel="stylesheet" type="text/css" href="stylesheets/<?=THEME?>/import.css" media="all"/>
 <?php else:?>
