@@ -35,7 +35,7 @@
 	}
 
 	$DB = \shgysk8zer0\Core\PDO::load('connect.json');
-	$login = \shgysk8zer0\Core\Login::load('connect.json');
+	$login = \shgysk8zer0\Core\Login::load();
 	$session = \shgysk8zer0\Core\Session::load();
 	$settings = \shgysk8zer0\Core\Resources\Parser::parseFile('settings.json');
 
