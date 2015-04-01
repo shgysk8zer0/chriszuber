@@ -10,7 +10,7 @@ switch(trim($_POST['form'])) {
 		]);
 
 		if(is_null($invalid)) {
-			$login->login_with([
+			$login->loginWith([
 				'user' => $_POST['user'],
 				'password' => $_POST['password']
 			]);
@@ -171,14 +171,14 @@ switch(trim($_POST['form'])) {
 
 		if(is_null($invalid)) {
 
-			$user = $DB->prepare('
-				SELECT `g_plus`, `name`
+			$user = $DB->prepare(
+				'SELECT `g_plus`, `name`
 				FROM `users`
 				WHERE `user` = :user
-				LIMIT 1
-			')->bind([
+				LIMIT 1;'
+			)->bind([
 				'user' => $login->user
-			])->execute()->get_results(0);
+			])->execute()->getResults(0);
 
 			/*$title = urldecode(trim(strip_tags($_POST['title'])));
 			$description = trim($_POST['description']);
@@ -186,14 +186,13 @@ switch(trim($_POST['form'])) {
 			$content = trim($_POST['content']);*/
 			$author = $user->name;
 			$url = urlencode(strtolower(preg_replace('/\W+/', ' ', $title)));
-			$time = new \shgysk8zer0\Core\simple_date();
-			$template = new \shgysk8zer0\Core\template('posts');
+			$template = new \shgysk8zer0\Core\Template('posts');
 
 			foreach(explode(',', $keywords) as $tag) {
 				$template->tags .= '<a href="tags/' . trim(strtolower(preg_replace('/\s/', '-', trim($tag)))) . '">' . trim(caps($tag)) . "</a>";
 			}
 
-			$DB->prepare(
+			$stm = $DB->prepare(
 				"INSERT INTO `posts`(
 					`title`,
 					`description`,
@@ -224,7 +223,7 @@ switch(trim($_POST['form'])) {
 				'created' => date('Y-m-d H:i:s')
 			]);
 
-			if($DB->execute()) {
+			if($stm->execute()) {
 				$template = \shgysk8zer0\Core\Template::load('posts');
 				$template->title(
 					$title
@@ -235,9 +234,9 @@ switch(trim($_POST['form'])) {
 				)->author_url(
 					$user->g_plus
 				)->date(
-					$time->out('m/d/Y')
+					date('m/d/Y')
 				)->datetime(
-					$time->out()
+					time()
 				);
 				$url = URL . '/posts/' . $url;
 				$resp->notify(
@@ -729,7 +728,7 @@ switch(trim($_POST['form'])) {
 										}
 									}
 									$login = new \shgysk8zer0\Core\login($con_json);
-									$login->create_from([
+									$login->createFrom([
 										'user' => $site->user,
 										'password' => $site->password,
 										'role' => 'admin',
