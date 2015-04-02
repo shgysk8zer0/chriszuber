@@ -5,6 +5,13 @@ $head = $DB->fetchArray(
 	WHERE `name` = 'title'"
 , 0);
 
+$canonical = new \shgysk8zer0\Core\URL("//{$_SERVER['HTTP_HOST']}");
+if (in_array('mod_ssl', apache_get_modules())) {
+	$canonical->scheme = 'https';
+} else {
+	$canonical->scheme = 'http';
+}
+
 exit(\shgysk8zer0\Core\JSON_Response::load()->remove(
 	'main > :not(aside)'
 )->prepend(
@@ -23,11 +30,11 @@ exit(\shgysk8zer0\Core\JSON_Response::load()->remove(
 )->attributes(
 	'link[rel=canonical]',
 	'href',
-	$_SERVER['REQUEST_SCHEME'] . '://' . preg_replace('/^www\./', null, $_SERVER['SERVER_NAME']) . $_SERVER['REDIRECT_URL']
+	"$canonical"
 )->attributes(
 	'meta[itemprop=url], meta[property="og:url"]',
 	'content',
-	$_SERVER['REQUEST_SCHEME'] . '://' . preg_replace('/^www\./', null, $_SERVER['SERVER_NAME']) . $_SERVER['REDIRECT_URL']
+	"$canonical"
 )->attributes(
 	'meta[itemprop=name], meta[property="og:title"]',
 	'content',

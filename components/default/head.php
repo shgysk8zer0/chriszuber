@@ -24,6 +24,13 @@
 		$pages->title = null;
 		$pages->rss = null;
 	}
+
+	$canonical = new \shgysk8zer0\Core\URL("//{$_SERVER['HTTP_HOST']}");
+	if (in_array('mod_ssl', apache_get_modules())) {
+		$canonical->scheme = 'https';
+	} else {
+		$canonical->scheme = 'http';
+	}
 ?>
 <head>
 <title><?=(!(isset($pages) and is_string($pages->title) and strlen($pages->title)) or $pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?></title>
@@ -37,7 +44,7 @@
 <meta name="author" content="<?=$head->author?>"/>
 <!--==============================Schema.org=================================-->
 <meta itemprop="name" content="<?=(is_null($pages->title) or $pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?>"/>
-<meta itemprop="url" content="<?=URL . $_SERVER['REQUEST_URI'];?>"/>
+<meta itemprop="url" content="<?=$canonical?>"/>
 <meta itemprop="description" content="<?=isset($pages->description) ? $pages->description : $head->description?>"/>
 <meta itemprop="keywords" content="<?=isset($pagse->keywords) ? $pages->keywords : $head->keywords?>"/>
 <meta itemprop="image" content="<?=URL?>/super-user.png"/>
@@ -55,7 +62,7 @@
 <!--=========================================================================-->
 <meta name="viewport" content="<?=$head->viewport?>"/>
 <meta name="mobile-web-app-capable" content="yes">
-<link rel="canonical" href="<?=preg_replace('/^http(s)?' . preg_quote('://', '/')  .'(www\.)?/', 'http://', URL) . $_SERVER['REQUEST_URI']?>"/>
+<link rel="canonical" href="<?=$canonical?>"/>
 <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
 <link rel="icon" type="image/svg" sizes="any" href="favicon.svgz?t=<?=time()?>"/>
 <link rel="alternate icon" type="image/png" sizes="16x16" href="favicon.png"/>
