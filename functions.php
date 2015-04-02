@@ -7,7 +7,7 @@
  * @version 2014-07-07
  */
 
-if (!defined('PHP_VERSION_ID')) {
+if (! defined('PHP_VERSION_ID')) {
 	$version = explode('.', PHP_VERSION);
 	define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
 
@@ -18,12 +18,44 @@ if (!defined('PHP_VERSION_ID')) {
 	}
 }
 
-if (!function_exists('mb_strimwidth')) {
+if (! function_exists('mb_strimwidth')) {
 	function mb_strimwidth($str, $start, $width, $trimmarker = '', $encoding = '') {
 		if (strlen($str) > $start - $width) {
 			return substr($str, $start, $width) . $trimmarker;
 		}
 		return substr($str, $start, $width);
+	}
+}
+if (! function_exists('http_parse_headers')) {
+	function http_parse_headers($raw_headers)
+	{
+		$headers = array();
+		$key = ''; // [+]
+
+		foreach(explode("\n", $raw_headers) as $i => $h)
+		{
+			$h = explode(':', $h, 2);
+
+			if (isset($h[1])) {
+				if (!isset($headers[$h[0]])) {
+					$headers[$h[0]] = trim($h[1]);
+				} elseif (is_array($headers[$h[0]])) {
+					$headers[$h[0]] = array_merge($headers[$h[0]], array(trim($h[1])));
+				} else {
+					$headers[$h[0]] = array_merge(array($headers[$h[0]]), array(trim($h[1])));
+				}
+
+				$key = $h[0];
+			} else {
+				if (substr($h[0], 0, 1) == "\t") {
+					$headers[$key] .= "\r\n\t".trim($h[0]);
+				} elseif (!$key) {
+					$headers[0] = trim($h[0]);
+					trim($h[0]);
+				}
+			}
+		}
+		return $headers;
 	}
 }
 
@@ -117,9 +149,17 @@ function init($session = true, $settings_file = 'settings.json')
 	if (PHP_SAPI == 'cli' and !defined('URL')) {
 		define('URL', 'http://localhost');
 	} elseif (!defined('URL')) {
-		(str_replace('/', DIRECTORY_SEPARATOR, rtrim($_SERVER['DOCUMENT_ROOT'], '/')) === BASE)
-			? define('URL', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}")
-			: define('URL', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/" . end(@explode(DIRECTORY_SEPARATOR, BASE)));
+		define(
+			'URL',
+			"{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}" .
+			join(
+				'/',
+				array_diff(
+					explode(DIRECTORY_SEPARATOR, __DIR__),
+					explode('/', $_SERVER['DOCUMENT_ROOT'])
+				)
+			)
+		);
 	}
 
 	if (@is_object($settings->error_reporting)) {
@@ -226,6 +266,20 @@ function load()
 		$login    = \shgysk8zer0\Core\Login::load();
 		$cookie   = \shgysk8zer0\Core\Cookies::load();
 		$timer    = \shgysk8zer0\Core\Timer::load();
+
+		if (in_array('mod_ssl', apache_get_modules())) {
+			$URL->scheme = 'https';
+		} else {
+			$URL->scheme = 'http';
+		}
+
+		$URL->path = join(
+			'/',
+			array_diff(
+				explode(DIRECTORY_SEPARATOR, __DIR__),
+				explode('/', $_SERVER['DOCUMENT_ROOT'])
+			)
+		);
 
 		if (defined('THEME')) {
 			$path = join(DIRECTORY_SEPARATOR, [BASE, 'components', THEME]);
