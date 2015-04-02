@@ -39,11 +39,11 @@ try {
 
 		$DB = new \shgysk8zer0\Core\PDO('connect.json');
 
-		if(! $DB->connected) {
+		if (! $DB->connected) {
 			throw new \Exception('Database connection failed', 504);
 		}
 
-		$DB->prepare(
+		$stm = $DB->prepare(
 			"INSERT INTO `CSP_errors` (
 				`blocked-uri`,
 				`document-uri`,
@@ -65,7 +65,7 @@ try {
 			'script_sample' => $report->{'script-sample'}
 		]);
 
-		if(! $DB->execute()) {
+		if(! $stm->execute()) {
 			throw new \Exception('Error not successfully recorded', 504);
 		} else {
 			http_response_code(202);
