@@ -54,7 +54,7 @@
 <!--=====================Facebook meta tags==================================-->
 <meta property="og:title" content="<?=(is_null($pages->title) or $pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?>"/>
 <meta property="og:site_name" content="<?=TITLE;?>"/>
-<meta property="og:url" content="<?=URL . $_SERVER['REQUEST_URI'];?>"/>
+<meta property="og:url" content="<?=$canonical?>"/>
 <meta property="og:description" content="<?=isset($pages->description) ? $pages->description : $head->description?>"/>
 <meta property="og:image" content="<?=URL?>/super-user.png"/>
 <meta property="og:type" content="website"/>
