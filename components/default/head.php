@@ -25,7 +25,7 @@
 		$pages->rss = null;
 	}
 
-	$canonical = new \shgysk8zer0\Core\URL("//{$_SERVER['HTTP_HOST']}");
+	$canonical = new \shgysk8zer0\Core\URL("//{$_SERVER['SERVER_NAME']}");
 	if (in_array('mod_ssl', apache_get_modules())) {
 		$canonical->scheme = 'https';
 	} else {
