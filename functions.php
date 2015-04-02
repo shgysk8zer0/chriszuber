@@ -151,7 +151,7 @@ function init($session = true, $settings_file = 'settings.json')
 	} elseif (!defined('URL')) {
 		define(
 			'URL',
-			"{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}" .
+			"{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}/" .
 			join(
 				'/',
 				array_diff(
@@ -260,7 +260,7 @@ function load()
 	static $DB, $settings, $session, $login, $cookie, $path = null, $timer, $URL;
 	if (is_null($path)) {
 		$DB       = \shgysk8zer0\Core\PDO::load('connect.json');
-		$URL      = \shgysk8zer0\Core\URL::load(URL);
+		$URL      = \shgysk8zer0\Core\URL::load();
 		$settings = \shgysk8zer0\Core\Resources\Parser::parseFile('settings.json');
 		$session  = \shgysk8zer0\Core\Session::load();
 		$login    = \shgysk8zer0\Core\Login::load();
