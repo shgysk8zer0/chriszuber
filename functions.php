@@ -70,7 +70,7 @@ function config()
  */
 function init($session = true, $settings_file = 'settings.json')
 {
-	if (!first_run(__FUNCTION__)) {
+	if (! first_run(__FUNCTION__)) {
 		return;
 	}
 
@@ -217,30 +217,34 @@ function error_reporter_class(
 
 function load()
 {
-	static $DB, $settings, $session, $login, $cookie, $path = null;
+	static $DB, $settings, $session, $login, $cookie, $path = null, $timer, $URL;
 	if (is_null($path)) {
-		$DB = \shgysk8zer0\Core\PDO::load('connect.json');
-		$settings = \shgysk8zer0\Core\resources\Parser::parseFile('settings.json');
-		$session = \shgysk8zer0\Core\Session::load();
-		$login = \shgysk8zer0\Core\Login::load();
-		$cookie = \shgysk8zer0\Core\Cookies::load();
+		$DB       = \shgysk8zer0\Core\PDO::load('connect.json');
+		$URL      = \shgysk8zer0\Core\URL::load(URL);
+		$settings = \shgysk8zer0\Core\Resources\Parser::parseFile('settings.json');
+		$session  = \shgysk8zer0\Core\Session::load();
+		$login    = \shgysk8zer0\Core\Login::load();
+		$cookie   = \shgysk8zer0\Core\Cookies::load();
+		$timer    = \shgysk8zer0\Core\Timer::load();
 
 		if (defined('THEME')) {
-			$path = BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . THEME . DIRECTORY_SEPARATOR;
+			$path = join(DIRECTORY_SEPARATOR, [BASE, 'components', THEME]);
 		} else {
-			$path = BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR;
+			$path = join(DIRECTORY_SEPARATOR, [BASE, 'components']);
 		}
 	}
 
 	array_map(function($fname) use (
 		$DB,
-		$path,
+		$URL,
 		$settings,
 		$session,
+		$login,
 		$cookie,
-		$login
+		$timer,
+		$path
 	) {
-		include $path . $fname . '.php';
+		require $path . DIRECTORY_SEPARATOR . $fname . '.php';
 	}, flatten(func_get_args()));
 }
 
