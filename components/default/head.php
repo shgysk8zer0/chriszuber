@@ -1,11 +1,9 @@
 <?php
-	$storage = \shgysk8zer0\Core\storage::load();
+	$storage = \shgysk8zer0\Core\Storage::load();
 
-	if($DB->connected) {
+	if ($DB->connected) {
 		$head = $DB->name_value('head');
-	}
-
-	else {
+	} else {
 		$head = new \stdClass();
 		$head->title = 'Lorem Ipsum';
 		$head->charset = 'utf-8';
@@ -21,8 +19,7 @@
 
 	if($DB->connected) {
 		$pages = \shgysk8zer0\Core\pages::load();
-	}
-	else {
+	} else {
 		$pages = new \stdClass();
 		$pages->title = null;
 		$pages->rss = null;
