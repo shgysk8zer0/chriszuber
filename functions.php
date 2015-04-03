@@ -127,7 +127,10 @@ function init($session = true, $settings_file = 'settings.json')
 		ini_set('default_charset', 'UTF-8');
 	}
 
-	if (@is_array($settings->define)) {
+	if (
+		@is_object($settings->define)
+		and $settings->define = get_object_vars($settings->define)
+	) {
 		array_map(
 			'define',
 			array_map('strtoupper', array_keys($settings->define)),
