@@ -293,7 +293,7 @@ switch(trim($_POST['form'])) {
 		], $post);
 
 		if(is_null($invalid)) {
-			$DB->prepare(
+			$stm = $DB->prepare(
 				"UPDATE `posts`
 				SET `title` = :title,
 				`keywords` = :keywords,
@@ -303,7 +303,7 @@ switch(trim($_POST['form'])) {
 				LIMIT 1;"
 			)->bind($post);
 
-			if($DB->execute()) {
+			if($stm->execute()) {
 				$resp->notify(
 					"Post has been updated.",
 					"{$_POST['old_title']} has been updated.",
