@@ -81,7 +81,6 @@
         ],
         "frame-ancestors": "'self'",
         "object-src": "'self'",
-        "report-uri": "\/CSP_Errors.php",
         "enforce": true
     }
 }
