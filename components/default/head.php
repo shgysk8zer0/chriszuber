@@ -2,7 +2,7 @@
 	$storage = \shgysk8zer0\Core\Storage::load();
 
 	if ($DB->connected) {
-		$head = $DB->name_value('head');
+		$head = $DB->nameValue('head');
 	} else {
 		$head = new \stdClass();
 		$head->title = 'Lorem Ipsum';
