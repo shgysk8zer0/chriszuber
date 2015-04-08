@@ -8,15 +8,18 @@ if (! $PDO->connected) {
 header('Content-Type: application/json');
 exit(json_encode(array_reduce(
 	$PDO('SELECT `keywords` FROM `posts`'),
-	function($all, $tags)
+	function(array $all, \stdClass $tags)
 	{
-		foreach (explode(',', $tags->keywords) as $tag) {
-			$tag = trim($tag);
-			if (! in_array($tag, $all)) {
-				array_push($all, $tag);
-			}
-			return $all;
-		}
+		return array_merge(
+			array_filter(
+				explode(',', $tags->keywords),
+				function($tag) use ($all)
+				{
+					return ! in_array($tag, $all);
+				}
+			),
+			$all
+		);
 	},
 	[]
 )));
