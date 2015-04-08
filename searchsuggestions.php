@@ -5,8 +5,9 @@ if (! $PDO->connected) {
 	http_response_code(500);
 	exit;
 }
-$all_tags = array_reduce(
-	$PDO->query('SELECT `keywords` FROM `posts`')->execute()->getResults(),
+header('Content-Type: application/json');
+exit(json_encode(array_reduce(
+	$PDO('SELECT `keywords` FROM `posts`'),
 	function($all, $tags)
 	{
 		foreach (explode(',', $tags->keywords) as $tag) {
@@ -18,6 +19,4 @@ $all_tags = array_reduce(
 		}
 	},
 	[]
-);
-header('Content-Type: application/json');
-exit(json_encode($all_tags));
+)));
