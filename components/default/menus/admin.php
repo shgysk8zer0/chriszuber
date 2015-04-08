@@ -22,7 +22,7 @@
 
 	$connect = \shgysk8zer0\Core\resources\parser::parseFile('connect.json');
 
-	$tables = $DB->show_tables();
+	$tables = $DB->showTables();
 ?>
 <menu type="context" id="admin_menu">
 	<menu label="Post Management">
