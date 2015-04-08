@@ -25,6 +25,10 @@
 		http_response_code(500);
 		exit('PHP version ' . getenv('MIN_PHP_VERSION') . ' or greater is required');
 	}
+
+	$exception_log = \shgysk8zer0\Core\File::load('logs/exceptions.log');
+	$error_log = \shgysk8zer0\Core\File::load('logs/errors.log');
+	set_exception_handler($exception_log);
 	require_once __DIR__ . DIRECTORY_SEPARATOR . 'functions.php';
 	init();
 	define_UA();
