@@ -3,7 +3,7 @@
 		exit('<strong>Loading form to create connection file, but it already exists</strong>');
 	}
 ?>
-<form name="setup_connect" action="<?=URL?>/" method="post">
+<form name="setup_connect" action="<?=URL?>" method="post">
 	<fieldset form="setup_connect">
 		<legend>Database Configuragtions</legend>
 		<label for="user" data-icon="U">Username</label>

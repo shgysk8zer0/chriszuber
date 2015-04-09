@@ -34,7 +34,7 @@
 ?>
 <head>
 <title><?=(!(isset($pages) and is_string($pages->title) and strlen($pages->title)) or $pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?></title>
-<base href="<?=URL?>/"/>
+<base href="<?=URL?>"/>
 <meta charset="<?=$head->charset?>"/>
 <meta name="referrer" content="origin"/>
 <!--=====================Standard meta tags==================================-->
@@ -47,7 +47,7 @@
 <meta itemprop="url" content="<?=$canonical?>"/>
 <meta itemprop="description" content="<?=isset($pages->description) ? $pages->description : $head->description?>"/>
 <meta itemprop="keywords" content="<?=isset($pagse->keywords) ? $pages->keywords : $head->keywords?>"/>
-<meta itemprop="image" content="<?=URL?>/super-user.png"/>
+<meta itemprop="image" content="<?=URL?>super-user.png"/>
 <!--======================Twitter meta tags==================================-->
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:site" content="@shgysk8zer0"/>
@@ -56,7 +56,7 @@
 <meta property="og:site_name" content="<?=TITLE;?>"/>
 <meta property="og:url" content="<?=$canonical?>"/>
 <meta property="og:description" content="<?=isset($pages->description) ? $pages->description : $head->description?>"/>
-<meta property="og:image" content="<?=URL?>/super-user.png"/>
+<meta property="og:image" content="<?=URL?>super-user.png"/>
 <meta property="og:type" content="website"/>
 <meta property="og:locale" content="en_us"/>
 <!--=========================================================================-->
@@ -66,7 +66,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
 <link rel="icon" type="image/svg" sizes="any" href="favicon.svgz?t=<?=time()?>"/>
 <link rel="alternate icon" type="image/png" sizes="16x16" href="favicon.png"/>
-<link rel="search" type="application/opensearchdescription+xml" title="<?=TITLE?> Tag Search" href="<?=URL?>/opensearch.php"/>
+<link rel="search" type="application/opensearchdescription+xml" title="<?=TITLE?> Tag Search" href="<?=URL?>opensearch.php"/>
 <?php if(localhost() and BROWSER === 'Firefox'):?>
 	<link rel="stylesheet" type="text/css" href="stylesheets/<?=THEME?>/import.css" media="all"/>
 <?php else:?>

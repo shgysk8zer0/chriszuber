@@ -15,7 +15,7 @@
 		<ul>
 			<?php foreach(get_all_tags() as $tag):?>
 			<li>
-				<a href="<?=URL?>/tags/<?=urlencode($tag)?>" data-icon=","><?=$tag?></a>
+				<a href="<?=URL?>tags/<?=urlencode($tag)?>" data-icon=","><?=$tag?></a>
 			</li>
 			<?php endforeach?>
 		</ul>

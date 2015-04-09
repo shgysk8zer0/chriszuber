@@ -2,7 +2,7 @@
 	$formname = filename(__FILE__);
 ?>
 <dialog id="<?=$formname?>_dialog">
-	<form name="<?=$formname?>" action="<?=URL?>/" method="post">
+	<form name="<?=$formname?>" action="<?=URL?>" method="post">
 		<fieldset form="<?=$formname?>">
 			<legend>
 				Compose new email

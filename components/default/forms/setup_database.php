@@ -1,7 +1,7 @@
 <?php
 	$connect = \shgysk8zer0\Core\resources\Parser::parseFile('connect.json');
 ?>
-<form name="setup_database" action="<?=URL?>/" method="post">
+<form name="setup_database" action="<?=URL?>" method="post">
 	<fieldset form="setup_database">
 		<legend>Root MySQL user</legend>
 		<label for="username">User: </label>

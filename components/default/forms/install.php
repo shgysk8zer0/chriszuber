@@ -2,7 +2,7 @@
 	$formname = filename(__FILE__);
 ?>
 <dialog id="<?=$formname?>_dialog">
-	<form name="<?=$formname?>" action="<?=URL?>/" method="post">
+	<form name="<?=$formname?>" action="<?=URL?>" method="post">
 		<details open>
 			<summary>Server Database Connection Credentials</summary>
 			<fieldset form="<?=$formname?>">
@@ -78,7 +78,7 @@
 				<label for="<?=$formname?>_head_publisher">Google Plus Page</label>
 				<input type="url" name="<?=$formname?>[head][publisher]" id="<?=$formname?>_publisher" size="37" placeholder="https://plus.google.com/+{profile id}"/><br />
 				<label for="<?=$formname?>_head_rss">RSS URL</label>
-				<input type="url" name="<?=$formname?>[head][rss]" id="<?=$formname?>_head_rss" placeholder="<?=URL?>/feeds.rss"/><br />
+				<input type="url" name="<?=$formname?>[head][rss]" id="<?=$formname?>_head_rss" placeholder="<?=URL?>feeds.rss"/><br />
 				<input type="hidden" name="<?=$formname?>[head][viewport]" value="width=device-width, height=device-height" required readonly/>
 				<input type="hidden" name="<?=$formname?>[head][charset]" value="utf-8" required readonly/>
 			</fieldset>

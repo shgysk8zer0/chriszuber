@@ -6,7 +6,7 @@
 	<button type="button" title="Close Contact Info" data-close="#contactDialog"></button><br />
 	<address itemprop="author" itemtype="http://schema.org/Person" itemscope>
 		<div>
-			<?php if(isset($contact->picture)):?><img itemprop="image" src="<?=URL?>/images/<?=$contact->picture?>" alt="Picture of Chris Zuber"/><br /><?php endif?>
+			<?php if(isset($contact->picture)):?><img itemprop="image" src="<?=URL?>images/<?=$contact->picture?>" alt="Picture of Chris Zuber"/><br /><?php endif?>
 			<?php if(isset($contact->first_name) and isset($contact->last_name)):?>
 			<span itemprop="name">
 				<b itemprop="givenName"><?=ucwords($contact->first_name)?></b>
