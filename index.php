@@ -29,7 +29,7 @@
 	$error_log = \shgysk8zer0\Core\File::load('logs/errors.log');
 
 	set_exception_handler($exception_log);
-	
+
 	set_error_handler(function(
 		$level,
 		$message,
@@ -53,10 +53,16 @@
 		exit();
 	}
 
-	$DB = \shgysk8zer0\Core\PDO::load('connect.json');
-	$login = \shgysk8zer0\Core\Login::load();
-	$session = \shgysk8zer0\Core\Session::load();
+	$DB       = \shgysk8zer0\Core\PDO::load('connect.json');
+	$login    = \shgysk8zer0\Core\Login::load();
+	$session  = \shgysk8zer0\Core\Session::load();
 	$settings = \shgysk8zer0\Core\Resources\Parser::parseFile('settings.json');
+	$URL      = \shgysk8zer0\Core\URL::load(URL);
+	$cookie   = \shgysk8zer0\Core\Cookies::load($URL->host);
+
+	$cookie->path     = $URL->path;
+	$cookie->secure   = https();
+	$cookie->httponly = true;
 
 	if (! defined('THEME')) {
 		define('THEME', 'default');
