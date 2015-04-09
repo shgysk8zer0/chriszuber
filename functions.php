@@ -263,26 +263,12 @@ function load()
 	static $DB, $settings, $session, $login, $cookie, $path = null, $timer, $URL;
 	if (is_null($path)) {
 		$DB       = \shgysk8zer0\Core\PDO::load('connect.json');
-		$URL      = \shgysk8zer0\Core\URL::load();
+		$URL      = \shgysk8zer0\Core\URL::load(URL);
 		$settings = \shgysk8zer0\Core\Resources\Parser::parseFile('settings.json');
 		$session  = \shgysk8zer0\Core\Session::load();
 		$login    = \shgysk8zer0\Core\Login::load();
-		$cookie   = \shgysk8zer0\Core\Cookies::load();
+		$cookie   = \shgysk8zer0\Core\Cookies::load($URL->host);
 		$timer    = \shgysk8zer0\Core\Timer::load();
-
-		if (in_array('mod_ssl', apache_get_modules())) {
-			$URL->scheme = 'https';
-		} else {
-			$URL->scheme = 'http';
-		}
-
-		$URL->path = join(
-			'/',
-			array_diff(
-				explode(DIRECTORY_SEPARATOR, __DIR__),
-				explode('/', $_SERVER['DOCUMENT_ROOT'])
-			)
-		);
 
 		if (defined('THEME')) {
 			$path = join(DIRECTORY_SEPARATOR, [BASE, 'components', THEME]);
