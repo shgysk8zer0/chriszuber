@@ -7,7 +7,7 @@
 		<?php foreach(get_recent_posts(15) as $post) {
 			echo $template->title($post->title)
 				->description($post->description)
-				->link(URL . "/posts/{$post->url}");
+				->link(URL . "posts/{$post->url}");
 		}?>
 	</div>
 	<div class="recent tags">
