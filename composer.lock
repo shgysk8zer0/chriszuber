@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e098e07ca95a2cd47602538adaa51547",
+    "hash": "24d92574021a27b8d291c146dac8b16e",
     "packages": [
         {
             "name": "shgysk8zer0/core",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/shgysk8zer0/core.git",
-                "reference": "b64398f1185a8a5ee08458173f7f98c22b102850"
+                "reference": "e51db2b6b5ac2636d073ff0c8cf6f05fe4fa313f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shgysk8zer0/core/zipball/b64398f1185a8a5ee08458173f7f98c22b102850",
-                "reference": "b64398f1185a8a5ee08458173f7f98c22b102850",
+                "url": "https://api.github.com/repos/shgysk8zer0/core/zipball/e51db2b6b5ac2636d073ff0c8cf6f05fe4fa313f",
+                "reference": "e51db2b6b5ac2636d073ff0c8cf6f05fe4fa313f",
                 "shasum": ""
             },
             "require": {
@@ -40,14 +40,51 @@
                 }
             ],
             "description": "Core Super User classes",
-            "time": "2015-01-08 22:37:22"
+            "time": "2015-04-10 04:56:16"
+        },
+        {
+            "name": "shgysk8zer0/core_api",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/shgysk8zer0/core_api.git",
+                "reference": "e30edab3bd513e31f32c2abc322f6d6301b33f90"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/shgysk8zer0/core_api/zipball/e30edab3bd513e31f32c2abc322f6d6301b33f90",
+                "reference": "e30edab3bd513e31f32c2abc322f6d6301b33f90",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": []
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Zuber",
+                    "email": "shgysk8zer0@gmail.com",
+                    "homepage": "http://chriszuber.com",
+                    "role": "developer"
+                }
+            ],
+            "description": "Core API Super User classes",
+            "time": "2015-04-10 17:43:19"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "shgysk8zer0/core": 20
+        "shgysk8zer0/core": 20,
+        "shgysk8zer0/core_api": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
