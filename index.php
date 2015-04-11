@@ -20,11 +20,9 @@
 	 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-	if (version_compare(PHP_VERSION, getenv('MIN_PHP_VERSION'), '<')) {
-		header('Content-Type: text/plain');
-		http_response_code(500);
-		exit('PHP version ' . getenv('MIN_PHP_VERSION') . ' or greater is required');
-	}
+	init();
+	define_UA();
+
 	$exception_log = \shgysk8zer0\Core\File::load('logs/exceptions.log');
 	$error_log = \shgysk8zer0\Core\File::load('logs/errors.log');
 
@@ -43,21 +41,44 @@
 			$error_log($e . PHP_EOL);
 		}
 	}, E_ALL);
+
 	error_reporting(0);
 	require_once __DIR__ . DIRECTORY_SEPARATOR . 'functions.php';
-	init();
-	define_UA();
 
-	if(BROWSER === 'Chrome' and $_SERVER['HTTP_HOST'] === 'localhost') {
-		header("Location: {$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_ADDR']}{$_SERVER['REQUEST_URI']}");
+	$redirect = false;
+
+	$URL = \shgysk8zer0\Core\URL::load();
+
+	if (! https() and in_array('mod_ssl', apache_get_modules())) {
+		$URL->scheme = 'https';
+		$redirect = true;
+	}
+
+	if ($URL->host === 'localhost' and BROWSER === 'Chrome') {
+		$redirect = true;
+		$URL->host = '127.0.0.1';
+	} elseif (preg_match('/^www\./', $URL->host)) {
+		$redirect = true;
+		$URL->host = preg_replace('/^www\.', null, $URL->host);
+	}
+
+	if ($redirect) {
+		http_response_code(301);
+		header("Location: $URL");
 		exit();
+	}
+	unset($redirect);
+
+	if (version_compare(PHP_VERSION, getenv('MIN_PHP_VERSION'), '<')) {
+		header('Content-Type: text/plain');
+		http_response_code(500);
+		exit('PHP version ' . getenv('MIN_PHP_VERSION') . ' or greater is required');
 	}
 
 	$DB       = \shgysk8zer0\Core\PDO::load('connect.json');
 	$login    = \shgysk8zer0\Core\Login::load();
 	$session  = \shgysk8zer0\Core\Session::load();
 	$settings = \shgysk8zer0\Core\Resources\Parser::parseFile('settings.json');
-	$URL      = \shgysk8zer0\Core\URL::load(URL);
 	$cookie   = \shgysk8zer0\Core\Cookies::load($URL->host);
 
 	$cookie->path     = $URL->path;
