@@ -59,7 +59,7 @@
 		$URL->host = '127.0.0.1';
 	} elseif (preg_match('/^www\./', $URL->host)) {
 		$redirect = true;
-		$URL->host = preg_replace('/^www\.', null, $URL->host);
+		$URL->host = preg_replace('/^www\./', null, $URL->host);
 	}
 
 	if ($redirect) {
