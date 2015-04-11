@@ -20,6 +20,8 @@
 	 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
+	error_reporting(0);
+	require_once __DIR__ . DIRECTORY_SEPARATOR . 'functions.php';
 	init();
 	define_UA();
 
@@ -42,8 +44,6 @@
 		}
 	}, E_ALL);
 
-	error_reporting(0);
-	require_once __DIR__ . DIRECTORY_SEPARATOR . 'functions.php';
 
 	$redirect = false;
 
