@@ -5,6 +5,7 @@
 /scripts/*
 
 # Allow
+!/logs/
 !/manifest.webapp
 !/opensearch.php
 !/searchsuggestions.php
