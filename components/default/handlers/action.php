@@ -76,7 +76,7 @@ switch($_POST['action']) {
 		update_sitemap();
 		$resp->notify(
 			'Sitemap has been updated',
-			'View ' . URL . '/sitemap.xml',
+			'View ' . URL . 'sitemap.xml',
 			'images/icons/db.png'
 		);
 		break;
@@ -87,7 +87,7 @@ switch($_POST['action']) {
 		update_rss();
 		$resp->notify(
 			'Rss Feed has been updated',
-			'View ' . URL . '/feed.rss',
+			'View ' . URL . 'feed.rss',
 			'images/icons/db.png'
 		);
 		break;
