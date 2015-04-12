@@ -7,7 +7,7 @@
  */
 
 function update_sitemap($name = 'sitemap.xml') {
-	$home = preg_replace('/^https/', 'http', URL);
+	$home = \shgysk8zer0\Core\URL::load(URL);
 	$sitemap = new \DOMDocument('1.0', 'UTF-8');
 	$urlset = new \DOMElement(
 		'urlset',
@@ -22,7 +22,7 @@ function update_sitemap($name = 'sitemap.xml') {
 		$urlset->appendChild($url);
 		$url->appendChild(new \DOMElement(
 			'loc',
-			"{$home}/posts/{$post->url}"
+			"{$home}posts/{$post->url}"
 		));
 		$url->appendChild(new \DOMElement(
 			'lastmod',
@@ -51,7 +51,7 @@ function update_rss($lim = 10, $name = 'feed.rss') {
 	$lim = (int)$lim;
 	$pdo = \shgysk8zer0\Core\PDO::load('connect');
 	if($pdo->connected) {
-		$url = preg_replace('/^https/', 'http', URL);
+		$url = \shgysk8zer0\Core\URL::load(URL);
 		$head = $pdo->nameValue('head');
 
 		$feed = new \DOMDocument('1.0', 'UTF-8');
@@ -81,7 +81,7 @@ function update_rss($lim = 10, $name = 'feed.rss') {
 			));
 			$item->appendChild(new \DOMElement(
 				'link',
-				"{$url}/posts/{$post->url}"
+				"{$url}posts/{$post->url}"
 			));
 			$item->appendChild(new \DOMElement(
 				'description',
@@ -93,7 +93,7 @@ function update_rss($lim = 10, $name = 'feed.rss') {
 			));
 			$item->appendChild(new \DOMElement(
 				'guid',
-				"{$url}/posts/{$post->url}"
+				"{$url}posts/{$post->url}"
 			));
 		}, $pdo->fetchArray(
 			"SELECT `title`, `url`, `description`, `created`
