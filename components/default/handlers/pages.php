@@ -5,14 +5,10 @@ $head = $DB->fetchArray(
 	WHERE `name` = 'title'"
 , 0);
 
-$canonical = new \shgysk8zer0\Core\URL("//{$_SERVER['SERVER_NAME']}");
-if (in_array('mod_ssl', apache_get_modules())) {
-	$canonical->scheme = 'https';
-} else {
-	$canonical->scheme = 'http';
-}
+$canonical = new \shgysk8zer0\Core\URL();
 
-exit(\shgysk8zer0\Core\JSON_Response::load()->remove(
+$resp = \shgysk8zer0\Core\JSON_Response::load();
+$resp->remove(
 	'main > :not(aside)'
 )->prepend(
 	'main',
@@ -42,4 +38,5 @@ exit(\shgysk8zer0\Core\JSON_Response::load()->remove(
 )->text(
 	'head > title',
 	"{$page->title} | {$head->value}"
-));
+);
+exit($resp);
