@@ -479,12 +479,13 @@ article > :not(footer) img {
 		position: static;
 	}
 	main aside {
-		flex: 0 1 30%;
+		flex: 0 0 30%;
 		order: 1;
 	}
 	main > article, main > form, main > .tags, main > [data-error] {
-		flex: 0 1 67%;
+		flex: 0 0 67%;
 		order: 2;
+		max-width: 67%;
 	}
 	@media screen and (max-width: 999px) {
 		main {
