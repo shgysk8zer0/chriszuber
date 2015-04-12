@@ -1,6 +1,6 @@
 <?php
 	if(!$DB->connected) return null;
-	$contact = $DB->name_value('contact');
+	$contact = $DB->nameValue('contact');
 ?>
 <dialog id="contactDialog">
 	<button type="button" title="Close Contact Info" data-close="#contactDialog"></button><br />

@@ -1,6 +1,6 @@
 <footer>
 	<?php if($DB->connected):
-		foreach($DB->fetch_array(
+		foreach($DB->fetchArray(
 			"SELECT
 				`url`,
 				`icon`,
