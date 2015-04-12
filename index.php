@@ -34,7 +34,8 @@
 		$level,
 		$message,
 		$file,
-		$line
+		$line,
+		array $context = array()
 	) use ($error_log)
 	{
 		try {
