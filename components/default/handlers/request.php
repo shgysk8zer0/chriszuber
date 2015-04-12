@@ -7,6 +7,6 @@ switch($_POST['request']) {
 			'nonce',
 			$session->nonce
 		);
-	 break;
+		break;
 }
 exit($resp);
