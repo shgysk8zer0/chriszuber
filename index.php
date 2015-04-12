@@ -26,7 +26,7 @@
 	define_UA();
 
 	$exception_log = \shgysk8zer0\Core\File::load('logs/exceptions.log');
-	$error_log = \shgysk8zer0\Core\File::load('logs/errors.log');
+	$error_log     = \shgysk8zer0\Core\File::load('logs/errors.log');
 
 	set_exception_handler($exception_log);
 
@@ -51,15 +51,15 @@
 
 	if (! https() and in_array('mod_ssl', apache_get_modules())) {
 		$URL->scheme = 'https';
-		$redirect = true;
+		$redirect    = true;
 	}
 
 	if ($URL->host === 'localhost' and BROWSER === 'Chrome') {
-		$redirect = true;
 		$URL->host = '127.0.0.1';
+		$redirect  = true;
 	} elseif (preg_match('/^www\./', $URL->host)) {
-		$redirect = true;
 		$URL->host = preg_replace('/^www\./', null, $URL->host);
+		$redirect  = true;
 	}
 
 	if ($redirect) {
@@ -110,7 +110,11 @@
 <!--<?=date('Y-m-d H:i:s')?>-->
 <?php load('head');?>
 <body contextmenu="main_menu" <?=defined('GA') ?'data-ga="' . GA . '"' : null ?>>
-	<?php if(!$DB->connected) load('forms/install');?>
-	<?php load('forms/login', 'header', 'main', 'footer');?>
+	<?php
+		if(! $DB->connected) {
+			load('forms/install');
+		}
+		load('forms/login', 'header', 'main', 'footer');
+	?>
 </body>
 </html>
