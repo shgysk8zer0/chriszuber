@@ -248,13 +248,13 @@ FileETag None
 #	<!--#include file="plugins/jquery.idletimer.js" -->
 # and they would be included into this single file.
 
-<IfModule include_module>
-	<FilesMatch "\.?(combined|polyfills)\.js$">
-		Options +Includes
-		AddOutputFilterByType INCLUDES application/javascript application/json
-		SetOutputFilter INCLUDES
-	</FilesMatch>
-</IfModule>
+# <IfModule include_module>
+# 	<FilesMatch "\.?(combined|polyfills)\.js$">
+# 		Options +Includes
+# 		AddOutputFilterByType INCLUDES application/javascript application/json
+# 		SetOutputFilter INCLUDES
+# 	</FilesMatch>
+# </IfModule>
 
 <IfModule rewrite_module>
 	# Redirect all non-existing to index.php
