@@ -81,7 +81,7 @@ if (!String.prototype.endsWith) {
 	};
 	InvalidCharacterError.prototype = new Error;
 	InvalidCharacterError.prototype.name = 'InvalidCharacterError';
-	if ('supports' in CSS) {
+	if (! 'supports' in CSS) {
 		CSS.supports = function (prop, value) {
 			var el = document.createElement('div');
 			el.style = prop + ":" + value;
