@@ -500,8 +500,7 @@ function supports(type) {
 			break;
 
 		case 'transitions':
-			supports = ((('supports' in CSS) && CSS.supports('transition', 'none') ||
-				CSS.supports('-webkit-transition', 'none')) ||
+			supports = (('supports' in CSS) && (CSS.supports('transition', 'none') || CSS.supports('-webkit-transition', 'none'))) ||
 				style.transition !== undefined ||
 				style.webkitTransition !== undefined ||
 				style.MozTransition !== undefined ||
