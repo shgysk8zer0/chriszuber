@@ -91,22 +91,24 @@ AddDefaultCharset utf-8
 	AddType application/x-web-app-manifest+json			.webapp
 	AddType application/x-xpinstall						.xpi
 	AddType application/xml								.atom .rdf .rss .xml
+	AddType text/x-markdown                             .md
 	AddType image/webp									.webp
 	AddType image/x-icon								.ico
 	AddType text/cache-manifest							.appcache .manifest
 	AddType text/vtt									.vtt
 	AddType text/x-component							.htc
 	AddType text/x-vcard								.vcf
+	AddType application/pgp-keys                        .gpg .pgp
 </IfModule>
 
 # Block access to backup and source files.
 # These files may be left by some text editors and can pose a great security
 # danger when anyone has access to them.
 
-<FilesMatch "(^#.*#|\.(bak|config|dist|fla|inc|ini|log|psd|sql|sw[op]|asc|(ba)?sh)|gpg|pgp|~)$">
+<FilesMatch "(^#.*#|~|\.(bak|ht*|dav|conf(ig)?|dist|fla|inc|ini|log|psd|sql|sw[op]|asc|(ba)?sh|md|yml|lock|log|git*|gpg|pgp))$">
 	Require all denied
 </FilesMatch>
-<FilesMatch "^(ajax|functions|custom)\.php$">
+<FilesMatch "^(ajax|functions|custom|autoloader|unit)\.php$">
 	Require all denied
 </FilesMatch>
 <IfModule deflate_module>
@@ -273,14 +275,9 @@ FileETag None
 # ------------------------------------------------------------------------------
 # | Error pages		  													 	 |
 # ------------------------------------------------------------------------------
-ErrorDocument 300 ./index.php
-ErrorDocument 301 ./index.php
-ErrorDocument 302 ./index.php
-ErrorDocument 303 ./index.php
-ErrorDocument 304 ./index.php
-ErrorDocument 400 ./index.php
-ErrorDocument 401 ./index.php
-ErrorDocument 402 ./index.php
-ErrorDocument 403 ./index.php
-ErrorDocument 404 ./index.php
-ErrorDocument 500 ./index.php
+ErrorDocument 400 /index.php
+ErrorDocument 401 /index.php
+ErrorDocument 402 /index.php
+ErrorDocument 403 /index.php
+ErrorDocument 404 /index.php
+ErrorDocument 500 /index.php
