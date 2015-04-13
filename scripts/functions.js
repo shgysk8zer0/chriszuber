@@ -124,11 +124,6 @@ if (!String.prototype.endsWith) {
 			return result;
 		};
 	}
-	CSS.supports = function (prop, value) {
-		var el = document.createElement('div');
-		el.style = prop + ":" + value;
-		return (getComputedStyle(el)[prop] === value);
-	};
 }(typeof global != 'undefined' ? global : this));
 DOMTokenList.prototype.pick = function(cname1, cname2, condition) {
 	(condition) ? this.add(cname1) : this.add(cname2);
