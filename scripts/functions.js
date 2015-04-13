@@ -505,8 +505,7 @@ function supports(type) {
 				style.webkitTransition !== undefined ||
 				style.MozTransition !== undefined ||
 				style.OTransition !== undefined ||
-				style.MsTransition !== undefined
-			);
+				style.MsTransition !== undefined;
 			break;
 
 		case 'cssgradients':
