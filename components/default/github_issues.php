@@ -2,7 +2,7 @@
 	$file = filename(__FILE__);
 	$github = \shgysk8zer0\Core\Resources\Parser::parseFile('github.json');
 	$PDO = new \shgysk8zer0\Core\PDO($github);
-	if(!$PDO->connected) {
+	if(! $PDO->connected) {
 		return;
 	}
 	$issues = $PDO->prepare(

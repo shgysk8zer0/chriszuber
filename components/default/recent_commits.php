@@ -9,7 +9,7 @@
 
 	$end = $start + 10;
 
-	$commits = $PDO->prepare(
+	$commits = $PDO(
 		"SELECT
 			`SHA`,
 			`Branch`,
@@ -23,9 +23,9 @@
 		ORDER BY `Timestamp`
 		DESC
 		LIMIT {$start}, 10;"
-	)->execute()->getResults();
+	);
 
-	array_walk($commits, function(&$commit) {
+	array_walk($commits, function(\stdClass &$commit) {
 		$commit->Message = nl2br($commit->Message, false);
 		$commit->Message = htmlentities($commit->Message, ENT_QUOTES | ENT_HTML5, 'UTF-8', true);
 		$commit->Message = explode('&lt;br&gt;', $commit->Message);
