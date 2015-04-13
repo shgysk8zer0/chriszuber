@@ -64,7 +64,9 @@
             "*.googleusercontent.com",
             "chriszuber.com",
             "https://travis-ci.org",
-            "https://api.travis-ci.org"
+            "https://api.travis-ci.org",
+            "https://i.creativecommons.org",
+            "https://licensebuttons.net"
         ],
         "media-src": [
             "'self'",
