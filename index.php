@@ -50,11 +50,6 @@
 
 	$URL = \shgysk8zer0\Core\URL::load();
 
-	if (! https() and in_array('mod_ssl', apache_get_modules())) {
-		$URL->scheme = 'https';
-		$redirect    = true;
-	}
-
 	if ($URL->host === 'localhost' and BROWSER === 'Chrome') {
 		$URL->host = '127.0.0.1';
 		$redirect  = true;
