@@ -560,7 +560,7 @@ function supports(type) {
 			break;
 
 		case 'cssvars':
-			supports = (!!CSS.supports('--x','x'));
+			supports = (!! 'supports' in CSS && CSS.supports('--x','x'));
 			break;
 
 		case 'formdata':
