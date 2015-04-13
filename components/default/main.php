@@ -13,7 +13,7 @@
 		$pages->content = null;
 	}
 ?>
-<main role="main" itemprop="mainContentofPage" itemscope itemtype="http://schema.org/Blog" <?=($login->logged_in and $login->role === 'admin') ? ' contextmenu="admin_menu"' : ''?>>
+<main role="main" itemprop="mainContentofPage" itemscope itemtype="http://schema.org/WebPageElement" <?=($login->logged_in and $login->role === 'admin') ? ' contextmenu="admin_menu"' : ''?>>
 	<?php
 		load('sidebar');
 		if (isset($missing)) {
