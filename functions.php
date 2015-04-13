@@ -825,7 +825,7 @@ function define_UA()
 				define('BROWSER', 'Firefox');
 			} elseif (preg_match("/Chrome/i", UA)) {
 				define('BROWSER', 'Chrome');
-			} elseif (preg_match("/(MSIE|TRIDENT)/i", UA)) {
+			} elseif (preg_match("/(MSIE)|(TRIDENT)/i", UA)) {
 				define('BROWSER', 'IE');
 			} elseif (preg_match("/(Safari)||(AppleWebKit)/i", UA)) {
 				define('BROWSER', 'Webkit');
