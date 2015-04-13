@@ -76,9 +76,9 @@
 <link href="<?=$head->rss?>" rel="alternate" type="application/rss+xml" title="<?=$head->title?> RSS Feed" />
 <?php endif?>
 <?php if(isset($head->publisher)):?><link rel="publisher" href="https://plus.google.com/<?=$head->publisher?>"><?php endif?>
-<!--[if IE]>
+<?php if (condition):?>
 <script type="text/javascript" src="scripts/polyfills.js"></script>
-<![endif]-->
+<?php endif;?>
 <?php if(localhost()):?>
 	<?php if(BROWSER === 'Firefox'):?>
 		<script type="application/javascript;version=1.8" src="scripts/functions.js" async></script>
