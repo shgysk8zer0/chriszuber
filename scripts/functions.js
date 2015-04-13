@@ -489,8 +489,11 @@ function supports(type) {
 			break;
 
 		case 'animations':
-			supports = ((('supports' in CSS) && CSS.supports('animation', 'name') ||
-				CSS.supports('-webkit-animation', 'name')) ||
+			supports = ((
+					('supports' in CSS)
+					&& (CSS.supports('animation', 'name')
+					|| CSS.supports('-webkit-animation', 'name'))
+				) ||
 				style.animation !== undefined ||
 				style.webkitAnimation !== undefined ||
 				style.MozAnimation !== undefined ||
