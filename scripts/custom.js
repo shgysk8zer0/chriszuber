@@ -25,7 +25,7 @@ window.addEventListener('load', function() { /*Cannot rely on $(window).load() t
 		},
 		attributes: function(){
 			switch(this.attributeName) {
-				case 'contextmenu': {
+				case 'contextmenu':
 					var menu = this.target.attr('contextmenu');
 					if(this.oldValue !== '') {
 						$('menu#' + this.oldValue).delete();
@@ -42,29 +42,38 @@ window.addEventListener('load', function() { /*Cannot rely on $(window).load() t
 							);
 						}
 					}
-				} break;
-				case 'contextmenu': {
+					break;
+
+				case 'contextmenu':
 					if(this.oldValue !== '') {
 						$('menu#' + this.oldValue).delete();
 					}
-				}break;
-				case 'open': {
-					if(this.target.hasAttribute('open') && (this.target.offsetTop + this.target.offsetHeight < window.scrollY)) {
+					break;
+
+				case 'open':
+					if(
+						this.target.hasAttribute('open')
+						&& (this.target.offsetTop + this.target.offsetHeight < window.scrollY)
+					) {
 						this.target.scrollIntoView();
 					}
-				} break;
-				case 'data-import': {
+					break;
+
+				case 'data-import':
 					if (this.target.hasAttribute('data-import')) {
 						this.target.HTMLimport();
 					}
-				} break;
-				case 'data-request': {
+					break;
+
+				case 'data-request':
 					if(this.oldValue !== '') {
 						this.target.addEventListener('click', function() {
 							if(!this.data('confirm') || confirm(this.data('confirm'))){
 								ajax({
 									url: this.data('url')|| document.baseURI,
-									request: (this.data('prompt')) ? this.data('request') + '&prompt_value=' + encodeURIComponent(prompt(this.data('prompt'))) : this.data('request'),
+									request: (this.data('prompt'))
+										? this.data('request') + '&prompt_value=' + encodeURIComponent(prompt(this.data('prompt')))
+										: this.data('request'),
 									cache: el.data('cache')
 								}).then(
 									handleJSON,
@@ -73,13 +82,14 @@ window.addEventListener('load', function() { /*Cannot rely on $(window).load() t
 							}
 					});
 					}
-				} break;
-				case 'data-dropzone': {
+					break;
+
+				case 'data-dropzone':
 					document.querySelector(this.target.data('dropzone')).DnD(this.target);
-				} break;
-				default: {
+					break;
+
+				default:
 					console.error('Unhandled attribute in watch', this);
-				}
 			}
 		}
 	}, [
@@ -133,8 +143,7 @@ NodeList.prototype.bootstrap = function() {
 				details.addEventListener('click', function() {
 					if(this.parentElement.hasAttribute('open')) {
 						this.parentElement.removeAttribute('open');
-					}
-					else {
+					} else {
 						this.parentElement.setAttribute('open', '');
 					}
 				});
@@ -180,8 +189,7 @@ NodeList.prototype.bootstrap = function() {
 							break;
 						}
 					}
-				}
-				else {
+				} else {
 					picture.getElementsByTagName('img')[0].src = picture.querySelector('source[media][srcset]').getAttribute('srcset');
 				}
 			});
@@ -270,8 +278,7 @@ NodeList.prototype.bootstrap = function() {
 				this.ancestor('fieldset').querySelectorAll('input[type=checkbox]').forEach(function(checkbox) {
 					if(checkbox.checked) {
 						checkbox.checked = false;
-					}
-					else {
+					} else {
 						checkbox.checked = true;
 					}
 				});
@@ -300,11 +307,9 @@ NodeList.prototype.bootstrap = function() {
 				var arg = null;
 				if(this.data('editor-value')) {
 					arg = this.data('editor-value');
-				}
-				else if(this.data('prompt')) {
+				} else if(this.data('prompt')) {
 					arg = prompt(this.data('prompt'));
-				}
-				else if(this.data('selection-to')) {
+				} else if(this.data('selection-to')) {
 					var createdEl = document.createElement(this.data('selection-to'));
 					createdEl.textContent = getSelection().toString();
 					arg = createdEl.outerHTML;
