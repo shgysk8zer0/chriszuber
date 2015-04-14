@@ -4,18 +4,22 @@
 <aside class="sidebar" rel="sidebar">
 	<div class="recent posts">
 		<h3>Recent Posts</h3>
-		<?php foreach(get_recent_posts(15) as $post) {
-			echo $template->title($post->title)
-				->description($post->description)
-				->link(URL . "posts/{$post->url}");
-		}?>
+		<?=array_reduce(
+			get_recent_posts(15),
+			function($html, \stdClass $post) use ($template, $URL)
+			{
+				return $html .= $template->title($post->title)
+					->description($post->description)
+					->link("{$URL}posts/{$post->url}");
+			}
+		)?>
 	</div>
 	<div class="recent tags">
 		<h3>Tags</h3>
 		<ul>
 			<?php foreach(get_all_tags() as $tag):?>
 			<li>
-				<a href="<?=URL?>tags/<?=urlencode($tag)?>" data-icon=","><?=$tag?></a>
+				<a href="<?=$URL?>tags/<?=urlencode($tag)?>" data-icon=","><?=$tag?></a>
 			</li>
 			<?php endforeach?>
 		</ul>
