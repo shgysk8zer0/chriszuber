@@ -16,12 +16,21 @@
 	</div>
 	<div class="recent tags">
 		<h3>Tags</h3>
-		<ul>
-			<?php foreach(get_all_tags() as $tag):?>
-			<li>
-				<a href="<?=$URL?>tags/<?=urlencode($tag)?>" data-icon=","><?=$tag?></a>
-			</li>
-			<?php endforeach?>
-		</ul>
+		<?php
+			$dom = new \DOMDocument('1.0', 'UTF-8');
+			$ul = array_reduce(
+				get_all_tags(),
+				function(\DOMElement $list, $item) use ($URL)
+				{
+					$li = $list->appendChild(new \DOMElement('li'));
+					$a = $li->appendChild(new \DOMElement('a', $item));
+					$a->setAttribute('href', $URL . 'tags/' . urlencode($item));
+					$a->setAttribute('data-icon', ',');
+					return $list;
+				},
+				$dom->appendChild(new \DOMElement('ul'))
+			);
+			echo $dom->saveHTML($ul);
+		?>
 	</div>
 </aside>
