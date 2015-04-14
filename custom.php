@@ -2,10 +2,9 @@
 /**
  * Update sitemap.xml
  *
- * @param  string  $name  [Name of file output]
+ * @param  string  $name  Name of file output
  * @return void
  */
-
 function update_sitemap($name = 'sitemap.xml') {
 	$home = \shgysk8zer0\Core\URL::load(URL);
 	$sitemap = new \DOMDocument('1.0', 'UTF-8');
@@ -42,11 +41,10 @@ function update_sitemap($name = 'sitemap.xml') {
 /**
  * Updates feed.rss with the $lim most recent posts
  *
- * @param  integer $lim   [Max number to include]
- * @param  string  $name  [Name of file output]
+ * @param  int     $lim   Max number to include
+ * @param  string  $name  Name of file output
  * @return void
  */
-
 function update_rss($lim = 10, $name = 'feed.rss') {
 	$lim = (int)$lim;
 	$pdo = \shgysk8zer0\Core\PDO::load('connect');
@@ -111,9 +109,8 @@ function update_rss($lim = 10, $name = 'feed.rss') {
  * Gets all keywords for all posts
  *
  * @param void
- * @return array [Unique keywords for all posts]
+ * @return array Unique keywords for all posts
  */
-
 function get_all_tags(){
 	$pdo = \shgysk8zer0\Core\PDO::load('connect');
 	if($pdo->connected) {
@@ -126,8 +123,7 @@ function get_all_tags(){
 			"SELECT `keywords`
 			FROM `posts`;"
 		))));
-	}
-	else {
+	} else {
 		return [];
 	}
 }
