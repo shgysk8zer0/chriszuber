@@ -1,25 +1,19 @@
 <?php
 error_reporting(0);
-header('Content-Type: application/json');
-define('BASE', __DIR__);
 
-$report = trim(file_get_contents('php://input'));
-$headers = getallheaders();
-$headers = (object)array_combine(
-	array_map('strtolower', array_keys($headers)),
-	array_values($headers)
-);
+$report = file_get_contents('php://input');
+$headers = new \shgysk8zer0\Core\Headers;
+$headers->{'Content-Type'} = 'application/json';
 
 try {
 	if($_SERVER['HTTP_HOST'] !== $_SERVER['SERVER_NAME']) {
 		throw new \Exception('Unauthorized', 401);
-	}
-	if(
+	} elseif(
 		preg_match('/^application\/(json|csp-report)/',
 		$headers->{'content-type'}
 	)) {
 		if(
-			is_null($headers->{'content-length'})
+			! is_numeric($headers->{'content-length'})
 			or strlen($report) !== (int)$headers->{'content-length'}
 		) {
 			throw new \Exception('Content-Length not set or invalid', 411);
@@ -58,11 +52,11 @@ try {
 				:script_sample
 			);"
 		)->bind([
-			'blocked_uri' => $report->{'blocked-uri'},
-			'document_uri' => $report->{'document-uri'},
+			'blocked_uri'        => $report->{'blocked-uri'},
+			'document_uri'       => $report->{'document-uri'},
 			'violated_directive' => $report->{'violated-directive'},
-			'source_file' => $report->{'source-file'},
-			'script_sample' => $report->{'script-sample'}
+			'source_file'        => $report->{'source-file'},
+			'script_sample'      => $report->{'script-sample'}
 		]);
 
 		if(! $stm->execute()) {
