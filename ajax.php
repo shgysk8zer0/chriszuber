@@ -1,5 +1,5 @@
 <?php
-if (! count($_REQUEST)) {
+if (empty($_REQUEST)) {
 	load('handlers/pages');
 } elseif (array_key_exists('load_form', $_POST)) {
 	load('handlers/load_form');
