@@ -5,7 +5,8 @@
  * @param  string  $name  Name of file output
  * @return void
  */
-function update_sitemap($name = 'sitemap.xml') {
+function update_sitemap($name = 'sitemap.xml')
+{
 	$home = \shgysk8zer0\Core\URL::load(URL);
 	$sitemap = new \DOMDocument('1.0', 'UTF-8');
 	$urlset = new \DOMElement(
@@ -45,15 +46,18 @@ function update_sitemap($name = 'sitemap.xml') {
  * @param  string  $name  Name of file output
  * @return void
  */
-function update_rss($lim = 10, $name = 'feed.rss') {
-	$lim = (int)$lim;
+function update_rss($lim = 10, $name = 'feed.rss')
+{
+	if (! is_int($lim)) {
+		$lim = 10;
+	}
 	$pdo = \shgysk8zer0\Core\PDO::load('connect');
 	if($pdo->connected) {
-		$url = \shgysk8zer0\Core\URL::load(URL);
+		$url  = \shgysk8zer0\Core\URL::load(URL);
 		$head = $pdo->nameValue('head');
-
 		$feed = new \DOMDocument('1.0', 'UTF-8');
-		$rss = new \DOMElement('rss');
+		$rss  = new \DOMElement('rss');
+
 		$feed->appendChild($rss);
 		$rss->setAttribute('version', '2.0');
 		$channel = new \DOMElement('channel');
@@ -70,7 +74,7 @@ function update_rss($lim = 10, $name = 'feed.rss') {
 			htmlspecialchars($head->description, ENT_XML1, 'UTF-8')
 		));
 
-		array_map(function($post) use (&$rss, $url) {
+		array_map(function(\stdClass $post) use (&$rss, $url) {
 			$item = new \DOMElement('item');
 			$rss->appendChild($item);
 			$item->appendChild(new \DOMElement(
@@ -111,18 +115,22 @@ function update_rss($lim = 10, $name = 'feed.rss') {
  * @param void
  * @return array Unique keywords for all posts
  */
-function get_all_tags(){
+function get_all_tags()
+{
 	$pdo = \shgysk8zer0\Core\PDO::load('connect');
 	if($pdo->connected) {
-		return array_unique(flatten(array_map(function($result) {
+		return array_unique(flatten(array_map(function(\stdClass $result)
+		{
 			return array_map(
 				'trim',
 				explode(',', $result->keywords)
 			);
 		}, $pdo->fetchArray(
-			"SELECT `keywords`
-			FROM `posts`;"
-		))));
+			"SELECT DISTINCT(`keywords`)
+			FROM `posts`
+			ORDER BY `created` DESC;"
+		)
+	)));
 	} else {
 		return [];
 	}
@@ -136,10 +144,14 @@ function get_all_tags(){
  * @param  array  $selectors  Select these columns
  * @return array
  */
-function get_recent_posts($limit = 5, array $selectors = array()) {
-	$pdo =\shgysk8zer0\Core\PDO::load('connect');
+function get_recent_posts($limit = 5, array $selectors = array())
+{
+	$pdo = \shgysk8zer0\Core\PDO::load('connect');
 
 	if($pdo->connected) {
+		if (! is_int($limit)) {
+			$limit = 5;
+		}
 		if(empty($selectors)) {
 			$selectors = [
 				'title',
@@ -172,40 +184,42 @@ function get_recent_posts($limit = 5, array $selectors = array()) {
  * @uses \DOMDocument
  * @uses \DOMElement
  */
-function get_datalist($list) {
+function get_datalist($list)
+{
 	$pdo = \shgysk8zer0\Core\PDO::load('connect');
-	$dom = new \DOMDocument('1.0', 'UTF-8');
-	$datalist = $dom->appendChild(new \DOMElement('datalist'));
-	$datalist->setAttribute('id', $list);
-
-	if($pdo->connected) {
-		switch(strtolower($list)) {
-			case 'tags':
-				$options = get_all_tags();
-				break;
-
-			case 'php_errors_files':
-				$options = array_map(function($option) {
-					return preg_replace(
-						'/^' . preg_quote(BASE . DIRECTORY_SEPARATOR, '/') . '/',
-						null,
-						$option->file
-					);
-				}, $pdo->fetchArray(
-					"SELECT DISTINCT(`file`)
-					FROM `PHP_errors`;"
-				));
-				break;
-		}
+	if (! $pdo->connected) {
+		return;
 	}
 
-	if(@is_array($options)) {
-		$datalist = array_reduce($options, function(\DOMElement $list, $item)
+	switch(strtolower($list)) {
+		case 'tags':
+			$options = get_all_tags();
+			break;
+
+		case 'php_errors_files':
+			$options = array_map(function(\stdClass $option)
+			{
+				return preg_replace(
+					'/^' . preg_quote(BASE . DIRECTORY_SEPARATOR, '/') . '/',
+					null,
+					$option->file
+				);
+			}, $pdo->fetchArray("SELECT DISTINCT(`file`) FROM `PHP_errors`;"));
+			break;
+
+		default:
+			return;
+	}
+
+	$dom = new \DOMDocument('1.0', 'UTF-8');
+	$datalist = array_reduce($options, function(\DOMElement $list, $item)
 		{
-			$opt = $list->appendChild(new \DOMElement('option', $item));
+			$opt = $list->appendChild(new \DOMElement('option'));
 			$opt->setAttribute('value', $item);
 			return $list;
-		}, $datalist);
-		return $dom->saveHTML($datalist);
-	}
+		},
+		$dom->appendChild(new \DOMElement('datalist'))
+	);
+	$datalist->setAttribute('id', $list);
+	return $dom->saveHTML($datalist);
 }
