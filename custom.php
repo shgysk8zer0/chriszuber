@@ -132,16 +132,15 @@ function get_all_tags(){
 /**
  * Get $selectors for the $limit most recent posts
  *
- * @param  integer $limit     [Max number for return]
- * @param  array  $selectors  [Select these columns]
+ * @param  int    $limit      Max number for return
+ * @param  array  $selectors  Select these columns
  * @return array
  */
-
-function get_recent_posts($limit = 5, array $selectors = null) {
+function get_recent_posts($limit = 5, array $selectors = array()) {
 	$pdo =\shgysk8zer0\Core\PDO::load('connect');
 
 	if($pdo->connected) {
-		if(!is_array($selectors)) {
+		if(empty($selectors)) {
 			$selectors = [
 				'title',
 				'url',
@@ -160,8 +159,7 @@ function get_recent_posts($limit = 5, array $selectors = null) {
 			DESC
 			LIMIT {$limit};"
 		);
-	}
-	else {
+	} else {
 		return [];
 	}
 }
@@ -169,13 +167,16 @@ function get_recent_posts($limit = 5, array $selectors = null) {
 /**
  * Builds a <datalist> for the request, each result being a <option>
  *
- * @param  string $list [Requested datalist]
- * @return string       [Results as a <datalist>]
+ * @param  string $list Requested datalist
+ * @return string       Results as a <datalist>
+ * @uses \DOMDocument
+ * @uses \DOMElement
  */
-
 function get_datalist($list) {
 	$pdo = \shgysk8zer0\Core\PDO::load('connect');
-	$datalist = "<datalist id=\"{$list}\">";
+	$dom = new \DOMDocument('1.0', 'UTF-8');
+	$datalist = $dom->appendChild(new \DOMElement('datalist'));
+	$datalist->setAttribute('id', $list);
 
 	if($pdo->connected) {
 		switch(strtolower($list)) {
@@ -199,9 +200,12 @@ function get_datalist($list) {
 	}
 
 	if(@is_array($options)) {
-		return array_reduce($options, function($carry, $item)
+		$datalist = array_reduce($options, function(\DOMElement $list, $item)
 		{
-			return $carry .= "<option value=\"{$item}\"></option>";
-		}, $datalist) . '</datalist>';
+			$opt = $list->appendChild(new \DOMElement('option', $item));
+			$opt->setAttribute('value', $item);
+			return $list;
+		}, $datalist);
+		return $dom->saveHTML($datalist);
 	}
 }
