@@ -1540,12 +1540,12 @@ function SVG_symbols(array $svgs, $output = null)
 
 function SVG_use(
 	$icon,
-	array $attributes = null,
+	array $attributes = array(),
 	$src = 'images/icons/combined.svg'
 )
 {
 	if (is_string($src) and !is_url($src)) {
-		$src = URL . '/' . $src;
+		$src = URL . $src;
 	}
 
 	$dom = new \DOMDocument('1.0');
@@ -1555,12 +1555,10 @@ function SVG_use(
 	$use = $svg->appendChild(new \DOMElement('use'));
 	$use->setAttribute('xlink:href', "{$src}#{$icon}");
 
-	if (is_array($attributes)) {
-		foreach ($attributes as $attr => $val) {
-			$svg->setAttribute($attr, $val);
-		}
+	foreach ($attributes as $attr => $val) {
+		$svg->setAttribute($attr, $val);
 	}
-	return $dom->saveXML($dom->getElementsByTagName('svg')->item(0));
+	return $dom->saveXML($svg);
 }
 
 /**
