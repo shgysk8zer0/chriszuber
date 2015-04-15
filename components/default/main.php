@@ -32,3 +32,4 @@
 		}
 	?>
 </main>
+<?php ob_flush(); flush();?>
