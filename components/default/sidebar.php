@@ -34,3 +34,4 @@
 		?>
 	</div>
 </aside>
+<?php ob_flush(); flush();?>

@@ -61,3 +61,4 @@
 		);
 	?>
 </footer>
+<?php ob_flush(); flush();?>

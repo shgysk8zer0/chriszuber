@@ -106,3 +106,4 @@
 </script>
 <![endif]-->
 </head>
+<?php ob_flush(); flush();?>
