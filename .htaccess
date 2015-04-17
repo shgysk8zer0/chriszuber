@@ -14,7 +14,6 @@ DirectoryIndex index.php index.html
 php_value auto_prepend_file ./autoloader.php
 
 <IfModule headers_module>
-#	Header set Strict-Transport-Security max-age=16070400;
 	Header set X-Frame-Options "SAMEORIGIN"
 	Header set X-Content-Type-Options nosniff
 	Header set X-XSS-Protection "1; mode=block"
