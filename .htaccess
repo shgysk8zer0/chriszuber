@@ -16,7 +16,6 @@ php_value auto_prepend_file ./autoloader.php
 <IfModule headers_module>
 #	Header set Strict-Transport-Security max-age=16070400;
 	Header set X-Frame-Options "SAMEORIGIN"
-	Header set Frame-Options "SAMEORIGIN"
 	Header set X-Content-Type-Options nosniff
 	Header set X-XSS-Protection "1; mode=block"
 	Header set Cache-Control "public, must-revalidate, proxy-revalidate, no-transform"
@@ -30,14 +29,15 @@ php_value auto_prepend_file ./autoloader.php
 	<Files manifest.appcache>
 		Header set Cache-Control "no-cache, no-store, must-revalidate, no-transform"
 	</Files>
+	<IfModule ssl_module>
+		Header set Strict-Transport-Security max-age=16070400;
+	</IfModule>
 </IfModule>
 <IfModule setenvif_module>
-	<IfModule headers_module>
-		<FilesMatch "\.(gif|ico|jpe?g|png|svgz?|webp)$">
-			SetEnvIf Origin ":" IS_CORS
-			Header set Access-Control-Allow-Origin "*" env=IS_CORS
-		</FilesMatch>
-	</IfModule>
+	<FilesMatch "\.(gif|ico|jpe?g|png|svgz?|webp)$">
+		SetEnvIf Origin ":" IS_CORS
+		Header set Access-Control-Allow-Origin "*" env=IS_CORS
+	</FilesMatch>
 </IfModule>
 
 # ------------------------------------------------------------------------------
