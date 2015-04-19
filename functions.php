@@ -152,14 +152,13 @@ function init($session = true, $settings_file = 'settings.json')
 	} elseif (!defined('URL')) {
 		define(
 			'URL',
-			"{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}/" .
-			join(
+			new \shgysk8zer0\Core\URL('/' . join(
 				'/',
 				array_diff(
 					explode(DIRECTORY_SEPARATOR, __DIR__),
 					explode('/', $_SERVER['DOCUMENT_ROOT'])
 				)
-			)
+			))
 		);
 	}
 
@@ -1292,17 +1291,16 @@ function SVG_use(
 		$src = URL . $src;
 	}
 
-	$dom = new \DOMDocument('1.0');
+	$dom = new \DOMDocument('1.0', 'UTF-8');
 	$svg = $dom->appendChild(new \DOMElement('svg', null, 'http://www.w3.org/2000/svg'));
 	$svg->setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
 	$svg->setAttribute('version', '1.1');
-	$use = $svg->appendChild(new \DOMElement('use'));
-	$use->setAttribute('xlink:href', "{$src}#{$icon}");
-
 	foreach ($attributes as $attr => $val) {
 		$svg->setAttribute($attr, $val);
 	}
-	return $dom->saveXML($svg);
+	$use = $svg->appendChild(new \DOMElement('use'));
+	$use->setAttribute('xlink:href', "{$src}#{$icon}");
+	return $dom->saveHTML($svg);
 }
 
 /**
@@ -1317,7 +1315,7 @@ function SVG_use(
  */
 function SVG_use_URI(
 	$icon,
-	array $attributes = null,
+	array $attributes = array(),
 	$src = 'images/icons/combined.svg'
 )
 {
