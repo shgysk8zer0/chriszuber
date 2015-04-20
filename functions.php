@@ -1028,12 +1028,6 @@ function utf($string = null)
 /**
  * List files in given path. Optional extension and strip extension from results
  *
- * @param [string $path[, string $ext[, boolean $strip_ext]]]
- * @return array
- */
-/**
- * List files in given path. Optional extension and strip extension from results
- *
  * @param  string $path      Path to search
  * @param  string $ext       Optional extension to search for
  * @param  bool   $strip_ext Whether or not to trim off the extension
