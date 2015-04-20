@@ -301,15 +301,6 @@ function html_join(
  */
 function array_to_attributes(array $attributes = null)
 {
-	/**
-	 * Converts an array of attributes into a string
-	 *
-	 * @param array $attributes
-	 * @return string
-	 * @example
-	 * array_to_attributes(['class' => 'myClass]) //returns 'class="myClass"'
-	 */
-
 	if (is_null($attributes)) {
 		return null;
 	}
@@ -381,7 +372,7 @@ function require_login($role = null, $exit = 'notify')
 		}
 	} elseif (isset($role)) {
 		$role = strtolower((string)$role);
-		$resp = new \shgysk8zer0\Core\json_response();
+		$resp = new \shgysk8zer0\Core\JSON_Response();
 		$roles = ['new', 'user', 'admin'];
 
 		$user_level = array_search($login->role, $roles);
@@ -392,17 +383,15 @@ function require_login($role = null, $exit = 'notify')
 				'We have a problem',
 				'Either your user\'s role or the required role are invalid',
 				'images/icons/info.png'
-			)->send();
-			return false;
-			exit();
+			);
+			exit($resp);
 		} elseif ($required_level > $user_level) {
 			$resp->notify(
 				'We have a problem :(',
 				"You are logged in as {$login->role} but this action requires {$role}",
 				'images/icons/info.png'
-			)->send();
-			return false;
-			exit();
+			);
+			exit($resp);
 		} else {
 			return true;
 		}
@@ -429,7 +418,7 @@ function check_nonce()
 		)
 		or $_POST['nonce'] !== $_SESSION['nonce']
 	) {
-		$resp = new \shgysk8zer0\Core\json_response();
+		$resp = new \shgysk8zer0\Core\JSON_Response();
 		$resp->notify(
 			'Something went wrong :(',
 			'Your session has expired. Try again',
@@ -443,8 +432,8 @@ function check_nonce()
 			'[name=nonce]',
 			'value',
 			$_SESSION['nonce']
-		)->send();
-		exit();
+		);
+		exit($resp);
 	};
 }
 
@@ -517,7 +506,7 @@ function localhost()
  */
 function https()
 {
-	return (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS']);
+	return array_key_exists('HTTPS', $_SERVER) and $_SERVER['HTTPS'];
 }
 
 /**
@@ -529,15 +518,15 @@ function https()
  */
 function DNT()
 {
-	return (isset($_SERVER['HTTP_DNT']) and $_SERVER['HTTP_DNT']);
+	return array_key_exists('HTTP_DNT', $_SERVER) and $_SERVER['HTTP_DNT'];
 }
 
 /**
 * Convert an address to GPS coordinates (longitude & latitude)
 * using Google Maps API
 *
-* @param  string $Address [Postal address]
-* @return [stdClass]          [{"lat": $latitude, "lng": $longitude}]
+* @param  string $Address Postal address
+* @return stdClass        {"lat": $latitude, "lng": $longitude}
 */
 function address_to_gps($Address = null)
 {
@@ -548,7 +537,7 @@ function address_to_gps($Address = null)
 	$request_url = "http://maps.googleapis.com/maps/api/geocode/xml?address=".urlencode($Address)."&sensor=true";
 	$xml = simplexml_load_file($request_url);
 
-	if (!empty($xml) and $xml->status == "OK") {
+	if (! empty($xml) and $xml->status == "OK") {
 		return $xml->result->geometry->location;
 	} else {
 		return false;
@@ -564,7 +553,7 @@ function address_to_gps($Address = null)
 function is_ajax()
 {
 	return (
-		isset($_SERVER['HTTP_REQUEST_TYPE'])
+		array_key_exists('HTTP_REQUEST_TYPE', $_SERVER)
 		and $_SERVER['HTTP_REQUEST_TYPE'] === 'AJAX'
 	);
 }
@@ -577,7 +566,7 @@ function is_ajax()
  */
 function header_type($type = null)
 {
-	header('Content-Type: ' . (string)$type . PHP_EOL);
+	header('Content-Type: ' . $type . PHP_EOL);
 }
 
 /**
@@ -831,7 +820,7 @@ function is_a_number($n = null)
  */
 function is_not_a_number($n = null)
 {
-	return ! is_a_number($n);
+	return ! is_numeric($n);
 }
 
 /**
@@ -939,11 +928,13 @@ function pattern_check($type, $str)
  */
 function check_inputs(array $inputs, array $source = null)
 {
-	if (is_null($source)) $source = $_REQUEST;
+	if (! is_array($source)) {
+		$source = $_REQUEST;
+	}
 
 	foreach ($inputs as $key => $test) {
 		if (
-			!array_key_exists($key, $source)
+			! array_key_exists($key, $source)
 			or (is_bool($test) and !$test)
 			or (is_string($test) and !preg_match('/^' . $test . '$/', $source[$key]))
 		) {
@@ -1031,7 +1022,7 @@ function pattern($type = null)
  */
 function utf($string = null)
 {
-	return htmlentities((string)$string, ENT_QUOTES | ENT_HTML5, "UTF-8");
+	return htmlentities($string, ENT_QUOTES | ENT_HTML5, "UTF-8");
 }
 
 /**
@@ -1040,33 +1031,32 @@ function utf($string = null)
  * @param [string $path[, string $ext[, boolean $strip_ext]]]
  * @return array
  */
-function ls($path = null, $ext = null, $strip_ext = null)
+/**
+ * List files in given path. Optional extension and strip extension from results
+ *
+ * @param  string $path      Path to search
+ * @param  string $ext       Optional extension to search for
+ * @param  bool   $strip_ext Whether or not to trim off the extension
+ * @return array             Array of matching files
+ */
+function ls($path = __DIR__, $ext = null, $strip_ext = false)
 {
-	if (is_null($path)) {
-		$path = BASE;
-	} else {
-		$path = (string)$path;
-	}
-
-	$files = array_diff(scandir($path), array('.', '..'));				// Get array of files. Remove current and previous directory (. & ..)
-	$results = [];
-	if (isset($ext)) {													//$ext has been passed, so let's work with it
-		//$ext = (string)$ext;
-		//Convert $ext into regexp
-		$ext = '/' . preg_quote('.' . (string)$ext, '/') .'$/';					// Convert for use in regular expression
-		if (isset($strip_ext)) {
-			foreach ($files as $file) {
-				(preg_match($ext, $file)) ? array_push($results, preg_replace($ext, '', $file)) : null;
+	$files = array_diff(scandir($path), array('.', '..'));
+	$files = array_filter($files, 'is_file');
+	if (is_string($ext)) {
+		$ext = trim($ext, '.');
+		$files = array_filter(
+			$files,
+			function($file) use ($ext)
+			{
+				return strtolower($ext) === strtolower(pathinfo($file, PATHINFO_EXTENSION));
 			}
-		} else {
-			foreach ($files as $file) {
-				(preg_match($ext, $file)) ? array_push($results, $file) : null;
-			}
-		}
-		return $results;
-	} else {
-		return $files;
+		);
 	}
+	if (is_bool($strip_ext) and $strip_ext) {
+		return array_map('filename', $files);
+	}
+	return array_values($files);
 }
 
 /**
