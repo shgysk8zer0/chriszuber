@@ -1048,7 +1048,8 @@ function ls($path = __DIR__, $ext = null, $strip_ext = false)
 		);
 	}
 	if (is_bool($strip_ext) and $strip_ext) {
-		return array_map('filename', $files);
+		$files = array_map('filename', $files);
+		$files = array_filter($files, 'strlen');
 	}
 	return array_values($files);
 }
