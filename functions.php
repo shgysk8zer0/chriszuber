@@ -1611,8 +1611,9 @@ function build_path()
  */
 function module_test($settings)
 {
-	//$settings = \shgysk8zer0\Core\resources\Parser::parseFile('settings.json');
-
+	if (! function_exists('apache_get_modules')) {
+		return;
+	}
 	/**
 	 * First, check if the directives are set in settings.ini
 	 * If not, return null
