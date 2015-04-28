@@ -7,3 +7,6 @@
 [submodule "classes/shgysk8zer0/core_api"]
 	path = classes/shgysk8zer0/core_api
 	url = git://github.com/shgysk8zer0/core_api
+[submodule "std-php-functions"]
+	path = std-php-functions
+	url = git://github.com/shgysk8zer0/std-php-functions.git
