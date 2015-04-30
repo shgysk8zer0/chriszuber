@@ -1,0 +1,22 @@
+{
+	"MIN_PHP_VERSION":"5.5",
+	"CONFIG_DIR":"config",
+	"AUTOLOAD_DIR":"classes",
+	"AUTOLOAD_EXTS":".php",
+	"AUTOLOAD_FUNC":"spl_autoload",
+	"HTTPS":"on",
+	"HTTP_HOST":"localhost",
+	"HTTP_USER_AGENT":"CLI",
+	"HTTP_DNT":"1",
+	"SERVER_ADDR":"127.0.0.1",
+	"SERVER_PORT":"443",
+	"SERVER_NAME":"localhost",
+	"REMOTE_ADDR":"127.0.0.1",
+	"REQUEST_SCHEME":"https",
+	"CONTEXT_PREFIX":"",
+	"SERVER_ADMIN":"shgysk8zer0@gmail.com",
+	"QUERY_STRING":"",
+	"REQUEST_URI":"\/",
+	"SCRIPT_NAME":"\/index.php",
+	"PHP_SELF":"\/index.php"
+}
