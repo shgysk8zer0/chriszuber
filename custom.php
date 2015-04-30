@@ -110,14 +110,19 @@ function update_rss($lim = 10, $name = 'feed.rss')
 }
 
 /**
- * Gets all keywords for all posts
+ * Gets all keywords for recent posts
  *
- * @param void
- * @return array Unique keywords for all posts
+ * @param  int $limit  Max number of recent posts to get tags from
+ * @return array       Unique keywords for the posts
  */
-function get_all_tags()
+function get_all_tags($limit = 5)
 {
-	$pdo = \shgysk8zer0\Core\PDO::load('connect');
+	if (! is_int($limit)) {
+		throw new \InvalidArgumentException(
+			sprintf('%s expects $limit to be an integer, %s given', __FUNCTION__, gettype($limit))
+		);
+	}
+	$pdo = \shgysk8zer0\Core\PDO::load('connect.json');
 	if($pdo->connected) {
 		return array_unique(flatten(array_map(function(\stdClass $result)
 		{
@@ -128,7 +133,8 @@ function get_all_tags()
 		}, $pdo->fetchArray(
 			"SELECT DISTINCT(`keywords`)
 			FROM `posts`
-			ORDER BY `created` DESC;"
+			ORDER BY `created` DESC
+			limit {$limit};"
 		)
 	)));
 	} else {
@@ -146,7 +152,7 @@ function get_all_tags()
  */
 function get_recent_posts($limit = 5, array $selectors = array())
 {
-	$pdo = \shgysk8zer0\Core\PDO::load('connect');
+	$pdo = \shgysk8zer0\Core\PDO::load('connect.json');
 
 	if($pdo->connected) {
 		if (! is_int($limit)) {
@@ -186,7 +192,7 @@ function get_recent_posts($limit = 5, array $selectors = array())
  */
 function get_datalist($list)
 {
-	$pdo = \shgysk8zer0\Core\PDO::load('connect');
+	$pdo = \shgysk8zer0\Core\PDO::load('connect.json');
 	if (! $pdo->connected) {
 		return;
 	}
@@ -211,15 +217,15 @@ function get_datalist($list)
 			return;
 	}
 
-	$dom = new \DOMDocument('1.0', 'UTF-8');
-	$datalist = array_reduce($options, function(\DOMElement $list, $item)
+	$doc = new \shgysk8zer0\Core\HTML_Doc;
+	$datalist = array_reduce(
+		$options,
+		function(\DOMElement $list, $item)
 		{
-			$opt = $list->appendChild(new \DOMElement('option'));
-			$opt->setAttribute('value', $item);
+			$list->option = ['@value' => $item];
 			return $list;
 		},
-		$dom->appendChild(new \DOMElement('datalist'))
+		$doc('datalist', null, ['id' => $list])
 	);
-	$datalist->setAttribute('id', $list);
-	return $dom->saveHTML($datalist);
+	return "{$datalist}";
 }
