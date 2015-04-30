@@ -21,7 +21,9 @@
 	 */
 
 	error_reporting(0);
-	require_once __DIR__ . DIRECTORY_SEPARATOR . 'functions.php';
+	if (PHP_SAPI === 'cli') {
+		require_once __DIR__ . DIRECTORY_SEPARATOR . 'autoloader.php';
+	}
 	init();
 	define_UA();
 
@@ -102,7 +104,7 @@
 <!--[if lt IE 7]>      <html lang="en" class="lt-ie9 lt-ie8 lt-ie7 no-js"> <![endif]-->
 <!--[if IE 7]>         <html lang="en" class="lt-ie9 lt-ie8 no-js"> <![endif]-->
 <!--[if IE 8]>         <html lang="en" class="lt-ie9 no-js"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en" itemscope itemtype="http://schema.org/WebPage" class="no-js" <?php if(!localhost() and isset($settings->appcache)):?> manifest="<?=URL . '/' . $settings->appcache?>"<?php endif?>> <!--<![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" itemscope itemtype="http://schema.org/WebPage" class="no-js" <?php if(! localhost() and isset($settings->appcache)):?> manifest="<?=URL . '/' . $settings->appcache?>"<?php endif?>> <!--<![endif]-->
 <!--<?=date('Y-m-d H:i:s')?>-->
 <?php load('head');?>
 <body contextmenu="main_menu" <?=defined('GA') ?'data-ga="' . GA . '"' : null ?>>
