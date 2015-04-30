@@ -214,10 +214,9 @@ function get_datalist($list)
 			break;
 
 		default:
-			return;
+			return [];
 	}
 
-	$doc = new \shgysk8zer0\Core\HTML_Doc;
 	$datalist = array_reduce(
 		$options,
 		function(\DOMElement $list, $item)
@@ -225,7 +224,8 @@ function get_datalist($list)
 			$list->option = ['@value' => $item];
 			return $list;
 		},
-		$doc('datalist', null, ['id' => $list])
+		new \shgysk8zer0\Core\HTML_El('datalist', null, null, true)
 	);
+	$datalist->{'@id'} = "$list";
 	return "{$datalist}";
 }
