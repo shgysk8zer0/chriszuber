@@ -249,7 +249,7 @@ switch(trim($_POST['form'])) {
 					"<a href=\"{$url}\">{$title}</a>"
 				)->prepend(
 					'main',
-					$template->out()
+					"{$template}"
 				)->after(
 					'#main_menu > menu[label="Posts"] > menuitem[label="Home"]',
 					"<menuitem label=\"{$title}\" icon=\"images/icons/coffee.svgz\" data-link=\"{$url}\"></menuitem>"
@@ -538,6 +538,23 @@ switch(trim($_POST['form'])) {
 			$author_email = $_POST['comment_email'];
 			$time = date('Y-m-d H:i:s');
 			$post_title = ucwords(urldecode($post));
+			$template = new \shgysk8zer0\Core\Template('comment_created_notification');
+
+			$template->author(
+				$author
+			)->author_url(
+				$author_url
+			)->author_email(
+				"{$author} <{$author_email}>"
+			)->time(
+				date('r', strtotime($time))
+			)->comment(
+				$comment
+			)->post(
+				ucwords(urldecode($post))
+			)->post_url(
+				URL . "/posts/{$post}"
+			);
 			$email = new \shgysk8zer0\Core\email(
 				$_SERVER['SERVER_ADMIN'],
 				"New comment on {$post_title} by {$author}",
@@ -589,13 +606,13 @@ switch(trim($_POST['form'])) {
 				'#new_comment'
 			)->append(
 				'#comments_section',
-				$template->comment(
+				"{$template->comment(
 					$comment
 				)->time(
 					date('l, F jS Y h:i A')
 				)->author(
 					$author
-				)->out()
+				)}"
 			)->notify(
 				'Comment Submitted',
 				"Your comment has been added to “{$_POST['post_title']}”"
