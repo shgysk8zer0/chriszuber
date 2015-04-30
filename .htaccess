@@ -11,7 +11,7 @@ DirectoryIndex index.php index.html
 </IfModule>
 
 #Loads the autoloader script before executing main PHP file
-php_value auto_prepend_file ./autoloader.php
+php_value auto_prepend_file ./std-php-functions/autoloader.php
 
 <IfModule headers_module>
 	Header set X-Frame-Options "SAMEORIGIN"
