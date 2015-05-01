@@ -203,14 +203,17 @@ function get_datalist($list)
 			break;
 
 		case 'php_errors_files':
-			$options = array_map(function(\stdClass $option)
-			{
-				return preg_replace(
-					'/^' . preg_quote(BASE . DIRECTORY_SEPARATOR, '/') . '/',
-					null,
-					$option->file
-				);
-			}, $pdo->fetchArray("SELECT DISTINCT(`file`) FROM `PHP_errors`;"));
+			$options = array_map(
+				function(\stdClass $option)
+				{
+					return preg_replace(
+						'/^' . preg_quote(BASE . DIRECTORY_SEPARATOR, '/') . '/',
+						null,
+						$option->file
+					);
+				},
+				$pdo->fetchArray("SELECT DISTINCT(`file`) FROM `PHP_errors`;")
+			);
 			break;
 
 		default:
