@@ -319,6 +319,7 @@ code {
 	background-color: hsl(0, 0%, 93%);
 	border-radius: 0.2rem;
 	display: inline-block;
+	white-space: pre;
 }
 pre > code {
 	display: block;
