@@ -97,7 +97,7 @@
 	if (is_ajax()) { // If this is an ajax request, let ajax.php handle it.
 		require_once __DIR__ . DIRECTORY_SEPARATOR . 'ajax.php';
 	}
-	$pages = \shgysk8zer0\Core\Pages::load();
+	$pages = \shgysk8zer0\Pages::load();
 	CSP();		//Do this here to avoid CSP being set on ajax requests.
 ?>
 <!DOCTYPE HTML>

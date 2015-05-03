@@ -7,7 +7,7 @@
 		$missing = module_test($settings);
 	}
 	if ($DB->connected) {
-		$pages = \shgysk8zer0\Core\pages::load();
+		$pages = \shgysk8zer0\Pages::load();
 	} else {
 		$pages = new \stdClass();
 		$pages->content = null;

@@ -1,5 +1,5 @@
 <?php
-$page = \shgysk8zer0\Core\Pages::load();
+$page = \shgysk8zer0\Pages::load();
 $head = $DB->fetchArray(
 	"SELECT `value` FROM `head`
 	WHERE `name` = 'title'"

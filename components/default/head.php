@@ -18,7 +18,7 @@
 	$storage->site_info = $head;
 
 	if($DB->connected) {
-		$pages = \shgysk8zer0\Core\pages::load();
+		$pages = \shgysk8zer0\Pages::load();
 	} else {
 		$pages = new \stdClass();
 		$pages->title = null;
