@@ -19,6 +19,8 @@ if (empty($_REQUEST)) {
 	load('handlers/debug');
 } elseif (array_key_exists('hangman', $_REQUEST)) {
 	load('handlers/hangman');
+} elseif (array_key_exists('view_source', $_REQUEST)) {
+	load('handlers/view_source');
 }
 
 exit(\shgysk8zer0\Core\JSON_Response::load());
