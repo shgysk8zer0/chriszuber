@@ -10,3 +10,6 @@
 [submodule "std-php-functions"]
 	path = std-php-functions
 	url = git://github.com/shgysk8zer0/std-php-functions.git
+[submodule "scripts/std-js"]
+	path = scripts/std-js
+	url = git://github.com/shgysk8zer0/std-js.git
