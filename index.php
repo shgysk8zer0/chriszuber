@@ -20,33 +20,14 @@
 	 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-	error_reporting(0);
+	define('BASE', __DIR__);
 	if (PHP_SAPI === 'cli') {
-		require_once __DIR__ . DIRECTORY_SEPARATOR . 'autoloader.php';
+		require_once __DIR__ . DIRECTORY_SEPARATOR . 'std-php-functions' . DIRECTORY_SEPARATOR . 'autoloader.php';
 	}
 	init();
 	define_UA();
 
-	$exception_log = \shgysk8zer0\Core\File::load('logs/exceptions.log');
-	$error_log     = \shgysk8zer0\Core\File::load('logs/errors.log');
-
-	set_exception_handler($exception_log);
-
-	set_error_handler(function(
-		$level,
-		$message,
-		$file,
-		$line,
-		array $context = array()
-	) use ($error_log)
-	{
-		try {
-			throw new \ErrorException($message, 0, $level, $file, $line);
-		} catch (\ErrorException $e) {
-			$error_log($e . PHP_EOL);
-		}
-	}, E_ALL);
-
+	set_exception_handler(\shgysk8zer0\Core\File::load('logs/exceptions.log'));
 
 	$redirect = false;
 
@@ -94,8 +75,13 @@
 			->setRole($session->role)
 			->setLogged_In($session->logged_in);
 	}
+
+	require_once __DIR__ . DIRECTORY_SEPARATOR . 'std-php-functions' . DIRECTORY_SEPARATOR . 'error_handler.php';
+
 	if (is_ajax()) { // If this is an ajax request, let ajax.php handle it.
 		require_once __DIR__ . DIRECTORY_SEPARATOR . 'ajax.php';
+
+		exit;
 	}
 	$pages = \shgysk8zer0\Pages::load();
 	CSP();		//Do this here to avoid CSP being set on ajax requests.
