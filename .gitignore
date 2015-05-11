@@ -42,6 +42,7 @@
 !/images/
 !/config/
 !/fonts/
+!/scripts/std-js
 !/scripts/functions.js
 !/scripts/custom.js
 !/scripts/polyfills.js
