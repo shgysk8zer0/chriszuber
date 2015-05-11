@@ -77,14 +77,14 @@
 <?php endif?>
 <?php if(isset($head->publisher)):?><link rel="publisher" href="https://plus.google.com/<?=$head->publisher?>"><?php endif?>
 <?php if (BROWSER === 'IE'):?>
-<script type="text/javascript" src="scripts/polyfills.js"></script>
+<script type="text/javascript" src="scripts/std-js/polyfills.js"></script>
 <?php endif;?>
 <?php if(localhost()):?>
 	<?php if(BROWSER === 'Firefox'):?>
-		<script type="application/javascript;version=1.8" src="scripts/functions.js" async></script>
+		<script type="application/javascript;version=1.8" src="scripts/std-js/functions.js" async></script>
 		<script type="application/javascript;version=1.8" src="scripts/custom.js" async></script>
 	<?php else:?>
-		<script type="application/javascript" src="scripts/functions.js" async></script>
+		<script type="application/javascript" src="scripts/std-js/functions.js" async></script>
 		<script type="application/javascript" src="scripts/custom.js" defer></script>
 	<?php endif?>
 <?php else:?>
