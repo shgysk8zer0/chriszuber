@@ -19,3 +19,6 @@
 [submodule "stylesheets/default"]
 	path = stylesheets/default
 	url = git://github.com/shgysk8zer0/default-theme.git
+[submodule "stylesheets/green"]
+	path = stylesheets/green
+	url = git://github.com/shgysk8zer0/green-theme.git
