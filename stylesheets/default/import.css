@@ -1,9 +1,9 @@
 @charset 'UTF-8';
-@import 'normalize.css';
-@import 'style.css';
-@import 'fonts.css';
-@import 'class_rules.css';
-@import 'animations.css' screen;
+@import '../base-theme/normalize.css';
+@import '../base-theme/style.css';
+@import '../base-theme/fonts.css';
+@import '../base-theme/class_rules.css';
+@import '../base-theme/animations.css' screen;
 :root {
 	--default-color: rgb(252, 252, 252);
 	--alt-color: rgb(41, 41, 41);

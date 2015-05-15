@@ -13,3 +13,6 @@
 [submodule "scripts/std-js"]
 	path = scripts/std-js
 	url = git://github.com/shgysk8zer0/std-js.git
+[submodule "stylesheets/base-theme"]
+	path = stylesheets/base-theme
+	url = git://github.com/shgysk8zer0/base-theme.git
