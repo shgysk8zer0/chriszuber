@@ -19,14 +19,4 @@
 	--icon-font: 'Web Symbols';
 	--default-cursor: url(../../images/cursors/Arch-black.svgz), auto;
 	--pointer: url('../../images/cursors/3D_hand_cursor.svgz'), pointer;
-	background-color: var(--primary-color);
-	background-image: url(../../images/backgrounds/curls-mono.svgz);
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-	background-blend-mode: multiply;
-	color: var(--default-color);
-	text-shadow: var(--shadow);
-	cursor: var(--default-cursor);
 }
