@@ -16,3 +16,6 @@
 [submodule "stylesheets/base-theme"]
 	path = stylesheets/base-theme
 	url = git://github.com/shgysk8zer0/base-theme.git
+[submodule "stylesheets/default"]
+	path = stylesheets/default
+	url = git://github.com/shgysk8zer0/default-theme.git
