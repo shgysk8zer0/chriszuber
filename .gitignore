@@ -1,6 +1,5 @@
 # Ignore
 /*
-/stylesheets/*
 /components/*
 /scripts/*
 
@@ -34,7 +33,7 @@
 !/favicon.*
 !/super-user.*
 !/manifest.appcache
-!/stylesheets/
+!/stylesheets/*
 !/components/
 !/std-php-functions/
 !/classes/
