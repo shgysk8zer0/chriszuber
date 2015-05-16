@@ -107,7 +107,7 @@ AddDefaultCharset utf-8
 <FilesMatch "(^#.*|~.*|\.(bak|ht.*|dav|conf(ig)?|dist|fla|inc|ini|log|psd|sql|sw[op]|asc|(ba)?sh|md|yml|lock|log|git.*|gpg|pgp))$">
 	Require all denied
 </FilesMatch>
-<FilesMatch "^(ajax|functions|custom|autoloader|unit)\.php$">
+<FilesMatch "^(ajax|custom|unit)\.php$">
 	Require all denied
 </FilesMatch>
 <IfModule deflate_module>
