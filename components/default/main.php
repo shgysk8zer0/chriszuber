@@ -15,7 +15,6 @@
 ?>
 <main role="main" itemprop="mainContentofPage" itemscope itemtype="http://schema.org/WebPageElement" <?=($login->logged_in and $login->role === 'admin') ? ' contextmenu="admin_menu"' : ''?>>
 	<?php
-		load('sidebar');
 		if (isset($missing)) {
 			echo '<div data-error="Missing Modules"><strong>Missing PHP Modules</strong><ul>';
 			foreach ($missing->php as $php) {
@@ -30,6 +29,7 @@
 		} elseif ($DB->connected) {
 			echo $pages->content;
 		}
+		load('sidebar');
 	?>
 </main>
 <?php ob_flush(); flush();?>
