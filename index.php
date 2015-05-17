@@ -80,24 +80,31 @@
 
 	if (is_ajax()) { // If this is an ajax request, let ajax.php handle it.
 		require_once __DIR__ . DIRECTORY_SEPARATOR . 'ajax.php';
-
 		exit;
 	}
 	$pages = \shgysk8zer0\Pages::load();
 	CSP();		//Do this here to avoid CSP being set on ajax requests.
+	echo '<!DOCTYPE HTML>' . PHP_EOL;
+
+	if (BROWSER === 'IE'): {
+		echo join(PHP_EOL, array(
+			new \shgysk8zer0\Core\IEConditionalComment(7, 'lt', false, '<html lang="en" class="lt-ie9 lt-ie8 lt-ie7 no-js">'),
+			new \shgysk8zer0\Core\IEConditionalComment(7, null, false, '<html lang="en" class="lt-ie9 lt-ie8 no-js">'),
+			new \shgysk8zer0\Core\IEConditionalComment(8, null, false, '<html lang="en" class="lt-ie9 no-js">'),
+			new \shgysk8zer0\Core\IEConditionalComment(8, 'gt', false, '<html lang="en" class="no-js">')
+		));
+	} else: { ?>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage" class="no-js" <?php if(! localhost() and isset($settings->appcache)):?> manifest="<?=URL . '/' . $settings->appcache?>"<?php endif?>>
+<?php
+	} endif;
+	load('head');
 ?>
-<!DOCTYPE HTML>
-<!--[if lt IE 7]>      <html lang="en" class="lt-ie9 lt-ie8 lt-ie7 no-js"> <![endif]-->
-<!--[if IE 7]>         <html lang="en" class="lt-ie9 lt-ie8 no-js"> <![endif]-->
-<!--[if IE 8]>         <html lang="en" class="lt-ie9 no-js"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en" itemscope itemtype="http://schema.org/WebPage" class="no-js" <?php if(! localhost() and isset($settings->appcache)):?> manifest="<?=URL . '/' . $settings->appcache?>"<?php endif?>> <!--<![endif]-->
-<!--<?=date('Y-m-d H:i:s')?>-->
-<?php load('head');?>
 <body contextmenu="main_menu" <?=defined('GA') ?'data-ga="' . GA . '"' : null ?>>
 	<?php
 		if(! $DB->connected) {
 			load('forms/install');
 		}
+
 		load('forms/login', 'header', 'main', 'footer');
 	?>
 </body>
