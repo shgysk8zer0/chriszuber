@@ -6,40 +6,20 @@
     "requires": [
         "custom.php"
     ],
-    "exception_handler": [],
-    "error_handler": [],
-    "error_reporting": {
-        "E_ERROR": true,
-        "E_WARNING": true,
-        "E_PARSE": true,
-        "E_NOTICE": true,
-        "E_CORE_ERROR": true,
-        "E_CORE_WARNING": true,
-        "E_COMPILE_ERROR": true,
-        "E_COMPILE_WARNING": true,
-        "E_USER_ERROR": true,
-        "E_USER_WARNING": true,
-        "E_USER_NOTICE": true,
-        "E_STRICT": true,
-        "E_RECOVERABLE_ERROR": true,
-        "E_DEPRECATED": true,
-        "E_USER_DEPRECATED": true
-    },
     "module_test": false,
     "apache_modules": [
         "mod_headers",
-        "mod_mime",
-        "mod_rewrite"
+        "mod_mime"
     ],
     "php_modules": [
         "Core",
+        "SPL",
         "curl",
         "date",
         "exif",
         "xml",
         "dom",
         "json",
-        "SPL",
         "PDO",
         "date",
         "pdo_mysql"
@@ -59,9 +39,8 @@
         ],
         "font-src": [
             "'self'",
-            "data:",
             "themes.googleusercontent.com",
-            "openfontlibrary.org"
+            "http://openfontlibrary.org"
         ],
         "img-src": [
             "'self'",
@@ -89,6 +68,7 @@
         ],
         "frame-ancestors": "'self'",
         "object-src": "'self'",
+        "report-uri": "/CSP_Errors.php",
         "enforce": true
     }
 }
