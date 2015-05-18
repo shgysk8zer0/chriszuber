@@ -1,9 +1,12 @@
 # Ignore
 /vendor
-/sitemap.xml
+/*.xml
+/*.json
+/*.html
 /config/github.json
 /config/connect.json
 /images/contact/
+/demos/
 /mother_brain
 *.rss
 *.dav
