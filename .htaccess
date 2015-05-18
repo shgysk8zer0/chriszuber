@@ -31,12 +31,12 @@ php_value auto_prepend_file ./std-php-functions/autoloader.php
 	<IfModule ssl_module>
 		Header set Strict-Transport-Security max-age=16070400;
 	</IfModule>
-</IfModule>
-<IfModule setenvif_module>
-	<FilesMatch "\.(gif|ico|jpe?g|png|svgz?|webp)$">
-		SetEnvIf Origin ":" IS_CORS
-		Header set Access-Control-Allow-Origin "*" env=IS_CORS
-	</FilesMatch>
+	<IfModule setenvif_module>
+		<FilesMatch "\.(gif|ico|jpe?g|png|svgz?|webp)$">
+			SetEnvIf Origin ":" IS_CORS
+			Header set Access-Control-Allow-Origin "*" env=IS_CORS
+		</FilesMatch>
+	</IfModule>
 </IfModule>
 
 # ------------------------------------------------------------------------------
