@@ -95,7 +95,7 @@
 	<?php endif?>
 <?php endif?>
 <?php if(!localhost() and isset($head->google_analytics_code) and !DNT()): define('GA', $head->google_analytics_code)?>
-	<script type="application/javascript" src="scripts/analytics.js" async defer></script>
+	<script type="application/javascript" src="scripts/std-js/analytics.js" async defer></script>
 <?php else:?>
 	<!--Analytics not used to honor Do Not Track Header-->
 <?php endif?>
