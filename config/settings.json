@@ -26,6 +26,7 @@
     ],
     "csp": {
         "default-src": "'self'",
+        "base-uri": "'self'",
         "script-src": [
             "'self'",
             "*.google-analytics.com",
@@ -66,8 +67,19 @@
             "https:\/\/facebook.com",
             "https:\/\/platform.twitter.com"
         ],
+        "child-src": [
+            "'self'",
+            "*.youtube.com",
+            "*.youtube-nocookie.com",
+            "https:\/\/plusone.google.com",
+            "https:\/\/facebook.com",
+            "https:\/\/platform.twitter.com"
+        ],
         "frame-ancestors": "'self'",
         "object-src": "'self'",
+        "form-action": "'self'",
+        "reflected-xss": "block",
+        "plugin-types": "",
         "report-uri": "/CSP_Errors.php",
         "enforce": true
     }
