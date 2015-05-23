@@ -22,14 +22,15 @@ if (!('cancelFullScreen' in document)) {
 if (!('requestFullScreen' in document)) {
 	document.requestFullScreen = document.mozRequestFullScreen || document.webkitRequestFullScreen || false;
 }
-if (! 'Element' in window) {
-	/*Fix IE not allowing Element.prototype*/
-	Element = function () {};
-}
-if (! 'CSS' in window) {
-	CSS = {};
-}
 (function(root) {
+	if (! 'Element' in root) {
+		/*Fix IE not allowing Element.prototype*/
+		root.Element = function () {};
+	}
+	if (! 'CSS' in root) {
+		root.CSS = {};
+		CSS.prototype = Object.prototype;
+	}
 	if(! 'show' in Element.prototype) {
 		Element.prototype.show = function() {
 			this.setAttribute('open', '');
@@ -73,20 +74,11 @@ if (! 'CSS' in window) {
 	}
 	if (! 'matches' in Element.prototype) {
 		/*Check if Element matches a given CSS selector*/
-		Element.prototype.matches = function (sel) {
-			try {
-				if ('mozMatchesSelector' in Element.prototype) {
-					return this.mozMatchesSelector(sel);
-				} else if ('webkitMatchesSelector' in Element.prototype) {
-					return this.webkitMatchesSelector(sel);
-				} else if ('oMatchesSelector' in Element.prototype) {
-					return this.oMatchesSelector(sel);
-				} else if ('msMatchesSelector' in Element.prototype) {
-					return this.msMatchesSelector(sel);
-				} else {
-					return ($(sel) .indexOf(this) !== -1);
-				}
-			} catch(e) {
+		Element.prototype.matches = Element.prototype.mozMatchesSelector
+			|| Element.prototype.webkitMatchesSelector
+			|| Element.prototype.oMatchesSelector
+			|| Element.prototype.msMatchesSelector
+			|| function(sel) {
 				return ($(sel) .indexOf(this) !== -1);
 			}
 		};
@@ -120,7 +112,7 @@ if (! 'CSS' in window) {
 			}
 		});
 	}
-	var CSS = ('CSS' in root) ? root.CSS : {};
+	var CSS =  root.CSS;
 	var InvalidCharacterError = function(message) {
 		this.message = message;
 	};
@@ -182,147 +174,151 @@ function supports(type) {
 		return false;
 	}
 
-	switch (type.toLowerCase()) {
-		case 'queryselectorall':
-			return ('querySelectorAll' in document);
-			break;
+	try {
+		switch (type.toLowerCase()) {
+			case 'queryselectorall':
+				return ('querySelectorAll' in document);
+				break;
 
-		case 'svg':
-			return (document.implementation.hasFeature('http://www.w3.org/TR/SVG11/feature#Shape', '1.1'));
-			break;
+			case 'svg':
+				return (document.implementation.hasFeature('http://www.w3.org/TR/SVG11/feature#Shape', '1.1'));
+				break;
 
-		case 'dataset':
-			return ('DOMStringMap' in window);
-			break;
+			case 'dataset':
+				return ('DOMStringMap' in window);
+				break;
 
-		case 'htmlimports':
-			return ('import' in document.createElement('link'));
-			break;
+			case 'htmlimports':
+				return ('import' in document.createElement('link'));
+				break;
 
-		case 'geolocation':
-			return ('geolocation' in navigator);
-			break;
+			case 'geolocation':
+				return ('geolocation' in navigator);
+				break;
 
-		case 'connectivity':
-			return ('onLine' in navigator);
-			break;
+			case 'connectivity':
+				return ('onLine' in navigator);
+				break;
 
-		case 'visibility':
-			return ('visibilityState' in document) || ('webkitVisibilityState' in document);
-			break;
+			case 'visibility':
+				return ('visibilityState' in document) || ('webkitVisibilityState' in document);
+				break;
 
-		case 'validity':
-			return ('validity' in document.createElement('input'));
-			break;
+			case 'validity':
+				return ('validity' in document.createElement('input'));
+				break;
 
-		case 'fonts':
-			return ('CSSFontFaceRule' in window);
-			break;
+			case 'fonts':
+				return ('CSSFontFaceRule' in window);
+				break;
 
-		case 'csssupports':
-			return (('CSS' in window) && ('supports' in CSS));
-			break;
+			case 'csssupports':
+				return (('CSS' in window) && ('supports' in CSS));
+				break;
 
-		case 'listeners':
-			return ('addEventListener' in window);
-			break;
+			case 'listeners':
+				return ('addEventListener' in window);
+				break;
 
-		case 'animations':
-			return ((supports('csssupports')
-				&& (CSS.supports('animation', 'name')
-				|| CSS.supports('-webkit-animation', 'name'))
-			) ||
-				'animation' in document.body.style ||
-				'webkitAnimation' in document.body.style
-			);
-			break;
+			case 'animations':
+				return ((supports('csssupports')
+					&& (CSS.supports('animation', 'name')
+					|| CSS.supports('-webkit-animation', 'name'))
+				) ||
+					'animation' in document.body.style ||
+					'webkitAnimation' in document.body.style
+				);
+				break;
 
-		case 'transitions':
-			return ((supports('csssupports')
-			&& (CSS.supports('transition', 'none') ||
-				CSS.supports('-webkit-transition', 'none'))
-			) ||
-				'transition' in document.body.style ||
-				'webkitTransition' in documnt.body.style
-			);
-			break;
+			case 'transitions':
+				return ((supports('csssupports')
+				&& (CSS.supports('transition', 'none') ||
+					CSS.supports('-webkit-transition', 'none'))
+				) ||
+					'transition' in document.body.style ||
+					'webkitTransition' in documnt.body.style
+				);
+				break;
 
-		case 'cssgradients':
-			return (supports('csssupports')
-				&& CSS.supports('background-image', 'linear-gradient(red,red)'))
-				|| (function() {
-				var el = document.createElement('a');
-				el.style.backgroundImage = 'linear-gradient(red, red)';
-				return (!!el.style.backgroundImage);
-			})();
-			break;
+			case 'cssgradients':
+				return (supports('csssupports')
+					&& CSS.supports('background-image', 'linear-gradient(red,red)'))
+					|| (function() {
+					var el = document.createElement('a');
+					el.style.backgroundImage = 'linear-gradient(red, red)';
+					return (!!el.style.backgroundImage);
+				})();
+				break;
 
-		case 'notifications':
-			return ('notifications' in window || 'Notification' in window);
-			break;
+			case 'notifications':
+				return ('notifications' in window || 'Notification' in window);
+				break;
 
-		case 'applicationcache':
-			return ('applicationCache' in window);
-			break;
+			case 'applicationcache':
+				return ('applicationCache' in window);
+				break;
 
-		case 'indexeddb':
-			return ('indexedDB' in window);
-			break;
+			case 'indexeddb':
+				return ('indexedDB' in window);
+				break;
 
-		case 'fullscreen':
-			return ('cancelFullScreen' in document);
-			break;
+			case 'fullscreen':
+				return ('cancelFullScreen' in document);
+				break;
 
-		case 'workers':
-			return ('Worker' in window);
-			break;
+			case 'workers':
+				return ('Worker' in window);
+				break;
 
-		case 'promises':
-			return ('Promise' in window);
-			break;
+			case 'promises':
+				return ('Promise' in window);
+				break;
 
-		case 'cssmatches':
-			return ('sessionStorage' in window && sessionStorage.hasOwnProperty('MatchesPre')) ||
-			[':matches', ':any', ':-moz-any', ':-webkit-any'].some(function (pre) {
-				try {
-					if (document.querySelector(pre + '(body)') === document.body) {
-						sessionStorage.setItem('MatchesPre', pre);
-						return true;
-					} else {
+			case 'cssmatches':
+				return ('sessionStorage' in window && sessionStorage.hasOwnProperty('MatchesPre')) ||
+				[':matches', ':any', ':-moz-any', ':-webkit-any'].some(function (pre) {
+					try {
+						if (document.querySelector(pre + '(body)') === document.body) {
+							sessionStorage.setItem('MatchesPre', pre);
+							return true;
+						} else {
+							return false;
+						};
+					} catch (e) {
 						return false;
-					};
-				} catch (e) {
-					return false;
-				}
-			});
-			break;
+					}
+				});
+				break;
 
-		case 'ajax':
-			return ('XMLHttpRequest' in window);
-			break;
+			case 'ajax':
+				return ('XMLHttpRequest' in window);
+				break;
 
-		case 'cssvars':
-			return (supports('csssupports') && CSS.supports('--x','x'));
-			break;
+			case 'cssvars':
+				return (supports('csssupports') && CSS.supports('--x','x'));
+				break;
 
-		case 'formdata':
-			return ('FormData' in window);
-			break;
+			case 'formdata':
+				return ('FormData' in window);
+				break;
 
-		case 'classlist':
-			return ('DOMTokenList' in window);
-			break;
+			case 'classlist':
+				return ('DOMTokenList' in window);
+				break;
 
-		case 'localstorage':
-			return ('localStorage' in window);
-			break;
+			case 'localstorage':
+				return ('localStorage' in window);
+				break;
 
-		case 'sessionstorage':
-			return ('sessionStorage' in window);
-			break;
+			case 'sessionstorage':
+				return ('sessionStorage' in window);
+				break;
 
-		default:
-			return (document.createElement(type.toLowerCase()) .toString() !== document.createElement('DNE') .toString());
+			default:
+				return (document.createElement(type.toLowerCase()) .toString() !== document.createElement('DNE') .toString());
+		}
+	} catch(e) {
+		return false;
 	}
 }
 "use strict";
