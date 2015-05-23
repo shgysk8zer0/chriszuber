@@ -22,7 +22,7 @@ php_value auto_prepend_file ./std-php-functions/autoloader.php
 	Header set Connection Keep-Alive
 	# `mod_headers` can't match based on the content-type, however, we only
 	# want to send this header for HTML pages and not for the other resources
-	<FilesMatch "\.(appcache|crx|css|eot|gif|htc|ico|jpe?g|js|m4a|m4v|manifest|mp4|oex|oga|ogg|ogv|otf|pdf|png|safariextz|svg|svgz|ttf|vcf|webapp|webm|webp|woff|xml|xpi)$">
+	<FilesMatch "\.(appcache|crx|css|eot|gif|htc|ico|jpe?g|js|m4a|m4v|manifest|mp4|oex|oga|ogg|ogv|otf|pdf|png|safariextz|svg|svgz|ttf|vcf|webapp|webm|webp|woff2?|xml|xpi)$">
 		Header unset X-UA-Compatible
 	</FilesMatch>
 	<Files manifest.appcache>
