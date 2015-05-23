@@ -1,2 +1,3 @@
 #!/bin/bash
-cat std-js/deprefixer.js std-js/poly_modern.js std-js/support_test.js std-js/functions.js std-js/zq.js std-js/json_response.js custom.js > combined.js 
+dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+cat $dir/std-js/deprefixer.js $dir/std-js/poly_modern.js $dir/std-js/support_test.js $dir/std-js/functions.js $dir/std-js/zq.js $dir/std-js/json_response.js $dir/custom.js > $dir/combined.js
