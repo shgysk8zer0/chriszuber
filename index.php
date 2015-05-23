@@ -36,8 +36,8 @@
 	if ($URL->host === 'localhost' and BROWSER === 'Chrome') {
 		$URL->host = '127.0.0.1';
 		$redirect  = true;
-	} elseif (preg_match('/^www\./', $URL->host)) {
-		$URL->host = preg_replace('/^www\./', null, $URL->host);
+	} elseif (substr($URL->host, 0, 4) === 'www.') {
+		$URL->host = substr($URL->host, 4);
 		$redirect  = true;
 	}
 
