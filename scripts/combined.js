@@ -228,8 +228,10 @@ function supports(type) {
 			break;
 
 		case 'animations':
-			return (supports('csssupports') && CSS.supports('animation', 'name') ||
-				CSS.supports('-webkit-animation', 'name')) ||
+			return ((supports('csssupports')
+				&& (CSS.supports('animation', 'name')
+				|| CSS.supports('-webkit-animation', 'name'))
+			) ||
 				'animation' in document.body.style ||
 				'webkitAnimation' in document.body.style
 			);
