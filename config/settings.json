@@ -36,11 +36,13 @@
         ],
         "style-src": [
             "'self'",
-            "https:\/\/gist-assets.github.com"
+            "https:\/\/gist-assets.github.com",
+            "fonts.googleapis.com"
         ],
         "font-src": [
             "'self'",
             "themes.googleusercontent.com",
+            "fonts.gstatic.com",
             "http://openfontlibrary.org"
         ],
         "img-src": [
