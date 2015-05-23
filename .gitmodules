@@ -22,3 +22,6 @@
 [submodule "stylesheets/green"]
 	path = stylesheets/green
 	url = git://github.com/shgysk8zer0/green-theme.git
+[submodule "fonts"]
+	path = fonts
+	url = git://github.com/shgysk8zer0/fonts.git
