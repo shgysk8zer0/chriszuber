@@ -162,8 +162,8 @@ switch($_POST['action']) {
 
 	case 'update_icons':
 		require_login('admin');
-		$icons = \shgysk8zer0\Core\resources\Parser::parse('icons.json');
-		$found = array_filter($icons->icons, 'file_exists');
+		$icons = \shgysk8zer0\Core\resources\Parser::parseFile('icons.json');
+		$found = array_filter(array_unique($icons->icons), 'file_exists');
 		if (count($found) === count($icons->icons)) {
 			SVG_symbols($icons->icons, $icons->output);
 			$resp->notify(
