@@ -165,15 +165,24 @@ switch($_POST['action']) {
 		$icons = \shgysk8zer0\Core\resources\Parser::parseFile('icons.json');
 		$found = array_filter(array_unique($icons->icons), 'file_exists');
 		if (count($found) === count($icons->icons)) {
-			SVG_symbols($icons->icons, $icons->output);
-			$resp->notify(
-				'Success!',
-				"Icons have been saved to {$icons->output}"
-			);
+			if (SVG_symbols($icons->icons, $icons->output)) {
+				$resp->notify(
+					'Success!',
+					"Icons have been saved to {$icons->output}"
+				);
+			} else {
+				$resp->notify(
+					'We have a problem :(',
+					'Was unable to update combined SVG due to an error parsing or saving the file',
+					'images/octicons/svg/bug.svg'
+				);
+			}
+
 		} else {
 			$resp->notify(
 				'We have a problem :(',
-				'Some icons are missing. Check your browser\'s log'
+				'Some icons are missing. Check your browser\'s log',
+				'images/octicons/svg/bug.svg'
 			)->log([
 				'Icons' => $icons,
 				'Found' => $found,
