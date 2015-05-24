@@ -111,6 +111,9 @@ AddDefaultCharset utf-8
 <FilesMatch "^(ajax|custom|unit)\.php$">
 	Require all denied
 </FilesMatch>
+<FilesMatch "\.html$">
+	Require all granted
+</FilesMatch>
 <IfModule deflate_module>
 	# Force compression for mangled headers.
 	# http://developer.yahoo.com/blogs/ydn/posts/2010/12/pushing-beyond-gzipping
