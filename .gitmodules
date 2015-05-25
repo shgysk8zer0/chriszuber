@@ -17,10 +17,10 @@
 	path = stylesheets/base-theme
 	url = git://github.com/shgysk8zer0/base-theme.git
 [submodule "stylesheets/default"]
-	path = stylesheets/default
+	path = stylesheets/default-theme
 	url = git://github.com/shgysk8zer0/default-theme.git
 [submodule "stylesheets/green"]
-	path = stylesheets/green
+	path = stylesheets/green-theme
 	url = git://github.com/shgysk8zer0/green-theme.git
 [submodule "fonts"]
 	path = fonts
@@ -28,3 +28,6 @@
 [submodule "stylesheets/core-css"]
 	path = stylesheets/core-css
 	url = git://github.com/shgysk8zer0/core-css.git
+[submodule "stylesheets/blue-theme"]
+	path = stylesheets/blue-theme
+	url = git://github.com/shgysk8zer0/blue-theme.git
