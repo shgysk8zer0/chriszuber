@@ -25,3 +25,6 @@
 [submodule "fonts"]
 	path = fonts
 	url = git://github.com/shgysk8zer0/fonts.git
+[submodule "stylesheets/core-css"]
+	path = stylesheets/core-css
+	url = git://github.com/shgysk8zer0/core-css.git
