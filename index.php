@@ -65,7 +65,7 @@
 	$cookie->httponly = true;
 
 	if (! defined('THEME')) {
-		define('THEME', 'default');
+		define('THEME', 'default-theme');
 	}
 
 	if (isset($session->logged_in) and $session->logged_in) { //Check login if session

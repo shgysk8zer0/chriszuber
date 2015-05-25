@@ -1,7 +1,7 @@
 {
     "time_zone": "America\/Los_Angeles",
     "define": {
-        "theme": "default"
+        "theme": "default-theme"
     },
     "requires": [
         "custom.php"
