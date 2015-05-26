@@ -21,9 +21,9 @@ switch(trim($_POST['form'])) {
 				$resp->close(
 					'#loginDialog'
 				)->disable(
-					'menu[label=Account] menuitem:not([label=Logout])'
+					'#main_menu [label=Login]'
 				)->enable(
-					'menuitem[label=Logout]'
+					'#main_menu menuitem[label=Logout]'
 				)->attributes(
 					'body > main',
 					'contextmenu',
