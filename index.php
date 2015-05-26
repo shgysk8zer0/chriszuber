@@ -39,9 +39,13 @@
 	} elseif (substr($URL->host, 0, 4) === 'www.') {
 		$URL->host = substr($URL->host, 4);
 		$redirect  = true;
+	} elseif (array_key_exists('tags', $_REQUEST)) {
+		$URL->path .= 'tags/' . urlencode($_REQUEST['tags']);
+		$redirect = true;
 	}
 
 	if ($redirect) {
+		unset($URL->user, $URL->pass, $URL->query, $URL->fragment);
 		http_response_code(301);
 		header("Location: $URL");
 		exit();
