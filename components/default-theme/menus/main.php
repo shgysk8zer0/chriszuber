@@ -6,10 +6,10 @@
 	<menuitem label="Go to recent tags" icon="images/octicons/svg/tag.svg" data-scroll-to=".recent.tags"></menuitem>
 	<hr>
 	<?php if($login->logged_in):?>
-		<menuitem label="Login" icon="images/octicons/key/key.svg" data-show-modal="#loginDialog" disabled></menuitem>
-		<menuitem label="Logout" icon="images/octicons/svg/lock.svg" data-request="action=logout"></menuitem>
+		<menuitem label="Login" icon="images/octicons/svg/sign-in.svg" data-show-modal="#loginDialog" disabled></menuitem>
+		<menuitem label="Logout" icon="images/octicons/svg/sign-out.svg" data-request="action=logout"></menuitem>
 	<?php else:?>
-		<menuitem label="Login" icon="images/octicons/svg/key.svg" data-show-modal="#loginDialog"></menuitem>
-		<menuitem label="Logout" icon="images/octicons/svg/lock.svg" data-request="action=logout" disabled></menuitem>
+		<menuitem label="Login" icon="images/octicons/svg/sign-in.svg" data-show-modal="#loginDialog"></menuitem>
+		<menuitem label="Logout" icon="images/octicons/svg/sign-out.svg" data-request="action=logout" disabled></menuitem>
 	<?php endif;?>
 </menu>
