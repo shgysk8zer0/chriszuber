@@ -8,9 +8,9 @@ switch($_POST['action']) {
 		nonce();
 
 		$resp->enable(
-			'menu[label=Account] menuitem[label=Login]'
+			'#main_menu menuitem[label=Login]'
 		)->disable(
-			'menu[label=Account] menuitem[label=Logout]'
+			'#main_menu menuitem[label=Logout]'
 		)->attributes(
 			'body > main',
 			'contextmenu',

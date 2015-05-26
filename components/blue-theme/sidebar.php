@@ -3,7 +3,7 @@
 ?>
 <aside class="sidebar" rel="sidebar">
 	<div class="recent posts">
-		<h3>Recent Posts</h3>
+		<h3 class="sticky">Recent Posts</h3>
 		<?=array_reduce(
 			get_recent_posts(15),
 			function($html, \stdClass $post) use ($template, $URL)
@@ -15,7 +15,7 @@
 		)?>
 	</div>
 	<div class="recent tags">
-		<h3>Tags</h3>
+		<h3 class="sticky">Tags</h3>
 		<?php
 			$dom = new \DOMDocument('1.0', 'UTF-8');
 			$ul = array_reduce(

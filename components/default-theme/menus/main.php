@@ -1,5 +1,5 @@
 <menu type="context" id="main_menu">
-	<menuitem label="Scroll to top" icon="images/octicons/svg/jump-up.svg" data-scroll-to="body > header"></menuitem>
+	<menuitem label="Scroll to top" icon="images/octicons/svg/jump-up.svg" data-scroll-to="body"></menuitem>
 	<menuitem label="Scroll to bottom" icon="images/octicons/svg/jump-down.svg" data-scroll-to="body > footer"></menuitem>
 	<menuitem label="Go to comments section" icon="images/octicons/svg/comment-discussion.svg" data-scroll-to="#comments_section"></menuitem>
 	<menuitem label="Go to recent posts" icon="images/octicons/svg/book.svg" data-scroll-to=".recent.posts"></menuitem>
