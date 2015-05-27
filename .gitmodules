@@ -32,5 +32,5 @@
 	path = stylesheets/blue-theme
 	url = git://github.com/shgysk8zer0/blue-theme.git
 [submodule "classes/shgysk8zer0/parsedown"]
-	path = classes/shgysk8zer0/parsedown
+	path = classes/parsedown
 	url = git://github.com/shgysk8zer0/parsedown.git
