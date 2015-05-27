@@ -150,11 +150,13 @@ switch($_POST['action']) {
 		break;
 
 	case 'README':
+		$readme = new \shgysk8zer0\Core\File('README.md');
+		$parser = new \Parsedown\Parsedown();
 		$resp->append(
 			'body',
 			'<dialog id="README_dialog">
 			<button data-delete="#README_dialog">
-			</button><br />' . `markdown README.md` . '</dialog>'
+			</button><br />' . $parser->text($readme) . '</dialog>'
 		)->showModal(
 			'#README_dialog'
 		);
