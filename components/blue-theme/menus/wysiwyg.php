@@ -142,16 +142,16 @@
 			<?php endforeach?>
 		</menu>
 		<menu label="List">
-			<menuitem label="Unordered" data-editor-command="insertunorderedlist"></menuitem>
-			<menuitem label="Ordered" data-editor-command="insertorderedlist"></menuitem>
+			<menuitem label="Unordered" icon="images/octicons/svg/list-unordered.svg" data-editor-command="insertunorderedlist"></menuitem>
+			<menuitem label="Ordered" icon="images/octicons/svg/list-ordered.svg" data-editor-command="insertorderedlist"></menuitem>
 		</menu>
-		<menuitem label="Link" data-editor-command="createlink" data-prompt="Enter link location"></menuitem>
-		<menuitem label="Image" data-editor-command="insertimage" data-prompt="Enter image location"></menuitem>
+		<menuitem label="Link" icon="images/octicons/svg/link.svg" data-editor-command="createlink" data-prompt="Enter link location"></menuitem>
+		<menuitem label="Image" icon="images/octicons/svg/file-media.svg" data-editor-command="insertimage" data-prompt="Enter image location"></menuitem>
 		<menuitem label="Figure" data-editor-command="inserthtml" data-selection-to="figure"></menuitem>
 		<menuitem label="Figure Caption" data-editor-command="inserthtml" data-selection-to="figcaption"></menuitem>
-		<menuitem label="Code" data-editor-command="inserthtml" data-selection-to="code"></menuitem>
+		<menuitem label="Code" icon="images/octicons/svg/code.svg" data-editor-command="inserthtml" data-selection-to="code"></menuitem>
 		<menuitem label="Pre-formatted Text" data-editor-command="inserthtml" data-selection-to="pre"></menuitem>
-		<menuitem label="Custom HTML" data-editor-command="inserthtml" data-prompt="Enter the HTML to insert."></menuitem>
+		<menuitem label="Custom HTML" icon="images/octicons/svg/file-code.svg" data-editor-command="inserthtml" data-prompt="Enter the HTML to insert."></menuitem>
 	</menu>
 	<menu label="Text Style">
 		<menu label="Font">
@@ -167,12 +167,12 @@
 			</menu>
 			<menu label="Font Color">
 				<?php foreach($colors as $name => $color):?>
-					<menuitem label="<?=$name?>" data-editor-command="forecolor" data-editor-value="<?=$color?>" icon="data:image/svg+xml;utf8,<?=rawurlencode('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><rect width="1" height="1" fill="' . $color . '"/></svg>');?>"></menuitem>
+					<menuitem label="<?=$name?>" icon="data:image/svg+xml;utf8,<?=rawurlencode('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><rect width="1" height="1" fill="' . $color . '"/></svg>');?>" data-editor-command="forecolor" data-editor-value="<?=$color?>" ></menuitem>
 				<?php endforeach?>
 			</menu>
 		</menu>
-		<menuitem label="Paragraph" data-editor-command="insertparagraph"></menuitem>
-		<menuitem label="Blockquote" data-editor-command="formatblock" data-editor-value="BLOCKQUOTE"></menuitem>
+		<menuitem label="Paragraph" icon="images/octicons/svg/file-text.svg" data-editor-command="insertparagraph"></menuitem>
+		<menuitem label="Blockquote" icon="images/octicons/svg/quote.svg" data-editor-command="formatblock" data-editor-value="BLOCKQUOTE"></menuitem>
 		<menuitem label="Bold" data-editor-command="bold"></menuitem>
 		<menuitem label="Italics" data-editor-command="italic"></menuitem>
 		<menuitem label="Underline" data-editor-command="underline"></menuitem>
@@ -188,13 +188,13 @@
 		</menu>
 	</menu>
 	<menu label="Indentation">
-		<menuitem label="Increase" data-editor-command="indent"></menuitem>
-		<menuitem label="Decrease" data-editor-command="outdent"></menuitem>
+		<menuitem label="Increase" icon="images/octicons/svg/move-right.svg" data-editor-command="indent"></menuitem>
+		<menuitem label="Decrease" icon="images/octicons/svg/move-left.svg" data-editor-command="outdent"></menuitem>
 	</menu>
 	<menu label="Justify">
 		<menuitem label="Center" data-editor-command="justifycenter"></menuitem>
-		<menuitem label="Left" data-editor-command="justifyleft"></menuitem>
-		<menuitem label="Right" data-editor-command="justifyright"></menuitem>
+		<menuitem label="Left" icon="images/octicons/svg/jump-left.svg" data-editor-command="justifyleft"></menuitem>
+		<menuitem label="Right" icon="images/octicons/svg/jump-right.svg" data-editor-command="justifyright"></menuitem>
 		<menuitem label="Full" data-editor-command="justifyfull"></menuitem>
 	</menu>
 	<menu label="Special Characters">
@@ -207,14 +207,14 @@
 		<?php endforeach?>
 	</menu>
 	<menuitem label="Line Break" data-editor-command="inserthtml" data-editor-value="<br />"></menuitem>
-	<menuitem label="Horizontal Rule" data-editor-command="inserthorizontalrule"></menuitem>
+	<menuitem label="Horizontal Rule" icon="images/octicons/svg/horizontal-rule.svg" data-editor-command="inserthorizontalrule"></menuitem>
 	<menu label="Selection">
 		<menuitem label="Select All" data-editor-command="selectall"></menuitem>
-		<menuitem label="Clear Formatting" data-editor-command="removeformat"></menuitem>
+		<menuitem label="Clear Formatting" icon="images/octicons/svg/circle-slash.svg" data-editor-command="removeformat"></menuitem>
 		<menuitem label="Remove Links" data-editor-command="unlink"></menuitem>
 	</menu>
 	<menu label="History">
-		<menuitem label="Undo" data-editor-command="undo"></menuitem>
-		<menuitem label="Redo" data-editor-command="redo"></menuitem>
+		<menuitem label="Undo" icon="images/octicons/svg/history.svg" data-editor-command="undo"></menuitem>
+		<menuitem label="Redo" icon="images/octicons/svg/history.svg" data-editor-command="redo"></menuitem>
 	</menu>
 </menu>
