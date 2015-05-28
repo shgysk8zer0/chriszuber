@@ -83,6 +83,7 @@
 <?php if(localhost()):?>
 	<?php if(BROWSER === 'Firefox'):?>
 		<script type="application/javascript;version=1.8" src="scripts/std-js/deprefixer.js" async></script>
+		<script type="application/javascript;version=1.8" src="scripts/std-js/prototypes.js" async></script>
 		<script type="application/javascript;version=1.8" src="scripts/std-js/support_test.js" async></script>
 		<script type="application/javascript;version=1.8" src="scripts/std-js/poly_modern.js" async></script>
 		<script type="application/javascript;version=1.8" src="scripts/std-js/functions.js" async></script>
@@ -91,6 +92,7 @@
 		<script type="application/javascript;version=1.8" src="scripts/custom.js" async defer></script>
 	<?php else:?>
 		<script type="application/javascript" src="scripts/std-js/deprefixer.js" async></script>
+		<script type="application/javascript" src="scripts/std-js/prototypes.js" async></script>
 		<script type="application/javascript" src="scripts/std-js/support_test.js" async></script>
 		<script type="application/javascript" src="scripts/std-js/poly_modern.js" async></script>
 		<script type="application/javascript" src="scripts/std-js/functions.js" async></script>
