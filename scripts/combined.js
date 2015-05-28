@@ -169,7 +169,8 @@ if(! ('supports' in CSS)) {
 	}
 }(typeof global !== 'undefined' ? global : this));
 
-function supports(type) {
+function supports(type)
+{
 	/*Feature detection. Returns boolean value of suport for type*/
 	/**
 	* A series of tests to determine support for a given feature
@@ -249,7 +250,8 @@ function supports(type) {
 			case 'cssgradients':
 				return (supports('csssupports')
 					&& CSS.supports('background-image', 'linear-gradient(red,red)'))
-					|| (function() {
+					|| (function()
+					{
 					var el = document.createElement('a');
 					el.style.backgroundImage = 'linear-gradient(red, red)';
 					return (!!el.style.backgroundImage);
@@ -282,7 +284,8 @@ function supports(type) {
 
 			case 'cssmatches':
 				return ('sessionStorage' in window && sessionStorage.hasOwnProperty('MatchesPre')) ||
-				[':matches', ':any', ':-moz-any', ':-webkit-any'].some(function (pre) {
+				[':matches', ':any', ':-moz-any', ':-webkit-any'].some(function (pre)
+				{
 					try {
 						if (document.querySelector(pre + '(body)') === document.body) {
 							sessionStorage.setItem('MatchesPre', pre);
@@ -327,173 +330,141 @@ function supports(type) {
 		return false;
 	}
 }
-"use strict";
-var body = document.body,
-	html = document.documentElement,
-	prefixes = ['', '-moz-', '-webkit-', '-o-', '-ms-'];
-DOMTokenList.prototype.pick = function(cname1, cname2, condition) {
-	(condition) ? this.add(cname1) : this.add(cname2);
-};
-DOMTokenList.prototype.swap = function(cname1, cname2) {
-	if(this.contains(cname1)) {
-		this.remove(cname1);
-		this.add(cname2);
-	} else {
-		this.remove(cname2);
-		this.add(cname1);
-	}
-};
-Array.prototype.unique = function() {
-	return this.filter(
-		function(val, i, arr) {
-			return (i <= arr.indexOf(val));
-		}
-	);
-};
-Array.prototype.end = function() {
-	return this[this.length - 1];
-};
-HTMLCollection.prototype.indexOf = Array.prototype.indexOf;
-function selection() {
-	var selected = getSelection();
-	//this.target = selected.focusNode;
-	this.start = selected.anchorOffset;
-	this.end = selected.focusOffset;
-	this.length = this.end - this.start;
-	this.parent = selected.anchorNode;
-	this.before = this.parent.textContent.substring(0, this.start);
-	this.after = this.parent.textContent.substring(this.end);
-	this.text = selected.focusNode.textContent.substring(this.start, this.end);
+function isOnline()
+{
+	return (! 'onLine' in navigator) || navigator.onLine;
 }
-selection.prototype.constructor = selection;
-selection.prototype.replace = function(rep) {
-	this.parent.innerHTML = this.before + rep + this.after;
-};
-RegExp.prototype.escape = function() {
-	return this.source.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-};
-
-Object.prototype.isaN = function () {
-	return parseFloat(this) == this;
-};
-Object.prototype.camelCase = function () {
-	return this.toLowerCase() .replace(/\ /g, '-') .replace(/-(.)/g, function (match, group1) {
-		return group1.toUpperCase();
-	});
-};
-Element.prototype.delete = function() {
-	this.parentElement.removeChild(this);
-};
-Element.prototype.after = function () {
-	for(var i = 0; i < arguments.length; i++) {
-		(typeof arguments[i] === 'string')
-			? this.insertAdjacentHTML('afterend', arguments[i])
-			: this.parentElement.insertBefore(arguments[i], this.nextSibling);
-	}
-	return this;
-};
-Element.prototype.before = function() {
-	for(var i = 0; i < arguments.length; i++) {
-		(typeof arguments[i] === 'string')
-			? this.insertAdjacentHTML('beforebegin', arguments[i])
-			: this.parentElement.insertBefore(arguments[i], this);
-	}
-	return this;
-};
-Element.prototype.prepend = function() {
-	for(var i = 0; i < arguments.length; i++) {
-		(typeof arguments[i] === 'string')
-			? this.insertAdjacentHTML('afterbegin', arguments[i])
-			: this.insertBefore(arguments[i], this.firstChild);
-	}
-	return this;
-};
-Element.prototype.append = function() {
-	for(var i = 0; i < arguments.length; i++) {
-		(typeof arguments[i] === 'string')
-			? this.insertAdjacentHTML('beforeend', arguments[i])
-			: this.appendChild(arguments[i]);
-	}
-	return this;
-};
-Element.prototype.clone = function() {
-	return this.cloneNode(true);
-};
-Element.prototype.next = function () {
-	return this.nextSibling;
-};
-Element.prototype.prev = function () {
-	return this.previousSibling;
-};
-Element.prototype.html = function(html) {
-	this.innerHTML = html;
-	return this;
-};
-Element.prototype.ancestor = function (sel) {
-	if(this.parentElement.matches(sel)) {
-		return this.parentElement;
-	} else if(this === document.body) {
-		return false;
+function isInternalLink(link)
+{
+	if ('URL' in window) {
+		return new URL(link.href, document.baseURI).host === location.host;
 	} else {
-		return this.parentElement.ancestor(sel);
+		return new RegExp(document.location.origin).test(link.href);
 	}
-};
-Element.prototype.data = function(set, value) {
-	var val = null;
-	if(supports('dataset')) {
-		(typeof value !== 'undefined') ? this.dataset[set.camelCase()] = value : val = this.dataset[set.camelCase()];
-	} else {
-		(typeof value !== 'undefined') ? this.setAttribute('data-' + set, value): val = this.getAttribute('data-' + set);
+}
+function ajax(data)
+{
+	if ((typeof data.type !== 'undefined' && data.type.toLowerCase() === 'get') && (typeof data.request === 'string')) {
+		data.url += '?' + data.request;
 	}
-	return val;
-};
-Element.prototype.attr = function(attr, val) {
-	switch(typeof val) {
-		case 'string':
-			this.setAttribute(attr, val);
-			return this;
-			break;
-
-		case 'boolean':
-			(val) ? this.setAttribute(attr, '') : this.removeAttribute(attr);
-			return this;
-			break;
-
-		default:
-			return this.getAttribute(attr);
-	}
-};
-Element.prototype.uniqueSelector = function () {
-	if (this.nodeType !== 1) {
-		return null;
-	}
-	var path = [],
-	current = this;
-	while (current !== document.documentElement) {
-		if (current === document.body) {
-			path.push('body');
-			break;
-		} else if(current.hasAttribute('id')) {
-			path.push('#' + current.id);
-			break;
-		} else {
-			path.push(current.tagName.toLowerCase() + ':nth-child(' + (current.parentElement.children.indexOf(current) + 1).toString() + ')');
-			current = current.parentElement;
+	if (typeof data.form !== 'undefined') {
+		if (typeof data.form === 'string') {
+			data.form = document.forms[data.form];
 		}
+		data.request = new FormData(data.form);
+		data.request.append('form', data.form.name);
+		data.request.append('nonce', sessionStorage.getItem('nonce'));
+		data.form.querySelectorAll('[data-input-name]').forEach(function(input) {
+			data.request.append(input.data('input-name'), input.innerHTML);
+		});
 	}
-	return path.reverse() .join(' > ');
-};
-Element.prototype.ajax = function(args) {
-	ajax(args).then(
-		this.html.bind(this),
-		console.error
-	);
+	return new Promise(function (success, fail)
+	{
+		var resp;
+		/*https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise*/
+		if (('cache' in data) && cache.has(data.cache)) {
+			if (typeof data.history === 'string') {
+				history.pushState({}, document.title, data.history);
+			}
+			success(cache.get(data.cache));
+		} else if (typeof navigator.onLine !== 'boolean' || navigator.onLine) {
+			var req = new XMLHttpRequest(),
+				progress = document.createElement('progress');
+			if (("withCredentials" in req) && ('withCredentials' in data)) {
+				req.withCredentials = data.withCredentials;
+
+			}
+			if (typeof data.contentType !== 'string') {
+				data.contentType = 'application/x-www-form-urlencoded';
+			}
+			document.body.appendChild(progress);
+			req.open(
+				data.type || 'POST',
+				data.url || document.baseURI,
+				data.async || true
+			);
+			if (typeof data.request === 'string') {
+				req.setRequestHeader('Content-type', data.contentType);
+			}
+			req.setRequestHeader('Request-Type', 'AJAX');
+			req.addEventListener('progress', function(event)
+			{
+				if (event.lengthComputable) {
+					progress.value = event.loaded / event.total;
+				}
+			});
+			req.addEventListener('load', function (event)
+			{
+				switch (req.getResponseHeader('Content-Type')) {
+					case 'application/json':
+						resp = JSON.parse(req.response.trim());
+						break;
+
+					case 'text/xml':
+						resp = new DOMParser().parseFromString(req.response.trim(), "text/xml");
+						break;
+
+					case 'text/html':
+						resp = document.createDocumentFragment();
+						resp.innerHTML = req.response.trim();
+						break;
+
+					default:
+						resp = req.response.trim();
+				}
+				progress.parentElement.removeChild(progress);
+				if (req.status == 200) {
+					if (data.cache) {
+						cache.set(data.cache, req.response.trim());
+					}
+					if (typeof data.history === 'string') {
+						history.pushState({}, document.title, data.history);
+					}
+					success(resp);
+				} else {
+					fail(Error(req.statusText));
+				}
+			});
+			req.addEventListener('error', function ()
+			{
+				fail(Error('Network Error'));
+				progress.parentElement.removeChild(progress);
+			});
+			if (typeof data.request !== 'undefined') {
+				req.send(data.request);
+			} else {
+				req.send();
+			}
+		} else {
+			notify({
+				title: 'Network:',
+				body: 'offline',
+				icon: 'images/icons/network-server.png'
+			});
+			fail('No Internet Connection');
+		}
+	});
+}
+function cache()
+{
 	return this;
-};
-Element.prototype.wordCount = function() {
-	return this.textContent.split(' ').length;
-};
-function notify(options) {
+}
+function getLocation(options)
+{
+	/*https://developer.mozilla.org/en-US/docs/Web/API/Geolocation.getCurrentPosition*/
+	if (typeof options === 'undefined') {
+		options = {};
+	}
+	return new Promise(function(success, fail)
+	{
+		if (!('geolocation' in navigator)) {
+			fail('Your browser does not support GeoLocation');
+		}
+		navigator.geolocation.getCurrentPosition(success, fail, options);
+	});
+}
+function notify(options)
+{
 	/*Creates a notification, with alert fallback*/
 	var notification;
 	if (typeof options === 'string') {
@@ -501,7 +472,7 @@ function notify(options) {
 			body: options
 		};
 	}
-	if(typeof options.icon !== 'string') {
+	if (typeof options.icon !== 'string') {
 		options.icon = 'images/octicons/svg/megaphone.svg';
 	}
 	if ('Notification' in window) {
@@ -539,195 +510,61 @@ function notify(options) {
 		return notification;
 	}
 }
-/*AppCache updater*/
-/*$(window) .load(function (e) { *//*Check for appCache updates if there is a manifest set*/
-window.addEventListener('load', function () {
-	/**
-	*TODO Should I check for manifest on anything but <html>?
-	*		Could use (!!$('[manifest]').length) instead.
-	*/
-	if (('applicationCache' in window) && ('manifest' in document.documentElement)) {
-		var appCache = window.applicationCache;
-		$(appCache) .updateready(function (e) {
-			if (appCache.status == appCache.UPDATEREADY) {
-				appCache.update() && appCache.swapCache();
-				if (confirm('A new version of this site is available. Load it?')) {
-					window.location.reload();
-				}
-			}
-		});
-	}
-});
-function getLocation(options) {
-	/*https://developer.mozilla.org/en-US/docs/Web/API/Geolocation.getCurrentPosition*/
-	if (typeof options === 'undefined') {
-		options = {};
-	}
-	return new Promise(function(success, fail) {
-		if (!('geolocation' in navigator)) {
-			fail('Your browser does not support GeoLocation');
-		}
-		navigator.geolocation.getCurrentPosition(success, fail, options);
-	});
+function selection()
+{
+	var selected = getSelection();
+	//this.target = selected.focusNode;
+	this.start = selected.anchorOffset;
+	this.end = selected.focusOffset;
+	this.length = this.end - this.start;
+	this.parent = selected.anchorNode;
+	this.before = this.parent.textContent.substring(0, this.start);
+	this.after = this.parent.textContent.substring(this.end);
+	this.text = selected.focusNode.textContent.substring(this.start, this.end);
 }
-Element.prototype.query = function(query) {
-	var els = [];
-	if(this.matches(query)) {
-		els.push(this);
-	}
-	this.querySelectorAll(query).forEach(function(el) {
-		els.push(el);
-	});
-	return els;
+selection.prototype.constructor = selection;
+selection.prototype.replace = function(rep)
+{
+	this.parent.innerHTML = this.before + rep + this.after;
 };
-Object.prototype.keys = function() {
-	return Object.keys(this) || [];
-};
-function ajax(data) {
-	if ((typeof data.type !== 'undefined' && data.type.toLowerCase() === 'get') && (typeof data.request === 'string')) {
-		data.url += '?' + data.request;
-	}
-	if(typeof data.form !== 'undefined') {
-		if(typeof data.form === 'string') {
-			data.form = document.forms[data.form];
-		}
-		data.request = new FormData(data.form);
-		data.request.append('form', data.form.name);
-		data.request.append('nonce', sessionStorage.getItem('nonce'));
-		data.form.querySelectorAll('[data-input-name]').forEach(function(input) {
-			data.request.append(input.data('input-name'), input.innerHTML);
-		});
-	}
-	return new Promise(function (success, fail) {
-		var resp;
-		/*https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise*/
-		if(('cache' in data) && cache.has(data.cache)) {
-			if(typeof data.history === 'string') {
-				history.pushState({}, document.title, data.history);
-			}
-			success(cache.get(data.cache));
-		} else if(typeof navigator.onLine !== 'boolean' || navigator.onLine) {
-			var req = new XMLHttpRequest(),
-				progress = document.createElement('progress');
-			if (("withCredentials" in req) && ('withCredentials' in data)) {
-				req.withCredentials = data.withCredentials;
-
-			}
-			if(typeof data.contentType !== 'string') {
-				data.contentType = 'application/x-www-form-urlencoded';
-			}
-			document.body.appendChild(progress);
-			req.open(
-				data.type || 'POST',
-				data.url || document.baseURI,
-				data.async || true
-			);
-			if(typeof data.request === 'string') {
-				req.setRequestHeader('Content-type', data.contentType);
-			}
-			req.setRequestHeader('Request-Type', 'AJAX');
-			req.addEventListener('progress', function(event) {
-				if(event.lengthComputable) {
-					progress.value = event.loaded / event.total;
-				}
-			});
-			req.addEventListener('load', function (event) {
-				switch(req.getResponseHeader('Content-Type')) {
-					case 'application/json':
-						resp = JSON.parse(req.response.trim());
-						break;
-
-					case 'text/xml':
-						resp = new DOMParser().parseFromString(req.response.trim(), "text/xml");
-						break;
-
-					case 'text/html':
-						resp = document.createDocumentFragment();
-						resp.innerHTML = req.response.trim();
-						break;
-
-					default:
-						resp = req.response.trim();
-				}
-				progress.parentElement.removeChild(progress);
-				if(req.status == 200) {
-					if(data.cache) {
-						cache.set(data.cache, req.response.trim());
-					}
-					if(typeof data.history === 'string') {
-						history.pushState({}, document.title, data.history);
-					}
-					success(resp);
-				} else {
-					fail(Error(req.statusText));
-				}
-			});
-			req.addEventListener('error', function () {
-				fail(Error('Network Error'));
-				progress.parentElement.removeChild(progress);
-			});
-			if(typeof data.request !== 'undefined') {
-				req.send(data.request);
-			} else {
-				req.send();
-			}
-		} else {
-			notify({
-				title: 'Network:',
-				body: 'offline',
-				icon: 'images/icons/network-server.png'
-			});
-			fail('No Internet Connection');
-		}
-	});
-}
-function cache() {
-	return this;
-}
 cache.prototype.constructor = cache;
-cache.prototype.has = function(key) {
+cache.prototype.has = function(key)
+{
 	return localStorage.keys().indexOf(('cache ' + key).camelCase()) !== -1;
 };
-cache.prototype.get = function(key) {
+cache.prototype.get = function(key)
+{
 	return localStorage.getItem(('cache ' + key).camelCase()) || false;
 };
-cache.prototype.set = function(key, value) {
+cache.prototype.set = function(key, value)
+{
 	localStorage.setItem(('cache ' + key).camelCase(), value);
 	return this;
 };
-cache.prototype.unset = function(key) {
+cache.prototype.unset = function(key)
+{
 	localStorage.removeItem(('cache ' + key).camelCase());
 	return this;
 };
-cache.prototype.keys = function() {
-	return localStorage.keys().filter(function(key) {
+cache.prototype.keys = function()
+{
+	return localStorage.keys().filter(function(key)
+	{
 		return /^cache/.test(key);
 	});
 };
-cache.prototype.each = function(callback) {
+cache.prototype.each = function(callback)
+{
 	return this.keys().forEach(callback.bind(this));
 };
-cache.prototype.clear = function() {
-	this.each(function(key) {
+cache.prototype.clear = function()
+{
+	this.each(function(key)
+	{
 		localStorage.removeItem(key);
 	});
 	return this;
 };
-Object.prototype.isArray  = false;
-Object.prototype.isString = false;
-Object.prototype.isNumber = false;
-Array.prototype.isArray   = true;
-String.prototype.isString = true;
-Number.prototype.isNumber = true;
-window.addEventListener('popstate', function() {
-	ajax({
-		url: location.pathname,
-		type: 'GET'
-	}).then(
-		handleJSON,
-		console.error
-	);
-});
 /*======================================================zQ Functions=========================================================*/
 Object.prototype.isZQ = false;
 zQ.prototype.isZQ = true;
@@ -879,7 +716,7 @@ zQ.prototype.pause = function() {
 
 zQ.prototype.on = function (event, callback) {
 	this.each(function (e) {
-		(html.addEventListener) ? e.addEventListener(event, callback, true)  : e['on' + event] = callback;
+		('addEventListener' in Element.prototype) ? e.addEventListener(event, callback, true)  : e['on' + event] = callback;
 	});
 	return this;
 };
@@ -1021,62 +858,78 @@ function handleJSON(json) {
 		return false;
 	}
 	if ('remove' in json) {
-		document.querySelectorAll(json.remove).forEach(function(el) {
+		document.querySelectorAll(json.remove).forEach(function(el)
+		{
 			el.parentElement.removeChild(el);
 		});
 	}
 	if('text' in json) {
-		Object.keys(json.text).forEach(function(key) {
+		Object.keys(json.text).forEach(function(key)
+		{
 			document.querySelector(key).textContent = json.text[key];
 		});
 	}
 	if('html' in json) {
-		Object.keys(json.html).forEach(function(key) {
+		Object.keys(json.html).forEach(function(key)
+		{
 			document.querySelector(key).innerHTML = json.html[key];
 		});
 	}
 	if('after' in json) {
-		Object.keys(json.after).forEach(function(key) {
+		Object.keys(json.after).forEach(function(key)
+		{
 			document.querySelector(key).insertAdjacentHTML('afterend', json.after[key]);
 		});
 	}
 	if('before' in json) {
-		Object.keys(json.before).forEach(function(key) {
+		Object.keys(json.before).forEach(function(key)
+		{
 			document.querySelector(key).insertAdjacentHTML('beforebegin', json.before[key]);
 		});
 	}
 	if('append' in json) {
-		Object.keys(json.append).forEach(function(key) {
+		Object.keys(json.append).forEach(function(key)
+		{
 			document.querySelector(key).insertAdjacentHTML('beforeend', json.append[key]);
 		});
 	}
 	if('prepend' in json) {
-		Object.keys(json.prepend).forEach(function(key) {
+		Object.keys(json.prepend).forEach(function(key)
+		{
 			document.querySelector(key).insertAdjacentHTML('afterbegin', json.prepend[key]);
 		});
 	}
 	if('addClass' in json) {
-		Object.keys(json.addClass).forEach(function(selector) {
-			document.querySelectorAll(selector).forEach(function(el) {
-				json.addClass[selector].split(',').forEach(function(cname) {
+		Object.keys(json.addClass).forEach(function(selector)
+		{
+			document.querySelectorAll(selector).forEach(function(el)
+			{
+				json.addClass[selector].split(',').forEach(function(cname)
+				{
 					el.classList.add(cname);
 				});
 			});
 		});
 	}
 	if('removeClass' in json) {
-		Object.keys(json.removeClass).forEach(function(selector) {
-			document.querySelectorAll(selector).forEach(function(el) {
-				json.removeClass[selector].split(',').forEach(function(cname) {
+		Object.keys(json.removeClass).forEach(function(selector)
+		{
+			document.querySelectorAll(selector).forEach(function(el)
+			{
+				json.removeClass[selector].split(',').forEach(function(cname)
+				{
 					el.classList.remove(cname);
 				});
 			});
 		});
 	}
 	if('attributes' in json) {
-		Object.keys(json.attributes).forEach(function(selector) {
-			document.querySelectorAll(selector).forEach(function(el) {
-				Object.keys(json.attributes[selector]).forEach(function(attribute) {
+		Object.keys(json.attributes).forEach(function(selector)
+		{
+			document.querySelectorAll(selector).forEach(function(el)
+			{
+				Object.keys(json.attributes[selector]).forEach(function(attribute)
+				{
 					if(typeof json.attributes[selector][attribute] === 'boolean') {
 						(json.attributes[selector][attribute]) ? el.setAttribute(attribute, '') : el.removeAttribute(attribute);
 					}
@@ -1088,9 +941,11 @@ function handleJSON(json) {
 		});
 	}
 	if('increment' in json) {
-		Object.keys(json.increment).forEach(function(selector) {
+		Object.keys(json.increment).forEach(function(selector)
+		{
 			var el = document.querySelector(selector);
-			Object.keys(json.increment[selector]).forEach(function(attribute) {
+			Object.keys(json.increment[selector]).forEach(function(attribute)
+			{
 				if(attribute in el) {
 					el[attribute] += json.increment[selector][attribute]
 				}
@@ -1101,44 +956,56 @@ function handleJSON(json) {
 		})
 	}
 	if('stepUp' in json) {
-		Object.keys(json.stepUp).forEach(function(selector) {
-			document.querySelectorAll(selector).forEach(function(el) {
+		Object.keys(json.stepUp).forEach(function(selector)
+		{
+			document.querySelectorAll(selector).forEach(function(el)
+			{
 				el.stepUp(json.stepUp[selector]);
 			});
 		});
 	}
 	if('stepDown' in json) {
-		Object.keys(json.stepDown).forEach(function(selector) {
-			document.querySelectorAll(selector).forEach(function(el) {
+		Object.keys(json.stepDown).forEach(function(selector)
+		{
+			document.querySelectorAll(selector).forEach(function(el)
+			{
 				el.stepDown(json.stepDown[selector]);
 			});
 		});
 	}
 	if('style' in json) {
-		Object.keys(json.style).forEach(function(sel) {
-			document.querySelectorAll(sel).forEach(function(el) {
-				Object.keys(json.style[sel]).forEach(function(prop) {
+		Object.keys(json.style).forEach(function(sel)
+		{
+			document.querySelectorAll(sel).forEach(function(el)
+			{
+				Object.keys(json.style[sel]).forEach(function(prop)
+				{
 					el.style[prop.camelCase()] = json.style[sel][prop];
 				});
 			});
 		});
 	}
 	if('dataset' in json) {
-		Object.keys(json.dataset).forEach(function(sel) {
-			document.querySelectorAll(sel).forEach(function(el) {
-				Object.keys(json.dataset[sel]).forEach(function(prop) {
+		Object.keys(json.dataset).forEach(function(sel)
+		{
+			document.querySelectorAll(sel).forEach(function(el)
+			{
+				Object.keys(json.dataset[sel]).forEach(function(prop)
+				{
 					el.data(prop, json.dataset[sel][prop]);
 				});
 			});
 		});
 	}
 	if('sessionStorage' in json) {
-		Object.keys(json.sessionStorage).forEach(function(key) {
+		Object.keys(json.sessionStorage).forEach(function(key)
+		{
 			(json.sessionStorage[key] === '') ? sessionStorage.removeItem(key) : sessionStorage.setItem(key, json.sessionStorage[key]);
 		});
 	}
 	if('localStorage' in json) {
-		Object.keys(json.localStorage).forEach(function(key) {
+		Object.keys(json.localStorage).forEach(function(key)
+		{
 			(json.localStorage[key] === '') ? sessionStorage.removeItem(key) : localStorage.setItem(key, json.localStorage[key]);
 		});
 	}
@@ -1183,13 +1050,15 @@ function handleJSON(json) {
 	}
 	if('open' in json) {
 		var specs = [];
-		json.open.specs.keys().forEach(function(spec) {
+		json.open.specs.keys().forEach(function(spec)
+		{
 			specs.push(spec + '=' + json.open.specs[spec]);
 		});
 		window.open(json.open.url, '_blank', specs.join(','), json.open.replace);
 	}
 	if('show' in json) {
-		document.querySelectorAll(json.show).forEach(function(el) {
+		document.querySelectorAll(json.show).forEach(function(el)
+		 {
 			el.show();
 		});
 	}
@@ -1197,13 +1066,16 @@ function handleJSON(json) {
 		document.querySelector(json.showModal).showModal();
 	}
 	if('close' in json) {
-		document.querySelectorAll(json.close).forEach(function(el) {
+		document.querySelectorAll(json.close).forEach(function(el)
+		{
 			el.close();
 		});
 	}
 	if('triggerEvent' in json) {
-		Object.keys(json.triggerEvent).forEach(function(selector) {
-			document.querySelectorAll(selector).forEach(function(target) {
+		Object.keys(json.triggerEvent).forEach(function(selector)
+		{
+			document.querySelectorAll(selector).forEach(function(target)
+			{
 				var event = json.triggerEvent[selector].toLowerCase();
 				if(event === 'click') {
 					target.dispatchEvent(new MouseEvent(event));
@@ -1215,21 +1087,26 @@ function handleJSON(json) {
 	}
 	if('serverEvent' in json) {
 		var serverEvent = new EventSource(json.serverEvent);
-		serverEvent.addEventListener('ping', function(event) {
+		serverEvent.addEventListener('ping', function(event)
+		{
 			handleJSON(JSON.parse(event.data));
 		});
-		serverEvent.addEventListener('close', function(event) {
+		serverEvent.addEventListener('close', function(event)
+		{
 			serverEvent.close();
 			handleJSON(JSON.parse(event.data));
 		});
-		serverEvent.addEventListener('error', function(error) {
+		serverEvent.addEventListener('error', function(error)
+		{
 			console.error(new Error(error));
 			console.error(error);
 		});
 	}
 }
-"use strict";
-window.addEventListener('load', function() { /*Cannot rely on $(window).load() to work, so use this instead*/
+/*Cannot rely on $(window).load() to work, so use this instead*/
+window.addEventListener('load', function()
+{
+	"use strict";
 	var html = $('html'),
 		body = $('body'),
 		head = $('head');
@@ -1240,48 +1117,55 @@ window.addEventListener('load', function() { /*Cannot rely on $(window).load() t
 	'visibility','notifications', 'ApplicationCache', 'indexedDB',
 	'localStorage','sessionStorage', 'CSSgradients', 'transitions',
 	'animations',  'CSSvars','CSSsupports', 'CSSmatches', 'querySelectorAll',
-	'workers', 'promises', 'ajax', 'FormData'].forEach(function(feat){
+	'workers', 'promises', 'ajax', 'FormData'].forEach(function(feat)
+	{
 		document.documentElement.classList.pick(feat, 'no-' + feat, supports(feat));
 	});
 	document.documentElement.classList.pick('offline', 'online', (supports('connectivity') && !navigator.onLine));
 	setTimeout(
-		function(){
+		function()
+		{
 			body.results.bootstrap();
 		}, 100
 	);
 	body.watch({
-		childList: function(){
+		childList: function()
+		{
 			this.addedNodes.bootstrap();
 		},
-		attributes: function(){
-			switch(this.attributeName) {
+		attributes: function()
+		{
+			switch (this.attributeName) {
 				case 'contextmenu':
 					var menu = this.target.attr('contextmenu');
-					if(this.oldValue !== '') {
+					if (this.oldValue !== '') {
 						$('menu#' + this.oldValue).delete();
 					}
-					if(menu && menu !== '') {
-						if(!$('menu#'+ menu).found){
+					if (menu && menu !== '') {
+						if (! $('menu#'+ menu).found) {
 							ajax({
 								url: document.baseURI,
 								request: 'load_menu=' + menu.replace(/\_menu$/ ,''),
 								cache: this.target.data('cache')
 							}).then(
 								handleJSON,
-								console.error
+								function(err)
+								{
+									console.error(err);
+								}
 							);
 						}
 					}
 					break;
 
 				case 'contextmenu':
-					if(this.oldValue !== '') {
+					if (this.oldValue !== '') {
 						$('menu#' + this.oldValue).delete();
 					}
 					break;
 
 				case 'open':
-					if(
+					if (
 						this.target.hasAttribute('open')
 						&& (this.target.offsetTop + this.target.offsetHeight < window.scrollY)
 					) {
@@ -1296,9 +1180,10 @@ window.addEventListener('load', function() { /*Cannot rely on $(window).load() t
 					break;
 
 				case 'data-request':
-					if(this.oldValue !== '') {
-						this.target.addEventListener('click', function() {
-							if(!this.data('confirm') || confirm(this.data('confirm'))){
+					if (this.oldValue !== '') {
+						this.target.addEventListener('click', function()
+						{
+							if (! this.data('confirm') || confirm(this.data('confirm'))) {
 								ajax({
 									url: this.data('url')|| document.baseURI,
 									request: (this.data('prompt'))
@@ -1307,10 +1192,13 @@ window.addEventListener('load', function() { /*Cannot rely on $(window).load() t
 									cache: el.data('cache')
 								}).then(
 									handleJSON,
-									console.error
+									function(err)
+									{
+										console.error(err);
+									}
 								);
 							}
-					});
+						});
 					}
 					break;
 
@@ -1333,10 +1221,13 @@ window.addEventListener('load', function() { /*Cannot rely on $(window).load() t
 		'data-dropzone',
 		'data-import'
 	]);
-	$(window).networkChange(function() {
+	$(window).networkChange(function()
+	{
 		$('html').toggleClass('online', navigator.onLine).toggleClass('offline', !navigator.onLine);
-	}).online(function(){
-		$('fieldset').each(function(fieldset){
+	}).online(function()
+	{
+		$('fieldset').each(function(fieldset)
+		{
 			fieldset.removeAttribute('disabled');
 		});
 		notify({
@@ -1344,8 +1235,10 @@ window.addEventListener('load', function() { /*Cannot rely on $(window).load() t
 			body: 'online',
 			icon: 'images/icons/network-server.png'
 		});
-	}).offline(function(){
-		$('fieldset').each(function(fieldset){
+	}).offline(function()
+	{
+		$('fieldset').each(function(fieldset)
+		{
 			fieldset.disabled = true;
 		});
 		notify({
@@ -1354,24 +1247,31 @@ window.addEventListener('load', function() { /*Cannot rely on $(window).load() t
 			icon: 'images/icons/network-server.png'
 		});
 	});
-	if(!sessionStorage.hasOwnProperty('nonce')) {
+	if (!sessionStorage.hasOwnProperty('nonce')) {
 		ajax({
 			request: 'request=nonce'
 		}).then(
 			handleJSON,
-			console.error
+			function(err)
+			{
+				console.error(err);
+			}
 		);
 	}
 });
-NodeList.prototype.bootstrap = function() {
-	this.forEach(function(node){
-		if(node.nodeType !== 1) {
+NodeList.prototype.bootstrap = function()
+{
+	"use strict";
+	this.forEach(function(node)
+	{
+		if (node.nodeType !== 1) {
 			return this;
 		}
-		if(!supports('details')) {
-			node.query('details > summary').forEach(function(details) {
+		if (! supports('details')) {
+			node.query('details > summary').forEach(function(details)
+			{
 				details.addEventListener('click', function() {
-					if(this.parentElement.hasAttribute('open')) {
+					if (this.parentElement.hasAttribute('open')) {
 						this.parentElement.removeAttribute('open');
 					} else {
 						this.parentElement.setAttribute('open', '');
@@ -1379,42 +1279,51 @@ NodeList.prototype.bootstrap = function() {
 				});
 			});
 		}
-		if(supports('menuitem')) {
-			node.query('[contextmenu]').forEach(function(el) {
+		if (supports('menuitem')) {
+			node.query('[contextmenu]').forEach(function(el)
+			{
 				var menu = el.attr('contextmenu');
-				if(menu && menu !== '') {
-					if(!$('menu#'+ menu).found){
+				if (menu && menu !== '') {
+					if (! $('menu#'+ menu).found) {
 						ajax({
 							url: document.baseURI,
 							request: 'load_menu=' + menu.replace(/\_menu$/ ,''),
 							cache: el.data('cache')
 						}).then(
 							handleJSON,
-							console.error
+							function(err)
+							{
+								console.error(err);
+							}
 						);
 					}
 				}
 			});
 		}
-		if(supports('datalist')) {
-			node.query('[list]').forEach(function(list) {
-				if(!$('#' + list.getAttribute('list')).found) {
+		if (supports('datalist')) {
+			node.query('[list]').forEach(function(list)
+			{
+				if (!$('#' + list.getAttribute('list')).found) {
 					ajax({
 						request: 'datalist=' + list.getAttribute('list'),
 						type: 'POST'
 					}).then(
 						handleJSON,
-						console.error
+						function(err)
+						{
+							console.error(err);
+						}
 					);
 				}
 			});
 		}
-		if(!supports('picture')) {
-			node.query('picture').forEach(function(picture) {
-				if('matchMedia' in window) {
+		if (! supports('picture')) {
+			node.query('picture').forEach(function(picture)
+			{
+				if ('matchMedia' in window) {
 					var sources = picture.querySelectorAll('source[media][srcset]');
-					for(var n = 0; n < sources.length; n++) {
-						if(matchMedia(sources[n].getAttribute('media')).matches) {
+					for (var n = 0; n < sources.length; n++) {
+						if (matchMedia(sources[n].getAttribute('media')).matches) {
 							picture.getElementsByTagName('img')[0].src = sources[n].getAttribute('srcset');
 							break;
 						}
@@ -1424,17 +1333,20 @@ NodeList.prototype.bootstrap = function() {
 				}
 			});
 		}
-		node.query('[autofocus]').forEach(function(input) {
+		node.query('[autofocus]').forEach(function(input)
+		{
 			input.focus();
 		});
-		node.query('a[href]:not([target="_blank"]):not([download]):not([href*="\#"])').filter(function(a) {
-			return new RegExp(document.location.origin).test(a.href);
-		}).forEach(function(a) {
-			a.addEventListener('click', function(event) {
-				if(typeof ga === 'function') {
+		node.query('a[href]:not([target="_blank"]):not([download]):not([href*="\#"])').filter(
+			isInternalLink
+		).forEach(function(a)
+		{
+			a.addEventListener('click', function(event)
+			{
+				event.preventDefault();
+				if (typeof ga === 'function') {
 					ga('send', 'pageview', this.href);
 				}
-				event.preventDefault();
 				ajax({
 					url: this.href,
 					type: 'GET',
@@ -1442,14 +1354,19 @@ NodeList.prototype.bootstrap = function() {
 					cache: this.data('cache')
 				}).then(
 					handleJSON,
-					console.error
+					function(err)
+					{
+						console.console.error(err);
+					}
 				);
 			});
 		});
-		node.query('form[name]').forEach(function(form){
-			form.addEventListener('submit', function(event){
+		node.query('form[name]').forEach(function(form)
+		{
+			form.addEventListener('submit', function(event)
+			{
 				event.preventDefault();
-				if(! this.data('confirm') || confirm(this.data('confirm'))) {
+				if (! this.data('confirm') || confirm(this.data('confirm'))) {
 					ajax({
 						url: this.action || document.baseURI,
 						type: this.method || 'POST',
@@ -1457,85 +1374,109 @@ NodeList.prototype.bootstrap = function() {
 						form: this
 					}).then(
 						handleJSON,
-						console.error
+						function(err)
+						{
+							console.error(err);
+						}
 					);
 				}
 			});
-			if(form.name === 'new_post') {
-				var retain = setInterval(function(){
+			if (form.name === 'new_post') {
+				var retain = setInterval(function()
+				{
 					ajax({
 						url: document.baseURI,
 						request: 'action=keep-alive'
 					}).then(
 						handleJSON,
-						console.error
+						function(err)
+						{
+							console.error(err);
+						}
 					);
 				}, 60000);
-				form.addEventListener('submit', function(){
+				form.addEventListener('submit', function()
+				{
 					clearInterval(retain);
 				});
 			}
 		});
-		node.query('[data-show]').forEach(function(el) {
-			el.addEventListener('click', function() {
+		node.query('[data-show]').forEach(function(el)
+		{
+			el.addEventListener('click', function()
+			{
 				document.querySelector(this.data('show')).show();
 			});
 		});
-		node.query('[data-show-modal]').forEach(function(el) {
-			el.addEventListener('click', function() {
+		node.query('[data-show-modal]').forEach(function(el)
+		{
+			el.addEventListener('click', function()
+			{
 				document.querySelector(this.data('show-modal')).showModal();
 			});
 		});
-		node.query('[data-scroll-to]').forEach(function(el) {
-			el.addEventListener('click', function() {
+		node.query('[data-scroll-to]').forEach(function(el)
+		{
+			el.addEventListener('click', function()
+			{
 				document.querySelector(this.data('scroll-to')).scrollIntoView();
 			});
 		});
-		node.query('[data-import]').forEach(function(el) {
+		node.query('[data-import]').forEach(function(el)
+		{
 			el.HTMLimport();
 		});
-		node.query('[data-close]').forEach(function(el) {
-			el.addEventListener('click', function() {
+		node.query('[data-close]').forEach(function(el)
+		{
+			el.addEventListener('click', function()
+			{
 				document.querySelector(this.data('close')).close();
 			});
 		});
-		node.query('fieldset button[type=button].toggle').forEach(function(toggle) {
-			toggle.addEventListener('click', function() {
-				this.ancestor('fieldset').querySelectorAll('input[type=checkbox]').forEach(function(checkbox) {
-					if(checkbox.checked) {
-						checkbox.checked = false;
-					} else {
-						checkbox.checked = true;
-					}
+		node.query('fieldset button[type=button].toggle').forEach(function(toggle)
+		{
+			toggle.addEventListener('click', function()
+			{
+				this.ancestor('fieldset').querySelectorAll('input[type=checkbox]').forEach(function(checkbox)
+				{
+					checkbox.checked = ! checkbox.checked;
 				});
 			});
 		});
-		node.query('[data-must-match]').forEach(function(match) {
+		node.query('[data-must-match]').forEach(function(match)
+		{
 			match.pattern = new RegExp(document.querySelector('[name="' + match.data('must-match') + '"]').value).escape();
-			document.querySelector('[name="' + match.data('must-match') + '"]').addEventListener('change', function() {
+			document.querySelector('[name="' + match.data('must-match') + '"]').addEventListener('change', function()
+			{
 				document.querySelector('[data-must-match="' + this.name + '"]').pattern = new RegExp(this.value).escape();
 			});
 		});
-		node.query('[data-dropzone]') .forEach(function (el) {
+		node.query('[data-dropzone]') .forEach(function (el)
+		{
 			document.querySelector(el.data('dropzone')).DnD(el);
 		});
-		node.query('input[data-equal-input]').forEach(function(input) {
-			input.addEventListener('input', function() {
-				document.querySelectorAll('input[data-equal-input="' + this.data('equal-input') + '"]').forEach(function(other) {
-					if(other !== input) {
+		node.query('input[data-equal-input]').forEach(function(input)
+		{
+			input.addEventListener('input', function()
+			{
+				document.querySelectorAll('input[data-equal-input="' + this.data('equal-input') + '"]').forEach(function(other)
+				{
+					if (other !== input) {
 						other.value = input.value;
 					}
 				});
 			});
 		});
-		node.query('[data-editor-command]').forEach(function(item) {
-			item.addEventListener('click', function() {
+		node.query('[data-editor-command]').forEach(function(item)
+		{
+			item.addEventListener('click', function()
+			{
 				var arg = null;
-				if(this.data('editor-value')) {
+				if (this.data('editor-value')) {
 					arg = this.data('editor-value');
-				} else if(this.data('prompt')) {
+				} else if (this.data('prompt')) {
 					arg = prompt(this.data('prompt'));
-				} else if(this.data('selection-to')) {
+				} else if (this.data('selection-to')) {
 					var createdEl = document.createElement(this.data('selection-to'));
 					createdEl.textContent = getSelection().toString();
 					arg = createdEl.outerHTML;
@@ -1543,39 +1484,54 @@ NodeList.prototype.bootstrap = function() {
 				document.execCommand(this.data('editor-command'), null, arg);
 			});
 		});
-		node.query('[data-request]').forEach(function(el) {
-			el.addEventListener('click', function(event) {
+		node.query('[data-request]').forEach(function(el)
+		{
+			el.addEventListener('click', function(event)
+			{
 				event.preventDefault();
-				if(!this.data('confirm') || confirm(this.data('confirm'))){
+				if (!this.data('confirm') || confirm(this.data('confirm'))) {
 					ajax({
 						url: this.data('url')|| document.baseURI,
-						request: (this.data('prompt')) ? this.data('request') + '&prompt_value=' + encodeURIComponent(prompt(this.data('prompt'))) : this.data('request'),
+						request: (this.data('prompt'))
+							? this.data('request') + '&prompt_value=' + encodeURIComponent(prompt(this.data('prompt')))
+							: this.data('request'),
 						history: this.data('history') || null,
 						cache: el.data('cache')
 					}).then(
 						handleJSON,
-						console.error
+						function(err)
+						{
+							console.error(err);
+						}
 					);
 				}
 			});
 		});
-		node.query('[data-dropzone]') .forEach(function (finput) {
+		node.query('[data-dropzone]') .forEach(function (finput)
+		{
 			document.querySelector(finput.data('dropzone')).DnD(finput);
 		});
-		node.query('[data-fullscreen]').forEach(function(el) {
-			el.addEventListener(el.data('fullscreen'), function() {
+		node.query('[data-fullscreen]').forEach(function(el)
+		{
+			el.addEventListener(el.data('fullscreen'), function()
+			{
 				this.requestFullscreen();
 			});
 		});
-		node.query('[data-delete]').forEach(function(el) {
-			el.addEventListener('click', function() {
-				document.querySelectorAll(this.data('delete')).forEach(function(remove) {
+		node.query('[data-delete]').forEach(function(el)
+		{
+			el.addEventListener('click', function()
+			{
+				document.querySelectorAll(this.data('delete')).forEach(function(remove)
+				{
 					remove.parentElement.removeChild(remove);
 				});
 			});
 		});
-		node.query('menuitem[label="Edit Post"]').forEach(function(el) {
-			el.addEventListener('click', function() {
+		node.query('menuitem[label="Edit Post"]').forEach(function(el)
+		{
+			el.addEventListener('click', function()
+			{
 				var form = document.createElement('form'),
 					article = document.querySelector('article'),
 					header = article.querySelector('header'),
@@ -1617,23 +1573,30 @@ NodeList.prototype.bootstrap = function() {
 				fieldset.append(legend, header, content, oldTitle, description, submit);
 				form.appendChild(fieldset);
 				article.appendChild(form);
-				var retain = setInterval(function(){
+				var retain = setInterval(function()
+				{
 					ajax({
 						url: document.baseURI,
 						request: 'action=keep-alive'
 					}).then(
 						handleJSON,
-						console.error
+						function(err)
+						{
+							console.error(err);
+						}
 					);
 				}, 60000);
-				form.addEventListener('submit', function(){
+				form.addEventListener('submit', function()
+				{
 					clearInterval(retain);
 				});
 			});
 		});
-		node.query('[label="Clear Cache"]').forEach(function(el) {
-			el.addEventListener('click', function() {
-				if(!this.data('confirm') || confirm(this.data('confirm'))){
+		node.query('[label="Clear Cache"]').forEach(function(el)
+		{
+			el.addEventListener('click', function()
+			{
+				if (! this.data('confirm') || confirm(this.data('confirm'))) {
 					cache.clear();
 				}
 			});
@@ -1641,20 +1604,26 @@ NodeList.prototype.bootstrap = function() {
 	});
 	return this;
 };
-Element.prototype.worker_clock=function(){
+Element.prototype.worker_clock = function()
+{
+	"use strict";
 	var clockWorker = new Worker(document.baseURI + 'scripts/workers/clock.js'),
 		time = this;
-	clockWorker.addEventListener('message', function(e){
+	clockWorker.addEventListener('message', function(e)
+	{
 		time.textContent = e.data.norm;
 		time.setAttribute('datetime', e.data.datetime);
 	});
 	clockWorker.postMessage('');
 };
-function notifyLocation() {
+function notifyLocation()
+{
+	"use strict";
 	getLocation({
 		enableHighAccuracy: true,
 		maximumAge: 0
-	}).then(function(pos){
+	}).then(function(pos)
+	{
 		console.log(pos.coords);
 		notify({
 			title: 'Your current location:',
@@ -1663,21 +1632,26 @@ function notifyLocation() {
 		});
 	});
 }
-Element.prototype.DnD = function (sets) {
-	this.ondragover = function (event) {
+Element.prototype.DnD = function(sets)
+{
+	"use strict";
+	this.ondragover = function(event)
+	{
 		this.classList.add('receiving');
 		return false;
 	};
-	this.ondragend = function (event) {
+	this.ondragend = function(event)
+	{
 		this.classList.remove('receiving');
 		return false;
 	};
-	this.ondrop = function (e) {
+	this.ondrop = function(e)
+	{
 		this.classList.remove('receiving');
 		e.preventDefault();
 		console.log(e);
-		if(e.dataTransfer.files.length) {
-			for(var i=0; i < e.dataTransfer.files.length; i++) {
+		if (e.dataTransfer.files.length) {
+			for (var i=0; i < e.dataTransfer.files.length; i++) {
 				var file = e.dataTransfer.files[i],
 					reader = new FileReader(),
 					progress = document.createElement('progress');
@@ -1688,35 +1662,38 @@ Element.prototype.DnD = function (sets) {
 				sets.appendChild(progress);
 				console.log(e, reader);
 				reader.readAsDataURL(file);
-				reader.addEventListener('progress', function(event) {
-					if(event.lengthComputable){
+				reader.addEventListener('progress', function(event)
+				{
+					if (event.lengthComputable) {
 						progress.value = event.loaded / event.total;
 					}
 				});
-				reader.onload = function (event) {
+				reader.onload = function(event)
+				{
 					progress.parentElement.removeChild(progress);
 					console.log(event);
-					if(typeof sets !== 'undefined') {
-						switch(sets.tagName.toLowerCase()) {
+					if (typeof sets !== 'undefined') {
+						switch (sets.tagName.toLowerCase()) {
 							case 'input':
-							case 'textarea': {
+							case 'textarea':
 								sets.value = event.target.result;
-							} break;
-							case 'img': {
+								break;
+
+							case 'img':
 								sets.src = event.target.result;
-							} break;
-							default: {
-								if(/image\/*/.test(file.type)) {
+								break;
+							default:
+								if (/image\/*/.test(file.type)) {
 									document.execCommand('insertimage', null, event.target.result);
 								}
-								else if(/text\/*/.test(file.type)){
+								else if (/text\/*/.test(file.type)) {
 									sets.innerHTML = event.target.result;
 								}
-							}
 						}
 					}
 				};
-				reader.onerror = function (event) {
+				reader.onerror = function(event)
+				{
 					progress.parentElement.removeChild(progress);
 					console.error(event);
 				};
@@ -1725,4 +1702,33 @@ Element.prototype.DnD = function (sets) {
 		}
 		return false;
 	};
+	/**
+	*TODO Should I check for manifest on anything but <html>?
+	*		Could use (!!$('[manifest]').length) instead.
+	*/
+	if (('applicationCache' in window) && ('manifest' in document.documentElement)) {
+		var appCache = window.applicationCache;
+		$(appCache) .updateready(function (e) {
+			if (appCache.status == appCache.UPDATEREADY) {
+				appCache.update() && appCache.swapCache();
+				if (confirm('A new version of this site is available. Load it?')) {
+					window.location.reload();
+				}
+			}
+		});
+	}
 };
+window.addEventListener('popstate', function()
+{
+	"use strict";
+	ajax({
+		url: location.pathname,
+		type: 'GET'
+	}).then(
+		handleJSON,
+		function(err)
+		{
+			console.error(err);
+		}
+	);
+});
