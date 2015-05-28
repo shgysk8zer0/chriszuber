@@ -27,9 +27,8 @@ switch($_POST['action']) {
 
 	case 'Clear PHP_errors':
 		require_login('admin');
-		$pdo =\shgysk8zer0\Core\PDO::load('connect.json');
 
-		$pdo->resetTable('PHP_errors');
+		$DB->resetTable('PHP_errors');
 		file_put_contents(BASE . '/errors.log', null, LOCK_EX);
 		$resp->notify(
 			'Success!',
@@ -150,11 +149,13 @@ switch($_POST['action']) {
 		break;
 
 	case 'README':
+		$readme = new \shgysk8zer0\Core\File('README.md');
+		$parser = new \Parsedown\Parsedown();
 		$resp->append(
 			'body',
 			'<dialog id="README_dialog">
 			<button data-delete="#README_dialog">
-			</button><br />' . `markdown README.md` . '</dialog>'
+			</button><br />' . $parser->text($readme) . '</dialog>'
 		)->showModal(
 			'#README_dialog'
 		);

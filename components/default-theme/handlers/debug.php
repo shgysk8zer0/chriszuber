@@ -1,35 +1,41 @@
 <?php
 $resp = \shgysk8zer0\Core\JSON_Response::load();
-check_nonce();
 require_login('admin');
 
-switch(trim($_POST['debug'])) {
+switch($_POST['debug']) {
 	case 'headers':
-		$resp->info(['HTTP Headers' => headers_list()]);
+		$resp->dir(['HTTP Headers' => headers_list()]);
 		break;
 
 	case 'extensions':
-		$resp->info(['PHP extensions' => get_loaded_extensions()]);
+		$resp->dir(['PHP extensions' => get_loaded_extensions()]);
 		break;
 
 	case 'modules':
-		$resp->info(['Apache Modules' => apache_get_modules()]);
+		$resp->dir(['Apache Modules' => apache_get_modules()]);
 		break;
 
 	case '_SERVER':
-		$resp->info(['$_SERVER' => $_SERVER]);
+		$resp->dir(['$_SERVER' => $_SERVER]);
 		break;
 
 	case '_SESSION':
-		$resp->info(['$_SESSION' => $_SESSION]);
+		$resp->dir(['$_SESSION' => $_SESSION]);
 		break;
 
 	case '_COOKIES':
-		$resp->info(['$_COOKIES' => $_COOKIE]);
+		$resp->dir(['$_COOKIES' => $_COOKIE]);
 		break;
+
+	case 'vars':
+		$resp->dir(['Defined Vars' => get_defined_vars()]);
+		break;
+
+	default:
+		$resp->error(sprintf('Unhandled debug request: %s', $_POST['debug']));
 }
 $resp->notify(
-	'Debug info sent to console.info',
+	'Debug info sent to console',
 	'Check your developer console'
 );
 exit($resp);

@@ -27,9 +27,8 @@ switch($_POST['action']) {
 
 	case 'Clear PHP_errors':
 		require_login('admin');
-		$pdo =\shgysk8zer0\Core\PDO::load('connect.json');
 
-		$pdo->resetTable('PHP_errors');
+		$DB->resetTable('PHP_errors');
 		file_put_contents(BASE . '/errors.log', null, LOCK_EX);
 		$resp->notify(
 			'Success!',
