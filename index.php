@@ -41,6 +41,7 @@ set_exception_handler(\shgysk8zer0\Core\File::load('logs/exceptions.log'));
 
 $redirect = false;
 $URL = \shgysk8zer0\Core\URL::load();
+$headers = \shgysk8zer0\Core\Headers::load();
 
 if ($URL->host === 'localhost' and BROWSER === 'Chrome') {
 	$URL->host = '127.0.0.1';
@@ -56,8 +57,8 @@ if ($URL->host === 'localhost' and BROWSER === 'Chrome') {
 if ($redirect) {
 	unset($URL->user, $URL->pass, $URL->query, $URL->fragment);
 	http_response_code(301);
-	header("Location: $URL");
-	exit();
+	$header->Location= $URL;
+	exit;
 }
 unset($redirect);
 
@@ -68,6 +69,7 @@ $cookie->path     = $URL->path;
 $cookie->secure   = https();
 $cookie->httponly = true;
 
+
 if (isset($session->logged_in) and $session->logged_in) { //Check login if session
 	\shgysk8zer0\Core\Login::load()
 		->setUser($session->user)
@@ -76,13 +78,12 @@ if (isset($session->logged_in) and $session->logged_in) { //Check login if sessi
 		->setLogged_In($session->logged_in);
 }
 
-unset($URL, $login, $session, $cookie);
-
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'std-php-functions' . DIRECTORY_SEPARATOR . 'error_handler.php';
-if (is_ajax()) { // If this is an ajax request, let ajax.php handle it.
+if (in_array('application/json', explode(',', $headers->accept))) {
 	require_once __DIR__ . DIRECTORY_SEPARATOR . 'ajax.php';
 
 	exit;
 }
+unset($URL, $login, $session, $cookie, $headers);
 CSP();		//Do this here to avoid CSP being set on ajax requests.
 load('html');
