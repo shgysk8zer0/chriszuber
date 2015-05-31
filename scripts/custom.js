@@ -32,7 +32,7 @@ window.addEventListener('load', function()
 		{
 			switch (this.attributeName) {
 				case 'contextmenu':
-					var menu = this.target.attr('contextmenu');
+					let menu = this.target.attr('contextmenu');
 					if (this.oldValue !== '') {
 						$('menu#' + this.oldValue).delete();
 					}
@@ -177,7 +177,7 @@ NodeList.prototype.bootstrap = function()
 		if (supports('menuitem')) {
 			node.query('[contextmenu]').forEach(function(el)
 			{
-				var menu = el.attr('contextmenu');
+				let menu = el.attr('contextmenu');
 				if (menu && menu !== '') {
 					if (! $('menu#'+ menu).found) {
 						ajax({
@@ -277,7 +277,7 @@ NodeList.prototype.bootstrap = function()
 				}
 			});
 			if (form.name === 'new_post') {
-				var retain = setInterval(function()
+				let retain = setInterval(function()
 				{
 					ajax({
 						url: document.baseURI,
@@ -366,13 +366,13 @@ NodeList.prototype.bootstrap = function()
 		{
 			item.addEventListener('click', function()
 			{
-				var arg = null;
+				let arg = null;
 				if (this.data('editor-value')) {
 					arg = this.data('editor-value');
 				} else if (this.data('prompt')) {
 					arg = prompt(this.data('prompt'));
 				} else if (this.data('selection-to')) {
-					var createdEl = document.createElement(this.data('selection-to'));
+					let createdEl = document.createElement(this.data('selection-to'));
 					createdEl.textContent = getSelection().toString();
 					arg = createdEl.outerHTML;
 				}
@@ -427,7 +427,7 @@ NodeList.prototype.bootstrap = function()
 		{
 			el.addEventListener('click', function()
 			{
-				var form = document.createElement('form'),
+				let form = document.createElement('form'),
 					article = document.querySelector('article'),
 					header = article.querySelector('header'),
 					title = header.querySelector('[itemprop="headline"]'),
@@ -468,7 +468,7 @@ NodeList.prototype.bootstrap = function()
 				fieldset.append(legend, header, content, oldTitle, description, submit);
 				form.appendChild(fieldset);
 				article.appendChild(form);
-				var retain = setInterval(function()
+				let retain = setInterval(function()
 				{
 					ajax({
 						url: document.baseURI,
@@ -502,7 +502,7 @@ NodeList.prototype.bootstrap = function()
 Element.prototype.worker_clock = function()
 {
 	"use strict";
-	var clockWorker = new Worker(document.baseURI + 'scripts/workers/clock.js'),
+	let clockWorker = new Worker(document.baseURI + 'scripts/workers/clock.js'),
 		time = this;
 	clockWorker.addEventListener('message', function(e)
 	{
@@ -546,8 +546,8 @@ Element.prototype.DnD = function(sets)
 		e.preventDefault();
 		console.log(e);
 		if (e.dataTransfer.files.length) {
-			for (var i=0; i < e.dataTransfer.files.length; i++) {
-				var file = e.dataTransfer.files[i],
+			for (let i=0; i < e.dataTransfer.files.length; i++) {
+				let file = e.dataTransfer.files[i],
 					reader = new FileReader(),
 					progress = document.createElement('progress');
 				progress.min = 0;
@@ -597,21 +597,6 @@ Element.prototype.DnD = function(sets)
 		}
 		return false;
 	};
-	/**
-	*TODO Should I check for manifest on anything but <html>?
-	*		Could use (!!$('[manifest]').length) instead.
-	*/
-	if (('applicationCache' in window) && ('manifest' in document.documentElement)) {
-		var appCache = window.applicationCache;
-		$(appCache) .updateready(function (e) {
-			if (appCache.status == appCache.UPDATEREADY) {
-				appCache.update() && appCache.swapCache();
-				if (confirm('A new version of this site is available. Load it?')) {
-					window.location.reload();
-				}
-			}
-		});
-	}
 };
 window.addEventListener('popstate', function()
 {
