@@ -43,12 +43,12 @@ window.addEventListener('load', function()
 								request: 'load_menu=' + menu.replace(/\_menu$/ ,''),
 								cache: this.target.data('cache')
 							}).then(
-								handleJSON,
-								function(err)
-								{
-									console.error(err);
-								}
-							);
+								handleJSON
+							).catch(function(err)
+							{
+								$('body > progress').delete();
+								console.error(err);
+							});
 						}
 					}
 					break;
@@ -86,12 +86,13 @@ window.addEventListener('load', function()
 										: this.data('request'),
 									cache: el.data('cache')
 								}).then(
-									handleJSON,
+									handleJSON
+								).catch(
 									function(err)
-									{
-										console.error(err);
-									}
-								);
+								{
+									$('body > progress').delete();
+									console.error(err);
+								});
 							}
 						});
 					}
@@ -146,12 +147,13 @@ window.addEventListener('load', function()
 		ajax({
 			request: 'request=nonce'
 		}).then(
-			handleJSON,
+			handleJSON
+		).catch(
 			function(err)
-			{
-				console.error(err);
-			}
-		);
+		{
+			$('body > progress').delete();
+			console.error(err);
+		});
 	}
 });
 NodeList.prototype.bootstrap = function()
@@ -185,12 +187,13 @@ NodeList.prototype.bootstrap = function()
 							request: 'load_menu=' + menu.replace(/\_menu$/ ,''),
 							cache: el.data('cache')
 						}).then(
-							handleJSON,
+							handleJSON
+						).catch(
 							function(err)
-							{
-								console.error(err);
-							}
-						);
+						{
+							$('body > progress').delete();
+							console.error(err);
+						});
 					}
 				}
 			});
@@ -203,12 +206,13 @@ NodeList.prototype.bootstrap = function()
 						request: 'datalist=' + list.getAttribute('list'),
 						type: 'POST'
 					}).then(
-						handleJSON,
+						handleJSON
+					).catch(
 						function(err)
-						{
-							console.error(err);
-						}
-					);
+					{
+						$('body > progress').delete();
+						console.error(err);
+					});
 				}
 			});
 		}
@@ -248,12 +252,13 @@ NodeList.prototype.bootstrap = function()
 					history: this.href,
 					cache: this.data('cache')
 				}).then(
-					handleJSON,
+					handleJSON
+				).catch(
 					function(err)
-					{
-						console.console.error(err);
-					}
-				);
+				{
+					$('body > progress').delete();
+					console.error(err);
+				});
 			});
 		});
 		node.query('form[name]').forEach(function(form)
@@ -268,12 +273,13 @@ NodeList.prototype.bootstrap = function()
 						contentType: this.enctype,
 						form: this
 					}).then(
-						handleJSON,
+						handleJSON
+					).catch(
 						function(err)
-						{
-							console.error(err);
-						}
-					);
+					{
+						$('body > progress').delete();
+						console.error(err);
+					});
 				}
 			});
 			if (form.name === 'new_post') {
@@ -283,12 +289,13 @@ NodeList.prototype.bootstrap = function()
 						url: document.baseURI,
 						request: 'action=keep-alive'
 					}).then(
-						handleJSON,
+						handleJSON
+					).catch(
 						function(err)
-						{
-							console.error(err);
-						}
-					);
+					{
+						$('body > progress').delete();
+						console.error(err);
+					});
 				}, 60000);
 				form.addEventListener('submit', function()
 				{
@@ -393,12 +400,13 @@ NodeList.prototype.bootstrap = function()
 						history: this.data('history') || null,
 						cache: el.data('cache')
 					}).then(
-						handleJSON,
+						handleJSON
+					).catch(
 						function(err)
-						{
-							console.error(err);
-						}
-					);
+					{
+						$('body > progress').delete();
+						console.error(err);
+					});
 				}
 			});
 		});
@@ -474,12 +482,13 @@ NodeList.prototype.bootstrap = function()
 						url: document.baseURI,
 						request: 'action=keep-alive'
 					}).then(
-						handleJSON,
+						handleJSON
+					).catch(
 						function(err)
-						{
-							console.error(err);
-						}
-					);
+					{
+						$('body > progress').delete();
+						console.error(err);
+					});
 				}, 60000);
 				form.addEventListener('submit', function()
 				{
@@ -605,10 +614,11 @@ window.addEventListener('popstate', function()
 		url: location.pathname,
 		type: 'GET'
 	}).then(
-		handleJSON,
+		handleJSON
+	).catch(
 		function(err)
-		{
-			console.error(err);
-		}
-	);
+	{
+		$('body > progress').delete();
+		console.error(err);
+	});
 });
