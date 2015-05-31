@@ -57,7 +57,7 @@ if ($URL->host === 'localhost' and BROWSER === 'Chrome') {
 if ($redirect) {
 	unset($URL->user, $URL->pass, $URL->query, $URL->fragment);
 	http_response_code(301);
-	$header->Location= $URL;
+	$headers->Location = "$URL";
 	exit;
 }
 unset($redirect);
