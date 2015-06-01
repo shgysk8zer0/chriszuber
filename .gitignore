@@ -6,7 +6,7 @@
 /config/github.json
 /config/connect.json
 /images/contact/
-/demos/
+/demos/*/
 /mother_brain
 *.rss
 *.dav

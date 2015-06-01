@@ -1,0 +1,10 @@
+DirectoryIndex index.html index.phtml index.php
+
+#Configure PHP's autoloader and set include_path, min PHP version
+<IfModule env_module>
+	SetEnv CONFIG_DIR ../config
+	SetEnv AUTOLOAD_DIR ../classes
+</IfModule>
+
+#Loads the autoloader script before executing main PHP file
+php_value auto_prepend_file ../std-php-functions/autoloader.php
