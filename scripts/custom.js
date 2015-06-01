@@ -369,23 +369,7 @@ NodeList.prototype.bootstrap = function()
 				});
 			});
 		});
-		node.query('[data-editor-command]').forEach(function(item)
-		{
-			item.addEventListener('click', function()
-			{
-				let arg = null;
-				if (this.data('editor-value')) {
-					arg = this.data('editor-value');
-				} else if (this.data('prompt')) {
-					arg = prompt(this.data('prompt'));
-				} else if (this.data('selection-to')) {
-					let createdEl = document.createElement(this.data('selection-to'));
-					createdEl.textContent = getSelection().toString();
-					arg = createdEl.outerHTML;
-				}
-				document.execCommand(this.data('editor-command'), null, arg);
-			});
-		});
+		node.query('menu[type="context"]').forEach(WYSIWYG);
 		node.query('[data-request]').forEach(function(el)
 		{
 			el.addEventListener('click', function(event)

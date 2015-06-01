@@ -1312,6 +1312,63 @@ function handleJSON(json) {
 		});
 	}
 }
+function WYSIWYG(menu)
+{
+	menu.querySelectorAll('menuitem[data-editor-command]').forEach(function(item)
+	{
+		item.addEventListener('click', function()
+		{
+			var arg = null;
+			if (this.dataset.hasOwnProperty('editorValue')) {
+				arg = this.dataset.editorValue;
+			} else if (this.dataset.hasOwnProperty('prompt')) {
+				arg = prompt(this.dataset.prompt.toString());
+			} else if (this.dataset.hasOwnProperty('selectionTo')) {
+				var createdEl = document.createElement(this.dataset.selectionTo);
+				createdEl.textContent = getSelection().toString();
+				arg = createdEl.outerHTML;
+			}
+			document.execCommand(this.dataset.editorCommand, null, arg);
+		});
+	});
+	menu.querySelectorAll('menuitem[label="Add Class"]').forEach(function(menuitem) {
+		menuitem.addEventListener('click', function() {
+			var addClass = prompt('Enter class name to add');
+			if (addClass.length !== 0) {
+				getSelection().anchorNode.parentElement.classList.add(addClass);
+			}
+		});
+	});
+	menu.querySelectorAll('menuitem[label="Remove Class"]').forEach(function(menuitem) {
+		menuitem.addEventListener('click', function() {
+			var removeClass = prompt('Enter class name to remove');
+			if (removeClass.length !== 0) {
+				var el = getSelection().anchorNode.parentElement;
+				el.classList.remove(removeClass);
+				if (el.classList.length === 0) {
+					el.removeAttribute('class');
+				}
+			}
+		});
+	});
+	menu.querySelectorAll('menuitem[label="Set Attribute"]').forEach(function(menuitem) {
+		menuitem.addEventListener('click', function() {
+			var name = prompt('Enter attribute name');
+			if (name.length !== 0) {
+				var value = prompt('Enter attribute value');
+				getSelection().anchorNode.parentElement.setAttribute(name, value.toString());
+			}
+		})
+	});
+	menu.querySelectorAll('menuitem[label="Remove Attribute"]').forEach(function(menuitem) {
+		menuitem.addEventListener('click', function() {
+			var attr = prompt('Enter name of attribute to remove');
+			if (attr.length !== 0) {
+				getSelection().anchorNode.parentElement.removeAttribute(attr);
+			}
+		});
+	});
+}
 /*Cannot rely on $(window).load() to work, so use this instead*/
 window.addEventListener('load', function()
 {
@@ -1357,12 +1414,12 @@ window.addEventListener('load', function()
 								request: 'load_menu=' + menu.replace(/\_menu$/ ,''),
 								cache: this.target.data('cache')
 							}).then(
-								handleJSON,
-								function(err)
-								{
-									console.error(err);
-								}
-							);
+								handleJSON
+							).catch(function(err)
+							{
+								$('body > progress').delete();
+								console.error(err);
+							});
 						}
 					}
 					break;
@@ -1400,12 +1457,13 @@ window.addEventListener('load', function()
 										: this.data('request'),
 									cache: el.data('cache')
 								}).then(
-									handleJSON,
+									handleJSON
+								).catch(
 									function(err)
-									{
-										console.error(err);
-									}
-								);
+								{
+									$('body > progress').delete();
+									console.error(err);
+								});
 							}
 						});
 					}
@@ -1460,12 +1518,13 @@ window.addEventListener('load', function()
 		ajax({
 			request: 'request=nonce'
 		}).then(
-			handleJSON,
+			handleJSON
+		).catch(
 			function(err)
-			{
-				console.error(err);
-			}
-		);
+		{
+			$('body > progress').delete();
+			console.error(err);
+		});
 	}
 });
 NodeList.prototype.bootstrap = function()
@@ -1499,12 +1558,13 @@ NodeList.prototype.bootstrap = function()
 							request: 'load_menu=' + menu.replace(/\_menu$/ ,''),
 							cache: el.data('cache')
 						}).then(
-							handleJSON,
+							handleJSON
+						).catch(
 							function(err)
-							{
-								console.error(err);
-							}
-						);
+						{
+							$('body > progress').delete();
+							console.error(err);
+						});
 					}
 				}
 			});
@@ -1517,12 +1577,13 @@ NodeList.prototype.bootstrap = function()
 						request: 'datalist=' + list.getAttribute('list'),
 						type: 'POST'
 					}).then(
-						handleJSON,
+						handleJSON
+					).catch(
 						function(err)
-						{
-							console.error(err);
-						}
-					);
+					{
+						$('body > progress').delete();
+						console.error(err);
+					});
 				}
 			});
 		}
@@ -1562,12 +1623,13 @@ NodeList.prototype.bootstrap = function()
 					history: this.href,
 					cache: this.data('cache')
 				}).then(
-					handleJSON,
+					handleJSON
+				).catch(
 					function(err)
-					{
-						console.console.error(err);
-					}
-				);
+				{
+					$('body > progress').delete();
+					console.error(err);
+				});
 			});
 		});
 		node.query('form[name]').forEach(function(form)
@@ -1582,12 +1644,13 @@ NodeList.prototype.bootstrap = function()
 						contentType: this.enctype,
 						form: this
 					}).then(
-						handleJSON,
+						handleJSON
+					).catch(
 						function(err)
-						{
-							console.error(err);
-						}
-					);
+					{
+						$('body > progress').delete();
+						console.error(err);
+					});
 				}
 			});
 			if (form.name === 'new_post') {
@@ -1597,12 +1660,13 @@ NodeList.prototype.bootstrap = function()
 						url: document.baseURI,
 						request: 'action=keep-alive'
 					}).then(
-						handleJSON,
+						handleJSON
+					).catch(
 						function(err)
-						{
-							console.error(err);
-						}
-					);
+					{
+						$('body > progress').delete();
+						console.error(err);
+					});
 				}, 60000);
 				form.addEventListener('submit', function()
 				{
@@ -1676,23 +1740,7 @@ NodeList.prototype.bootstrap = function()
 				});
 			});
 		});
-		node.query('[data-editor-command]').forEach(function(item)
-		{
-			item.addEventListener('click', function()
-			{
-				let arg = null;
-				if (this.data('editor-value')) {
-					arg = this.data('editor-value');
-				} else if (this.data('prompt')) {
-					arg = prompt(this.data('prompt'));
-				} else if (this.data('selection-to')) {
-					let createdEl = document.createElement(this.data('selection-to'));
-					createdEl.textContent = getSelection().toString();
-					arg = createdEl.outerHTML;
-				}
-				document.execCommand(this.data('editor-command'), null, arg);
-			});
-		});
+		node.query('menu[type="context"]').forEach(WYSIWYG);
 		node.query('[data-request]').forEach(function(el)
 		{
 			el.addEventListener('click', function(event)
@@ -1707,12 +1755,13 @@ NodeList.prototype.bootstrap = function()
 						history: this.data('history') || null,
 						cache: el.data('cache')
 					}).then(
-						handleJSON,
+						handleJSON
+					).catch(
 						function(err)
-						{
-							console.error(err);
-						}
-					);
+					{
+						$('body > progress').delete();
+						console.error(err);
+					});
 				}
 			});
 		});
@@ -1788,12 +1837,13 @@ NodeList.prototype.bootstrap = function()
 						url: document.baseURI,
 						request: 'action=keep-alive'
 					}).then(
-						handleJSON,
+						handleJSON
+					).catch(
 						function(err)
-						{
-							console.error(err);
-						}
-					);
+					{
+						$('body > progress').delete();
+						console.error(err);
+					});
 				}, 60000);
 				form.addEventListener('submit', function()
 				{
@@ -1919,10 +1969,11 @@ window.addEventListener('popstate', function()
 		url: location.pathname,
 		type: 'GET'
 	}).then(
-		handleJSON,
+		handleJSON
+	).catch(
 		function(err)
-		{
-			console.error(err);
-		}
-	);
+	{
+		$('body > progress').delete();
+		console.error(err);
+	});
 });
