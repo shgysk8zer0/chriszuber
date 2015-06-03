@@ -232,3 +232,21 @@ function get_datalist($list)
 	$datalist->{'@id'} = "$list";
 	return "{$datalist}";
 }
+
+/**
+* Adds <li>s & <a>s to a list element, specifically for recent tags
+*
+* @param  shgysk8zer0\Core_API\Interfaces\MagicDOM  $list <ol> or <ul>
+* @param  string                                    $item The tag
+* @return shgysk8zer0\Core_API\Interfaces\MagicDOM  List with tag appended
+*/
+function recent_tags_list(\shgysk8zer0\Core_API\Interfaces\MagicDOM $list, $item = '')
+{
+	return $list->li(array(
+		'a' => array(
+			$item,
+			'@href' => sprintf('%stags/%s', URL, $item),
+			'@data-icon' => ','
+		)
+	));
+}
