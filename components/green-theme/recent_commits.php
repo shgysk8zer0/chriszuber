@@ -2,6 +2,7 @@
 	$filename = filename(__FILE__);
 	$github = \shgysk8zer0\Core\resources\Parser::parseFile('github.json');
 	$PDO = new \shgysk8zer0\Core\PDO($github);
+	$parser = new \Parsedown\Parsedown;
 	$start = (
 		array_key_exists('commit_start', $_REQUEST)
 		and is_numeric($_REQUEST['commit_start'])
@@ -26,9 +27,8 @@
 	);
 
 	array_walk($commits, function(\stdClass &$commit) {
-		$commit->Message = nl2br($commit->Message, false);
-		$commit->Message = htmlentities($commit->Message, ENT_QUOTES | ENT_HTML5, 'UTF-8', true);
-		$commit->Message = explode('&lt;br&gt;', $commit->Message);
+		$commit->Message = mb_convert_encoding($commit->Message, 'utf-8');
+		$commit->Message = explode(PHP_EOL, $commit->Message);
 	});
 ?>
 <dialog id="<?=$filename?>_dialog">
@@ -64,7 +64,7 @@
 						<summary>
 							<?=array_shift($commit->Message)?>
 						</summary>
-						<samp><?=join('<br>', $commit->Message);?></samp>
+						<samp><?=$parser->text(join(PHP_EOL, $commit->Message));?></samp>
 					</details>
 				</td>
 				<td>

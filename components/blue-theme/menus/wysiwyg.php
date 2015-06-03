@@ -1,5 +1,6 @@
 <?php
 	$els = [
+		'Span/generic' => 'span',
 		"Strong" => "strong",
 		"Emphasis" => "em",
 		"Deleted Text" => "del",
@@ -135,6 +136,12 @@
 ?>
 <menu type="context" id="wysiwyg_menu">
 	<!--https://developer.mozilla.org/en-US/docs/Midas-->
+	<menu label="Attributes">
+		<menuitem label="Add Class"></menuitem>
+		<menuitem label="Remove Class"></menuitem>
+		<menuitem label="Set Attribute"></menuitem>
+		<menuitem label="Remove Attribute"></menuitem>
+	</menu>
 	<menu label="Create">
 		<menu label="Headings">
 			<?php foreach(range(1, 6) as $h):?>

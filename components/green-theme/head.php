@@ -68,11 +68,8 @@
 <link rel="alternate icon" type="image/png" sizes="16x16" href="favicon.png"/>
 <link rel="search" type="application/opensearchdescription+xml" title="<?=TITLE?> Tag Search" href="<?=URL?>opensearch.php"/>
 <link rel="prefetch" href="images/icons/combined.svg" type="image/svg+xml"/>
-<?php if(localhost() and BROWSER === 'Firefox'):?>
-	<link rel="stylesheet" type="text/css" href="stylesheets/<?=THEME?>/import.css" media="all"/>
-<?php else:?>
-	<link rel="stylesheet" type="text/css" href="stylesheets/<?=THEME?>/output.css" media="all"/>
-<?php endif?>
+<link rel="stylesheet" type="text/css" href="stylesheets/<?=THEME?>/<?=(localhost() and BROWSER === 'Firefox') ? 'import' : 'output'?>.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="stylesheets/core-css/print.css" media="print"/>
 <?php if(isset($head->rss)):?>
 <link href="<?=$head->rss?>" rel="alternate" type="application/rss+xml" title="<?=$head->title?> RSS Feed" />
 <?php endif?>
@@ -89,6 +86,7 @@
 		<script type="application/javascript;version=1.8" src="scripts/std-js/functions.js" async></script>
 		<script type="application/javascript;version=1.8" src="scripts/std-js/zq.js" async></script>
 		<script type="application/javascript;version=1.8" src="scripts/std-js/json_response.js" async></script>
+		<script type="application/javascript;version=1.8" src="scripts/std-js/wysiwyg.js" async defer></script>
 		<script type="application/javascript;version=1.8" src="scripts/custom.js" async defer></script>
 	<?php else:?>
 		<script type="application/javascript" src="scripts/std-js/deprefixer.js" async></script>
@@ -98,6 +96,7 @@
 		<script type="application/javascript" src="scripts/std-js/functions.js" async></script>
 		<script type="application/javascript" src="scripts/std-js/zq.js" async></script>
 		<script type="application/javascript" src="scripts/std-js/json_response.js" async></script>
+		<script type="application/javascript" src="scripts/std-js/wysiwyg.js" async defer></script>
 		<script type="application/javascript" src="scripts/custom.js" async defer></script>
 	<?php endif?>
 <?php else:?>

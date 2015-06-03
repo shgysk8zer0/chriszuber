@@ -2,6 +2,7 @@
 	$file = filename(__FILE__);
 	$github = \shgysk8zer0\Core\Resources\Parser::parseFile('github.json');
 	$PDO = new \shgysk8zer0\Core\PDO($github);
+	$parser = new \Parsedown\Parsedown;
 	if(! $PDO->connected) {
 		return;
 	}
@@ -69,7 +70,7 @@
 				<td>
 					<details>
 						<summary><?=utf($issue->Title);?></summary>
-						<kbd><?=nl2br(utf($issue->Body));?></kbd>
+						<kbd><?=$parser->text(mb_convert_encoding($issue->Body, 'utf-8'));?></kbd>
 					</details>
 				</td>
 				<td>
