@@ -1,5 +1,6 @@
 <?php
 	$els = [
+		'Span/generic' => 'span',
 		"Strong" => "strong",
 		"Emphasis" => "em",
 		"Deleted Text" => "del",
