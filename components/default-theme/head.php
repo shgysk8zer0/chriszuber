@@ -26,11 +26,6 @@
 	}
 
 	$canonical = new \shgysk8zer0\Core\URL("//{$_SERVER['SERVER_NAME']}");
-	if (in_array('mod_ssl', apache_get_modules())) {
-		$canonical->scheme = 'https';
-	} else {
-		$canonical->scheme = 'http';
-	}
 ?>
 <head>
 <title><?=(!(isset($pages) and is_string($pages->title) and strlen($pages->title)) or $pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?></title>
