@@ -34,3 +34,6 @@
 [submodule "classes/shgysk8zer0/parsedown"]
 	path = classes/parsedown
 	url = git://github.com/shgysk8zer0/parsedown.git
+[submodule "images/cursors"]
+	path = images/cursors
+	url = git://github.com/shgysk8zer0/cursors.git
