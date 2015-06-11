@@ -224,4 +224,7 @@
 		<menuitem label="Undo" icon="images/octicons/svg/history.svg" data-editor-command="undo"></menuitem>
 		<menuitem label="Redo" icon="images/octicons/svg/history.svg" data-editor-command="redo"></menuitem>
 	</menu>
+	<menuitem label="Save Work"></menuitem>
+	<menuitem label="Restore Work"></menuitem>
+	<menuitem label="Full-Screen" icon="images/octicons/svg/screen-full.svg" data-fullscreen="main article"></menuitem>
 </menu>
