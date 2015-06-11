@@ -22,7 +22,7 @@
 					</details>
 				</nav>
 			</header>
-			<section itemprop="text">%CONTENT%</section>
+			<section class="flex column" itemprop="text">%CONTENT%</section>
 			<footer>
 				%LICENSE%
 				%COMMENTS%
