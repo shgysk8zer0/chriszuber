@@ -398,11 +398,13 @@ NodeList.prototype.bootstrap = function()
 		{
 			document.querySelector(finput.data('dropzone')).DnD(finput);
 		});
-		node.query('[data-fullscreen]').forEach(function(el)
-		{
-			el.addEventListener(el.data('fullscreen'), function()
-			{
-				this.requestFullscreen();
+		node.query('[data-fullscreen]').forEach(function(el) {
+			el.addEventListener('click', function(event) {
+				if (fullScreen) {
+					document.cancelFullScreen();
+				} else {
+					document.querySelector(this.dataset.fullscreen).requestFullScreen();
+				}
 			});
 		});
 		node.query('[data-delete]').forEach(function(el)
@@ -504,6 +506,9 @@ Element.prototype.worker_clock = function()
 	});
 	clockWorker.postMessage('');
 };
+HTMLElement.prototype.dataURI = function() {
+	return 'data:text/html,' + encodeURIComponent(this.innerHTML)
+}
 function notifyLocation()
 {
 	"use strict";
@@ -520,27 +525,23 @@ function notifyLocation()
 		});
 	});
 }
-Element.prototype.DnD = function(sets)
-{
+Element.prototype.DnD = function(sets) {
 	"use strict";
-	this.ondragover = function(event)
-	{
+	this.ondragover = function(event) {
 		this.classList.add('receiving');
 		return false;
 	};
-	this.ondragend = function(event)
-	{
+	this.ondragend = function(event) {
 		this.classList.remove('receiving');
 		return false;
 	};
-	this.ondrop = function(e)
-	{
+	this.ondrop = function(e) {
 		this.classList.remove('receiving');
 		e.preventDefault();
 		console.log(e);
 		if (e.dataTransfer.files.length) {
-			for (let i=0; i < e.dataTransfer.files.length; i++) {
-				let file = e.dataTransfer.files[i],
+			for (var i=0; i < e.dataTransfer.files.length; i++) {
+				var file = e.dataTransfer.files[i],
 					reader = new FileReader(),
 					progress = document.createElement('progress');
 				progress.min = 0;
@@ -549,15 +550,17 @@ Element.prototype.DnD = function(sets)
 				progress.classList.add('uploading');
 				sets.appendChild(progress);
 				console.log(e, reader);
-				reader.readAsDataURL(file);
-				reader.addEventListener('progress', function(event)
-				{
+				if (/image\/*/.test(file.type)) {
+					reader.readAsDataURL(file);
+				} else if (/text\/*/.test(file.type)) {
+					reader.readAsText(file);
+				}
+				reader.addEventListener('progress', function(event) {
 					if (event.lengthComputable) {
 						progress.value = event.loaded / event.total;
 					}
 				});
-				reader.onload = function(event)
-				{
+				reader.onload = function(event) {
 					progress.parentElement.removeChild(progress);
 					console.log(event);
 					if (typeof sets !== 'undefined') {
@@ -570,18 +573,17 @@ Element.prototype.DnD = function(sets)
 							case 'img':
 								sets.src = event.target.result;
 								break;
+
 							default:
 								if (/image\/*/.test(file.type)) {
 									document.execCommand('insertimage', null, event.target.result);
-								}
-								else if (/text\/*/.test(file.type)) {
+								} else if (/text\/*/.test(file.type)) {
 									sets.innerHTML = event.target.result;
 								}
 						}
 					}
 				};
-				reader.onerror = function(event)
-				{
+				reader.onerror = function(event) {
 					progress.parentElement.removeChild(progress);
 					console.error(event);
 				};
