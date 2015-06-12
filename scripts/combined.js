@@ -1,27 +1,41 @@
-if (!('Notification' in window)) {
+if (! ('Notification' in window)) {
 	window.Notification = window.notifications || window.webkitNotifications || window.oNotifications || window.msNotifications || false;
 }
-if (!('indexedDB' in window)) {
+if (! ('indexedDB' in window)) {
 	window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || false;
 }
-if (!('hidden' in document)) {
+if (! ('hidden' in document)) {
 	document.hidden = document.webkitHidden || document.msHidden || document.mozHidden || false;
 }
-if (!('visibilityState' in document)) {
+if (! ('visibilityState' in document)) {
 	document.visibilityState = document.webkitVisibilityState || document.msVisibilityState || document.mozVisibilityState || false;
 }
-if (!('fullScreenElement' in document)) {
+if (! ('fullScreenElement' in document)) {
 	document.fullScreenElement = document.mozFullScreenElement || document.webkitFullscreenElement || false;
 }
-if (!('requestAnimationFrame' in window)) {
+if (! ('requestAnimationFrame' in window)) {
 	window.requestAnimationFrame = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || false;
 }
-if (!('cancelFullScreen' in document)) {
+if (! ('cancelFullScreen' in document)) {
 	document.cancelFullScreen = document.mozCancelFullScreen || document.webkitCancelFullScreen || document.msCancelFullScreen || false;
 }
-if (!('requestFullScreen' in document)) {
-	document.requestFullScreen = document.mozRequestFullScreen || document.webkitRequestFullScreen || false;
+if (! ('requestFullScreen' in HTMLElement.prototype)) {
+	HTMLElement.prototype.requestFullScreen = HTMLElement.prototype.mozRequestFullScreen || HTMLElement.prototype.webkitRequestFullScreen || false;
 }
+/*Add Array prototypes to NodeList*/
+[
+	'forEach',
+	'indexOf',
+	'some',
+	'every',
+	'map',
+	'filter',
+	'reduce'
+].filter(function (method) {
+	return !(method in NodeList.prototype) && (method in Array.prototype);
+}).forEach(function (method) {
+	NodeList.prototype[method] = Array.prototype[method]
+});
 DOMTokenList.prototype.pick = function(cname1, cname2, condition)
 {
 	(condition) ? this.add(cname1) : this.add(cname2);
@@ -777,10 +791,6 @@ cache.prototype.clear = function()
 /*======================================================zQ Functions=========================================================*/
 Object.prototype.isZQ = false;
 zQ.prototype.isZQ = true;
-/*Add Array prototypes to NodeList*/
-['forEach', 'indexOf', 'some', 'every', 'map', 'filter'].forEach(function(feat) {
-	NodeList.prototype[feat] = Array.prototype[feat];
-});
 function $(q) {
 	if(typeof q === 'undefined') {
 		q = document.documentElement;
@@ -1314,10 +1324,11 @@ function handleJSON(json) {
 }
 function WYSIWYG(menu)
 {
-	menu.querySelectorAll('menuitem[data-editor-command]').forEach(function(item)
+	menu.querySelectorAll('[data-editor-command]').forEach(function(item)
 	{
-		item.addEventListener('click', function()
+		item.addEventListener('click', function(event)
 		{
+			event.preventDefault();
 			var arg = null;
 			if (this.dataset.hasOwnProperty('editorValue')) {
 				arg = this.dataset.editorValue;
@@ -1331,16 +1342,18 @@ function WYSIWYG(menu)
 			document.execCommand(this.dataset.editorCommand, null, arg);
 		});
 	});
-	menu.querySelectorAll('menuitem[label="Add Class"]').forEach(function(menuitem) {
-		menuitem.addEventListener('click', function() {
+	menu.querySelectorAll('[label="Add Class"]').forEach(function(menuitem) {
+		menuitem.addEventListener('click', function(event) {
+			event.preventDefault();
 			var addClass = prompt('Enter class name to add');
 			if (addClass.length !== 0) {
 				getSelection().anchorNode.parentElement.classList.add(addClass);
 			}
 		});
 	});
-	menu.querySelectorAll('menuitem[label="Remove Class"]').forEach(function(menuitem) {
-		menuitem.addEventListener('click', function() {
+	menu.querySelectorAll('[label="Remove Class"]').forEach(function(menuitem) {
+		menuitem.addEventListener('click', function(event) {
+			event.preventDefault();
 			var removeClass = prompt('Enter class name to remove');
 			if (removeClass.length !== 0) {
 				var el = getSelection().anchorNode.parentElement;
@@ -1351,8 +1364,9 @@ function WYSIWYG(menu)
 			}
 		});
 	});
-	menu.querySelectorAll('menuitem[label="Set Attribute"]').forEach(function(menuitem) {
-		menuitem.addEventListener('click', function() {
+	menu.querySelectorAll('[label="Set Attribute"]').forEach(function(menuitem) {
+		menuitem.addEventListener('click', function(event) {
+			event.preventDefault();
 			var name = prompt('Enter attribute name');
 			if (name.length !== 0) {
 				var value = prompt('Enter attribute value');
@@ -1360,12 +1374,25 @@ function WYSIWYG(menu)
 			}
 		})
 	});
-	menu.querySelectorAll('menuitem[label="Remove Attribute"]').forEach(function(menuitem) {
-		menuitem.addEventListener('click', function() {
+	menu.querySelectorAll('[label="Remove Attribute"]').forEach(function(menuitem) {
+		menuitem.addEventListener('click', function(event) {
+			event.preventDefault();
 			var attr = prompt('Enter name of attribute to remove');
 			if (attr.length !== 0) {
 				getSelection().anchorNode.parentElement.removeAttribute(attr);
 			}
+		});
+	});
+	menu.querySelectorAll('[label="Save Work"]').forEach(function(item) {
+		item.addEventListener('click', function(event) {
+			event.preventDefault();
+			localStorage.setItem('savedDoc', document.querySelector('[contenteditable="true"]').innerHTML);
+		});
+	});
+	menu.querySelectorAll('[label="Restore Work"]').forEach(function(item) {
+		item.addEventListener('click', function(event) {
+			event.preventDefault();
+			document.querySelector('[contenteditable="true"]').innerHTML = localStorage.getItem('savedDoc');
 		});
 	});
 }
@@ -1769,11 +1796,13 @@ NodeList.prototype.bootstrap = function()
 		{
 			document.querySelector(finput.data('dropzone')).DnD(finput);
 		});
-		node.query('[data-fullscreen]').forEach(function(el)
-		{
-			el.addEventListener(el.data('fullscreen'), function()
-			{
-				this.requestFullscreen();
+		node.query('[data-fullscreen]').forEach(function(el) {
+			el.addEventListener('click', function(event) {
+				if (fullScreen) {
+					document.cancelFullScreen();
+				} else {
+					document.querySelector(this.dataset.fullscreen).requestFullScreen();
+				}
 			});
 		});
 		node.query('[data-delete]').forEach(function(el)
@@ -1891,27 +1920,22 @@ function notifyLocation()
 		});
 	});
 }
-Element.prototype.DnD = function(sets)
-{
+Element.prototype.DnD = function(sets) {
 	"use strict";
-	this.ondragover = function(event)
-	{
+	this.ondragover = function(event) {
 		this.classList.add('receiving');
 		return false;
 	};
-	this.ondragend = function(event)
-	{
+	this.ondragend = function(event) {
 		this.classList.remove('receiving');
 		return false;
 	};
-	this.ondrop = function(e)
-	{
-		this.classList.remove('receiving');
+	this.ondrop = function(e) {
 		e.preventDefault();
-		console.log(e);
+		this.classList.remove('receiving');
 		if (e.dataTransfer.files.length) {
-			for (let i=0; i < e.dataTransfer.files.length; i++) {
-				let file = e.dataTransfer.files[i],
+			for (var i=0; i < e.dataTransfer.files.length; i++) {
+				var file = e.dataTransfer.files[i],
 					reader = new FileReader(),
 					progress = document.createElement('progress');
 				progress.min = 0;
@@ -1919,40 +1943,40 @@ Element.prototype.DnD = function(sets)
 				progress.value= 0;
 				progress.classList.add('uploading');
 				sets.appendChild(progress);
-				console.log(e, reader);
-				reader.readAsDataURL(file);
-				reader.addEventListener('progress', function(event)
-				{
+				if (/image\/*/.test(file.type)) {
+					reader.readAsDataURL(file);
+				} else if (/text\/*/.test(file.type)) {
+					reader.readAsText(file);
+				}
+				reader.addEventListener('progress', function(event) {
 					if (event.lengthComputable) {
 						progress.value = event.loaded / event.total;
 					}
 				});
-				reader.onload = function(event)
-				{
+				reader.onload = function(event) {
 					progress.parentElement.removeChild(progress);
-					console.log(event);
-					if (typeof sets !== 'undefined') {
-						switch (sets.tagName.toLowerCase()) {
-							case 'input':
-							case 'textarea':
-								sets.value = event.target.result;
-								break;
+					switch (file.type) {
+						case 'image/png':
+						case 'image/jpeg':
+						case 'image/svg':
+							document.execCommand('insertimage', null, event.target.result);
+							break;
 
-							case 'img':
-								sets.src = event.target.result;
-								break;
-							default:
-								if (/image\/*/.test(file.type)) {
-									document.execCommand('insertimage', null, event.target.result);
-								}
-								else if (/text\/*/.test(file.type)) {
-									sets.innerHTML = event.target.result;
-								}
-						}
+						case 'text/html':
+						case 'text/xml':
+							var content = new DOMParser().parseFromString(event.target.result, file.type);
+							var selection = getSelection().anchorNode;
+							var container = (selection.nodeType === 1) ? selection : selection.parentElement;
+							content.body.childNodes.forEach(function(node) {
+								container.appendChild(node);
+							});
+							break;
+
+						default:
+							console.error(new Error('Unhandled file type: ' + file.type));
 					}
 				};
-				reader.onerror = function(event)
-				{
+				reader.onerror = function(event) {
 					progress.parentElement.removeChild(progress);
 					console.error(event);
 				};
@@ -1962,6 +1986,9 @@ Element.prototype.DnD = function(sets)
 		return false;
 	};
 };
+HTMLElement.prototype.dataURI = function() {
+	return 'data:text/html,' + encodeURIComponent(this.innerHTML)
+}
 window.addEventListener('popstate', function()
 {
 	"use strict";

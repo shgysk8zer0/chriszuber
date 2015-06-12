@@ -506,9 +506,6 @@ Element.prototype.worker_clock = function()
 	});
 	clockWorker.postMessage('');
 };
-HTMLElement.prototype.dataURI = function() {
-	return 'data:text/html,' + encodeURIComponent(this.innerHTML)
-}
 function notifyLocation()
 {
 	"use strict";
@@ -536,9 +533,8 @@ Element.prototype.DnD = function(sets) {
 		return false;
 	};
 	this.ondrop = function(e) {
-		this.classList.remove('receiving');
 		e.preventDefault();
-		console.log(e);
+		this.classList.remove('receiving');
 		if (e.dataTransfer.files.length) {
 			for (var i=0; i < e.dataTransfer.files.length; i++) {
 				var file = e.dataTransfer.files[i],
@@ -549,7 +545,6 @@ Element.prototype.DnD = function(sets) {
 				progress.value= 0;
 				progress.classList.add('uploading');
 				sets.appendChild(progress);
-				console.log(e, reader);
 				if (/image\/*/.test(file.type)) {
 					reader.readAsDataURL(file);
 				} else if (/text\/*/.test(file.type)) {
@@ -562,25 +557,25 @@ Element.prototype.DnD = function(sets) {
 				});
 				reader.onload = function(event) {
 					progress.parentElement.removeChild(progress);
-					console.log(event);
-					if (typeof sets !== 'undefined') {
-						switch (sets.tagName.toLowerCase()) {
-							case 'input':
-							case 'textarea':
-								sets.value = event.target.result;
-								break;
+					switch (file.type) {
+						case 'image/png':
+						case 'image/jpeg':
+						case 'image/svg':
+							document.execCommand('insertimage', null, event.target.result);
+							break;
 
-							case 'img':
-								sets.src = event.target.result;
-								break;
+						case 'text/html':
+						case 'text/xml':
+							var content = new DOMParser().parseFromString(event.target.result, file.type);
+							var selection = getSelection().anchorNode;
+							var container = (selection.nodeType === 1) ? selection : selection.parentElement;
+							content.body.childNodes.forEach(function(node) {
+								container.appendChild(node);
+							});
+							break;
 
-							default:
-								if (/image\/*/.test(file.type)) {
-									document.execCommand('insertimage', null, event.target.result);
-								} else if (/text\/*/.test(file.type)) {
-									sets.innerHTML = event.target.result;
-								}
-						}
+						default:
+							console.error(new Error('Unhandled file type: ' + file.type));
 					}
 				};
 				reader.onerror = function(event) {
@@ -593,6 +588,9 @@ Element.prototype.DnD = function(sets) {
 		return false;
 	};
 };
+HTMLElement.prototype.dataURI = function() {
+	return 'data:text/html,' + encodeURIComponent(this.innerHTML)
+}
 window.addEventListener('popstate', function()
 {
 	"use strict";
