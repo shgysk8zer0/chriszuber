@@ -80,6 +80,7 @@
 		<script type="application/javascript;version=1.8" src="scripts/std-js/poly_modern.js" async></script>
 		<script type="application/javascript;version=1.8" src="scripts/std-js/functions.js" async></script>
 		<script type="application/javascript;version=1.8" src="scripts/std-js/zq.js" async></script>
+		<script type="application/javascript;version=1.8" src="scripts/std-js/popstate.js" async></script>
 		<script type="application/javascript;version=1.8" src="scripts/std-js/json_response.js" async></script>
 		<script type="application/javascript;version=1.8" src="scripts/std-js/wysiwyg.js" async defer></script>
 		<script type="application/javascript;version=1.8" src="scripts/custom.js" async defer></script>
@@ -90,6 +91,7 @@
 		<script type="application/javascript" src="scripts/std-js/poly_modern.js" async></script>
 		<script type="application/javascript" src="scripts/std-js/functions.js" async></script>
 		<script type="application/javascript" src="scripts/std-js/zq.js" async></script>
+		<script type="application/javascript" src="scripts/std-js/popstate.js" async></script>
 		<script type="application/javascript" src="scripts/std-js/json_response.js" async></script>
 		<script type="application/javascript" src="scripts/std-js/wysiwyg.js" async defer></script>
 		<script type="application/javascript" src="scripts/custom.js" async defer></script>
