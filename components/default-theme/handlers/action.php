@@ -192,6 +192,23 @@ switch($_POST['action']) {
 		}
 		break;
 
+	case 'concatenate_js':
+		require_login('admin');
+		$scripts = array_map('current', get_dev_scripts());
+		if (concatenate_scripts($scripts)) {
+			$resp->notify(
+				'Success!',
+				'JavaScript files were concatenated'
+			);
+		} else {
+			$resp->notify(
+				'We have a problem :(',
+				'JavaScript files were not concatenated',
+				'images/octicons/svg/bug.svg'
+			);
+		}
+		break;
+
 	case 'test':
 		require_login('admin');
 

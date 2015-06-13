@@ -50,6 +50,7 @@
 	<menuitem type="command" label="Search PHP errors" icon="images/octicons/svg/search.svg" data-request="load_form=php_errors"></menuitem>
 	<menuitem type="command" label="Update Icons" icon="images/octicons/svg/sync.svg" data-request="action=update_icons"></menuitem>
 	<menuitem type="command" label="Compose email" icon="images/octicons/svg/mail.svg" data-request="load_form=compose_email"></menuitem>
+	<menuitem type="command" label="Concatenate JavaScript" icon="images/logos/javascript.svg" data-request="action=concatenate_js"></menuitem>
 	<menuitem type="command" label="test" icon="images/octicons/svg/terminal.svg" data-request="action=test"></menuitem>
 	<?php endif?>
 	<menuitem type="command" label="Clear Cache" icon="images/octicons/svg/trashcan.svg" data-confirm="Are you sure you want to clear your cache for this site?"></menuitem>
