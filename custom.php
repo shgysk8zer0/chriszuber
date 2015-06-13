@@ -46,6 +46,37 @@ function get_dev_scripts()
 }
 
 /**
+ * Concatenate JavaScript files
+ *
+ * @param  string $output File to save concatenated scripts to
+ * @return void
+ */
+function concatenate_scripts($output = 'scripts/combined.js')
+{
+	$handle = fopen($output, 'c');
+	// Only proceed if we can obtain an exclusive lock
+	if (flock($handle, LOCK_EX)) {
+		// Get all scripts used, and get the contents of the script
+		$scripts = get_dev_scripts();
+		array_walk($scripts, function(&$script) {
+			$script = file_get_contents(current($script));
+			// Un-comment the following line to minify
+			//$script = str_replace(["\r", "\n", "\t"], null, $script);
+		});
+		// Truncate the script to not just append to it
+		ftruncate($handle, 0);
+		// Iterate through the scripts, appending to the now empty file
+		foreach ($scripts as $file) {
+			fwrite($handle, $file);
+		}
+		// Release the lock
+		flock($handle, LOCK_UN);
+	}
+	// Close the handle
+	fclose($handle);
+}
+
+/**
  * Update sitemap.xml
  *
  * @param  string  $name  Name of file output
