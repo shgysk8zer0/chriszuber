@@ -1,5 +1,27 @@
 <?php
 /**
+ * Create a script tag as a string
+ *
+ * @param  string $src   URL src for script
+ * @param  bool   $async Whether or not to set the async attribute
+ * @param  bool   $defer Whether or not to set the async attribute
+ * @param  string $type  Type Attribute (because Firefox can handle additional "version")
+ *
+ * @return string        "<script ...></script>"
+ */
+function mk_script_tag($src, $async = true, $defer = false, $type = 'application/javascript')
+{
+	$script = "<script type=\"{$type}\" src=\"{$src}\"";
+	if ($async) {
+		$script .= ' async="';
+	}
+	if ($defer) {
+		$script .= ' defer="';
+	}
+	$script .= '></script>';
+	return $script;
+}
+/**
  * Update sitemap.xml
  *
  * @param  string  $name  Name of file output

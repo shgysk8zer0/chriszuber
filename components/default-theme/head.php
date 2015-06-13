@@ -72,38 +72,29 @@
 <?php if (BROWSER === 'IE'):?>
 <script type="text/javascript" src="scripts/std-js/polyfills.js"></script>
 <?php endif;?>
-<?php if(localhost()):?>
-	<?php if(BROWSER === 'Firefox'):?>
-		<script type="application/javascript;version=1.8" src="scripts/std-js/deprefixer.js" async></script>
-		<script type="application/javascript;version=1.8" src="scripts/std-js/prototypes.js" async></script>
-		<script type="application/javascript;version=1.8" src="scripts/std-js/support_test.js" async></script>
-		<script type="application/javascript;version=1.8" src="scripts/std-js/poly_modern.js" async></script>
-		<script type="application/javascript;version=1.8" src="scripts/std-js/functions.js" async></script>
-		<script type="application/javascript;version=1.8" src="scripts/std-js/zq.js" async></script>
-		<script type="application/javascript;version=1.8" src="scripts/std-js/popstate.js" async></script>
-		<script type="application/javascript;version=1.8" src="scripts/std-js/json_response.js" async></script>
-		<script type="application/javascript;version=1.8" src="scripts/std-js/wysiwyg.js" async defer></script>
-		<script type="application/javascript;version=1.8" src="scripts/custom.js" async defer></script>
-	<?php else:?>
-		<script type="application/javascript" src="scripts/std-js/deprefixer.js" async></script>
-		<script type="application/javascript" src="scripts/std-js/prototypes.js" async></script>
-		<script type="application/javascript" src="scripts/std-js/support_test.js" async></script>
-		<script type="application/javascript" src="scripts/std-js/poly_modern.js" async></script>
-		<script type="application/javascript" src="scripts/std-js/functions.js" async></script>
-		<script type="application/javascript" src="scripts/std-js/zq.js" async></script>
-		<script type="application/javascript" src="scripts/std-js/popstate.js" async></script>
-		<script type="application/javascript" src="scripts/std-js/json_response.js" async></script>
-		<script type="application/javascript" src="scripts/std-js/wysiwyg.js" async defer></script>
-		<script type="application/javascript" src="scripts/custom.js" async defer></script>
-	<?php endif?>
-<?php else:?>
-	<?php if(BROWSER === 'Firefox'):?>
-		<script type="application/javascript;version=1.8" src="scripts/combined.js" async></script>
-	<?php else:?>
-		<script type="application/javascript" src="scripts/combined.js" async></script>
-	<?php endif?>
+<?php
+	if (localhost()): {
+		$type = (BROWSER === 'Firefox') ? 'application/javascript;version=1.8' : 'application/javascript';
+		foreach (array(
+			array('scripts/std-js/deprefixer.js', true, false, $type),
+			array('scripts/std-js/prototypes.js', true, false, $type),
+			array('scripts/std-js/support_test.js', true, false, $type),
+			array('scripts/std-js/poly_modern.js', true, false, $type),
+			array('scripts/std-js/functions.js', true, false, $type),
+			array('scripts/std-js/zq.js', true, false, $type),
+			array('scripts/std-js/popstate.js', true, false, $type),
+			array('scripts/std-js/json_response.js', true, false, $type),
+			array('scripts/std-js/wysiwyg.js', true, false, $type),
+			array('scripts/custom.js', true, false, $type)
+		) as $script) {
+			echo call_user_func_array('mk_script_tag', $script) . PHP_EOL;
+		}
+		unset($type, $script);
+	}
+else:?>
+	<script type="<?=(BROWSER === 'Firefox') ? 'application/javascript;version=1.8' : 'application/javascript'?>" src="scripts/combined.js" async></script>
 <?php endif?>
-<?php if(!localhost() and isset($head->google_analytics_code) and !DNT()): define('GA', $head->google_analytics_code)?>
+<?php if(! localhost() and isset($head->google_analytics_code) and ! DNT()): define('GA', $head->google_analytics_code)?>
 	<script type="application/javascript" src="scripts/std-js/analytics.js" async defer></script>
 <?php else:?>
 	<!--Analytics not used to honor Do Not Track Header-->
