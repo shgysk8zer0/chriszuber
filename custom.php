@@ -13,14 +13,38 @@ function mk_script_tag($src, $async = true, $defer = false, $type = 'application
 {
 	$script = "<script type=\"{$type}\" src=\"{$src}\"";
 	if ($async) {
-		$script .= ' async="';
+		$script .= ' async=""';
 	}
 	if ($defer) {
-		$script .= ' defer="';
+		$script .= ' defer=""';
 	}
 	$script .= '></script>';
 	return $script;
 }
+
+/**
+ * Get an array of scipts to use, compatible with `mk_script_tag`
+ *
+ * @param void
+ * @return array [[src, async, defer, type], ...]
+ */
+function get_dev_scripts()
+{
+	$type = (BROWSER === 'Firefox') ? 'application/javascript;version=1.8' : 'application/javascript';
+	return array(
+		array('scripts/std-js/deprefixer.js', true, false, $type),
+		array('scripts/std-js/prototypes.js', true, false, $type),
+		array('scripts/std-js/support_test.js', true, false, $type),
+		array('scripts/std-js/poly_modern.js', true, false, $type),
+		array('scripts/std-js/functions.js', true, false, $type),
+		array('scripts/std-js/zq.js', true, false, $type),
+		array('scripts/std-js/popstate.js', true, false, $type),
+		array('scripts/std-js/json_response.js', true, false, $type),
+		array('scripts/std-js/wysiwyg.js', true, false, $type),
+		array('scripts/custom.js', true, false, $type)
+	);
+}
+
 /**
  * Update sitemap.xml
  *

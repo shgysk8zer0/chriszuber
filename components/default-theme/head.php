@@ -74,22 +74,10 @@
 <?php endif;?>
 <?php
 	if (localhost()): {
-		$type = (BROWSER === 'Firefox') ? 'application/javascript;version=1.8' : 'application/javascript';
-		foreach (array(
-			array('scripts/std-js/deprefixer.js', true, false, $type),
-			array('scripts/std-js/prototypes.js', true, false, $type),
-			array('scripts/std-js/support_test.js', true, false, $type),
-			array('scripts/std-js/poly_modern.js', true, false, $type),
-			array('scripts/std-js/functions.js', true, false, $type),
-			array('scripts/std-js/zq.js', true, false, $type),
-			array('scripts/std-js/popstate.js', true, false, $type),
-			array('scripts/std-js/json_response.js', true, false, $type),
-			array('scripts/std-js/wysiwyg.js', true, false, $type),
-			array('scripts/custom.js', true, false, $type)
-		) as $script) {
+		foreach (get_dev_scripts() as $script) {
 			echo call_user_func_array('mk_script_tag', $script) . PHP_EOL;
 		}
-		unset($type, $script);
+		unset($script);
 	}
 else:?>
 	<script type="<?=(BROWSER === 'Firefox') ? 'application/javascript;version=1.8' : 'application/javascript'?>" src="scripts/combined.js" async></script>
