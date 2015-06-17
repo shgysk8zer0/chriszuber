@@ -160,6 +160,11 @@
 		<menuitem label="Pre-formatted Text" data-editor-command="inserthtml" data-selection-to="pre"></menuitem>
 		<menuitem label="Custom HTML" icon="images/octicons/svg/file-code.svg" data-editor-command="inserthtml" data-prompt="Enter the HTML to insert."></menuitem>
 	</menu>
+	<menu label="Background Color">
+		<?php foreach($colors as $name => $color):?>
+			<menuitem label="<?=$name?>" icon="data:image/svg+xml;utf8,<?=rawurlencode('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><rect width="1" height="1" fill="' . $color . '"/></svg>');?>" data-editor-command="backcolor" data-editor-value="<?=$color?>" data-style-with-css></menuitem>
+		<?php endforeach?>
+	</menu>
 	<menu label="Text Style">
 		<menu label="Font">
 			<menu label="Size">
@@ -174,7 +179,7 @@
 			</menu>
 			<menu label="Font Color">
 				<?php foreach($colors as $name => $color):?>
-					<menuitem label="<?=$name?>" icon="data:image/svg+xml;utf8,<?=rawurlencode('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><rect width="1" height="1" fill="' . $color . '"/></svg>');?>" data-editor-command="forecolor" data-editor-value="<?=$color?>" ></menuitem>
+					<menuitem label="<?=$name?>" icon="data:image/svg+xml;utf8,<?=rawurlencode('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><rect width="1" height="1" fill="' . $color . '"/></svg>');?>" data-editor-command="forecolor" data-editor-value="<?=$color?>" data-style-with-css></menuitem>
 				<?php endforeach?>
 			</menu>
 		</menu>
