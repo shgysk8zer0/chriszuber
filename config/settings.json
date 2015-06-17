@@ -37,7 +37,8 @@
         "style-src": [
             "'self'",
             "https:\/\/gist-assets.github.com",
-            "fonts.googleapis.com"
+            "fonts.googleapis.com",
+            "'unsafe-inline'"
         ],
         "font-src": [
             "'self'",
@@ -82,6 +83,7 @@
         "form-action": "'self'",
         "reflected-xss": "block",
         "plugin-types": "",
+        "report-uri": "CSP_Errors.php",
         "enforce": true
     }
 }
