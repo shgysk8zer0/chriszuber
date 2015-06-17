@@ -41,6 +41,7 @@ function get_dev_scripts()
 		array('scripts/std-js/popstate.js', true, false, $type),
 		array('scripts/std-js/json_response.js', true, false, $type),
 		array('scripts/std-js/wysiwyg.js', true, false, $type),
+		array('scripts/std-js/kbd_shortcuts.js', true, false, $type),
 		array('scripts/custom.js', true, false, $type)
 	);
 }

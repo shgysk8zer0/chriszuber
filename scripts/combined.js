@@ -34,7 +34,7 @@ if (! ('requestFullScreen' in HTMLElement.prototype)) {
 ].filter(function (method) {
 	return !(method in NodeList.prototype) && (method in Array.prototype);
 }).forEach(function (method) {
-	NodeList.prototype[method] = Array.prototype[method]
+	NodeList.prototype[method] = Array.prototype[method];
 });
 DOMTokenList.prototype.pick = function(cname1, cname2, condition)
 {
@@ -208,7 +208,8 @@ Element.prototype.ajax = function(args) {
 Element.prototype.wordCount = function()
 {
 	return this.textContent.split(' ').length;
-};Element.prototype.DnD = function(sets) {
+};
+Element.prototype.DnD = function(sets) {
 	"use strict";
 	this.ondragover = function(event) {
 		this.classList.add('receiving');
@@ -228,7 +229,7 @@ Element.prototype.wordCount = function()
 					progress = document.createElement('progress');
 				progress.min = 0;
 				progress.max = 1;
-				progress.value= 0;
+				progress.value = 0;
 				progress.classList.add('uploading');
 				sets.appendChild(progress);
 				if (/image\/*/.test(file.type)) {
@@ -241,46 +242,58 @@ Element.prototype.wordCount = function()
 						progress.value = event.loaded / event.total;
 					}
 				});
-				reader.onload = function(event) {
+				reader.addEventListener('load', function(event) {
 					progress.parentElement.removeChild(progress);
 					switch (file.type) {
 						case 'image/png':
 						case 'image/jpeg':
 						case 'image/svg':
+						case 'image/gif':
 							document.execCommand('insertimage', null, event.target.result);
 							break;
 
-						case 'text/html':
-						case 'text/xml':
-							var content = new DOMParser().parseFromString(event.target.result, file.type);
-							var selection = getSelection().anchorNode;
-							var container = (selection.nodeType === 1) ? selection : selection.parentElement;
-							content.body.childNodes.forEach(function(node) {
-								container.appendChild(node.cloneNode(true));
-							});
-							break;
-
 						default:
-							console.error(new Error('Unhandled file type: ' + file.type));
+							try {
+								var content = new DOMParser().parseFromString(event.target.result, file.type);
+								document.execCommand('insertHTML', null, content.body.innerHTML);
+							} catch (exc) {
+								console.error(exc);
+							}
+							break;
 					}
-				};
-				reader.onerror = function(event) {
+				});
+				reader.addEventListener('error', function(event) {
 					progress.parentElement.removeChild(progress);
 					console.error(event);
-				};
-			console.log(file);
+				});
 			}
 		}
 		return false;
 	};
 };
 HTMLElement.prototype.dataURI = function() {
+	var doc = this.toDocument();
+	var style = doc.createElement('link');
+	style.setAttribute('rel', 'stylesheet');
+	style.setAttribute('type', 'text/css');
+	style.setAttribute('href', 'https://fonts.googleapis.com/css?family=Acme|Ubuntu|Press+Start+2P|Alice|Comfortaa|Open+Sans|Droid+Serif');
+	doc.head.appendChild(style);
+
+	return doc.dataURI();
+}
+HTMLElement.prototype.toDocument = function (charset) {
+	if (typeof charset !== 'string') {
+		charset = 'utf-8';
+	}
 	var doc = new DOMParser().parseFromString('', 'text/html');
-	doc.head.appendChild(doc.createElement('meta')).setAttribute('charset', 'utf-8');
+	doc.head.appendChild(doc.createElement('meta')).setAttribute('charset', charset);
 	this.childNodes.forEach(function(node) {
 		doc.body.appendChild(node.cloneNode(true));
 	});
-	return 'data:text/html,' + encodeURIComponent('<!DOCTYPE html>' + doc.documentElement.outerHTML);
+	return doc;
+};
+HTMLDocument.prototype.dataURI = function() {
+	return 'data:text/html,' + encodeURIComponent('<!DOCTYPE html>' + this.documentElement.outerHTML);
 }
 Element.prototype.query = function(query)
 {
@@ -1413,6 +1426,7 @@ function WYSIWYG(menu)
 		item.addEventListener('click', function(event)
 		{
 			event.preventDefault();
+			document.execCommand('styleWithCSS', null, this.dataset.hasOwnProperty('styleWithCss'));
 			var arg = null;
 			if (this.dataset.hasOwnProperty('editorValue')) {
 				arg = this.dataset.editorValue;
@@ -1480,6 +1494,99 @@ function WYSIWYG(menu)
 		});
 	});
 }
+window.addEventListener('keypress', function (event) {
+    if (event.target.matches('[contenteditable="true"], [contenteditable="true"] *')) {
+        switch (event.key.toLowerCase()) {
+            case 'y':
+                if (event.ctrlKey && !(event.altKey || event.shiftKey)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    document.execCommand('redo');
+                }
+                break;
+            case 'z':
+                if (event.ctrlKey && !(event.altKey || event.shiftKey)) {
+                    event.preventDefault()
+                    event.stopPropagation();
+                    document.execCommand('undo');
+                }
+                break;
+            case 'a':
+                if (event.ctrlKey && !(event.altKey || event.shiftKey)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    document.execCommand('selectall');
+                }
+                break;
+            case 'e':
+                if (event.ctrlKey && !(event.altKey || event.shiftKey)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    document.execCommand('justifyCenter');
+                }
+                break;
+            case 'l':
+                if (event.ctrlKey && !(event.altKey || event.shiftKey)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    document.execCommand('justifyLeft');
+                }
+                break;
+            case 'r':
+                if (event.ctrlKey && !(event.altKey || event.shiftKey)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    document.execCommand('justifyRight');
+                }
+                break;
+            case 'j':
+                if (event.ctrlKey && !(event.altKey || event.shiftKey)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    document.execCommand('justiyFull');
+                }
+                break;
+            case 'i':
+                if (event.ctrlKey && !(event.altKey || event.shiftKey)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    document.execCommand('styleWithCSS', null, false);
+                    document.execCommand('italic');
+                }
+                break;
+            case 'b':
+                if (event.ctrlKey && !(event.altKey || event.shiftKey)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    document.execCommand('styleWithCSS', null, false);
+                    document.execCommand('bold');
+                }
+                break;
+            case 'u':
+                if (event.ctrlKey && !(event.altKey || event.shiftKey)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    document.execCommand('styleWithCSS', null, false);
+                    document.execCommand('underline');
+                }
+                break;
+            case 'k':
+                if (event.ctrlKey && !(event.altKey || event.shiftKey)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    document.execCommand('styleWithCSS', null, false);
+                    document.execCommand('strikethrough');
+                }
+                break;
+            case 'tab':
+                event.preventDefault();
+                event.stopPropagation();
+                (event.shiftKey) ? document.execCommand('outdent')  : document.execCommand('indent');
+                break;
+        }
+    }
+},
+true);
 /*Cannot rely on $(window).load() to work, so use this instead*/
 window.addEventListener('load', function()
 {
