@@ -1,7 +1,7 @@
 <?php
 	$storage = \shgysk8zer0\Core\storage::load();
 ?>
-	<header role="banner">
+	<header role="banner" id="header">
 		<h1>
 			<a href="<?=URL?>" rel="bookmark">
 				<?=$storage->site_info->title?>

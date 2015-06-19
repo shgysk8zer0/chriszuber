@@ -1,4 +1,4 @@
-<footer>
+<footer id="footer">
 	<?php if($DB->connected):
 		foreach($DB->fetchArray(
 			"SELECT
