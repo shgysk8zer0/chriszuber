@@ -41,6 +41,13 @@ class Pages implements API\Interfaces\Magic_Methods
 	private $data   = null;
 
 	/**
+	 * URL path converted to an array
+	 *
+	 * @var array
+	 */
+	private $request_path = array();
+
+	/**
 	 * HTTP response code
 	 * @var int
 	 */
@@ -110,12 +117,12 @@ class Pages implements API\Interfaces\Magic_Methods
 		$pdo = Core\PDO::load('connect.json');
 
 		$this->parseURL($url);
-		$this->path = array_map('urldecode', explode('/', ltrim($this->path, '/')));
+		$this->request_path = array_map('urldecode', explode('/', ltrim($this->path, '/')));
 
 		if ($pdo->connected) {
-			switch(current($this->path)) {
+			switch(current($this->request_path)) {
 				case 'tags':
-					if (count($this->path) > 1) {
+					if (count($this->request_path) > 1) {
 						$this->type = 'tags';
 						$this->data = $pdo->prepare(
 							"SELECT
@@ -129,7 +136,7 @@ class Pages implements API\Interfaces\Magic_Methods
 							WHERE `keywords` LIKE :tag
 							LIMIT 20;"
 						)->execute([
-							'tag' => preg_replace('/\s*/', '%', " {$this->path[1]} ")
+							'tag' => preg_replace('/\s*/', '%', " {$this->request_path[1]} ")
 						])->getResults();
 					}
 					break;
@@ -137,14 +144,14 @@ class Pages implements API\Interfaces\Magic_Methods
 				case 'posts':
 				case '':
 					$this->type = 'posts';
-					if (empty($this->path)) {
+					if (count($this->request_path) < 2) {
 						$this->data = $pdo->fetchArray(
 							'SELECT *
 							FROM `posts`
 							WHERE `url` = ""
 							LIMIT 1;'
 						, 0);
-					} elseif (count($this->path) >= 1) {
+					} else {
 						$this->data = $pdo->prepare(
 							'SELECT *
 							FROM `posts`
@@ -152,12 +159,12 @@ class Pages implements API\Interfaces\Magic_Methods
 							ORDER BY `created`
 							LIMIT 1;'
 						)->execute([
-							'url' => urlencode($this->path[1])
+							'url' => urlencode($this->request_path[1])
 						])->getResults(0);
 					}
 					break;
 			}
-			if (isset($this->data) and !empty($this->data)) {
+			if (isset($this->data) and ! empty($this->data)) {
 				$this->getContent();
 			} else{
 				$this->errorPage();
@@ -207,7 +214,7 @@ class Pages implements API\Interfaces\Magic_Methods
 					FROM `comments`
 					WHERE `post` = :post;'
 				)->execute([
-					'post' => $this->path
+					'post' => end($this->request_path)
 				])->getResults();
 
 				if (is_array($results)) {
@@ -252,8 +259,8 @@ class Pages implements API\Interfaces\Magic_Methods
 
 			case 'tags':
 				$this->title = 'Tags';
-				$this->description = "Tags search results for {$this->path[1]}";
-				$this->keywords = "Keywords, tags, search, {$this->path[1]}";
+				$this->description = "Tags search results for {$this->request_path[1]}";
+				$this->keywords = "Keywords, tags, search, {$this->request_path[1]}";
 				$this->content = '<div class="tags">';
 
 				$template = Core\Template::load('tags');
@@ -293,7 +300,7 @@ class Pages implements API\Interfaces\Magic_Methods
 	{
 		http_response_code($code);
 		$this->status = $code;
-		$this->path = '/' . join('/', $this->path);
+		$this->request_path = '/' . join('/', $this->request_path);
 		$this->description = 'No results for ' . $this->URLToString();
 		$this->keywords = '';
 		$this->title = $title_prefix .  ' (' . $code . ')';
