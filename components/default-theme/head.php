@@ -94,4 +94,4 @@ else:?>
 </script>
 <![endif]-->
 </head>
-<?php ob_flush(); flush();?>
+<?php ob_flush(); flush(); unset($URL->query);?>
