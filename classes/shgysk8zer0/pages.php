@@ -101,6 +101,8 @@ class Pages implements API\Interfaces\Magic_Methods
 	 */
 	public $created;
 
+	private $_handle_queries = array('view_source');
+
 	/**
 	 * Construct the class based on $url (defaulting to the current URL)
 	 * Aside from other magic methods, this is the only public method.
@@ -118,57 +120,81 @@ class Pages implements API\Interfaces\Magic_Methods
 
 		$this->parseURL($url);
 		$this->request_path = array_map('urldecode', explode('/', ltrim($this->path, '/')));
+		try {
+			if (! empty($_GET) and in_array(current(array_keys($_GET)), $this->_handle_queries)) {
+				switch(current(array_keys($_GET))) {
+					case 'view_source':
+						$this->type = 'source-viewer';
+						$this->title = "{$_GET['view_source']} -- source";
+						$this->keywords = 'PHP, source';
+						$this->description = "Source code for {$_GET['view_source']}";
+						$filename = realpath(getenv('AUTOLOAD_DIR')) . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, strtolower($_REQUEST['view_source']));
 
-		if ($pdo->connected) {
-			switch(current($this->request_path)) {
-				case 'tags':
-					if (count($this->request_path) > 1) {
-						$this->type = 'tags';
-						$this->data = $pdo->prepare(
-							"SELECT
-								`title`,
-								`description`,
-								`author`,
-								`author_url`,
-								`url`,
-								`created`
-							FROM `posts`
-							WHERE `keywords` LIKE :tag
-							LIMIT 20;"
-						)->execute([
-							'tag' => preg_replace('/\s*/', '%', " {$this->request_path[1]} ")
-						])->getResults();
-					}
-					break;
+						if (empty(pathinfo($filename, PATHINFO_EXTENSION))) {
+							$filename .= '.php';
+						}
+						if (! file_exists($filename)) {
+							throw new \Exception("{$_REQUEST['view_source']} not found", 404);
+						}
+						$this->content = "<div itemprop=\"text\" data-view-source=\"{$_GET['view_source']}\">";
+						$this->content .= highlight_file($filename, true) . '</div>';
+						break;
+				}
+			} elseif ($pdo->connected) {
+				switch(current($this->request_path)) {
+					case 'tags':
+						if (count($this->request_path) > 1) {
+							$this->type = 'tags';
+							$this->data = $pdo->prepare(
+								"SELECT
+									`title`,
+									`description`,
+									`author`,
+									`author_url`,
+									`url`,
+									`created`
+								FROM `posts`
+								WHERE `keywords` LIKE :tag
+								LIMIT 20;"
+							)->execute([
+								'tag' => preg_replace('/\s*/', '%', " {$this->request_path[1]} ")
+							])->getResults();
+						}
+						break;
 
-				case 'posts':
-				case '':
-					$this->type = 'posts';
-					if (count($this->request_path) < 2) {
-						$this->data = $pdo->fetchArray(
-							'SELECT *
-							FROM `posts`
-							WHERE `url` = ""
-							LIMIT 1;'
-						, 0);
-					} else {
-						$this->data = $pdo->prepare(
-							'SELECT *
-							FROM `posts`
-							WHERE `url` = :url
-							ORDER BY `created`
-							LIMIT 1;'
-						)->execute([
-							'url' => urlencode($this->request_path[1])
-						])->getResults(0);
-					}
-					break;
+					case 'posts':
+					case '':
+						$this->type = 'posts';
+						if (count($this->request_path) < 2) {
+							$this->data = $pdo->fetchArray(
+								'SELECT *
+								FROM `posts`
+								WHERE `url` = ""
+								LIMIT 1;'
+							, 0);
+						} else {
+							$this->data = $pdo->prepare(
+								'SELECT *
+								FROM `posts`
+								WHERE `url` = :url
+								ORDER BY `created`
+								LIMIT 1;'
+							)->execute([
+								'url' => urlencode($this->request_path[1])
+							])->getResults(0);
+						}
+						break;
+				}
+				if (isset($this->data) and ! empty($this->data)) {
+					$this->getContent();
+				} else{
+					throw new \Exception('Woops! Not found', 404);
+				}
+			} else {
+				throw new \Exception('Unable to connect to database', 500);
 			}
-			if (isset($this->data) and ! empty($this->data)) {
-				$this->getContent();
-			} else{
-				$this->errorPage();
-			}
+		} catch (\Exception $e) {
+			$this->errorPage($e->getCode(), $e->getMessage());
 		}
 	}
 
