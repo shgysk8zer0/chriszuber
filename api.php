@@ -1,6 +1,8 @@
 <?php
 namespace shgysk8zer0\Core;
 error_reporting(0);
+define('BASE', __DIR__);
+init();
 $timer   = new Timer;
 $date    = new DateTime;
 $headers = new Headers;
@@ -10,8 +12,6 @@ $PDO     = new PDO;
 $login   = new Login;
 
 try {
-	define('BASE', __DIR__);
-	init();
 	if (isset($headers->user, $headers->password)) {
 		$login->loginWith(['user' => $headers->user, 'password' => $headers->password]);
 	} elseif (isset($API->request->user, $API->request->password)) {
