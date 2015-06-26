@@ -21,6 +21,7 @@ Thumbs.db
 
 # Do not ignore
 !/default.sql
+!/composer.json
 
 #################
 ## Eclipse
