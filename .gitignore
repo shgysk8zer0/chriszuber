@@ -8,7 +8,6 @@
 /config/connect.json
 /images/contact/
 /demos/*/
-/mother_brain
 *.rss
 *.dav
 *.sql
