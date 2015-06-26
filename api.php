@@ -1,6 +1,6 @@
 <?php
 namespace shgysk8zer0\Core;
-
+error_reporting(0);
 $timer   = new Timer;
 $date    = new DateTime;
 $headers = new Headers;
