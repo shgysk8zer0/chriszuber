@@ -37,7 +37,7 @@ if (! defined('THEME')) {
 }
 define_UA();
 
-set_exception_handler(\shgysk8zer0\Core\File::load('logs/exceptions.log'));
+set_exception_handler(new \shgysk8zer0\Core\ExceptionLog);
 
 $redirect = false;
 $URL = \shgysk8zer0\Core\URL::load();
