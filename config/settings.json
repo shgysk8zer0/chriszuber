@@ -30,6 +30,9 @@
         "script-src": [
             "'self'",
             "*.google-analytics.com",
+            "https:\/\/www.google.com",
+            "https:\/\/apis.google.com",
+            "https:\/\/ssl.gstatic.com",
             "https:\/\/apis.google.com",
             "https:\/\/platform.twitter.com",
             "https:\/\/gist.github.com"
