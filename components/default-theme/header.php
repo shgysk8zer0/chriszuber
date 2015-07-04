@@ -7,7 +7,7 @@
 				<?=$storage->site_info->title?>
 			</a>
 		</h1>
-		<nav role="navigation" class="flex row">
+		<nav role="navigation" class="flex row wrap">
 			<?php foreach(get_recent_posts(5) as $post):?>
 			<a href="<?=URL?>posts/<?=$post->url?>" class="center"><?=$post->title?></a>
 			<?php endforeach?>

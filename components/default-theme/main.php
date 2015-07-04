@@ -13,7 +13,7 @@
 		$pages->content = null;
 	}
 ?>
-<main role="main" itemprop="mainContentofPage" itemscope itemtype="http://schema.org/WebPageElement" id="main" class="flex row" <?=($login->logged_in and $login->role === 'admin') ? ' contextmenu="admin_menu"' : ''?>>
+<main role="main" itemprop="mainContentofPage" itemscope itemtype="http://schema.org/WebPageElement" id="main" class="flex row wrap" <?=($login->logged_in and $login->role === 'admin') ? ' contextmenu="admin_menu"' : ''?>>
 	<?php
 		if (isset($missing)) {
 			echo '<div data-error="Missing Modules"><strong>Missing PHP Modules</strong><ul>';
