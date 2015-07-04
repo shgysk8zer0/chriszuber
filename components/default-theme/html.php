@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html lang="en" itemscope itemtype="http://schema.org/WebPage" class="no-js" <?php if(! localhost() and isset($settings->appcache)):?> manifest="<?=URL . '/' . $settings->appcache?>"<?php endif?>> <!--<![endif]-->
 <!--<?=date('Y-m-d H:i:s')?>-->
 <?php load('head');?>
-<body contextmenu="main_menu" <?=defined('GA') ?'data-ga="' . GA . '"' : null ?>>
+<body class="flex row wrap" contextmenu="main_menu" <?=defined('GA') ?'data-ga="' . GA . '"' : null ?>>
 	<?php
 		if(! $DB->connected) {
 			load('forms/install');
