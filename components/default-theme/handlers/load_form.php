@@ -79,10 +79,29 @@ switch($_POST['load_form']) {
 	case 'php_errors':
 		require_login('admin');
 
-		$resp->html(
-			'main',
-			load_results("forms/php_errors")
+		$table = array_reduce(
+			$DB(
+				'SELECT `message`, `file`, `line`
+				FROM `errors`
+				GROUP BY `file`, `line`;'
+			),
+			function(\DOMElement $table, \stdClass $error)
+			{
+				return $table->message($error->message)
+					->file($error->file)
+					->line($error->line)
+					->nextRow();
+			},
+			new \shgysk8zer0\Core\Elements\Table('message', 'file', 'line')
 		);
+		$table->caption = 'PHP Errors';
+
+		$table = $table->getNode();
+
+		$dialog = new \shgysk8zer0\Core\Elements\Dialog('php-errors', $table);
+
+		$resp->append('body', $dialog)->showModal($dialog->id);
+
 		break;
 }
 exit($resp);
