@@ -1621,7 +1621,7 @@ window.addEventListener('load', function()
 		{
 			switch (this.attributeName) {
 				case 'contextmenu':
-					let menu = this.target.attr('contextmenu');
+					var menu = this.target.attr('contextmenu');
 					if (this.oldValue !== '') {
 						$('menu#' + this.oldValue).delete();
 					}
@@ -1768,7 +1768,7 @@ NodeList.prototype.bootstrap = function()
 		if (supports('menuitem')) {
 			node.query('[contextmenu]').forEach(function(el)
 			{
-				let menu = el.attr('contextmenu');
+				var menu = el.attr('contextmenu');
 				if (menu && menu !== '') {
 					if (! $('menu#'+ menu).found) {
 						ajax({
@@ -1872,7 +1872,7 @@ NodeList.prototype.bootstrap = function()
 				}
 			});
 			if (form.name === 'new_post') {
-				let retain = setInterval(function()
+				var retain = setInterval(function()
 				{
 					ajax({
 						url: document.baseURI,
@@ -2010,7 +2010,7 @@ NodeList.prototype.bootstrap = function()
 		{
 			el.addEventListener('click', function()
 			{
-				let form = document.createElement('form'),
+				var form = document.createElement('form'),
 					article = document.querySelector('article'),
 					header = article.querySelector('header'),
 					title = header.querySelector('[itemprop="headline"]'),
@@ -2051,7 +2051,7 @@ NodeList.prototype.bootstrap = function()
 				fieldset.append(legend, header, content, oldTitle, description, submit);
 				form.appendChild(fieldset);
 				article.appendChild(form);
-				let retain = setInterval(function()
+				var retain = setInterval(function()
 				{
 					ajax({
 						url: document.baseURI,
@@ -2086,7 +2086,7 @@ NodeList.prototype.bootstrap = function()
 Element.prototype.worker_clock = function()
 {
 	"use strict";
-	let clockWorker = new Worker(document.baseURI + 'scripts/workers/clock.js'),
+	var clockWorker = new Worker(document.baseURI + 'scripts/workers/clock.js'),
 		time = this;
 	clockWorker.addEventListener('message', function(e)
 	{
