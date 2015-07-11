@@ -40,3 +40,6 @@
 [submodule "stylesheets/normalize"]
 	path = stylesheets/normalize
 	url = git://github.com/necolas/normalize.css.git
+[submodule "classes/shgysk8zer0/dom"]
+	path = classes/shgysk8zer0/dom
+	url = git://github.com/shgysk8zer0/dom.git
