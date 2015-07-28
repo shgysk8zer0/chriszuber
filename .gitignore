@@ -6,8 +6,7 @@
 /*.xml
 /*.json
 /*.html
-/config/github.json
-/config/connect.json
+/config/*.json
 /images/contact/
 /demos/*/
 *.rss
@@ -23,6 +22,9 @@ Thumbs.db
 # Do not ignore
 !/default.sql
 !/composer.json
+!/config/icons.json
+!/config/settings.json
+!/config/server.json
 
 #################
 ## Eclipse
