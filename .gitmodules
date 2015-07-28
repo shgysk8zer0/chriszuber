@@ -43,3 +43,6 @@
 [submodule "classes/shgysk8zer0/dom"]
 	path = classes/shgysk8zer0/dom
 	url = git://github.com/shgysk8zer0/dom.git
+[submodule "classes/shgysk8zer0/twitterapi"]
+	path = classes/shgysk8zer0/twitterapi
+	url = git://github.com/shgysk8zer0/twitterapi.git
