@@ -1,35 +1,30 @@
 /*Cannot rely on $(window).load() to work, so use this instead*/
-window.addEventListener('load', function()
-{
-	"use strict";
+window.addEventListener('load', function() {
+	'use strict';
 	var html = $('html'),
-		body = $('body'),
-		head = $('head');
+		$body = $('body'),
+		$head = $('head');
 		cache = new cache();
 		document.documentElement.classList.swap('no-js', 'js');
 	['svg', 'audio', 'video', 'picture', 'canvas', 'menuitem', 'details',
 	'dialog', 'dataset', 'HTMLimports', 'classList', 'connectivity',
-	'visibility','notifications', 'ApplicationCache', 'indexedDB',
-	'localStorage','sessionStorage', 'CSSgradients', 'transitions',
-	'animations',  'CSSvars','CSSsupports', 'CSSmatches', 'querySelectorAll',
-	'workers', 'promises', 'ajax', 'FormData'].forEach(function(feat)
-	{
+	'visibility', 'notifications', 'ApplicationCache', 'indexedDB',
+	'localStorage', 'sessionStorage', 'CSSgradients', 'transitions',
+	'animations', 'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll',
+	'workers', 'promises', 'ajax', 'FormData'].forEach(function(feat) {
 		document.documentElement.classList.pick(feat, 'no-' + feat, supports(feat));
 	});
 	document.documentElement.classList.pick('offline', 'online', (supports('connectivity') && !navigator.onLine));
 	setTimeout(
-		function()
-		{
-			body.results.bootstrap();
+		function() {
+			$body.results.bootstrap();
 		}, 100
 	);
-	body.watch({
-		childList: function()
-		{
+	$body.watch({
+		childList: function() {
 			this.addedNodes.bootstrap();
 		},
-		attributes: function()
-		{
+		attributes: function() {
 			switch (this.attributeName) {
 				case 'contextmenu':
 					var menu = this.target.attr('contextmenu');
@@ -37,25 +32,18 @@ window.addEventListener('load', function()
 						$('menu#' + this.oldValue).delete();
 					}
 					if (menu && menu !== '') {
-						if (! $('menu#'+ menu).found) {
+						if (!$('menu#' + menu).found) {
 							ajax({
 								url: document.baseURI,
-								request: 'load_menu=' + menu.replace(/\_menu$/ ,''),
+								request: 'load_menu=' + menu.replace(/\_menu$/, ''),
 								cache: this.target.data('cache')
 							}).then(
 								handleJSON
-							).catch(function(err)
-							{
+							).catch(function(err) {
 								$('body > progress').delete();
 								console.error(err);
 							});
 						}
-					}
-					break;
-
-				case 'contextmenu':
-					if (this.oldValue !== '') {
-						$('menu#' + this.oldValue).delete();
 					}
 					break;
 
@@ -76,20 +64,17 @@ window.addEventListener('load', function()
 
 				case 'data-request':
 					if (this.oldValue !== '') {
-						this.target.addEventListener('click', function()
-						{
-							if (! this.data('confirm') || confirm(this.data('confirm'))) {
+						this.target.addEventListener('click', function() {
+							if (!this.data('confirm') || confirm(this.data('confirm'))) {
 								ajax({
-									url: this.data('url')|| document.baseURI,
+									url: this.data('url') || document.baseURI,
 									request: (this.data('prompt'))
 										? this.data('request') + '&prompt_value=' + encodeURIComponent(prompt(this.data('prompt')))
 										: this.data('request'),
 									cache: el.data('cache')
 								}).then(
 									handleJSON
-								).catch(
-									function(err)
-								{
+								).catch(function(err) {
 									$('body > progress').delete();
 									console.error(err);
 								});
@@ -117,13 +102,11 @@ window.addEventListener('load', function()
 		'data-dropzone',
 		'data-import'
 	]);
-	$(window).networkChange(function()
-	{
+	$(window).networkChange(function() {
 		$('html').toggleClass('online', navigator.onLine).toggleClass('offline', !navigator.onLine);
 	}).online(function()
 	{
-		$('fieldset').each(function(fieldset)
-		{
+		$('fieldset').each(function(fieldset) {
 			fieldset.removeAttribute('disabled');
 		});
 		notify({
@@ -131,10 +114,8 @@ window.addEventListener('load', function()
 			body: 'online',
 			icon: 'images/icons/network-server.png'
 		});
-	}).offline(function()
-	{
-		$('fieldset').each(function(fieldset)
-		{
+	}).offline(function() {
+		$('fieldset').each(function(fieldset) {
 			fieldset.disabled = true;
 		});
 		notify({
@@ -148,25 +129,20 @@ window.addEventListener('load', function()
 			request: 'request=nonce'
 		}).then(
 			handleJSON
-		).catch(
-			function(err)
-		{
+		).catch(function(err) {
 			$('body > progress').delete();
 			console.error(err);
 		});
 	}
 });
-NodeList.prototype.bootstrap = function()
-{
-	"use strict";
-	this.forEach(function(node)
-	{
+NodeList.prototype.bootstrap = function() {
+	'use strict';
+	this.forEach(function(node) {
 		if (node.nodeType !== 1) {
 			return this;
 		}
-		if (! supports('details')) {
-			node.query('details > summary').forEach(function(details)
-			{
+		if (!supports('details')) {
+			node.query('details > summary').forEach(function(details) {
 				details.addEventListener('click', function() {
 					if (this.parentElement.hasAttribute('open')) {
 						this.parentElement.removeAttribute('open');
@@ -177,20 +153,17 @@ NodeList.prototype.bootstrap = function()
 			});
 		}
 		if (supports('menuitem')) {
-			node.query('[contextmenu]').forEach(function(el)
-			{
+			node.query('[contextmenu]').forEach(function(el) {
 				var menu = el.attr('contextmenu');
 				if (menu && menu !== '') {
-					if (! $('menu#'+ menu).found) {
+					if (!$('menu#' + menu).found) {
 						ajax({
 							url: document.baseURI,
-							request: 'load_menu=' + menu.replace(/\_menu$/ ,''),
+							request: 'load_menu=' + menu.replace(/\_menu$/, ''),
 							cache: el.data('cache')
 						}).then(
 							handleJSON
-						).catch(
-							function(err)
-						{
+						).catch(function(err) {
 							$('body > progress').delete();
 							console.error(err);
 						});
@@ -199,26 +172,22 @@ NodeList.prototype.bootstrap = function()
 			});
 		}
 		if (supports('datalist')) {
-			node.query('[list]').forEach(function(list)
-			{
+			node.query('[list]').forEach(function(list) {
 				if (!$('#' + list.getAttribute('list')).found) {
 					ajax({
 						request: 'datalist=' + list.getAttribute('list'),
 						type: 'POST'
 					}).then(
 						handleJSON
-					).catch(
-						function(err)
-					{
+					).catch(function(err) {
 						$('body > progress').delete();
 						console.error(err);
 					});
 				}
 			});
 		}
-		if (! supports('picture')) {
-			node.query('picture').forEach(function(picture)
-			{
+		if (!supports('picture')) {
+			node.query('picture').forEach(function(picture) {
 				if ('matchMedia' in window) {
 					var sources = picture.querySelectorAll('source[media][srcset]');
 					for (var n = 0; n < sources.length; n++) {
@@ -232,16 +201,13 @@ NodeList.prototype.bootstrap = function()
 				}
 			});
 		}
-		node.query('[autofocus]').forEach(function(input)
-		{
+		node.query('[autofocus]').forEach(function(input) {
 			input.focus();
 		});
 		node.query('a[href]:not([target="_blank"]):not([download]):not([href*="\#"])').filter(
 			isInternalLink
-		).forEach(function(a)
-		{
-			a.addEventListener('click', function(event)
-			{
+		).forEach(function(a) {
+			a.addEventListener('click', function(event) {
 				event.preventDefault();
 				if (typeof ga === 'function') {
 					ga('send', 'pageview', this.href);
@@ -253,20 +219,16 @@ NodeList.prototype.bootstrap = function()
 					cache: this.data('cache')
 				}).then(
 					handleJSON
-				).catch(
-					function(err)
-				{
+				).catch(function(err) {
 					$('body > progress').delete();
 					console.error(err);
 				});
 			});
 		});
-		node.query('form[name]').forEach(function(form)
-		{
-			form.addEventListener('submit', function(event)
-			{
+		node.query('form[name]').forEach(function(form) {
+			form.addEventListener('submit', function(event) {
 				event.preventDefault();
-				if (! this.data('confirm') || confirm(this.data('confirm'))) {
+				if (!this.data('confirm') || confirm(this.data('confirm'))) {
 					ajax({
 						url: this.action || document.baseURI,
 						type: this.method || 'POST',
@@ -274,95 +236,71 @@ NodeList.prototype.bootstrap = function()
 						form: this
 					}).then(
 						handleJSON
-					).catch(
-						function(err)
-					{
+					).catch(function(err) {
 						$('body > progress').delete();
 						console.error(err);
 					});
 				}
 			});
 			if (form.name === 'new_post') {
-				var retain = setInterval(function()
-				{
+				var retain = setInterval(function() {
 					ajax({
 						url: document.baseURI,
 						request: 'action=keep-alive'
 					}).then(
 						handleJSON
-					).catch(
-						function(err)
-					{
+					).catch(function(err) {
 						$('body > progress').delete();
 						console.error(err);
 					});
 				}, 60000);
-				form.addEventListener('submit', function()
-				{
+				form.addEventListener('submit', function() {
 					clearInterval(retain);
 				});
 			}
 		});
-		node.query('[data-show]').forEach(function(el)
-		{
-			el.addEventListener('click', function()
-			{
+		node.query('[data-show]').forEach(function(el) {
+			el.addEventListener('click', function() {
 				document.querySelector(this.data('show')).show();
 			});
 		});
-		node.query('[data-show-modal]').forEach(function(el)
-		{
-			el.addEventListener('click', function()
-			{
+		node.query('[data-show-modal]').forEach(function(el) {
+			el.addEventListener('click', function() {
 				document.querySelector(this.data('show-modal')).showModal();
 			});
 		});
-		node.query('[data-scroll-to]').forEach(function(el)
-		{
-			el.addEventListener('click', function()
-			{
+		node.query('[data-scroll-to]').forEach(function(el) {
+			el.addEventListener('click', function() {
 				document.querySelector(this.data('scroll-to')).scrollIntoView();
 			});
 		});
-		node.query('[data-import]').forEach(function(el)
-		{
+		node.query('[data-import]').forEach(function(el) {
 			el.HTMLimport();
 		});
-		node.query('[data-close]').forEach(function(el)
-		{
-			el.addEventListener('click', function()
-			{
+		node.query('[data-close]').forEach(function(el) {
+			el.addEventListener('click', function() {
 				document.querySelector(this.data('close')).close();
 			});
 		});
-		node.query('fieldset button[type=button].toggle').forEach(function(toggle)
-		{
-			toggle.addEventListener('click', function()
-			{
-				this.ancestor('fieldset').querySelectorAll('input[type=checkbox]').forEach(function(checkbox)
-				{
-					checkbox.checked = ! checkbox.checked;
+		node.query('fieldset button[type=button].toggle').forEach(function(toggle) {
+			toggle.addEventListener('click', function() {
+				this.ancestor('fieldset').querySelectorAll('input[type=checkbox]').forEach(function(checkbox) {
+					checkbox.checked = !checkbox.checked;
 				});
 			});
 		});
-		node.query('[data-must-match]').forEach(function(match)
-		{
+		node.query('[data-must-match]').forEach(function(match) {
 			match.pattern = new RegExp(document.querySelector('[name="' + match.data('must-match') + '"]').value).escape();
-			document.querySelector('[name="' + match.data('must-match') + '"]').addEventListener('change', function()
-			{
+			document.querySelector('[name="' + match.data('must-match') + '"]').addEventListener('change', function() {
 				document.querySelector('[data-must-match="' + this.name + '"]').pattern = new RegExp(this.value).escape();
 			});
 		});
-		node.query('[data-dropzone]') .forEach(function (el)
-		{
+		node.query('[data-dropzone]') .forEach(function (el) {
 			document.querySelector(el.data('dropzone')).DnD(el);
 		});
-		node.query('input[data-equal-input]').forEach(function(input)
-		{
-			input.addEventListener('input', function()
-			{
-				document.querySelectorAll('input[data-equal-input="' + this.data('equal-input') + '"]').forEach(function(other)
-				{
+		node.query('input[data-equal-input]').forEach(function(input) {
+			input.addEventListener('input', function() {
+				document.querySelectorAll('input[data-equal-input="' + this.data('equal-input') + '"]').forEach(function(other) {
 					if (other !== input) {
 						other.value = input.value;
 					}
@@ -370,14 +308,12 @@ NodeList.prototype.bootstrap = function()
 			});
 		});
 		node.query('menu[type="context"]').forEach(WYSIWYG);
-		node.query('[data-request]').forEach(function(el)
-		{
-			el.addEventListener('click', function(event)
-			{
+		node.query('[data-request]').forEach(function(el) {
+			el.addEventListener('click', function(event) {
 				event.preventDefault();
 				if (!this.data('confirm') || confirm(this.data('confirm'))) {
 					ajax({
-						url: this.data('url')|| document.baseURI,
+						url: this.data('url') || document.baseURI,
 						request: (this.data('prompt'))
 							? this.data('request') + '&prompt_value=' + encodeURIComponent(prompt(this.data('prompt')))
 							: this.data('request'),
@@ -385,17 +321,14 @@ NodeList.prototype.bootstrap = function()
 						cache: el.data('cache')
 					}).then(
 						handleJSON
-					).catch(
-						function(err)
-					{
+					).catch(function(err) {
 						$('body > progress').delete();
 						console.error(err);
 					});
 				}
 			});
 		});
-		node.query('[data-dropzone]') .forEach(function (finput)
-		{
+		node.query('[data-dropzone]') .forEach(function (finput) {
 			document.querySelector(finput.data('dropzone')).DnD(finput);
 		});
 		node.query('[data-fullscreen]').forEach(function(el) {
@@ -407,20 +340,15 @@ NodeList.prototype.bootstrap = function()
 				}
 			});
 		});
-		node.query('[data-delete]').forEach(function(el)
-		{
-			el.addEventListener('click', function()
-			{
-				document.querySelectorAll(this.data('delete')).forEach(function(remove)
-				{
+		node.query('[data-delete]').forEach(function(el) {
+			el.addEventListener('click', function() {
+				document.querySelectorAll(this.data('delete')).forEach(function(remove) {
 					remove.parentElement.removeChild(remove);
 				});
 			});
 		});
-		node.query('menuitem[label="Edit Post"]').forEach(function(el)
-		{
-			el.addEventListener('click', function()
-			{
+		node.query('menuitem[label="Edit Post"]').forEach(function(el) {
+			el.addEventListener('click', function() {
 				var form = document.createElement('form'),
 					article = document.querySelector('article'),
 					header = article.querySelector('header'),
@@ -444,10 +372,10 @@ NodeList.prototype.bootstrap = function()
 				description.maxLength = 160;
 				description.placeholder = 'Description will appear in searches. 160 character limit';
 				legend.textContent = 'Update Post';
-				submit.type = "Submit";
+				submit.type = 'Submit';
 				submit.textContent = 'Update Post';
 				title.attr('contenteditable', 'true');
-				title.data('input-name','title');
+				title.data('input-name', 'title');
 				keywords.attr('contenteditable', 'true');
 				keywords.data('input-name', 'keywords');
 				keywords.setAttribute('open', '');
@@ -462,31 +390,25 @@ NodeList.prototype.bootstrap = function()
 				fieldset.append(legend, header, content, oldTitle, description, submit);
 				form.appendChild(fieldset);
 				article.appendChild(form);
-				var retain = setInterval(function()
-				{
+				var retain = setInterval(function() {
 					ajax({
 						url: document.baseURI,
 						request: 'action=keep-alive'
 					}).then(
 						handleJSON
-					).catch(
-						function(err)
-					{
+					).catch(function(err) {
 						$('body > progress').delete();
 						console.error(err);
 					});
 				}, 60000);
-				form.addEventListener('submit', function()
-				{
+				form.addEventListener('submit', function() {
 					clearInterval(retain);
 				});
 			});
 		});
-		node.query('[label="Clear Cache"]').forEach(function(el)
-		{
-			el.addEventListener('click', function()
-			{
-				if (! this.data('confirm') || confirm(this.data('confirm'))) {
+		node.query('[label="Clear Cache"]').forEach(function(el) {
+			el.addEventListener('click', function() {
+				if (!this.data('confirm') || confirm(this.data('confirm'))) {
 					cache.clear();
 				}
 			});
@@ -494,30 +416,26 @@ NodeList.prototype.bootstrap = function()
 	});
 	return this;
 };
-Element.prototype.worker_clock = function()
-{
-	"use strict";
+Element.prototype.worker_clock = function() {
+	'use strict';
 	var clockWorker = new Worker(document.baseURI + 'scripts/workers/clock.js'),
 		time = this;
-	clockWorker.addEventListener('message', function(e)
-	{
+	clockWorker.addEventListener('message', function(e) {
 		time.textContent = e.data.norm;
 		time.setAttribute('datetime', e.data.datetime);
 	});
 	clockWorker.postMessage('');
 };
-function notifyLocation()
-{
-	"use strict";
+function notifyLocation() {
+	'use strict';
 	getLocation({
 		enableHighAccuracy: true,
 		maximumAge: 0
-	}).then(function(pos)
-	{
+	}).then(function(pos) {
 		console.log(pos.coords);
 		notify({
 			title: 'Your current location:',
-			body: 'Longitude: ' + pos.coords.longitude + "\nLatitude: " + pos.coords.latitude,
+			body: 'Longitude: ' + pos.coords.longitude + '\nLatitude: ' + pos.coords.latitude,
 			icon: document.baseURI + 'images/icons/map.png'
 		});
 	});
