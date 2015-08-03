@@ -27,7 +27,7 @@ window.addEventListener('load', function() {
 		attributes: function() {
 			switch (this.attributeName) {
 				case 'contextmenu':
-					var menu = this.target.attr('contextmenu');
+					var menu = this.target.getAttribute('contextmenu');
 					if (this.oldValue !== '') {
 						$('menu#' + this.oldValue).delete();
 					}
@@ -35,8 +35,7 @@ window.addEventListener('load', function() {
 						if (!$('menu#' + menu).found) {
 							ajax({
 								url: document.baseURI,
-								request: 'load_menu=' + menu.replace(/\_menu$/, ''),
-								cache: this.target.data('cache')
+								request: 'load_menu=' + menu.replace(/\_menu$/, '')
 							}).then(
 								handleJSON
 							).catch(function(err) {
@@ -57,7 +56,7 @@ window.addEventListener('load', function() {
 					break;
 
 				case 'data-import':
-					if (this.target.hasAttribute('data-import')) {
+					if (this.target.dataset.has('import')) {
 						this.target.HTMLimport();
 					}
 					break;
@@ -65,13 +64,12 @@ window.addEventListener('load', function() {
 				case 'data-request':
 					if (this.oldValue !== '') {
 						this.target.addEventListener('click', function() {
-							if (!this.data('confirm') || confirm(this.data('confirm'))) {
+							if (!this.dataset.has('confirm') || confirm(this.dataset.confirm)) {
 								ajax({
-									url: this.data('url') || document.baseURI,
-									request: (this.data('prompt'))
-										? this.data('request') + '&prompt_value=' + encodeURIComponent(prompt(this.data('prompt')))
-										: this.data('request'),
-									cache: el.data('cache')
+									url: this.dataset.url || document.baseURI,
+									request: (this.dataset.has('prompt'))
+										? this.dataset.request + '&prompt_value=' + encodeURIComponent(prompt(this.dataset.prompt))
+										: this.dataset.request
 								}).then(
 									handleJSON
 								).catch(function(err) {
@@ -84,7 +82,7 @@ window.addEventListener('load', function() {
 					break;
 
 				case 'data-dropzone':
-					document.querySelector(this.target.data('dropzone')).DnD(this.target);
+					document.querySelector(this.target.dataset.dropzone).DnD(this.target);
 					break;
 
 				default:
@@ -104,8 +102,7 @@ window.addEventListener('load', function() {
 	]);
 	$(window).networkChange(function() {
 		$('html').toggleClass('online', navigator.onLine).toggleClass('offline', !navigator.onLine);
-	}).online(function()
-	{
+	}).online(function() {
 		$('fieldset').each(function(fieldset) {
 			fieldset.removeAttribute('disabled');
 		});
@@ -154,13 +151,12 @@ NodeList.prototype.bootstrap = function() {
 		}
 		if (supports('menuitem')) {
 			node.query('[contextmenu]').forEach(function(el) {
-				var menu = el.attr('contextmenu');
+				var menu = el.getAttribute('contextmenu');
 				if (menu && menu !== '') {
 					if (!$('menu#' + menu).found) {
 						ajax({
 							url: document.baseURI,
-							request: 'load_menu=' + menu.replace(/\_menu$/, ''),
-							cache: el.data('cache')
+							request: 'load_menu=' + menu.replace(/\_menu$/, '')
 						}).then(
 							handleJSON
 						).catch(function(err) {
@@ -211,12 +207,10 @@ NodeList.prototype.bootstrap = function() {
 				event.preventDefault();
 				if (typeof ga === 'function') {
 					ga('send', 'pageview', this.href);
-				}
-				ajax({
+				}ajax({
 					url: this.href,
 					type: 'GET',
-					history: this.href,
-					cache: this.data('cache')
+					history: this.href
 				}).then(
 					handleJSON
 				).catch(function(err) {
@@ -228,7 +222,7 @@ NodeList.prototype.bootstrap = function() {
 		node.query('form[name]').forEach(function(form) {
 			form.addEventListener('submit', function(event) {
 				event.preventDefault();
-				if (!this.data('confirm') || confirm(this.data('confirm'))) {
+				if (!this.dataset.has('confirm') || confirm(this.dataset.confirm)) {
 					ajax({
 						url: this.action || document.baseURI,
 						type: this.method || 'POST',
@@ -261,17 +255,17 @@ NodeList.prototype.bootstrap = function() {
 		});
 		node.query('[data-show]').forEach(function(el) {
 			el.addEventListener('click', function() {
-				document.querySelector(this.data('show')).show();
+				document.querySelector(this.dataset.show).show();
 			});
 		});
 		node.query('[data-show-modal]').forEach(function(el) {
 			el.addEventListener('click', function() {
-				document.querySelector(this.data('show-modal')).showModal();
+				document.querySelector(this.dataset.showModal).showModal();
 			});
 		});
 		node.query('[data-scroll-to]').forEach(function(el) {
 			el.addEventListener('click', function() {
-				document.querySelector(this.data('scroll-to')).scrollIntoView();
+				document.querySelector(this.dataset.scrollTo).scrollIntoView();
 			});
 		});
 		node.query('[data-import]').forEach(function(el) {
@@ -279,28 +273,28 @@ NodeList.prototype.bootstrap = function() {
 		});
 		node.query('[data-close]').forEach(function(el) {
 			el.addEventListener('click', function() {
-				document.querySelector(this.data('close')).close();
+				document.querySelector(this.dataset.close).close();
 			});
 		});
 		node.query('fieldset button[type=button].toggle').forEach(function(toggle) {
 			toggle.addEventListener('click', function() {
-				this.ancestor('fieldset').querySelectorAll('input[type=checkbox]').forEach(function(checkbox) {
+				this.nearest('fieldset').querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
 					checkbox.checked = !checkbox.checked;
 				});
 			});
 		});
 		node.query('[data-must-match]').forEach(function(match) {
-			match.pattern = new RegExp(document.querySelector('[name="' + match.data('must-match') + '"]').value).escape();
-			document.querySelector('[name="' + match.data('must-match') + '"]').addEventListener('change', function() {
+			match.pattern = new RegExp(document.querySelector('[name="' + match.dataset.mustMatch + '"]').value).escape();
+			document.querySelector('[name="' + match.dataset.mustMatch + '"]').addEventListener('change', function() {
 				document.querySelector('[data-must-match="' + this.name + '"]').pattern = new RegExp(this.value).escape();
 			});
 		});
 		node.query('[data-dropzone]') .forEach(function (el) {
-			document.querySelector(el.data('dropzone')).DnD(el);
+			document.querySelector(el.dataset.dropzone).DnD(el);
 		});
 		node.query('input[data-equal-input]').forEach(function(input) {
 			input.addEventListener('input', function() {
-				document.querySelectorAll('input[data-equal-input="' + this.data('equal-input') + '"]').forEach(function(other) {
+				document.querySelectorAll('input[data-equal-input="' + this.dataset.equalInput + '"]').forEach(function(other) {
 					if (other !== input) {
 						other.value = input.value;
 					}
@@ -311,14 +305,13 @@ NodeList.prototype.bootstrap = function() {
 		node.query('[data-request]').forEach(function(el) {
 			el.addEventListener('click', function(event) {
 				event.preventDefault();
-				if (!this.data('confirm') || confirm(this.data('confirm'))) {
+				if (!this.dataset.has('confirm') || confirm(this.dataset.confirm)) {
 					ajax({
-						url: this.data('url') || document.baseURI,
-						request: (this.data('prompt'))
-							? this.data('request') + '&prompt_value=' + encodeURIComponent(prompt(this.data('prompt')))
-							: this.data('request'),
-						history: this.data('history') || null,
-						cache: el.data('cache')
+						url: this.dataset.url || document.baseURI,
+						request: (this.dataset.has('prompt'))
+							? this.dataset.request + '&prompt_value=' + encodeURIComponent(prompt(this.dataset.prompt))
+							: this.dataset.request,
+						history: this.dataset.history || null
 					}).then(
 						handleJSON
 					).catch(function(err) {
@@ -329,7 +322,7 @@ NodeList.prototype.bootstrap = function() {
 			});
 		});
 		node.query('[data-dropzone]') .forEach(function (finput) {
-			document.querySelector(finput.data('dropzone')).DnD(finput);
+			document.querySelector(finput.dataset.dropzone).DnD(finput);
 		});
 		node.query('[data-fullscreen]').forEach(function(el) {
 			el.addEventListener('click', function(event) {
@@ -342,8 +335,8 @@ NodeList.prototype.bootstrap = function() {
 		});
 		node.query('[data-delete]').forEach(function(el) {
 			el.addEventListener('click', function() {
-				document.querySelectorAll(this.data('delete')).forEach(function(remove) {
-					remove.parentElement.removeChild(remove);
+				document.querySelectorAll(this.dataset.delete).forEach(function(el) {
+					el.remove();
 				});
 			});
 		});
@@ -361,11 +354,11 @@ NodeList.prototype.bootstrap = function() {
 					oldTitle = document.createElement('input'),
 					description = document.createElement('textarea'),
 					footer = article.querySelector('footer');
-				footer.parentElement.removeChild(footer);
+				footer.remove();
 				form.name = 'edit_post';
 				form.method = 'POST';
 				form.action = document.baseURI;
-				form.attr('contextmenu', 'wysiwyg_menu');
+				form.atsetAttributetr('contextmenu', 'wysiwyg_menu');
 				description.name = 'description';
 				description.value = document.querySelector('meta[name="description"]').content;
 				description.required = true;
@@ -374,14 +367,14 @@ NodeList.prototype.bootstrap = function() {
 				legend.textContent = 'Update Post';
 				submit.type = 'Submit';
 				submit.textContent = 'Update Post';
-				title.attr('contenteditable', 'true');
-				title.data('input-name', 'title');
-				keywords.attr('contenteditable', 'true');
-				keywords.data('input-name', 'keywords');
+				title.setAttribute('contenteditable', 'true');
+				title.dataset.inputName = 'title';
+				keywords.setAttribute('contenteditable', 'true');
+				keywords.dataset.inputName = 'keywords';
 				keywords.setAttribute('open', '');
-				content.attr('contenteditable', 'true');
-				content.data('input-name', 'content');
-				content.data('dropzone', 'main');
+				content.setAttribute('contenteditable', 'true');
+				content.dataset.inputName = 'content';
+				content.dataset.dropzone = 'main';
 				oldTitle.name = 'old_title';
 				oldTitle.type = 'hidden';
 				oldTitle.readonly = true;
@@ -408,23 +401,13 @@ NodeList.prototype.bootstrap = function() {
 		});
 		node.query('[label="Clear Cache"]').forEach(function(el) {
 			el.addEventListener('click', function() {
-				if (!this.data('confirm') || confirm(this.data('confirm'))) {
+				if (!this.dataset.has('confirm') || confirm(this.dataset.confirm)) {
 					cache.clear();
 				}
 			});
 		});
 	});
 	return this;
-};
-Element.prototype.worker_clock = function() {
-	'use strict';
-	var clockWorker = new Worker(document.baseURI + 'scripts/workers/clock.js'),
-		time = this;
-	clockWorker.addEventListener('message', function(e) {
-		time.textContent = e.data.norm;
-		time.setAttribute('datetime', e.data.datetime);
-	});
-	clockWorker.postMessage('');
 };
 function notifyLocation() {
 	'use strict';
