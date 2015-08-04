@@ -34,6 +34,7 @@ function get_dev_scripts()
 	return array(
 		array('scripts/std-js/deprefixer.js', true, false, $type),
 		array('scripts/std-js/prototypes.js', true, false, $type),
+		array('scripts/std-js/polyfills/fetch.js', true, false, $type),
 		array('scripts/std-js/support_test.js', true, false, $type),
 		array('scripts/std-js/poly_modern.js', true, false, $type),
 		array('scripts/std-js/functions.js', true, false, $type),
