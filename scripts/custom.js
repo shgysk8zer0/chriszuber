@@ -56,6 +56,7 @@ window.addEventListener('load', function() {
 					if (menu && menu !== '') {
 						if (!$('menu#' + menu).found) {
 							fetch(document.baseURI, {
+								method: 'POST',
 								headers: new Headers({Accept: 'application/json'}),
 								body: new URLSearchParams('load_menu=' + menu.replace(/\_menu$/, '')),
 								credentials: 'include'
@@ -367,7 +368,7 @@ NodeList.prototype.bootstrap = function() {
 				form.name = 'edit_post';
 				form.method = 'POST';
 				form.action = document.baseURI;
-				form.atsetAttributetr('contextmenu', 'wysiwyg_menu');
+				form.setAttribute('contextmenu', 'wysiwyg_menu');
 				description.name = 'description';
 				description.value = document.querySelector('meta[name="description"]').content;
 				description.required = true;
