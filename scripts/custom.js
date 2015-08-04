@@ -33,15 +33,19 @@ window.addEventListener('load', function() {
 					}
 					if (menu && menu !== '') {
 						if (!$('menu#' + menu).found) {
-							ajax({
-								url: document.baseURI,
-								request: 'load_menu=' + menu.replace(/\_menu$/, '')
-							}).then(
-								handleJSON
-							).catch(function(err) {
-								$('body > progress').delete();
-								console.error(err);
-							});
+							(function() {
+								var req = new FormData();
+								var headers = new Headers();
+								req.append('load_menu', menu.replace(/\_menu$/, ''));
+								headers.append('Accept', 'application/json');
+								fetch(document.baseURI, {
+									headers: headers,
+									body: req,
+									credentials: 'include'
+								}).then(parseResponse).then(handleJSON).catch(function(exc) {
+									console.error(exc);
+								});
+							})();
 						}
 					}
 					break;
@@ -122,14 +126,20 @@ window.addEventListener('load', function() {
 		});
 	});
 	if (!sessionStorage.hasOwnProperty('nonce')) {
-		ajax({
-			request: 'request=nonce'
-		}).then(
-			handleJSON
-		).catch(function(err) {
-			$('body > progress').delete();
-			console.error(err);
-		});
+		(function() {
+			var data = new FormData();
+			var headers = new Headers();
+			data.append('request', 'nonce');
+			headers.append('Accept', 'application/json');
+			fetch(document.baseURI, {
+				headers: headers,
+				method: 'POST',
+				body: data,
+				credenditals: 'include'
+			}).then(parseResponse).then(handleJSON).catch(function(exc) {
+				console.error(exc);
+			});
+		})();
 	}
 });
 NodeList.prototype.bootstrap = function() {
@@ -200,50 +210,45 @@ NodeList.prototype.bootstrap = function() {
 		node.query('[autofocus]').forEach(function(input) {
 			input.focus();
 		});
-		node.query(
-			'a[href]:not([target="_blank"]):not([download]):not([href*="\#"])'
-		).filter(function(a) {
-			return a.origin === location.origin;
-		}).forEach(function(a) {
+		node.query('a[href]:not([target="_blank"]):not([download]):not([href*="\#"])').filter(
+			isInternalLink
+		).forEach(function(a) {
 			a.addEventListener('click', function(event) {
 				event.preventDefault();
 				if (typeof ga === 'function') {
 					ga('send', 'pageview', this.href);
-				}
-				var headers = new Headers();
-				headers.append('Accept', 'application/json');
-				fetch(this.href, {
-					headers: headers,
-					method: 'Get'
-				}).then(parseResponse).then(function(resp) {
-					history.pushState({}, document.title, a.href);
-					return resp;
-				}).then(handleJSON).catch(function(exc) {
-					console.error(exc);
+				}ajax({
+					url: this.href,
+					type: 'GET',
+					history: this.href
+				}).then(
+					handleJSON
+				).catch(function(err) {
+					$('body > progress').delete();
+					console.error(err);
 				});
 			});
 		});
-		node.query('form[name][action]').filter(function(form) {
+		node.query('form[name]').filter(function(form) {
 			return new URL(form.action, location.origin).origin === location.origin;
 		}).forEach(function(form) {
 			form.addEventListener('submit', function(event) {
 				event.preventDefault();
-				var headers = new Headers();
-				var form = new FormData(this);
-				form.append('nonce', sessionStorage.getItem('nonce'));
-				form.append('form', this.name);
-				this.querySelectorAll('[data-input-name]').forEach(function(input) {
-					form.append(input.dataset.inputName, input.innerHTML);
-				});
-				headers.append('Accept', 'application/json');
 				if (!this.dataset.has('confirm') || confirm(this.dataset.confirm)) {
-					fetch(this.action || document.baseURI, {
-						headers: headers,
-						method: this.method || 'POST',
-						body: form
-					}).then(parseResponse).then(handleJSON).catch(function(exc) {
-						console.error(exc);
-					});
+					var data = new FormData(this);
+					var headers = new Headers();
+					data.append('nonce', sessionStorage.getItem('nonce'));
+					data.append('form', this.name);
+					headers.append('Accept', 'application/json');
+					fetch(
+						this.action || document.baseURI,
+						{
+							method: this.method || 'POST',
+							headers: headers,
+							body: data,
+							credentials: 'include'
+						}
+					).then(parseResponse).then(handleJSON).catch(reportError);
 				}
 			});
 			if (form.name === 'new_post') {
@@ -419,6 +424,14 @@ NodeList.prototype.bootstrap = function() {
 	});
 	return this;
 };
+function reportError(err) {
+	console.error(err);
+	notify({
+		title: err.name,
+		body: err.message,
+		icon: 'images/octicons/svg/bug.svg'
+	});
+}
 function notifyLocation() {
 	'use strict';
 	getLocation({
