@@ -55,19 +55,13 @@ window.addEventListener('load', function() {
 					}
 					if (menu && menu !== '') {
 						if (!$('menu#' + menu).found) {
-							(function() {
-								var req = new FormData();
-								var headers = new Headers();
-								req.append('load_menu', menu.replace(/\_menu$/, ''));
-								headers.append('Accept', 'application/json');
-								fetch(document.baseURI, {
-									headers: headers,
-									body: req,
-									credentials: 'include'
-								}).then(parseResponse).then(handleJSON).catch(function(exc) {
-									console.error(exc);
-								});
-							})();
+							fetch(document.baseURI, {
+								headers: new Headers({Accept: 'application/json'}),
+								body: new URLSearchParams('load_menu=' + menu.replace(/\_menu$/, '')),
+								credentials: 'include'
+							}).then(parseResponse).then(handleJSON).catch(function(exc) {
+								console.error(exc);
+							});
 						}
 					}
 					break;
@@ -148,20 +142,12 @@ window.addEventListener('load', function() {
 		});
 	});
 	if (!sessionStorage.hasOwnProperty('nonce')) {
-		(function() {
-			var data = new FormData();
-			var headers = new Headers();
-			data.append('request', 'nonce');
-			headers.append('Accept', 'application/json');
-			fetch(document.baseURI, {
-				headers: headers,
-				method: 'POST',
-				body: data,
-				credentials: 'include'
-			}).then(parseResponse).then(handleJSON).catch(function(exc) {
-				console.error(exc);
-			});
-		})();
+		fetch(document.baseURI, {
+			headers: new Headers({Accept: 'application/json'}),
+			method: 'POST',
+			body: new URLSearchParams('request=nonce'),
+			credentials: 'include'
+		}).then(parseResponse).then(handleJSON).catch(reportError);
 	}
 });
 NodeList.prototype.bootstrap = function() {
@@ -186,14 +172,10 @@ NodeList.prototype.bootstrap = function() {
 				var menu = el.getAttribute('contextmenu');
 				if (menu && menu !== '') {
 					if (!$('menu#' + menu).found) {
-						var headers = new Headers();
-						var data = new FormData();
-						headers.append('Accept', 'application/json');
-						data.append('load_menu', menu.replace(/\_menu$/, ''));
 						fetch(document.baseURI, {
 							method: 'POST',
-							headers: headers,
-							body: data,
+							headers: new Headers({Accept: 'application/json'}),
+							body: new URLSearchParams('load_menu=' + menu.replace(/\_menu$/, '')),
 							credentials: 'include'
 						}).then(parseResponse).then(handleJSON).catch(reportError);
 					}
@@ -203,14 +185,10 @@ NodeList.prototype.bootstrap = function() {
 		if (supports('datalist')) {
 			node.query('[list]').forEach(function(list) {
 				if (!$('#' + list.getAttribute('list')).found) {
-					var headers = new Headers();
-					var data = new FormData();
-					headers.append('Accept', 'application/json');
-					data.append('datalist', list.getAttribute('list'));
 					fetch(document.baseURI, {
 						method: 'POST',
-						headers: headers,
-						body: data,
+						headers: new Headers({Accept: 'application/json'}),
+						body: new URLSearchParams('datalist=' + list.getAttribute('list')),
 						credentials: 'include'
 					}).then(parseResponse).then(handleJSON).catch(reportError);
 				}
@@ -244,11 +222,9 @@ NodeList.prototype.bootstrap = function() {
 				if (typeof ga === 'function') {
 					ga('send', 'pageview', this.href);
 				}
-				var headers = new Headers();
-				headers.append('Accept', 'application/json');
 				fetch(this.href, {
 					method: 'GET',
-					headers: headers
+					headers: new Headers({Accept: 'application/json'})
 				}).then(parseResponse).then(handleJSON).catch(reportError);
 			});
 		});
@@ -259,15 +235,13 @@ NodeList.prototype.bootstrap = function() {
 				event.preventDefault();
 				if (!this.dataset.has('confirm') || confirm(this.dataset.confirm)) {
 					var data = new FormData(this);
-					var headers = new Headers();
 					data.append('nonce', sessionStorage.getItem('nonce'));
 					data.append('form', this.name);
-					headers.append('Accept', 'application/json');
 					fetch(
 						this.action || document.baseURI,
 						{
 							method: this.method || 'POST',
-							headers: headers,
+							headers: new Headers({Accept: 'application/json'}),
 							body: data,
 							credentials: 'include'
 						}
@@ -276,14 +250,10 @@ NodeList.prototype.bootstrap = function() {
 			});
 			if (form.name === 'new_post') {
 				var retain = setInterval(function() {
-					var headers = new Headers();
-					var data = new FormData();
-					headers.append('Accept', 'application/json');
-					data.append('action', 'keep-alive');
 					fetch(document.baseURI, {
 						method: 'GET',
-						headers: headers,
-						body: data,
+						headers: new Headers({Accept: 'application/json'}),
+						body: new URLSearchParams('action=keep-alive'),
 						credentials: 'include'
 					}).then(parseResponse).then(handleJSON).catch(reportError);
 				}, 60000);
@@ -423,14 +393,10 @@ NodeList.prototype.bootstrap = function() {
 				form.appendChild(fieldset);
 				article.appendChild(form);
 				var retain = setInterval(function() {
-					var headers = new Headers();
-					var data = new FormData();
-					headers.append('Accept', 'application/json');
-					data.append('action', 'keep-alive');
 					fetch(docuemnt.baseURI, {
 						method: 'POST',
-						headers: headers,
-						body: data,
+						headers: new Headers({Accept: 'application/json'}),
+						body: new URLSearchParams('action=keep-alive'),
 						credentials: 'include'
 					}).then(parseResponse).then(handleJSON).catch(reportError);
 				}, 60000);
