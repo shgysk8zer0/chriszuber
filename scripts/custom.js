@@ -240,7 +240,8 @@ NodeList.prototype.bootstrap = function() {
 					fetch(this.action || document.baseURI, {
 						headers: headers,
 						method: this.method || 'POST',
-						body: form
+						body: form,
+						credentials: 'include'
 					}).then(parseResponse).then(handleJSON).catch(function(exc) {
 						console.error(exc);
 					});
