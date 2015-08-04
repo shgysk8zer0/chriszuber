@@ -200,39 +200,49 @@ NodeList.prototype.bootstrap = function() {
 		node.query('[autofocus]').forEach(function(input) {
 			input.focus();
 		});
-		node.query('a[href]:not([target="_blank"]):not([download]):not([href*="\#"])').filter(
-			isInternalLink
-		).forEach(function(a) {
+		node.query(
+			'a[href]:not([target="_blank"]):not([download]):not([href*="\#"])'
+		).filter(function(a) {
+			return a.origin === location.origin;
+		}).forEach(function(a) {
 			a.addEventListener('click', function(event) {
 				event.preventDefault();
 				if (typeof ga === 'function') {
 					ga('send', 'pageview', this.href);
-				}ajax({
-					url: this.href,
-					type: 'GET',
-					history: this.href
-				}).then(
-					handleJSON
-				).catch(function(err) {
-					$('body > progress').delete();
-					console.error(err);
+				}
+				var headers = new Headers();
+				headers.append('Accept', 'application/json');
+				fetch(this.href, {
+					headers: headers,
+					method: 'Get'
+				}).then(parseResponse).then(function(resp) {
+					history.pushState({}, document.title, a.href);
+					return resp;
+				}).then(handleJSON).catch(function(exc) {
+					console.error(exc);
 				});
 			});
 		});
-		node.query('form[name]').forEach(function(form) {
+		node.query('form[name][action]').filter(function(form) {
+			return new URL(form.action, location.origin).origin === location.origin;
+		}).forEach(function(form) {
 			form.addEventListener('submit', function(event) {
 				event.preventDefault();
+				var headers = new Headers();
+				var form = new FormData(this);
+				form.append('nonce', sessionStorage.getItem('nonce'));
+				form.append('form', this.name);
+				this.querySelectorAll('[data-input-name]').forEach(function(input) {
+					form.append(input.dataset.inputName, input.innerHTML);
+				});
+				headers.append('Accept', 'application/json');
 				if (!this.dataset.has('confirm') || confirm(this.dataset.confirm)) {
-					ajax({
-						url: this.action || document.baseURI,
-						type: this.method || 'POST',
-						contentType: this.enctype,
-						form: this
-					}).then(
-						handleJSON
-					).catch(function(err) {
-						$('body > progress').delete();
-						console.error(err);
+					fetch(this.action || document.baseURI, {
+						headers: headers,
+						method: this.method || 'POST',
+						body: form
+					}).then(parseResponse).then(handleJSON).catch(function(exc) {
+						console.error(exc);
 					});
 				}
 			});
