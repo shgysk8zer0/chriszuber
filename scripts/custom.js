@@ -1,4 +1,26 @@
 /*Cannot rely on $(window).load() to work, so use this instead*/
+function reportError(err) {
+	console.error(err);
+	notify({
+		title: err.name,
+		body: err.message,
+		icon: 'images/octicons/svg/bug.svg'
+	});
+}
+function notifyLocation() {
+	'use strict';
+	getLocation({
+		enableHighAccuracy: true,
+		maximumAge: 0
+	}).then(function(pos) {
+		console.log(pos.coords);
+		notify({
+			title: 'Your current location:',
+			body: 'Longitude: ' + pos.coords.longitude + '\nLatitude: ' + pos.coords.latitude,
+			icon: document.baseURI + 'images/icons/map.png'
+		});
+	});
+}
 window.addEventListener('load', function() {
 	'use strict';
 	var html = $('html'),
@@ -135,7 +157,7 @@ window.addEventListener('load', function() {
 				headers: headers,
 				method: 'POST',
 				body: data,
-				credenditals: 'include'
+				credentials: 'include'
 			}).then(parseResponse).then(handleJSON).catch(function(exc) {
 				console.error(exc);
 			});
@@ -164,15 +186,16 @@ NodeList.prototype.bootstrap = function() {
 				var menu = el.getAttribute('contextmenu');
 				if (menu && menu !== '') {
 					if (!$('menu#' + menu).found) {
-						ajax({
-							url: document.baseURI,
-							request: 'load_menu=' + menu.replace(/\_menu$/, '')
-						}).then(
-							handleJSON
-						).catch(function(err) {
-							$('body > progress').delete();
-							console.error(err);
-						});
+						var headers = new Headers();
+						var data = new FormData();
+						headers.append('Accept', 'application/json');
+						data.append('load_menu', menu.replace(/\_menu$/, ''));
+						fetch(document.baseURI, {
+							method: 'POST',
+							headers: headers,
+							body: data,
+							credentials: 'include'
+						}).then(parseResponse).then(handleJSON).catch(reportError);
 					}
 				}
 			});
@@ -180,15 +203,16 @@ NodeList.prototype.bootstrap = function() {
 		if (supports('datalist')) {
 			node.query('[list]').forEach(function(list) {
 				if (!$('#' + list.getAttribute('list')).found) {
-					ajax({
-						request: 'datalist=' + list.getAttribute('list'),
-						type: 'POST'
-					}).then(
-						handleJSON
-					).catch(function(err) {
-						$('body > progress').delete();
-						console.error(err);
-					});
+					var headers = new Headers();
+					var data = new FormData();
+					headers.append('Accept', 'application/json');
+					data.append('datalist', list.getAttribute('list'));
+					fetch(document.baseURI, {
+						method: 'POST',
+						headers: headers,
+						body: data,
+						credentials: 'include'
+					}).then(parseResponse).then(handleJSON).catch(reportError);
 				}
 			});
 		}
@@ -210,23 +234,22 @@ NodeList.prototype.bootstrap = function() {
 		node.query('[autofocus]').forEach(function(input) {
 			input.focus();
 		});
-		node.query('a[href]:not([target="_blank"]):not([download]):not([href*="\#"])').filter(
-			isInternalLink
-		).forEach(function(a) {
+		node.query(
+			'a[href]:not([target="_blank"]):not([download]):not([href*="\#"])'
+		).filter(function(link) {
+			return link.origin === location.origin;
+		}).forEach(function(a) {
 			a.addEventListener('click', function(event) {
 				event.preventDefault();
 				if (typeof ga === 'function') {
 					ga('send', 'pageview', this.href);
-				}ajax({
-					url: this.href,
-					type: 'GET',
-					history: this.href
-				}).then(
-					handleJSON
-				).catch(function(err) {
-					$('body > progress').delete();
-					console.error(err);
-				});
+				}
+				var headers = new Headers();
+				headers.append('Accept', 'application/json');
+				fetch(this.href, {
+					method: 'GET',
+					headers: headers
+				}).then(parseResponse).then(handleJSON).catch(reportError);
 			});
 		});
 		node.query('form[name]').filter(function(form) {
@@ -253,15 +276,16 @@ NodeList.prototype.bootstrap = function() {
 			});
 			if (form.name === 'new_post') {
 				var retain = setInterval(function() {
-					ajax({
-						url: document.baseURI,
-						request: 'action=keep-alive'
-					}).then(
-						handleJSON
-					).catch(function(err) {
-						$('body > progress').delete();
-						console.error(err);
-					});
+					var headers = new Headers();
+					var data = new FormData();
+					headers.append('Accept', 'application/json');
+					data.append('action', 'keep-alive');
+					fetch(document.baseURI, {
+						method: 'GET',
+						headers: headers,
+						body: data,
+						credentials: 'include'
+					}).then(parseResponse).then(handleJSON).catch(reportError);
 				}, 60000);
 				form.addEventListener('submit', function() {
 					clearInterval(retain);
@@ -399,15 +423,16 @@ NodeList.prototype.bootstrap = function() {
 				form.appendChild(fieldset);
 				article.appendChild(form);
 				var retain = setInterval(function() {
-					ajax({
-						url: document.baseURI,
-						request: 'action=keep-alive'
-					}).then(
-						handleJSON
-					).catch(function(err) {
-						$('body > progress').delete();
-						console.error(err);
-					});
+					var headers = new Headers();
+					var data = new FormData();
+					headers.append('Accept', 'application/json');
+					data.append('action', 'keep-alive');
+					fetch(docuemnt.baseURI, {
+						method: 'POST',
+						headers: headers,
+						body: data,
+						credentials: 'include'
+					}).then(parseResponse).then(handleJSON).catch(reportError);
 				}, 60000);
 				form.addEventListener('submit', function() {
 					clearInterval(retain);
@@ -424,25 +449,3 @@ NodeList.prototype.bootstrap = function() {
 	});
 	return this;
 };
-function reportError(err) {
-	console.error(err);
-	notify({
-		title: err.name,
-		body: err.message,
-		icon: 'images/octicons/svg/bug.svg'
-	});
-}
-function notifyLocation() {
-	'use strict';
-	getLocation({
-		enableHighAccuracy: true,
-		maximumAge: 0
-	}).then(function(pos) {
-		console.log(pos.coords);
-		notify({
-			title: 'Your current location:',
-			body: 'Longitude: ' + pos.coords.longitude + '\nLatitude: ' + pos.coords.latitude,
-			icon: document.baseURI + 'images/icons/map.png'
-		});
-	});
-}
