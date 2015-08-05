@@ -77,7 +77,7 @@ window.addEventListener('load', function() {
 					break;
 
 				case 'data-import':
-					if (this.target.dataset.has('import')) {
+					if ('import' in this.target.dataset) {
 						this.target.HTMLimport();
 					}
 					break;
@@ -85,7 +85,7 @@ window.addEventListener('load', function() {
 				case 'data-request':
 					if (this.oldValue !== '') {
 						this.target.addEventListener('click', function() {
-							if (!this.dataset.has('confirm') || confirm(this.dataset.confirm)) {
+							if (!('confirm' in this.dataset) || confirm(this.dataset.confirm)) {
 								var data = new URLSearchParams(this.dataset.request);
 								if ('prompt' in this.dataset) {
 									data.set('prompt_value', prompt(this.dataset.prompt));
@@ -230,7 +230,7 @@ NodeList.prototype.bootstrap = function() {
 		}).forEach(function(form) {
 			form.addEventListener('submit', function(event) {
 				event.preventDefault();
-				if (!this.dataset.has('confirm') || confirm(this.dataset.confirm)) {
+				if (!('confirm' in this.dataset) || confirm(this.dataset.confirm)) {
 					var data = new FormData(this);
 					data.append('nonce', sessionStorage.getItem('nonce'));
 					data.append('form', this.name);
@@ -282,9 +282,9 @@ NodeList.prototype.bootstrap = function() {
 				document.querySelector(this.dataset.close).close();
 			});
 		});
-		node.query('fieldset button[type=button].toggle').forEach(function(toggle) {
+		node.query('fieldset button[type="button"].toggle').forEach(function(toggle) {
 			toggle.addEventListener('click', function() {
-				this.nearest('fieldset').querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
+				this.closest('fieldset').querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
 					checkbox.checked = !checkbox.checked;
 				});
 			});
@@ -311,7 +311,7 @@ NodeList.prototype.bootstrap = function() {
 		node.query('[data-request]').forEach(function(el) {
 			el.addEventListener('click', function(event) {
 				event.preventDefault();
-				if (!this.dataset.has('confirm') || confirm(this.dataset.confirm)) {
+				if (!('confirm' in this.dataset) || confirm(this.dataset.confirm)) {
 					var data = new URLSearchParams(this.dataset.request);
 					if ('prompt' in this.dataset) {
 						data.set('prompt_value', prompt(this.dataset.prompt));
@@ -402,7 +402,7 @@ NodeList.prototype.bootstrap = function() {
 		});
 		node.query('[label="Clear Cache"]').forEach(function(el) {
 			el.addEventListener('click', function() {
-				if (!this.dataset.has('confirm') || confirm(this.dataset.confirm)) {
+				if (!('confirm' in this.dataset) || confirm(this.dataset.confirm)) {
 					cache.clear();
 				}
 			});
