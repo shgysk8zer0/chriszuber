@@ -226,7 +226,10 @@ NodeList.prototype.bootstrap = function() {
 				fetch(this.href, {
 					method: 'GET',
 					headers: new Headers({Accept: 'application/json'})
-				}).then(parseResponse).then(handleJSON).catch(reportError);
+				}).then(parseResponse).then(function(resp) {
+					history.pushState({}, null, a.href);
+					return resp;
+				}).then(handleJSON).catch(reportError);
 			});
 		});
 		node.query('form[name]').filter(function(form) {
