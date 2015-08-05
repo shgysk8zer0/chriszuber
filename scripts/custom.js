@@ -86,17 +86,15 @@ window.addEventListener('load', function() {
 					if (this.oldValue !== '') {
 						this.target.addEventListener('click', function() {
 							if (!this.dataset.has('confirm') || confirm(this.dataset.confirm)) {
-								ajax({
-									url: this.dataset.url || document.baseURI,
-									request: (this.dataset.has('prompt'))
-										? this.dataset.request + '&prompt_value=' + encodeURIComponent(prompt(this.dataset.prompt))
-										: this.dataset.request
-								}).then(
-									handleJSON
-								).catch(function(err) {
-									$('body > progress').delete();
-									console.error(err);
-								});
+								var data = new URLSearchParams(this.dataset.request);
+								if ('prompt' in this.dataset) {
+									data.set('prompt_value', prompt(this.dataset.prompt));
+								}
+								fetch(this.dataset.url || document.baseURI, {
+									method: 'POST',
+									headers: new Headers({Accept: 'application/json'}),
+									body: data
+								}).then(parseResponse).then(handleJSON).catch(reportError);
 							}
 						});
 					}
@@ -215,9 +213,7 @@ NodeList.prototype.bootstrap = function() {
 		});
 		node.query(
 			'a[href]:not([target="_blank"]):not([download]):not([href*="\#"])'
-		).filter(function(link) {
-			return link.origin === location.origin;
-		}).forEach(function(a) {
+		).filter(isInternalLink).forEach(function(a) {
 			a.addEventListener('click', function(event) {
 				event.preventDefault();
 				if (typeof ga === 'function') {
@@ -226,10 +222,7 @@ NodeList.prototype.bootstrap = function() {
 				fetch(this.href, {
 					method: 'GET',
 					headers: new Headers({Accept: 'application/json'})
-				}).then(parseResponse).then(function(resp) {
-					history.pushState({}, null, a.href);
-					return resp;
-				}).then(handleJSON).catch(reportError);
+				}).then(parseResponse).then(handleJSON).catch(reportError);
 			});
 		});
 		node.query('form[name]').filter(function(form) {
@@ -319,18 +312,16 @@ NodeList.prototype.bootstrap = function() {
 			el.addEventListener('click', function(event) {
 				event.preventDefault();
 				if (!this.dataset.has('confirm') || confirm(this.dataset.confirm)) {
-					ajax({
-						url: this.dataset.url || document.baseURI,
-						request: (this.dataset.has('prompt'))
-							? this.dataset.request + '&prompt_value=' + encodeURIComponent(prompt(this.dataset.prompt))
-							: this.dataset.request,
-						history: this.dataset.history || null
-					}).then(
-						handleJSON
-					).catch(function(err) {
-						$('body > progress').delete();
-						console.error(err);
-					});
+					var data = new URLSearchParams(this.dataset.request);
+					if ('prompt' in this.dataset) {
+						data.set('prompt_value', prompt(this.dataset.prompt));
+					}
+					fetch(this.dataset.url || document.baseURI, {
+						method: 'POST',
+						headers: new Headers({Accept: 'application/json'}),
+						body: data,
+						credentials: 'include'
+					}).then(parseResponse).then(handleJSON).catch(reportError);
 				}
 			});
 		});
