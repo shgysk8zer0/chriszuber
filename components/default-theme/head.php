@@ -1,8 +1,11 @@
 <?php
 	$storage = \shgysk8zer0\Core\Storage::load();
+	$canonical = new \shgysk8zer0\Core\URL($URL->pathname);
 
 	if ($DB->connected) {
 		$head = $DB->nameValue('head');
+		$site = $DB->nameValue('site');
+		$canonical->setScheme($site->scheme)->setHost($site->host);
 	} else {
 		$head = new \stdClass();
 		$head->title = 'Lorem Ipsum';
@@ -24,14 +27,12 @@
 		$pages->title = null;
 		$pages->rss = null;
 	}
-
-	$canonical = new \shgysk8zer0\Core\URL("//{$_SERVER['SERVER_NAME']}");
 ?>
 <head>
 <title><?=(!(isset($pages) and is_string($pages->title) and strlen($pages->title)) or $pages->title === TITLE) ? TITLE : "{$pages->title} | " . TITLE ?></title>
 <base href="<?=URL?>"/>
 <meta charset="<?=$head->charset?>"/>
-<meta name="referrer" content="origin"/>
+<meta name="referrer" content="<?=isset($head->referrer) ? $head->referrer : 'origin-when-cross-origin'?>"/>
 <!--=====================Standard meta tags==================================-->
 <meta name="description" content="<?=isset($pages->description) ? $pages->description : $head->description?>"/>
 <meta name="keywords" content="<?=isset($pages->keywords) ? $pages->keywords : $head->keywords?>"/>
