@@ -67,7 +67,7 @@ AddDefaultCharset utf-8
 	# JavaScript
 	# Normalize to standard type (it's sniffed in IE anyways):
 	# http://tools.ietf.org/html/rfc4329#section-7.2
-	AddType application/javascript						.js .jsonp
+	AddType application/javascript						.js .es6 .jsonp
 	AddType application/json							.json
 
 	# Video
