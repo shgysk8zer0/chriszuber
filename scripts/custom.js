@@ -51,7 +51,7 @@ window.addEventListener('load', function() {
 				case 'contextmenu':
 					var menu = this.target.getAttribute('contextmenu');
 					if (this.oldValue !== '') {
-						$('menu#' + this.oldValue).delete();
+						$('menu#' + this.oldValue).remove();
 					}
 					if (menu && menu !== '') {
 						if (!$('menu#' + menu).found) {
@@ -226,7 +226,7 @@ NodeList.prototype.bootstrap = function() {
 			});
 		});
 		node.query('form[name]').filter(function(form) {
-			return new URL(form.action, location.origin).origin === location.origin;
+			return form.action.startsWith(location.origin);
 		}).forEach(function(form) {
 			form.addEventListener('submit', function(event) {
 				event.preventDefault();
