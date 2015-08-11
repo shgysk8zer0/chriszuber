@@ -33,6 +33,7 @@ function get_dev_scripts()
 	$type = (BROWSER === 'Firefox') ? 'application/javascript;version=1.8' : 'application/javascript';
 	return array(
 		array('scripts/std-js/deprefixer.js', true, false, $type),
+		array('scripts/std-js/polyfills/URLSearchParams.js', true, false, $type),
 		array('scripts/std-js/prototypes.js', true, false, $type),
 		array('scripts/std-js/polyfills/fetch.js', true, false, $type),
 		array('scripts/std-js/support_test.js', true, false, $type),
