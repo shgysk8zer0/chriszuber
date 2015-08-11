@@ -16,8 +16,8 @@ function notifyLocation() {
 		console.log(pos.coords);
 		notify({
 			title: 'Your current location:',
-			body: 'Longitude: ' + pos.coords.longitude + '\nLatitude: ' + pos.coords.latitude,
-			icon: document.baseURI + 'images/icons/map.png'
+			body: `Longitude: ${pos.coords.longitude}\nLatitude: ${pos.coords.latitude}`,
+			icon: `${document.baseURI}images/icons/map.png`
 		});
 	});
 }
@@ -34,11 +34,10 @@ window.addEventListener('load', function() {
 	'localStorage', 'sessionStorage', 'CSSgradients', 'transitions',
 	'animations', 'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll',
 	'workers', 'promises', 'ajax', 'FormData'].forEach(function(feat) {
-		document.documentElement.classList.pick(feat, 'no-' + feat, supports(feat));
+		document.documentElement.classList.pick(feat, `no-${feat}`, supports(feat));
 	});
 	document.documentElement.classList.pick('offline', 'online', (supports('connectivity') && !navigator.onLine));
-	setTimeout(
-		function() {
+	setTimeout(function() {
 			$body.results.bootstrap();
 		}, 100
 	);
@@ -51,14 +50,14 @@ window.addEventListener('load', function() {
 				case 'contextmenu':
 					var menu = this.target.getAttribute('contextmenu');
 					if (this.oldValue !== '') {
-						$('menu#' + this.oldValue).remove();
+						$(`menu#${this.oldValue}`).remove();
 					}
 					if (menu && menu !== '') {
 						if (!$('menu#' + menu).found) {
 							fetch(document.baseURI, {
 								method: 'POST',
 								headers: new Headers({Accept: 'application/json'}),
-								body: new URLSearchParams('load_menu=' + menu.replace(/\_menu$/, '')),
+								body: new URLSearchParams(`load_menu=${menu.replace(/\_menu$/, '')}`),
 								credentials: 'include'
 							}).then(parseResponse).then(handleJSON).catch(function(exc) {
 								console.error(exc);
@@ -105,7 +104,7 @@ window.addEventListener('load', function() {
 					break;
 
 				default:
-					console.error('Unhandled attribute in watch', this);
+					console.error(`Unhandled attribute in watch: "${this.attributeName}"`);
 			}
 		}
 	}, [
@@ -174,7 +173,7 @@ NodeList.prototype.bootstrap = function() {
 						fetch(document.baseURI, {
 							method: 'POST',
 							headers: new Headers({Accept: 'application/json'}),
-							body: new URLSearchParams('load_menu=' + menu.replace(/\_menu$/, '')),
+							body: new URLSearchParams(`load_menu=${menu.replace(/\_menu$/, '')}`),
 							credentials: 'include'
 						}).then(parseResponse).then(handleJSON).catch(reportError);
 					}
@@ -187,7 +186,7 @@ NodeList.prototype.bootstrap = function() {
 					fetch(document.baseURI, {
 						method: 'POST',
 						headers: new Headers({Accept: 'application/json'}),
-						body: new URLSearchParams('datalist=' + list.getAttribute('list')),
+						body: new URLSearchParams(`datalist=${list.getAttribute('list')}`),
 						credentials: 'include'
 					}).then(parseResponse).then(handleJSON).catch(reportError);
 				}
@@ -213,7 +212,7 @@ NodeList.prototype.bootstrap = function() {
 		});
 		node.query(
 			'a[href]:not([target="_blank"]):not([download]):not([href*="\#"])'
-		).filter(isInternalLink).forEach(function(a) {
+		).filter(link => link.origin == location.origin).forEach(function(a) {
 			a.addEventListener('click', function(event) {
 				event.preventDefault();
 				if (typeof ga === 'function') {
@@ -228,9 +227,9 @@ NodeList.prototype.bootstrap = function() {
 				}).catch(reportError);
 			});
 		});
-		node.query('form[name]').filter(function(form) {
-			return form.action.startsWith(location.origin);
-		}).forEach(function(form) {
+		node.query('form[name]').filter(
+			form => form.action.startsWith(location.origin)
+		).forEach(function(form) {
 			form.addEventListener('submit', function(event) {
 				event.preventDefault();
 				if (!('confirm' in this.dataset) || confirm(this.dataset.confirm)) {
@@ -293,9 +292,9 @@ NodeList.prototype.bootstrap = function() {
 			});
 		});
 		node.query('[data-must-match]').forEach(function(match) {
-			match.pattern = new RegExp(document.querySelector('[name="' + match.dataset.mustMatch + '"]').value).escape();
-			document.querySelector('[name="' + match.dataset.mustMatch + '"]').addEventListener('change', function() {
-				document.querySelector('[data-must-match="' + this.name + '"]').pattern = new RegExp(this.value).escape();
+			match.pattern = new RegExp(document.querySelector(`[name="${match.dataset.mustMatch}"]`).value).escape();
+			document.querySelector(`[name="${match.dataset.mustMatch}"]`).addEventListener('change', function() {
+				document.querySelector(`[data-must-match="${this.name}"]`).pattern = new RegExp(this.value).escape();
 			});
 		});
 		node.query('[data-dropzone]') .forEach(function (el) {
@@ -303,7 +302,7 @@ NodeList.prototype.bootstrap = function() {
 		});
 		node.query('input[data-equal-input]').forEach(function(input) {
 			input.addEventListener('input', function() {
-				document.querySelectorAll('input[data-equal-input="' + this.dataset.equalInput + '"]').forEach(function(other) {
+				document.querySelectorAll(`input[data-equal-input="${this.dataset.equalInput}"]`).forEach(function(other) {
 					if (other !== input) {
 						other.value = input.value;
 					}
