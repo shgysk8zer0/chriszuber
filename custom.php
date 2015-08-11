@@ -82,34 +82,31 @@ function concatenate_scripts(array $scripts, $output = 'scripts/combined.js')
 function update_sitemap($name = 'sitemap.xml')
 {
 	$home = \shgysk8zer0\Core\URL::load(URL);
-	$sitemap = new \DOMDocument('1.0', 'UTF-8');
-	$urlset = new \DOMElement(
+	$sitemap = new \shgysk8zer0\DOM\XML(
 		'urlset',
-		null,
-		'http://www.sitemaps.org/schemas/sitemap/0.9'
+		'http://www.sitemaps.org/schemas/sitemap/0.9',
+		'1.0',
+		'UTF-8'
 	);
 
-	$sitemap->appendChild($urlset);
-
-	array_map(function($post) use ($home, &$urlset){
-		$url = new \DOMElement('url');
-		$urlset->appendChild($url);
-		$url->appendChild(new \DOMElement(
-			'loc',
-			"{$home}posts/{$post->url}"
-		));
-		$url->appendChild(new \DOMElement(
-			'lastmod',
-			date('Y-m-d', strtotime($post->created))
-		));
-		$url->appendChild(new \DOMElement('priority', '0.8'));
-	}, \shgysk8zer0\Core\PDO::load('connect')->fetchArray(
-		"SELECT `url`, `created`
+	$posts = \shgysk8zer0\Core\PDO::load()->fetchArray(
+		'SELECT `url`, `created`
 		FROM `posts`
-		WHERE `url` != ''
-		ORDER BY `created` DESC;"
-	));
+		WHERE `url` != ""
+		ORDER BY `created` DESC;'
+	);
 
+	$posts = new \shgysk8zer0\Core\ArrayObject($posts);
+	$posts->reduce(
+		function(\DOMElement $urlset, \stdClass $post) use ($home) {
+			$url = $urlset->append('url');
+			$url->append('loc', "{$home}posts/{$post->url}");
+			$url->append('lastmod', date(DATE_RSS, strtotime($post->created)));
+			$url->append('priority', 0.8);
+			return $urlset;
+		},
+		$sitemap->documentElement
+	);
 	$sitemap->save(__DIR__ . DIRECTORY_SEPARATOR . $name);
 }
 
