@@ -135,15 +135,17 @@ function update_rss($lim = 10, $name = 'feed.rss')
 			LIMIT {$lim};"
 		);
 		$posts = new \shgysk8zer0\Core\ArrayObject($posts);
-		$rss->formatOutput = true;
 
 		$rss->documentElement->version = '2.0';
 		$channel = $rss->documentElement->append('channel');
-		$channel->append('title', htmlspecialchars($head->title, ENT_XML1, $rss->encoding));
-		$channel->append('description', htmlspecialchars($head->description, ENT_XML1, $rss->encoding));
-		$channel->append('link', URL);
-		$channel->append('lastBuildDate', date(DATE_RSS));
-		$channel->append('language', 'en-us');
+		$site = array(
+			'title' => htmlspecialchars($head->title, ENT_XML1, $rss->encoding),
+			'description' => htmlspecialchars($head->description, ENT_XML1, $rss->encoding),
+			'link' => URL,
+			'lastBuildDate' => date(DATE_RSS),
+			'laneguage' => 'en-us'
+		);
+		array_map([$channel, 'append'], array_keys($site), array_values($site));
 
 		$posts->reduce(
 			function(\DOMElement $feed, \stdClass $post) use ($url) {
