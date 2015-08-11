@@ -84,34 +84,31 @@ function concatenate_scripts(array $scripts, $output = 'scripts/combined.js')
 function update_sitemap($name = 'sitemap.xml')
 {
 	$home = \shgysk8zer0\Core\URL::load(URL);
-	$sitemap = new \DOMDocument('1.0', 'UTF-8');
-	$urlset = new \DOMElement(
+	$sitemap = new \shgysk8zer0\DOM\XML(
 		'urlset',
-		null,
-		'http://www.sitemaps.org/schemas/sitemap/0.9'
+		'http://www.sitemaps.org/schemas/sitemap/0.9',
+		'1.0',
+		'UTF-8'
 	);
 
-	$sitemap->appendChild($urlset);
-
-	array_map(function($post) use ($home, &$urlset){
-		$url = new \DOMElement('url');
-		$urlset->appendChild($url);
-		$url->appendChild(new \DOMElement(
-			'loc',
-			"{$home}posts/{$post->url}"
-		));
-		$url->appendChild(new \DOMElement(
-			'lastmod',
-			date('Y-m-d', strtotime($post->created))
-		));
-		$url->appendChild(new \DOMElement('priority', '0.8'));
-	}, \shgysk8zer0\Core\PDO::load('connect')->fetchArray(
-		"SELECT `url`, `created`
+	$posts = \shgysk8zer0\Core\PDO::load()->fetchArray(
+		'SELECT `url`, `created`
 		FROM `posts`
-		WHERE `url` != ''
-		ORDER BY `created` DESC;"
-	));
+		WHERE `url` != ""
+		ORDER BY `created` DESC;'
+	);
 
+	$posts = new \shgysk8zer0\Core\ArrayObject($posts);
+	$posts->reduce(
+		function(\DOMElement $urlset, \stdClass $post) use ($home) {
+			$url = $urlset->append('url');
+			$url->append('loc', "{$home}posts/{$post->url}");
+			$url->append('lastmod', date(DATE_RSS, strtotime($post->created)));
+			$url->append('priority', 0.8);
+			return $urlset;
+		},
+		$sitemap->documentElement
+	);
 	$sitemap->save(__DIR__ . DIRECTORY_SEPARATOR . $name);
 }
 
@@ -130,58 +127,42 @@ function update_rss($lim = 10, $name = 'feed.rss')
 	$pdo = \shgysk8zer0\Core\PDO::load('connect');
 	if($pdo->connected) {
 		$url  = \shgysk8zer0\Core\URL::load(URL);
+		$rss = new \shgysk8zer0\DOM\XML('rss', null, '1.0', 'UTF-8');
 		$head = $pdo->nameValue('head');
-		$feed = new \DOMDocument('1.0', 'UTF-8');
-		$rss  = new \DOMElement('rss');
-
-		$feed->appendChild($rss);
-		$rss->setAttribute('version', '2.0');
-		$channel = new \DOMElement('channel');
-		$rss->appendChild($channel);
-		$channel->appendChild(new \DOMElement(
-			'title',
-			htmlspecialchars($head->title, ENT_XML1, 'UTF-8')
-		));
-		$channel->appendChild(new \DOMElement('link', URL));
-		$channel->appendChild(new \DOMElement('lastBuildDate', date('r')));
-		$channel->appendChild(new \DOMElement('language', 'en-us'));
-		$channel->appendChild(new \DOMElement(
-			'description',
-			htmlspecialchars($head->description, ENT_XML1, 'UTF-8')
-		));
-
-		array_map(function(\stdClass $post) use (&$rss, $url) {
-			$item = new \DOMElement('item');
-			$rss->appendChild($item);
-			$item->appendChild(new \DOMElement(
-				'title',
-				htmlspecialchars($post->title, ENT_XML1, 'UTF-8')
-			));
-			$item->appendChild(new \DOMElement(
-				'link',
-				"{$url}posts/{$post->url}"
-			));
-			$item->appendChild(new \DOMElement(
-				'description',
-				htmlspecialchars($post->description, ENT_XML1, 'UTF-8')
-			));
-			$item->appendChild(new \DOMElement(
-				'pubDate',
-				date('r', strtotime($post->created))
-			));
-			$item->appendChild(new \DOMElement(
-				'guid',
-				"{$url}posts/{$post->url}"
-			));
-		}, $pdo->fetchArray(
+		$posts = $pdo->fetchArray(
 			"SELECT `title`, `url`, `description`, `created`
 			FROM `posts`
 			WHERE `url` != ''
 			ORDER BY `created` DESC
 			LIMIT {$lim};"
-		));
+		);
+		$posts = new \shgysk8zer0\Core\ArrayObject($posts);
 
-		$feed->save(BASE . DIRECTORY_SEPARATOR . $name);
+		$rss->documentElement->version = '2.0';
+		$channel = $rss->documentElement->append('channel');
+		$site = array(
+			'title' => htmlspecialchars($head->title, ENT_XML1, $rss->encoding),
+			'description' => htmlspecialchars($head->description, ENT_XML1, $rss->encoding),
+			'link' => URL,
+			'lastBuildDate' => date(DATE_RSS),
+			'laneguage' => 'en-us'
+		);
+		array_map([$channel, 'append'], array_keys($site), array_values($site));
+
+		$posts->reduce(
+			function(\DOMElement $feed, \stdClass $post) use ($url) {
+				$item = $feed->append('item');
+				$item->append('title', htmlspecialchars($post->title, ENT_XML1, $feed->ownerDocument->encoding));
+				$item->append('link', "{$url}posts/{$post->url}");
+				$item->append('description', htmlspecialchars($post->description, ENT_XML1, $feed->ownerDocument->encoding));
+				$item->append('pubDate', date(DATE_RSS, strtotime($post->created)));
+				$item->append('guid', "{$url}posts/{$post->url}");
+				return $feed;
+			},
+			$rss->documentElement
+		);
+
+		$rss->save(BASE . DIRECTORY_SEPARATOR . $name);
 	}
 }
 
