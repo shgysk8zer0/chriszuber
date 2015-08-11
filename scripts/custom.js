@@ -222,7 +222,10 @@ NodeList.prototype.bootstrap = function() {
 				fetch(this.href, {
 					method: 'GET',
 					headers: new Headers({Accept: 'application/json'})
-				}).then(parseResponse).then(handleJSON).catch(reportError);
+				}).then(parseResponse).then(handleJSON).then(function(resp) {
+					history.pushState({}, document.title, a.href);
+					return resp;
+				}).catch(reportError);
 			});
 		});
 		node.query('form[name]').filter(function(form) {
