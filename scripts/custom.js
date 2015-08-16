@@ -1,4 +1,6 @@
 /*Cannot rely on $(window).load() to work, so use this instead*/
+'use strict';
+
 function reportError(err) {
 	console.error(err);
 	notify({
@@ -12,7 +14,7 @@ function notifyLocation() {
 	getLocation({
 		enableHighAccuracy: true,
 		maximumAge: 0
-	}).then(function(pos) {
+	}).then(function (pos) {
 		console.log(pos.coords);
 		notify({
 			title: 'Your current location:',
@@ -21,32 +23,25 @@ function notifyLocation() {
 		});
 	});
 }
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
 	'use strict';
 	var html = $('html'),
-		$body = $('body'),
-		$head = $('head');
-		cache = new cache();
-		document.documentElement.classList.swap('no-js', 'js');
-	['svg', 'audio', 'video', 'picture', 'canvas', 'menuitem', 'details',
-	'dialog', 'dataset', 'HTMLimports', 'classList', 'connectivity',
-	'visibility', 'notifications', 'ApplicationCache', 'indexedDB',
-	'localStorage', 'sessionStorage', 'CSSgradients', 'transitions',
-	'animations', 'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll',
-	'workers', 'promises', 'ajax', 'FormData'].forEach(function(feat) {
+	    $body = $('body'),
+	    $head = $('head');
+	cache = new cache();
+	document.documentElement.classList.swap('no-js', 'js');
+	['svg', 'audio', 'video', 'picture', 'canvas', 'menuitem', 'details', 'dialog', 'dataset', 'HTMLimports', 'classList', 'connectivity', 'visibility', 'notifications', 'ApplicationCache', 'indexedDB', 'localStorage', 'sessionStorage', 'CSSgradients', 'transitions', 'animations', 'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll', 'workers', 'promises', 'ajax', 'FormData'].forEach(function (feat) {
 		document.documentElement.classList.pick(feat, 'no-' + feat, supports(feat));
 	});
-	document.documentElement.classList.pick('offline', 'online', (supports('connectivity') && !navigator.onLine));
-	setTimeout(
-		function() {
-			$body.results.bootstrap();
-		}, 100
-	);
+	document.documentElement.classList.pick('offline', 'online', supports('connectivity') && !navigator.onLine);
+	setTimeout(function () {
+		$body.results.bootstrap();
+	}, 100);
 	$body.watch({
-		childList: function() {
+		childList: function childList() {
 			this.addedNodes.bootstrap();
 		},
-		attributes: function() {
+		attributes: function attributes() {
 			switch (this.attributeName) {
 				case 'contextmenu':
 					var menu = this.target.getAttribute('contextmenu');
@@ -57,10 +52,10 @@ window.addEventListener('load', function() {
 						if (!$('menu#' + menu).found) {
 							fetch(document.baseURI, {
 								method: 'POST',
-								headers: new Headers({Accept: 'application/json'}),
+								headers: new Headers({ Accept: 'application/json' }),
 								body: new URLSearchParams('load_menu=' + menu.replace(/\_menu$/, '')),
 								credentials: 'include'
-							}).then(parseResponse).then(handleJSON).catch(function(exc) {
+							}).then(parseResponse).then(handleJSON)['catch'](function (exc) {
 								console.error(exc);
 							});
 						}
@@ -68,10 +63,7 @@ window.addEventListener('load', function() {
 					break;
 
 				case 'open':
-					if (
-						this.target.hasAttribute('open')
-						&& (this.target.offsetTop + this.target.offsetHeight < window.scrollY)
-					) {
+					if (this.target.hasAttribute('open') && this.target.offsetTop + this.target.offsetHeight < window.scrollY) {
 						this.target.scrollIntoView();
 					}
 					break;
@@ -84,7 +76,7 @@ window.addEventListener('load', function() {
 
 				case 'data-request':
 					if (this.oldValue !== '') {
-						this.target.addEventListener('click', function() {
+						this.target.addEventListener('click', function () {
 							if (!('confirm' in this.dataset) || confirm(this.dataset.confirm)) {
 								var data = new URLSearchParams(this.dataset.request);
 								if ('prompt' in this.dataset) {
@@ -92,9 +84,9 @@ window.addEventListener('load', function() {
 								}
 								fetch(this.dataset.url || document.baseURI, {
 									method: 'POST',
-									headers: new Headers({Accept: 'application/json'}),
+									headers: new Headers({ Accept: 'application/json' }),
 									body: data
-								}).then(parseResponse).then(handleJSON).catch(reportError);
+								}).then(parseResponse).then(handleJSON)['catch'](reportError);
 							}
 						});
 					}
@@ -105,24 +97,14 @@ window.addEventListener('load', function() {
 					break;
 
 				default:
-					console.error('Unhandled attribute in watch', this);
+					console.error('Unhandled attribute in watch: "' + this.attributeName + '"');
 			}
 		}
-	}, [
-		'subtree',
-		'attributeOldValue'
-	], [
-		'contextmenu',
-		'list',
-		'open',
-		'data-request',
-		'data-dropzone',
-		'data-import'
-	]);
-	$(window).networkChange(function() {
+	}, ['subtree', 'attributeOldValue'], ['contextmenu', 'list', 'open', 'data-request', 'data-dropzone', 'data-import']);
+	$(window).networkChange(function () {
 		$('html').toggleClass('online', navigator.onLine).toggleClass('offline', !navigator.onLine);
-	}).online(function() {
-		$('fieldset').each(function(fieldset) {
+	}).online(function () {
+		$('fieldset').each(function (fieldset) {
 			fieldset.removeAttribute('disabled');
 		});
 		notify({
@@ -130,8 +112,8 @@ window.addEventListener('load', function() {
 			body: 'online',
 			icon: 'images/icons/network-server.png'
 		});
-	}).offline(function() {
-		$('fieldset').each(function(fieldset) {
+	}).offline(function () {
+		$('fieldset').each(function (fieldset) {
 			fieldset.disabled = true;
 		});
 		notify({
@@ -142,22 +124,22 @@ window.addEventListener('load', function() {
 	});
 	if (!sessionStorage.hasOwnProperty('nonce')) {
 		fetch(document.baseURI, {
-			headers: new Headers({Accept: 'application/json'}),
+			headers: new Headers({ Accept: 'application/json' }),
 			method: 'POST',
 			body: new URLSearchParams('request=nonce'),
 			credentials: 'include'
-		}).then(parseResponse).then(handleJSON).catch(reportError);
+		}).then(parseResponse).then(handleJSON)['catch'](reportError);
 	}
 });
-NodeList.prototype.bootstrap = function() {
+NodeList.prototype.bootstrap = function () {
 	'use strict';
-	this.forEach(function(node) {
+	this.forEach(function (node) {
 		if (node.nodeType !== 1) {
 			return this;
 		}
 		if (!supports('details')) {
-			node.query('details > summary').forEach(function(details) {
-				details.addEventListener('click', function() {
+			node.query('details > summary').forEach(function (details) {
+				details.addEventListener('click', function () {
 					if (this.parentElement.hasAttribute('open')) {
 						this.parentElement.removeAttribute('open');
 					} else {
@@ -167,34 +149,34 @@ NodeList.prototype.bootstrap = function() {
 			});
 		}
 		if (supports('menuitem')) {
-			node.query('[contextmenu]').forEach(function(el) {
+			node.query('[contextmenu]').forEach(function (el) {
 				var menu = el.getAttribute('contextmenu');
 				if (menu && menu !== '') {
 					if (!$('menu#' + menu).found) {
 						fetch(document.baseURI, {
 							method: 'POST',
-							headers: new Headers({Accept: 'application/json'}),
+							headers: new Headers({ Accept: 'application/json' }),
 							body: new URLSearchParams('load_menu=' + menu.replace(/\_menu$/, '')),
 							credentials: 'include'
-						}).then(parseResponse).then(handleJSON).catch(reportError);
+						}).then(parseResponse).then(handleJSON)['catch'](reportError);
 					}
 				}
 			});
 		}
 		if (supports('datalist')) {
-			node.query('[list]').forEach(function(list) {
+			node.query('[list]').forEach(function (list) {
 				if (!$('#' + list.getAttribute('list')).found) {
 					fetch(document.baseURI, {
 						method: 'POST',
-						headers: new Headers({Accept: 'application/json'}),
+						headers: new Headers({ Accept: 'application/json' }),
 						body: new URLSearchParams('datalist=' + list.getAttribute('list')),
 						credentials: 'include'
-					}).then(parseResponse).then(handleJSON).catch(reportError);
+					}).then(parseResponse).then(handleJSON)['catch'](reportError);
 				}
 			});
 		}
 		if (!supports('picture')) {
-			node.query('picture').forEach(function(picture) {
+			node.query('picture').forEach(function (picture) {
 				if ('matchMedia' in window) {
 					var sources = picture.querySelectorAll('source[media][srcset]');
 					for (var n = 0; n < sources.length; n++) {
@@ -208,102 +190,102 @@ NodeList.prototype.bootstrap = function() {
 				}
 			});
 		}
-		node.query('[autofocus]').forEach(function(input) {
+		node.query('[autofocus]').forEach(function (input) {
 			input.focus();
 		});
-		node.query(
-			'a[href]:not([target="_blank"]):not([download]):not([href*="\#"])'
-		).filter(isInternalLink).forEach(function(a) {
-			a.addEventListener('click', function(event) {
+		node.query('a[href]:not([target="_blank"]):not([download]):not([href*="\#"])').filter(function (link) {
+			return link.origin == location.origin;
+		}).forEach(function (a) {
+			a.addEventListener('click', function (event) {
 				event.preventDefault();
 				if (typeof ga === 'function') {
 					ga('send', 'pageview', this.href);
 				}
 				fetch(this.href, {
 					method: 'GET',
-					headers: new Headers({Accept: 'application/json'})
-				}).then(parseResponse).then(handleJSON).then(function(resp) {
+					headers: new Headers({ Accept: 'application/json' })
+				}).then(parseResponse).then(handleJSON).then(function (resp) {
 					history.pushState({}, document.title, a.href);
 					return resp;
-				}).catch(reportError);
+				})['catch'](reportError);
 			});
 		});
-		node.query('form[name]').filter(function(form) {
+		node.query('form[name]').filter(function (form) {
 			return form.action.startsWith(location.origin);
-		}).forEach(function(form) {
-			form.addEventListener('submit', function(event) {
+		}).forEach(function (form) {
+			form.addEventListener('submit', function (event) {
 				event.preventDefault();
 				if (!('confirm' in this.dataset) || confirm(this.dataset.confirm)) {
 					var data = new FormData(this);
 					data.append('nonce', sessionStorage.getItem('nonce'));
 					data.append('form', this.name);
-					fetch(
-						this.action || document.baseURI,
-						{
-							method: this.method || 'POST',
-							headers: new Headers({Accept: 'application/json'}),
-							body: data,
-							credentials: 'include'
-						}
-					).then(parseResponse).then(handleJSON).catch(reportError);
+					this.querySelectorAll('[data-input-name]').forEach(function (el) {
+						data.append(el.dataset.inputName, el.innerHTML);
+					});
+					fetch(this.action || document.baseURI, {
+						method: this.method || 'POST',
+						headers: new Headers({ Accept: 'application/json' }),
+						body: data,
+						credentials: 'include'
+					}).then(parseResponse).then(handleJSON)['catch'](reportError);
 				}
 			});
 			if (form.name === 'new_post') {
-				var retain = setInterval(function() {
+				var retain = setInterval(function () {
 					fetch(document.baseURI, {
 						method: 'GET',
-						headers: new Headers({Accept: 'application/json'}),
+						headers: new Headers({ Accept: 'application/json' }),
 						body: new URLSearchParams('action=keep-alive'),
 						credentials: 'include'
-					}).then(parseResponse).then(handleJSON).catch(reportError);
+					}).then(parseResponse).then(handleJSON)['catch'](reportError);
 				}, 60000);
-				form.addEventListener('submit', function() {
+				form.addEventListener('submit', function () {
 					clearInterval(retain);
 				});
 			}
 		});
-		node.query('[data-show]').forEach(function(el) {
-			el.addEventListener('click', function() {
+		node.query('[data-show]').forEach(function (el) {
+			el.addEventListener('click', function () {
 				document.querySelector(this.dataset.show).show();
 			});
 		});
-		node.query('[data-show-modal]').forEach(function(el) {
-			el.addEventListener('click', function() {
+		node.query('[data-show-modal]').forEach(function (el) {
+			el.addEventListener('click', function () {
 				document.querySelector(this.dataset.showModal).showModal();
 			});
 		});
-		node.query('[data-scroll-to]').forEach(function(el) {
-			el.addEventListener('click', function() {
+		node.query('[data-scroll-to]').forEach(function (el) {
+			el.addEventListener('click', function () {
 				document.querySelector(this.dataset.scrollTo).scrollIntoView();
 			});
 		});
-		node.query('[data-import]').forEach(function(el) {
+		node.query('[data-import]').forEach(function (el) {
 			el.HTMLimport();
 		});
-		node.query('[data-close]').forEach(function(el) {
-			el.addEventListener('click', function() {
+		node.query('[data-close]').forEach(function (el) {
+			el.addEventListener('click', function () {
 				document.querySelector(this.dataset.close).close();
 			});
 		});
-		node.query('fieldset button[type="button"].toggle').forEach(function(toggle) {
-			toggle.addEventListener('click', function() {
-				this.closest('fieldset').querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
+		node.query('fieldset button[type="button"].toggle').forEach(function (toggle) {
+			toggle.addEventListener('click', function () {
+				this.closest('fieldset').querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
 					checkbox.checked = !checkbox.checked;
 				});
 			});
 		});
-		node.query('[data-must-match]').forEach(function(match) {
+		node.query('[data-must-match]').forEach(function (match) {
 			match.pattern = new RegExp(document.querySelector('[name="' + match.dataset.mustMatch + '"]').value).escape();
-			document.querySelector('[name="' + match.dataset.mustMatch + '"]').addEventListener('change', function() {
+			document.querySelector('[name="' + match.dataset.mustMatch + '"]').addEventListener('change', function () {
 				document.querySelector('[data-must-match="' + this.name + '"]').pattern = new RegExp(this.value).escape();
 			});
 		});
-		node.query('[data-dropzone]') .forEach(function (el) {
+		node.query('[data-dropzone]').forEach(function (el) {
 			document.querySelector(el.dataset.dropzone).DnD(el);
 		});
-		node.query('input[data-equal-input]').forEach(function(input) {
-			input.addEventListener('input', function() {
-				document.querySelectorAll('input[data-equal-input="' + this.dataset.equalInput + '"]').forEach(function(other) {
+		node.query('input[data-equal-input]').forEach(function (input) {
+			input.addEventListener('input', function () {
+				document.querySelectorAll('input[data-equal-input="' + this.dataset.equalInput + '"]').forEach(function (other) {
 					if (other !== input) {
 						other.value = input.value;
 					}
@@ -311,8 +293,8 @@ NodeList.prototype.bootstrap = function() {
 			});
 		});
 		node.query('menu[type="context"]').forEach(WYSIWYG);
-		node.query('[data-request]').forEach(function(el) {
-			el.addEventListener('click', function(event) {
+		node.query('[data-request]').forEach(function (el) {
+			el.addEventListener('click', function (event) {
 				event.preventDefault();
 				if (!('confirm' in this.dataset) || confirm(this.dataset.confirm)) {
 					var data = new URLSearchParams(this.dataset.request);
@@ -321,18 +303,18 @@ NodeList.prototype.bootstrap = function() {
 					}
 					fetch(this.dataset.url || document.baseURI, {
 						method: 'POST',
-						headers: new Headers({Accept: 'application/json'}),
+						headers: new Headers({ Accept: 'application/json' }),
 						body: data,
 						credentials: 'include'
-					}).then(parseResponse).then(handleJSON).catch(reportError);
+					}).then(parseResponse).then(handleJSON)['catch'](reportError);
 				}
 			});
 		});
-		node.query('[data-dropzone]') .forEach(function (finput) {
+		node.query('[data-dropzone]').forEach(function (finput) {
 			document.querySelector(finput.dataset.dropzone).DnD(finput);
 		});
-		node.query('[data-fullscreen]').forEach(function(el) {
-			el.addEventListener('click', function(event) {
+		node.query('[data-fullscreen]').forEach(function (el) {
+			el.addEventListener('click', function (event) {
 				if (fullScreen) {
 					document.cancelFullScreen();
 				} else {
@@ -340,27 +322,27 @@ NodeList.prototype.bootstrap = function() {
 				}
 			});
 		});
-		node.query('[data-delete]').forEach(function(el) {
-			el.addEventListener('click', function() {
-				document.querySelectorAll(this.dataset.delete).forEach(function(el) {
+		node.query('[data-delete]').forEach(function (el) {
+			el.addEventListener('click', function () {
+				document.querySelectorAll(this.dataset['delete']).forEach(function (el) {
 					el.remove();
 				});
 			});
 		});
-		node.query('menuitem[label="Edit Post"]').forEach(function(el) {
-			el.addEventListener('click', function() {
+		node.query('menuitem[label="Edit Post"]').forEach(function (el) {
+			el.addEventListener('click', function () {
 				var form = document.createElement('form'),
-					article = document.querySelector('article'),
-					header = article.querySelector('header'),
-					title = header.querySelector('[itemprop="headline"]'),
-					keywords = header.querySelector('[itemprop="keywords"]'),
-					content = article.querySelector('[itemprop="text"]'),
-					submit = document.createElement('button'),
-					fieldset = document.createElement('fieldset'),
-					legend = document.createElement('legend'),
-					oldTitle = document.createElement('input'),
-					description = document.createElement('textarea'),
-					footer = article.querySelector('footer');
+				    article = document.querySelector('article'),
+				    header = article.querySelector('header'),
+				    title = header.querySelector('[itemprop="headline"]'),
+				    keywords = header.querySelector('[itemprop="keywords"]'),
+				    content = article.querySelector('[itemprop="text"]'),
+				    submit = document.createElement('button'),
+				    fieldset = document.createElement('fieldset'),
+				    legend = document.createElement('legend'),
+				    oldTitle = document.createElement('input'),
+				    description = document.createElement('textarea'),
+				    footer = article.querySelector('footer');
 				footer.remove();
 				form.name = 'edit_post';
 				form.method = 'POST';
@@ -390,21 +372,21 @@ NodeList.prototype.bootstrap = function() {
 				fieldset.append(legend, header, content, oldTitle, description, submit);
 				form.appendChild(fieldset);
 				article.appendChild(form);
-				var retain = setInterval(function() {
+				var retain = setInterval(function () {
 					fetch(docuemnt.baseURI, {
 						method: 'POST',
-						headers: new Headers({Accept: 'application/json'}),
+						headers: new Headers({ Accept: 'application/json' }),
 						body: new URLSearchParams('action=keep-alive'),
 						credentials: 'include'
-					}).then(parseResponse).then(handleJSON).catch(reportError);
+					}).then(parseResponse).then(handleJSON)['catch'](reportError);
 				}, 60000);
-				form.addEventListener('submit', function() {
+				form.addEventListener('submit', function () {
 					clearInterval(retain);
 				});
 			});
 		});
-		node.query('[label="Clear Cache"]').forEach(function(el) {
-			el.addEventListener('click', function() {
+		node.query('[label="Clear Cache"]').forEach(function (el) {
+			el.addEventListener('click', function () {
 				if (!('confirm' in this.dataset) || confirm(this.dataset.confirm)) {
 					cache.clear();
 				}
