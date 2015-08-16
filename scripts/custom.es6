@@ -236,6 +236,9 @@ NodeList.prototype.bootstrap = function() {
 					var data = new FormData(this);
 					data.append('nonce', sessionStorage.getItem('nonce'));
 					data.append('form', this.name);
+					this.querySelectorAll('[data-input-name]').forEach(el => {
+						data.append(el.dataset.inputName, el.innerHTML);
+					});
 					fetch(
 						this.action || document.baseURI,
 						{
