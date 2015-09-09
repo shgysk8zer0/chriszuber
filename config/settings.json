@@ -58,7 +58,8 @@
             "https://travis-ci.org",
             "https://api.travis-ci.org",
             "https://i.creativecommons.org",
-            "https://licensebuttons.net"
+            "https://licensebuttons.net",
+            "https://i.imgur.com"
         ],
         "media-src": [
             "'self'",
