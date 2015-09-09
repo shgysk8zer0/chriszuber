@@ -1,6 +1,7 @@
 /hostname
 /private_key
 /tags
+/uploads/
 # Ignore
 /vendor/
 /*.xml
