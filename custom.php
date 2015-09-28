@@ -49,17 +49,17 @@ function get_dev_scripts()
 {
 	$type = (BROWSER === 'Firefox') ? 'application/javascript;version=1.8' : 'application/javascript';
 	return array(
-		array('scripts/std-js/deprefixer.js',    true, false, $type),
-		array('scripts/std-js/prototypes.js',    true, false, $type),
-		array('scripts/std-js/support_test.js',  true, false, $type),
-		array('scripts/std-js/poly_modern.js',   true, false, $type),
-		array('scripts/std-js/functions.js',     true, false, $type),
-		array('scripts/std-js/zq.js',            true, false, $type),
-		array('scripts/std-js/popstate.js',      true, false, $type),
-		array('scripts/std-js/json_response.js', true, false, $type),
-		array('scripts/std-js/wysiwyg.js',       true, false, $type),
-		array('scripts/std-js/kbd_shortcuts.js', true, false, $type),
-		array('scripts/custom.js',               true, false, $type)
+		array('scripts/std-js/deprefixer.es6',    true, false, $type),
+		array('scripts/std-js/prototypes.es6',    true, false, $type),
+		array('scripts/std-js/support_test.es6',  true, false, $type),
+		array('scripts/std-js/poly_modern.js',    true, false, $type),
+		array('scripts/std-js/functions.es6',     true, false, $type),
+		array('scripts/std-js/zq.js',             true, false, $type),
+		array('scripts/std-js/popstate.es6',      true, false, $type),
+		array('scripts/std-js/json_response.es6', true, false, $type),
+		array('scripts/std-js/wysiwyg.es6',       true, false, $type),
+		array('scripts/std-js/kbd_shortcuts.es6', true, false, $type),
+		array('scripts/custom.es6',               true, false, $type)
 	);
 }
 
