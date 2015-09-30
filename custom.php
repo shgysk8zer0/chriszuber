@@ -9,17 +9,34 @@
  *
  * @return string        "<script ...></script>"
  */
-function mk_script_tag($src, $async = true, $defer = false, $type = 'application/javascript')
+function mk_script_tag(
+	$src,
+	$async = true,
+	$defer = false,
+	$type = 'application/javascript',
+	array $attributes = array()
+)
 {
-	$script = "<script type=\"{$type}\" src=\"{$src}\"";
+	$dom = new \DOMDocument('1.0', 'UTF-8');
+	$script = $dom->createElement('script');
+	$dom->appendChild($script);
+	$script->setAttribute('src', $src);
+	$script->setAttribute('type', $type);
+
 	if ($async) {
-		$script .= ' async=""';
+		$script->setAttribute('async', null);
 	}
 	if ($defer) {
-		$script .= ' defer=""';
+		$script->setAttribute('defer', null);
 	}
-	$script .= '></script>';
-	return $script;
+
+	array_map(
+		[$script, 'setAttribute'],
+		array_keys($attributes),
+		array_values($attributes)
+	);
+
+	return $dom->saveHTML($script);
 }
 
 /**
@@ -32,19 +49,17 @@ function get_dev_scripts()
 {
 	$type = (BROWSER === 'Firefox') ? 'application/javascript;version=1.8' : 'application/javascript';
 	return array(
-		array('scripts/std-js/deprefixer.js', true, false, $type),
-		array('scripts/std-js/polyfills/URLSearchParams.js', true, false, $type),
-		array('scripts/std-js/prototypes.js', true, false, $type),
-		array('scripts/std-js/polyfills/fetch.js', true, false, $type),
-		array('scripts/std-js/support_test.js', true, false, $type),
-		array('scripts/std-js/poly_modern.js', true, false, $type),
-		array('scripts/std-js/functions.js', true, false, $type),
-		array('scripts/std-js/zq.js', true, false, $type),
-		array('scripts/std-js/popstate.js', true, false, $type),
-		array('scripts/std-js/json_response.js', true, false, $type),
-		array('scripts/std-js/wysiwyg.js', true, false, $type),
-		array('scripts/std-js/kbd_shortcuts.js', true, false, $type),
-		array('scripts/custom.js', true, false, $type)
+		array('scripts/std-js/deprefixer.es6',    true, false, $type),
+		array('scripts/std-js/prototypes.es6',    true, false, $type),
+		array('scripts/std-js/support_test.es6',  true, false, $type),
+		array('scripts/std-js/poly_modern.js',    true, false, $type),
+		array('scripts/std-js/functions.es6',     true, false, $type),
+		array('scripts/std-js/zq.js',             true, false, $type),
+		array('scripts/std-js/popstate.es6',      true, false, $type),
+		array('scripts/std-js/json_response.es6', true, false, $type),
+		array('scripts/std-js/wysiwyg.es6',       true, false, $type),
+		array('scripts/std-js/kbd_shortcuts.es6', true, false, $type),
+		array('scripts/custom.es6',               true, false, $type)
 	);
 }
 
