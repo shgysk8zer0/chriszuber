@@ -140,8 +140,10 @@ window.addEventListener('load', function() {
 		});
 	});
 	if (!sessionStorage.hasOwnProperty('nonce')) {
+		let headers = new Headers();
+		headers.set('Accept', 'application/json');
 		fetch(document.baseURI, {
-			headers: new Headers({Accept: 'application/json'}),
+			headers,
 			method: 'POST',
 			body: new URLSearchParams('request=nonce'),
 			credentials: 'include'
@@ -170,9 +172,11 @@ NodeList.prototype.bootstrap = function() {
 				var menu = el.getAttribute('contextmenu');
 				if (menu && menu !== '') {
 					if (!$('menu#' + menu).found) {
+						let headers = new Headers();
+						headers.set('Accept', 'application/json');
 						fetch(document.baseURI, {
 							method: 'POST',
-							headers: new Headers({Accept: 'application/json'}),
+							headers,
 							body: new URLSearchParams(`load_menu=${menu.replace(/\_menu$/, '')}`),
 							credentials: 'include'
 						}).then(parseResponse).then(handleJSON).catch(reportError);
