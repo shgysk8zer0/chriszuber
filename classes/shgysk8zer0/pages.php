@@ -32,7 +32,7 @@ class Pages implements API\Interfaces\Magic_Methods
 	use API\Traits\Magic_Methods;
 	use API\Traits\URL;
 
-	const MAGIC_PROPERTY = 'url_data';
+	const MAGIC_PROPERTY = '_url_data';
 
 	/**
 	 * Data retrieved from PDO query
@@ -118,7 +118,7 @@ class Pages implements API\Interfaces\Magic_Methods
 
 		$pdo = Core\PDO::load('connect.json');
 
-		$this->parseURL($url);
+		$this->{self::MAGIC_PROPERTY} = is_string($url) ? static::parseURL($url) : static::parseURL();
 		$this->request_path = array_map('urldecode', explode('/', ltrim($this->path, '/')));
 		try {
 			if (! empty($_GET) and in_array(current(array_keys($_GET)), $this->_handle_queries)) {
