@@ -54,7 +54,7 @@ function get_dev_scripts()
 		array('scripts/std-js/support_test.es6',  true, false, $type),
 		array('scripts/std-js/poly_modern.js',    true, false, $type),
 		array('scripts/std-js/functions.es6',     true, false, $type),
-		array('scripts/std-js/zq.js',             true, false, $type),
+		array('scripts/std-js/zq.es6',            true, false, $type),
 		array('scripts/std-js/popstate.es6',      true, false, $type),
 		array('scripts/std-js/json_response.es6', true, false, $type),
 		array('scripts/std-js/wysiwyg.es6',       true, false, $type),
