@@ -46,3 +46,9 @@
 [submodule "classes/shgysk8zer0/twitterapi"]
 	path = classes/shgysk8zer0/twitterapi
 	url = git://github.com/shgysk8zer0/twitterapi.git
+[submodule "images/SVG-icons"]
+	path = images/SVG-icons
+	url = git://github.com/shgysk8zer0/SVG-icons.git
+[submodule "images/logos"]
+	path = images/logos
+	url = git://github.com/shgysk8zer0/logos.git

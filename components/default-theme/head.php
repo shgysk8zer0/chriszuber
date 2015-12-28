@@ -63,7 +63,7 @@
 <link rel="icon" type="image/svg" sizes="any" href="favicon.svg"/>
 <link rel="alternate icon" type="image/png" sizes="16x16" href="favicon.png"/>
 <link rel="search" type="application/opensearchdescription+xml" title="<?=TITLE?> Tag Search" href="<?=URL?>opensearch.php"/>
-<link rel="prefetch" href="images/icons/combined.svg" type="image/svg+xml"/>
+<link rel="prefetch" href="images/combined.svg" type="image/svg+xml"/>
 <link rel="stylesheet" type="text/css" href="stylesheets/<?=THEME?>/<?=(localhost() and BROWSER === 'Firefox') ? 'import' : 'output'?>.css" media="screen"/>
 <link rel="stylesheet" type="text/css" href="stylesheets/core-css/print.css" media="print"/>
 <?php if(isset($head->rss)):?>
