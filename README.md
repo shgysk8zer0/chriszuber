@@ -61,9 +61,7 @@
 [json_response]: <https://github.com/shgysk8zer0/core/blob/master/json_response.php>
 [WYSIWYG]: <http://chriszuber.com/posts/html5+wysiwyg+editor+using+contenteditable>
 
-# Super User ![Build Status][travis-ci]
-
-[![Join the chat at https://gitter.im/shgysk8zer0/chriszuber](https://badges.gitter.im/shgysk8zer0/chriszuber.svg)](https://gitter.im/shgysk8zer0/chriszuber?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# Super User ![Build Status][travis-ci] [![Join the chat at https://gitter.im/shgysk8zer0/chriszuber](https://badges.gitter.im/shgysk8zer0/chriszuber.svg)](https://gitter.im/shgysk8zer0/chriszuber?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 **_The world of blogging in the HTML5 world._**
 
