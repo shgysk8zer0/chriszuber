@@ -63,6 +63,8 @@
 
 # Super User ![Build Status][travis-ci]
 
+[![Join the chat at https://gitter.im/shgysk8zer0/chriszuber](https://badges.gitter.im/shgysk8zer0/chriszuber.svg)](https://gitter.im/shgysk8zer0/chriszuber?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 **_The world of blogging in the HTML5 world._**
 
 >The aim of this project is to provide the best in HTML5, CSS3, JavaScript, and SVG with minimal effort,
