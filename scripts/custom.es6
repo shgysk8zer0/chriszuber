@@ -21,7 +21,7 @@ function notifyLocation() {
 		});
 	});
 }
-window.addEventListener('load', function() {
+window.addEventListener('load', () => {
 	'use strict';
 	var html = $('html'),
 		$body = $('body'),
@@ -33,17 +33,17 @@ window.addEventListener('load', function() {
 	'visibility', 'notifications', 'ApplicationCache', 'indexedDB',
 	'localStorage', 'sessionStorage', 'CSSgradients', 'transitions',
 	'animations', 'CSSvars', 'CSSsupports', 'CSSmatches', 'querySelectorAll',
-	'workers', 'promises', 'ajax', 'FormData'].forEach(function(feat) {
+	'workers', 'promises', 'ajax', 'FormData'].forEach(feat => {
 		document.documentElement.classList.pick(feat, `no-${feat}`, supports(feat));
 	});
 	document.documentElement.classList.pick('offline', 'online', (supports('connectivity') && !navigator.onLine));
-	setTimeout(function() {
-			$body.results.bootstrap();
+	setTimeout(() => {
+			$body.bootstrap();
 		}, 100
 	);
 	$body.watch({
-		childList: function() {
-			this.addedNodes.bootstrap();
+		childList: () => {
+			$(this.addedNodes).bootstrap();
 		},
 		attributes: function() {
 			switch (this.attributeName) {
@@ -150,9 +150,9 @@ window.addEventListener('load', function() {
 		}).then(parseResponse).then(handleJSON).catch(reportError);
 	}
 });
-NodeList.prototype.bootstrap = function() {
+zQ.prototype.bootstrap = function() {
 	'use strict';
-	this.forEach(function(node) {
+	this.each(function(node) {
 		if (node.nodeType !== 1) {
 			return this;
 		}
