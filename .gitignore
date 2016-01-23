@@ -1,6 +1,7 @@
 /hostname
 /private_key
 /tags
+/patches/
 /uploads/
 # Ignore
 /vendor/
@@ -15,6 +16,7 @@
 *.sql
 *.bak
 *.save
+*.patch
 *~
 *.log
 *.orig
