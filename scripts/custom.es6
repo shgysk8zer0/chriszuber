@@ -41,7 +41,7 @@ self.addEventListener('load', () => {
 		}, 100
 	);
 	$body.watch({
-		childList: () => {
+		childList: function() {
 			$(this.addedNodes).bootstrap();
 		},
 		attributes: function() {
@@ -84,14 +84,17 @@ self.addEventListener('load', () => {
 					if (this.oldValue !== '') {
 						this.target.addEventListener('click', function() {
 							if (!('confirm' in this.dataset) || confirm(this.dataset.confirm)) {
-								var data = new URLSearchParams(this.dataset.request);
+								let url = new URL(this.dataset.url, document.baseURI);
+								let headers = new Headers();
+								let body = new URLSearchParams(this.dataset.request);
+								headers.set('Accept', 'application/json');
 								if ('prompt' in this.dataset) {
-									data.set('prompt_value', prompt(this.dataset.prompt));
+									body.set('prompt_value', prompt(this.dataset.prompt));
 								}
-								fetch(this.dataset.url || document.baseURI, {
+								fetch(url, {
 									method: 'POST',
-									headers: new Headers({Accept: 'application/json'}),
-									body: data
+									headers,
+									body
 								}).then(parseResponse).then(handleJSON).catch(reportError);
 							}
 						});
@@ -139,12 +142,15 @@ self.addEventListener('load', () => {
 		});
 	});
 	if (!sessionStorage.hasOwnProperty('nonce')) {
+		let url = new URL(document.baseURI);
 		let headers = new Headers();
+		let body = new URLSearchParams();
 		headers.set('Accept', 'application/json');
-		fetch(document.baseURI, {
+		body.set('request', 'nonce');
+		fetch(url, {
 			headers,
 			method: 'POST',
-			body: new URLSearchParams('request=nonce'),
+			body,
 			credentials: 'include'
 		}).then(parseResponse).then(handleJSON).catch(reportError);
 	}
@@ -156,27 +162,33 @@ zQ.prototype.bootstrap = function() {
 			return this;
 		}
 		if (!supports('details')) {
-			node.query('details > summary').forEach(function(details) {
-				details.addEventListener('click', function() {
-					if (this.parentElement.hasAttribute('open')) {
-						this.parentElement.removeAttribute('open');
+			node.query('details > summary').forEach(summary => {
+				summary.addEventListener('click', click => {
+					if (summary.parentElement.hasAttribute('open')) {
+						summary.parentElement.removeAttribute('open');
 					} else {
-						this.parentElement.setAttribute('open', '');
+						summary.parentElement.setAttribute('open', '');
 					}
 				});
 			});
 		}
 		if (supports('menuitem')) {
-			node.query('[contextmenu]').forEach(function(el) {
-				var menu = el.getAttribute('contextmenu');
+			/*
+			 * This should be done via GET
+			 */
+			node.query('[contextmenu]').forEach(el => {
+				let menu = el.getAttribute('contextmenu');
 				if (menu && menu !== '') {
-					if (!$('menu#' + menu).found) {
+					if (!$(`menu#${menu}`).found) {
 						let headers = new Headers();
+						let url = new URL(document.baseURI);
+						let body = new URLSearchParams();
+						body.set('load_menu', menu.replace(/\_menu$/, ''));
 						headers.set('Accept', 'application/json');
-						fetch(document.baseURI, {
+						fetch(url, {
 							method: 'POST',
 							headers,
-							body: new URLSearchParams(`load_menu=${menu.replace(/\_menu$/, '')}`),
+							body,
 							credentials: 'include'
 						}).then(parseResponse).then(handleJSON).catch(reportError);
 					}
@@ -184,12 +196,17 @@ zQ.prototype.bootstrap = function() {
 			});
 		}
 		if (supports('datalist')) {
-			node.query('[list]').forEach(function(list) {
+			node.query('[list]').forEach(list => {
 				if (!$('#' + list.getAttribute('list')).found) {
-					fetch(document.baseURI, {
+					let url = new URL(document.baseURI);
+					let headers = new Headers();
+					let body = new URLSearchParams();
+					headers.set('Accept', 'application/json');
+					body.set('datalist', list.getAttribute('list'))
+					fetch(url, {
 						method: 'POST',
-						headers: new Headers({Accept: 'application/json'}),
-						body: new URLSearchParams(`datalist=${list.getAttribute('list')}`),
+						headers,
+						body,
 						credentials: 'include'
 					}).then(parseResponse).then(handleJSON).catch(reportError);
 				}
@@ -198,7 +215,7 @@ zQ.prototype.bootstrap = function() {
 		if (!supports('picture')) {
 			node.query('picture').forEach(function(picture) {
 				if ('matchMedia' in window) {
-					var sources = picture.querySelectorAll('source[media][srcset]');
+					let sources = picture.querySelectorAll('source[media][srcset]');
 					for (var n = 0; n < sources.length; n++) {
 						if (matchMedia(sources[n].getAttribute('media')).matches) {
 							picture.getElementsByTagName('img')[0].src = sources[n].getAttribute('srcset');
@@ -210,20 +227,21 @@ zQ.prototype.bootstrap = function() {
 				}
 			});
 		}
-		node.query('[autofocus]').forEach(function(input) {
-			input.focus();
-		});
+		node.query('[autofocus]').forEach(input => input.focus());
 		node.query(
 			'a[href]:not([target="_blank"]):not([download]):not([href*="\#"])'
-		).filter(link => link.origin == location.origin).forEach(function(a) {
-			a.addEventListener('click', function(event) {
-				event.preventDefault();
+		).filter(link => link.origin === location.origin).forEach(a => {
+			a.addEventListener('click', click => {
+				click.preventDefault();
+				let url = new URL(a.href, location.origin);
+				let headers = new Headers();
+				headers.set('Accept', 'application/json');
 				if (typeof ga === 'function') {
-					ga('send', 'pageview', this.href);
+					ga('send', 'pageview', a.href);
 				}
-				fetch(this.href, {
+				fetch(url, {
 					method: 'GET',
-					headers: new Headers({Accept: 'application/json'})
+					headers
 				}).then(parseResponse).then(handleJSON).then(function(resp) {
 					history.pushState({}, document.title, a.href);
 					return resp;
@@ -232,80 +250,88 @@ zQ.prototype.bootstrap = function() {
 		});
 		node.query('form[name]').filter(
 			form => new URL(form.action).origin === location.origin
-		).forEach(function(form) {
-			form.addEventListener('submit', function(event) {
-				event.preventDefault();
-				if (!('confirm' in this.dataset) || confirm(this.dataset.confirm)) {
-					var data = new FormData(this);
-					data.append('nonce', sessionStorage.getItem('nonce'));
-					data.append('form', this.name);
-					fetch(
-						this.action || document.baseURI,
-						{
-							method: this.method || 'POST',
-							headers: new Headers({Accept: 'application/json'}),
-							body: data,
+		).forEach(form => {
+			form.addEventListener('submit', submit => {
+				submit.preventDefault();
+				if (!('confirm' in submit.target.dataset) || confirm(submit.target.dataset.confirm)) {
+					let body = new FormData(submit.target);
+					let headers = new Headers();
+					let url = new URL(submit.target.action, location.origin);
+					body.append('nonce', sessionStorage.getItem('nonce'));
+					body.append('form', submit.target.name);
+					headers.set('Accept', 'application/json');
+					fetch(url, {
+							method: submit.target.method || 'POST',
+							headers,
+							body,
 							credentials: 'include'
 						}
 					).then(parseResponse).then(handleJSON).catch(reportError);
 				}
 			});
 			if (form.name === 'new_post') {
-				var retain = setInterval(function() {
-					fetch(document.baseURI, {
+				let retain = setInterval(() => {
+					let url = new URL(document.baseURI);
+					let headers = new Headers();
+					let body = new URLSearchParams();
+					headers.set('Accept', 'application/json');
+					body.set('action', 'keep-alive');
+					fetch(url, {
 						method: 'GET',
-						headers: new Headers({Accept: 'application/json'}),
-						body: new URLSearchParams('action=keep-alive'),
+						headers,
+						body,
 						credentials: 'include'
 					}).then(parseResponse).then(handleJSON).catch(reportError);
 				}, 60000);
-				form.addEventListener('submit', function() {
+				form.addEventListener('submit', () => {
 					clearInterval(retain);
 				});
 			}
 		});
-		node.query('[data-show]').forEach(function(el) {
-			el.addEventListener('click', function() {
-				document.querySelector(this.dataset.show).show();
+		node.query('[data-show]').forEach(el => {
+			el.addEventListener('click', click => {
+				document.querySelector(el.dataset.show).show();
 			});
 		});
-		node.query('[data-show-modal]').forEach(function(el) {
-			el.addEventListener('click', function() {
-				document.querySelector(this.dataset.showModal).showModal();
+		node.query('[data-show-modal]').forEach(el => {
+			el.addEventListener('click', click => {
+				document.querySelector(el.dataset.showModal).showModal();
 			});
 		});
-		node.query('[data-scroll-to]').forEach(function(el) {
-			el.addEventListener('click', function() {
-				document.querySelector(this.dataset.scrollTo).scrollIntoView();
+		node.query('[data-scroll-to]').forEach(el => {
+			el.addEventListener('click', click => {
+				document.querySelector(el.dataset.scrollTo).scrollIntoView();
 			});
 		});
-		node.query('[data-import]').forEach(function(el) {
+		node.query('[data-import]').forEach(el => {
 			el.HTMLimport();
 		});
-		node.query('[data-close]').forEach(function(el) {
-			el.addEventListener('click', function() {
-				document.querySelector(this.dataset.close).close();
+		node.query('[data-close]').forEach(el => {
+			el.addEventListener('click', click => {
+				document.querySelector(el.dataset.close).close();
 			});
 		});
-		node.query('fieldset button[type="button"].toggle').forEach(function(toggle) {
-			toggle.addEventListener('click', function() {
-				this.closest('fieldset').querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
+		node.query('fieldset button[type="button"].toggle').forEach(toggle => {
+			toggle.addEventListener('click', click => {
+				let fieldset = toggle.closest('fieldset');
+				let checkboxes = Array.from(fieldset.querySelectorAll('input[type="checkbox"]'));
+				checkboxes.forEach(checkbox => {
 					checkbox.checked = !checkbox.checked;
 				});
 			});
 		});
-		node.query('[data-must-match]').forEach(function(match) {
+		node.query('[data-must-match]').forEach(match => {
 			match.pattern = new RegExp(document.querySelector(`[name="${match.dataset.mustMatch}"]`).value).escape();
-			document.querySelector(`[name="${match.dataset.mustMatch}"]`).addEventListener('change', function() {
-				document.querySelector(`[data-must-match="${this.name}"]`).pattern = new RegExp(this.value).escape();
+			document.querySelector(`[name="${match.dataset.mustMatch}"]`).addEventListener('change', change => {
+				document.querySelector(`[data-must-match="${change.target.name}"]`).pattern = new RegExp(change.target.value).escape();
 			});
 		});
 		node.query('[data-dropzone]') .forEach(function (el) {
 			document.querySelector(el.dataset.dropzone).DnD(el);
 		});
-		node.query('input[data-equal-input]').forEach(function(input) {
-			input.addEventListener('input', function() {
-				document.querySelectorAll(`input[data-equal-input="${this.dataset.equalInput}"]`).forEach(function(other) {
+		node.query('input[data-equal-input]').forEach(input => {
+			input.addEventListener('input', input => {
+				$(`input[data-equal-input="${input.target.dataset.equalInput}"]`).each(other => {
 					if (other !== input) {
 						other.value = input.value;
 					}
@@ -313,40 +339,41 @@ zQ.prototype.bootstrap = function() {
 			});
 		});
 		node.query('menu[type="context"]').forEach(WYSIWYG);
-		node.query('[data-request]').forEach(function(el) {
-			el.addEventListener('click', function(event) {
-				event.preventDefault();
-				if (!('confirm' in this.dataset) || confirm(this.dataset.confirm)) {
-					var data = new URLSearchParams(this.dataset.request);
-					if ('prompt' in this.dataset) {
-						data.set('prompt_value', prompt(this.dataset.prompt));
+		node.query('[data-request]').forEach(el => {
+			el.addEventListener('click', click => {
+				click.preventDefault();
+				if (!(el.dataset.hasOwnProperty('confirm')) || confirm(el.dataset.confirm)) {
+					let url = new URL(el.dataset.url || document.baseURI);
+					let headers = new Headers();
+					let body = new URLSearchParams(el.dataset.request);
+					headers.set('Accept', 'application/json');
+					if ('prompt' in el.dataset) {
+						body.set('prompt_value', prompt(el.dataset.prompt));
 					}
-					fetch(this.dataset.url || document.baseURI, {
+					fetch(url, {
 						method: 'POST',
-						headers: new Headers({Accept: 'application/json'}),
-						body: data,
+						headers,
+						body,
 						credentials: 'include'
 					}).then(parseResponse).then(handleJSON).catch(reportError);
 				}
 			});
 		});
-		node.query('[data-dropzone]') .forEach(function (finput) {
+		node.query('[data-dropzone]').forEach(finput => {
 			document.querySelector(finput.dataset.dropzone).DnD(finput);
 		});
-		node.query('[data-fullscreen]').forEach(function(el) {
-			el.addEventListener('click', function(event) {
+		node.query('[data-fullscreen]').forEach(el => {
+			el.addEventListener('click', click => {
 				if (fullScreen) {
 					document.cancelFullScreen();
 				} else {
-					document.querySelector(this.dataset.fullscreen).requestFullScreen();
+					document.querySelector(el.dataset.fullscreen).requestFullScreen();
 				}
 			});
 		});
 		node.query('[data-delete]').forEach(function(el) {
-			el.addEventListener('click', function() {
-				document.querySelectorAll(this.dataset.delete).forEach(function(el) {
-					el.remove();
-				});
+			el.addEventListener('click', click => {
+				$(el.dataset.delete).remove();
 			});
 		});
 		node.query('menuitem[label="Edit Post"]').forEach(function(el) {
@@ -392,15 +419,20 @@ zQ.prototype.bootstrap = function() {
 				fieldset.append(legend, header, content, oldTitle, description, submit);
 				form.appendChild(fieldset);
 				article.appendChild(form);
-				var retain = setInterval(function() {
+				let retain = setInterval(() => {
+					let url = new URL(docuemnt.baseURI);
+					let headers = new Headers();
+					let body = new URLSearchParams();
+					headers.set('Accept', 'application/json');
+					body.set('action', 'keep-alive');
 					fetch(docuemnt.baseURI, {
 						method: 'POST',
-						headers: new Headers({Accept: 'application/json'}),
-						body: new URLSearchParams('action=keep-alive'),
+						headers,
+						body,
 						credentials: 'include'
 					}).then(parseResponse).then(handleJSON).catch(reportError);
 				}, 60000);
-				form.addEventListener('submit', function() {
+				form.addEventListener('submit', () => {
 					clearInterval(retain);
 				});
 			});
