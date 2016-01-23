@@ -231,7 +231,7 @@ zQ.prototype.bootstrap = function() {
 			});
 		});
 		node.query('form[name]').filter(
-			form => form.action.startsWith(location.origin)
+			form => new URL(form.action).origin === location.origin
 		).forEach(function(form) {
 			form.addEventListener('submit', function(event) {
 				event.preventDefault();
