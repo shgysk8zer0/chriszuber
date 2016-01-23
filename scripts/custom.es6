@@ -21,12 +21,11 @@ function notifyLocation() {
 		});
 	});
 }
-window.addEventListener('load', () => {
+self.addEventListener('load', () => {
 	'use strict';
 	var html = $('html'),
 		$body = $('body'),
 		$head = $('head');
-		cache = new cache();
 		document.documentElement.classList.swap('no-js', 'js');
 	['svg', 'audio', 'video', 'picture', 'canvas', 'menuitem', 'details',
 	'dialog', 'dataset', 'HTMLimports', 'classList', 'connectivity',
@@ -404,13 +403,6 @@ zQ.prototype.bootstrap = function() {
 				form.addEventListener('submit', function() {
 					clearInterval(retain);
 				});
-			});
-		});
-		node.query('[label="Clear Cache"]').forEach(function(el) {
-			el.addEventListener('click', function() {
-				if (!('confirm' in this.dataset) || confirm(this.dataset.confirm)) {
-					cache.clear();
-				}
 			});
 		});
 	});
