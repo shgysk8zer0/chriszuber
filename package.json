@@ -20,9 +20,9 @@
 	},
 	"dependencies": {},
 	"devDependencies": {
-			"babel": "^6.4.5",
-			"myth": "^1.5.0",
-			"webpack": "^1.12.12"
+		"babel": "^6.4.5",
+		"myth": "^1.5.0",
+		"webpack": "^1.12.12"
 	},
 	"engines": {
 		"php": ">5.5.0",
