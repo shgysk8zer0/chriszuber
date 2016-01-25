@@ -22,7 +22,16 @@
 	"devDependencies": {
 		"babel": "^6.4.5",
 		"myth": "^1.5.0",
-		"webpack": "^1.12.12"
+		"webpack": "^1.12.12",
+		"babel-preset-es2015": "*",
+		"babel-loader": "*"
+	},
+	"babel": {
+		"presets": ["es2015"],
+		"sourceMaps": true,
+		"only": "*.es6",
+		"compact": true,
+		"comments": false
 	},
 	"engines": {
 		"php": ">5.5.0",
