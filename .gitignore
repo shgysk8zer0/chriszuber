@@ -1,4 +1,5 @@
 /hostname
+/node_modules/
 /private_key
 /tags
 /patches/
