@@ -1,0 +1,31 @@
+{
+	"name": "Super-User-Blog",
+	"version": "2.3.0",
+	"description": "The world of blogging in the HTML5 world.",
+	"keywords": ["ECMAScript2015", "ES6", "CSS3", "HTML5", "PHP", "blog"],
+	"author": {
+		"name": "Chris Zuber",
+		"email": "shgysk8zer0@gmail.com",
+		"url": "https://chriszuber.com"
+	},
+	"contributors": [],
+	"homepage": "https://chriszuber.com/",
+	"license": "GPL-3.0",
+	"repository" : {
+		"type" : "git",
+		"url" : "https://github.com/shgysk8zer0/chriszuber.git"
+	},
+	"bugs": {
+		"url": "https://github.com/shgysk8zer0/chriszuber/issues"
+	},
+	"dependencies": {},
+	"devDependencies": {
+			"babel": "^6.4.5",
+			"myth": "^1.5.0",
+			"webpack": "^1.12.12"
+	},
+	"engines": {
+		"php": ">5.5.0",
+		"npm": "~3.5.0"
+	}
+}

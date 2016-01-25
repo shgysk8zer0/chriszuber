@@ -28,6 +28,7 @@ Thumbs.db
 !/config/icons.json
 !/config/settings.json
 !/config/server.json
+!/package.json
 
 #################
 ## Eclipse
