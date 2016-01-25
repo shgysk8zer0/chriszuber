@@ -11,7 +11,7 @@ module.exports = {
         loaders: [
             {
                 loader: 'babel-loader',
-                test: /\.(es6)|(js)$/,
+                test: /\.es6$/,
                 exclude: /node_modules/,
                 query: {
                   presets: 'es2015',
