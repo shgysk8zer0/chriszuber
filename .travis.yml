@@ -5,6 +5,8 @@ php:
     - '7'
 script: php unit.php
 notifications:
+  slack:
+    rooms: superuserteam:YxYbaHTLmU1cNNIhOg0m2YkV#superuserblog
   webhooks:
     urls:
       - https://webhooks.gitter.im/e/ad13806d2180c0d98893
